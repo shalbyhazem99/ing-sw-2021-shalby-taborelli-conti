@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.util.Stack;
+
 public class SpazioCarteSviluppo {
-    private java.util.ArrayList<CartaSviluppo> carteSviluppo;
+    private Stack<CartaSviluppo> carteSviluppo;
 }

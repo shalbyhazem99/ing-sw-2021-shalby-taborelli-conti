@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 public class CartaSviluppo {
-    private int livelli;
+    private LivelloCartaSviluppo livello;
     private TipologiaCartaSviluppo tipologia;
     private int puntiVittoria;
     private java.util.ArrayList<RisorseRichieste> costi;
