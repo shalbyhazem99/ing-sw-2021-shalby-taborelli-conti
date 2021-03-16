@@ -9,4 +9,6 @@ public class Partita {
     private java.util.ArrayList<CartaLeader> carteLeader;
     private java.util.ArrayList<CartaSviluppo>[][] carteSviluppo;
     private StrutturaMercato mercato;
+    private ArrayList<SegnalinoAzione> segnaliniAzione;
+    private boolean solitario;
 }
