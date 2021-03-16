@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw</OriginalElement>
+  <nodes>
+    <node x="-390.0" y="360.0">it.polimi.ingsw.App</node>
+    <node x="-468.0" y="205.0">it.polimi.ingsw.AppTest</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="-393.0" y="297.5" />
+  <SelectedNodes>
+    <node>it.polimi.ingsw.App</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
