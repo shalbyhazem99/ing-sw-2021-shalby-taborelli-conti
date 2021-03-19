@@ -6,5 +6,5 @@ public class CartaSviluppo {
     private int puntiVittoria;
     private java.util.ArrayList<RisorseRichieste> costi;
     private java.util.ArrayList<RisorseRichieste> from;
-    private java.util.ArrayList<RisorseRichieste> to;
+    private java.util.ArrayList<Risorsa> to;
 }

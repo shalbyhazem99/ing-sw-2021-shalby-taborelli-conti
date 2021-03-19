@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.util.ArrayList;
+
 public class Giocatore {
     private int posizionePercorso;
     private java.util.ArrayList<TesseraPapale> tesserePapali;
@@ -7,5 +9,5 @@ public class Giocatore {
     private java.util.ArrayList<SpazioCarteSviluppo> spazioSviluppo;
     private java.util.ArrayList<Deposito> depositiStandard;
     private java.util.ArrayList<Deposito> depositiAggiuntivi;
-    private Forziere forziere;
+    private ArrayList<Risorsa> forziere;
 }

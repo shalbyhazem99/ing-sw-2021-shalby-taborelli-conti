@@ -5,7 +5,6 @@ import java.util.Stack;
 
 public class Partita {
     private int posCalamaio;
-    private Riserva riserva;
     private java.util.ArrayList<Giocatore> giocatori;
     private java.util.ArrayList<CartaLeader> carteLeader;
     private Stack<CartaSviluppo>[][] carteSviluppo;
@@ -13,5 +12,4 @@ public class Partita {
     private ArrayList<SegnalinoAzione> segnaliniAzione;
     private boolean solitario;
     private int posCroceNera;
-    private ArrayList<Tessere3X> tessere3x;
 }
