@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.model</OriginalElement>
+  <nodes>
+    <node x="35.25" y="410.0">it.polimi.ingsw.model.SegnalinoAzione</node>
+    <node x="775.4025689223058" y="500.0">it.polimi.ingsw.model.Partita</node>
+    <node x="427.33333333333337" y="160.0">it.polimi.ingsw.model.CarteSviluppoRichieste</node>
+    <node x="1354.557330827068" y="330.0">it.polimi.ingsw.model.Biglia</node>
+    <node x="1330.557330827068" y="240.0">it.polimi.ingsw.model.ColoreBiglia</node>
+    <node x="517.6557017543861" y="80.0">it.polimi.ingsw.model.RisorseRichieste</node>
+    <node x="1115.6666666666667" y="160.0">it.polimi.ingsw.model.Risorsa</node>
+    <node x="1314.557330827068" y="410.0">it.polimi.ingsw.model.StrutturaMercato</node>
+    <node x="769.557330827068" y="240.0">it.polimi.ingsw.model.TesseraPapale</node>
+    <node x="742.8182957393486" y="160.0">it.polimi.ingsw.model.TipoCartaLeader</node>
+    <node x="0.0" y="330.0">it.polimi.ingsw.model.TipoSegnalino</node>
+    <node x="1073.557330827068" y="240.0">it.polimi.ingsw.model.Forziere</node>
+    <node x="1106.057330827068" y="410.0">it.polimi.ingsw.model.Tessere3X</node>
+    <node x="255.33333333333337" y="160.0">it.polimi.ingsw.model.CartaSviluppo</node>
+    <node x="894.5714285714287" y="0.0">it.polimi.ingsw.model.TipoRisorsa</node>
+    <node x="797.4025689223058" y="330.0">it.polimi.ingsw.model.Giocatore</node>
+    <node x="204.48809523809553" y="80.0">it.polimi.ingsw.model.TipologiaCartaSviluppo</node>
+    <node x="1206.557330827068" y="240.0">it.polimi.ingsw.model.Riserva</node>
+    <node x="286.58333333333337" y="240.0">it.polimi.ingsw.model.SpazioCarteSviluppo</node>
+    <node x="613.557330827068" y="240.0">it.polimi.ingsw.model.CartaLeader</node>
+    <node x="941.557330827068" y="240.0">it.polimi.ingsw.model.Deposito</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.model.Giocatore" target="it.polimi.ingsw.model.CartaLeader">
+      <point x="-24.0" y="-15.0" />
+      <point x="833.4025689223058" y="290.0" />
+      <point x="715.557330827068" y="290.0" />
+      <point x="34.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.CartaLeader" target="it.polimi.ingsw.model.TipoCartaLeader">
+      <point x="45.33333333333337" y="-15.0" />
+      <point x="726.8906641604013" y="220.0" />
+      <point x="826.8182957393486" y="220.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Tessere3X" target="it.polimi.ingsw.model.Giocatore">
+      <point x="-30.0" y="-15.0" />
+      <point x="1136.057330827068" y="385.0" />
+      <point x="887.4025689223058" y="385.0" />
+      <point x="30.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.CartaSviluppo" target="it.polimi.ingsw.model.TipologiaCartaSviluppo">
+      <point x="-38.0" y="-15.0" />
+      <point x="293.33333333333337" y="140.0" />
+      <point x="316.4880952380955" y="140.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.RisorseRichieste" target="it.polimi.ingsw.model.TipoRisorsa">
+      <point x="0.0" y="-15.0" />
+      <point x="605.6557017543861" y="55.0" />
+      <point x="917.2380952380954" y="55.0" />
+      <point x="-45.33333333333337" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Deposito" target="it.polimi.ingsw.model.TipoRisorsa">
+      <point x="-28.000000000000114" y="-15.0" />
+      <point x="969.5573308270679" y="55.0" />
+      <point x="962.5714285714287" y="55.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Giocatore" target="it.polimi.ingsw.model.TesseraPapale">
+      <point x="0.0" y="-15.0" />
+      <point x="857.4025689223058" y="310.0" />
+      <point x="845.557330827068" y="310.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.CartaLeader" target="it.polimi.ingsw.model.CarteSviluppoRichieste">
+      <point x="-45.33333333333337" y="-15.0" />
+      <point x="636.2239974937346" y="220.0" />
+      <point x="539.3333333333334" y="220.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Giocatore" target="it.polimi.ingsw.model.Deposito">
+      <point x="24.0" y="-15.0" />
+      <point x="881.4025689223058" y="300.0" />
+      <point x="997.557330827068" y="300.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.CartaLeader" target="it.polimi.ingsw.model.RisorseRichieste">
+      <point x="0.0" y="-15.0" />
+      <point x="681.557330827068" y="220.0" />
+      <point x="693.4025689223058" y="220.0" />
+      <point x="693.4025689223058" y="140.0" />
+      <point x="649.6557017543861" y="140.0" />
+      <point x="44.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Riserva" target="it.polimi.ingsw.model.Risorsa">
+      <point x="0.0" y="-15.0" />
+      <point x="1258.557330827068" y="220.0" />
+      <point x="1206.6666666666667" y="220.0" />
+      <point x="39.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.CartaSviluppo" target="it.polimi.ingsw.model.RisorseRichieste">
+      <point x="38.0" y="-15.0" />
+      <point x="369.33333333333337" y="140.0" />
+      <point x="561.6557017543861" y="140.0" />
+      <point x="-44.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.StrutturaMercato" target="it.polimi.ingsw.model.Biglia">
+      <point x="-58.66666666666674" y="-15.0" />
+      <point x="1343.8906641604012" y="385.0" />
+      <point x="1370.557330827068" y="385.0" />
+      <point x="-32.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.SpazioCarteSviluppo" target="it.polimi.ingsw.model.CartaSviluppo">
+      <point x="0.0" y="-15.0" />
+      <point x="386.58333333333337" y="220.0" />
+      <point x="369.33333333333337" y="220.0" />
+      <point x="38.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.SegnalinoAzione" target="it.polimi.ingsw.model.TipologiaCartaSviluppo">
+      <point x="42.0" y="-15.0" />
+      <point x="161.25" y="385.0" />
+      <point x="162.5" y="385.0" />
+      <point x="162.5" y="140.0" />
+      <point x="241.8214285714289" y="140.0" />
+      <point x="-74.66666666666663" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Partita" target="it.polimi.ingsw.model.StrutturaMercato">
+      <point x="44.571428571428555" y="-15.0" />
+      <point x="871.9739974937345" y="480.0" />
+      <point x="1402.557330827068" y="480.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Partita" target="it.polimi.ingsw.model.Riserva">
+      <point x="29.714285714285666" y="-15.0" />
+      <point x="857.1168546365916" y="470.0" />
+      <point x="1258.557330827068" y="470.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Partita" target="it.polimi.ingsw.model.CartaLeader">
+      <point x="-14.85714285714289" y="-15.0" />
+      <point x="812.5454260651629" y="460.0" />
+      <point x="640.2390350877195" y="460.0" />
+      <point x="640.2390350877195" y="310.0" />
+      <point x="647.557330827068" y="310.0" />
+      <point x="-34.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Tessere3X" target="it.polimi.ingsw.model.Risorsa">
+      <point x="30.0" y="-15.0" />
+      <point x="1196.057330827068" y="220.0" />
+      <point x="1180.6666666666667" y="220.0" />
+      <point x="13.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Biglia" target="it.polimi.ingsw.model.ColoreBiglia">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Deposito" target="it.polimi.ingsw.model.Risorsa">
+      <point x="27.999999999999886" y="-15.0" />
+      <point x="1025.5573308270677" y="210.0" />
+      <point x="1128.6666666666667" y="210.0" />
+      <point x="-39.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Partita" target="it.polimi.ingsw.model.Tessere3X">
+      <point x="14.85714285714289" y="-15.0" />
+      <point x="842.2597117794487" y="460.0" />
+      <point x="1166.057330827068" y="460.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Partita" target="it.polimi.ingsw.model.Giocatore">
+      <point x="0.0" y="-15.0" />
+      <point x="-30.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Giocatore" target="it.polimi.ingsw.model.Forziere">
+      <point x="48.0" y="-15.0" />
+      <point x="905.4025689223058" y="310.0" />
+      <point x="1129.557330827068" y="310.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Risorsa" target="it.polimi.ingsw.model.TipoRisorsa">
+      <point x="0.0" y="-15.0" />
+      <point x="1167.6666666666667" y="55.0" />
+      <point x="1007.9047619047622" y="55.0" />
+      <point x="45.33333333333337" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Partita" target="it.polimi.ingsw.model.SegnalinoAzione">
+      <point x="-44.571428571428555" y="-15.0" />
+      <point x="782.8311403508774" y="480.0" />
+      <point x="119.25" y="480.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.CarteSviluppoRichieste" target="it.polimi.ingsw.model.TipologiaCartaSviluppo">
+      <point x="0.0" y="-15.0" />
+      <point x="539.3333333333334" y="130.0" />
+      <point x="391.1547619047622" y="130.0" />
+      <point x="74.66666666666669" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.SegnalinoAzione" target="it.polimi.ingsw.model.TipoSegnalino">
+      <point x="-42.0" y="-15.0" />
+      <point x="77.25" y="385.0" />
+      <point x="76.0" y="385.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Giocatore" target="it.polimi.ingsw.model.SpazioCarteSviluppo">
+      <point x="-48.0" y="-15.0" />
+      <point x="809.4025689223058" y="300.0" />
+      <point x="386.58333333333337" y="300.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Partita" target="it.polimi.ingsw.model.CartaSviluppo">
+      <point x="-29.714285714285666" y="-15.0" />
+      <point x="797.6882832080203" y="470.0" />
+      <point x="276.08333333333337" y="470.0" />
+      <point x="276.08333333333337" y="220.0" />
+      <point x="293.33333333333337" y="220.0" />
+      <point x="-38.0" y="15.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Forziere" target="it.polimi.ingsw.model.Risorsa">
+      <point x="0.0" y="-15.0" />
+      <point x="1129.557330827068" y="220.0" />
+      <point x="1154.6666666666667" y="220.0" />
+      <point x="-13.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.6000000000000005" x="730.4999999999999" y="260.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

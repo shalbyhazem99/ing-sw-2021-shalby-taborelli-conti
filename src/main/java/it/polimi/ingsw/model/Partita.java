@@ -13,4 +13,5 @@ public class Partita {
     private ArrayList<SegnalinoAzione> segnaliniAzione;
     private boolean solitario;
     private int posCroceNera;
+    private ArrayList<Tessere3X> tessere3x;
 }
