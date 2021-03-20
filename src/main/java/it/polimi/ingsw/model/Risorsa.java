@@ -6,10 +6,10 @@ package it.polimi.ingsw.model;
  */
 public class Risorsa {
     private TipoRisorsa tipo;
+    public Risorsa(TipoRisorsa tipo) {
+        this.tipo = tipo;
+    }
 
-<<<<<<< Updated upstream
-
-=======
     public static Risorsa getInstance(TipoRisorsa tipoRisorsa){
         return new Risorsa(tipoRisorsa);
     }
@@ -17,5 +17,4 @@ public class Risorsa {
     public TipoRisorsa getTipo() {
         return tipo;
     }
->>>>>>> Stashed changes
 }

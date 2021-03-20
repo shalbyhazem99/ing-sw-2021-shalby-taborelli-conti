@@ -1,19 +1,17 @@
 package it.polimi.ingsw.model;
 
-<<<<<<< Updated upstream
-=======
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
->>>>>>> Stashed changes
 public class StrutturaMercato {
-    private Biglia[][] matriceMercato;
+    private static final int COLUMNNUMBER = 4;
+    private static final int ROWNUMBER = 3;
+
+    private Biglia[][] matriceMercato; //[row][column]
     private Biglia bigliaAggiuntiva;
-<<<<<<< Updated upstream
-=======
 
     private void generateMarblesPos() {
         ArrayList<Biglia> lista = new ArrayList<>();
@@ -153,5 +151,4 @@ public class StrutturaMercato {
         COLONNA;
     }
 
->>>>>>> Stashed changes
 }

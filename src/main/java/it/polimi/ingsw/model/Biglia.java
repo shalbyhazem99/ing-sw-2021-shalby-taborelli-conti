@@ -2,8 +2,6 @@ package it.polimi.ingsw.model;
 
 public class Biglia {
     private ColoreBiglia colore;
-<<<<<<< Updated upstream
-=======
 
     public Biglia(ColoreBiglia colore) {
         this.colore = colore;
@@ -21,5 +19,4 @@ public class Biglia {
     public String toString() {
         return colore.toString();
     }
->>>>>>> Stashed changes
 }
