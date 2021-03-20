@@ -2,4 +2,24 @@ package it.polimi.ingsw.model;
 
 public class Biglia {
     private ColoreBiglia colore;
+<<<<<<< Updated upstream
+=======
+
+    public Biglia(ColoreBiglia colore) {
+        this.colore = colore;
+    }
+
+    public static Biglia getInstance(ColoreBiglia colore) {
+        return new Biglia(colore);
+    }
+
+    public ColoreBiglia getColore() {
+        return colore;
+    }
+
+    @Override
+    public String toString() {
+        return colore.toString();
+    }
+>>>>>>> Stashed changes
 }
