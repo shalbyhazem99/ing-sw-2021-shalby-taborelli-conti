@@ -21,5 +21,6 @@ public class Deposito {
         return false;
     }
 
+
     //TODO: metodi per scambiare le risorse da un deposito all'altro
 }

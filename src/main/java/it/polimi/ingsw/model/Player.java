@@ -21,10 +21,6 @@ public class Player implements Serializable {
         return null;
     }
 
-    public boolean buyable(CartaSviluppo cartaSviluppo){
-        //TODO: se comprabile dal giocatore
-        return false;
-    }
     public void procediPerorsoFede(int numPosizioni){
         //TODO: va avanti
     }
