@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Player implements Serializable {
-    private int posizionePercorso;
-    private ArrayList<TesseraPapale> tesserePapali;
-    private ArrayList<CartaLeader> carteLeader;
-    private ArrayList<SpazioCarteSviluppo> spazioSviluppo;
-    private ArrayList<Deposito> depositiStandard;
-    private ArrayList<Risorsa> forziere;
-    private ArrayList<Deposito> depositiAggiuntivi;
-    private ArrayList<CountRisorse> sconti;
-    private ArrayList<TipoRisorsa> strategieConversione;
-    private ArrayList<PotereProduttivo> poteriAggiuntivi;
+    private int posFaithMarker;
+    private ArrayList<PopeFavorTiles> popeFavorTiles;
+    private ArrayList<LeaderCard> leaderCards;
+    private ArrayList<DevelopmentCardSpace> developmentCardSpaces;
+    private ArrayList<Warehouse> warehousesStandard;
+    private ArrayList<Resource> strongBox;
+    private ArrayList<Warehouse> warehousesAdditional;
+    private ArrayList<ResourcesCount> discounts;
+    private ArrayList<ResourceType> ConversionStrategies;
+    private ArrayList<ProductivePower> addedPower;
 
     //todo: it has a power?
     public static Player generatePlayer(){
@@ -25,11 +25,11 @@ public class Player implements Serializable {
         //TODO: va avanti
     }
 
-    public Boolean addCartaSiluppo(CartaSviluppo cartaSviluppo){
+    public Boolean addCartaSiluppo(DevelopmentCard developmentCard){
         //TODO: fare il controllo se i pò agiungere e aggiungerla. bisogna vedere come ricevere lo spazio sviluppo in cui provare ad aggiungerla
         return false;
     }
-    public void addRisorsaForziere(Risorsa risorsa){
+    public void addRisorsaForziere(Resource resource){
         //TODO:Aahhiunge una risorsa al forziere
     }
 

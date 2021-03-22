@@ -2,60 +2,11 @@
 <Diagram>
   <ID>JAVA</ID>
   <OriginalElement>it.polimi.ingsw.model</OriginalElement>
-  <nodes>
-    <node x="266.0" y="888.0">it.polimi.ingsw.model.SegnalinoAzione</node>
-    <node x="0.0" y="237.0">it.polimi.ingsw.model.CartaLeaderDeposito</node>
-    <node x="1067.0" y="358.0">it.polimi.ingsw.model.Partita</node>
-    <node x="569.0" y="888.0">it.polimi.ingsw.model.CarteSviluppoRichieste</node>
-    <node x="612.0" y="700.0">it.polimi.ingsw.model.Biglia</node>
-    <node x="1773.0" y="237.0">it.polimi.ingsw.model.CartaLeaderColor</node>
-    <node x="1442.0" y="358.0">it.polimi.ingsw.model.ColoreBiglia</node>
-    <node x="0.0" y="700.0">it.polimi.ingsw.model.CountRisorse</node>
-    <node x="0.0" y="888.0">it.polimi.ingsw.model.Risorsa</node>
-    <node x="0.0" y="358.0">it.polimi.ingsw.model.StrutturaMercato</node>
-    <node x="875.0" y="700.0">it.polimi.ingsw.model.TesseraPapale</node>
-    <node x="1131.0" y="700.0">it.polimi.ingsw.model.TipoSegnalino</node>
-    <node x="1382.0" y="700.0">it.polimi.ingsw.model.PotereProduttivo</node>
-    <node x="335.0" y="358.0">it.polimi.ingsw.model.CartaSviluppo</node>
-    <node x="1982.0" y="358.0">it.polimi.ingsw.model.TipoRisorsa</node>
-    <node x="1682.0" y="358.0">it.polimi.ingsw.model.TipologiaCartaSviluppo</node>
-    <node x="1873.0" y="700.0">it.polimi.ingsw.model.SpazioCarteSviluppo</node>
-    <node x="999.5" y="0.0">it.polimi.ingsw.model.CartaLeader</node>
-    <node x="593.0" y="237.0">it.polimi.ingsw.model.CartaLeaderProduttiva</node>
-    <node x="316.0" y="700.0">it.polimi.ingsw.model.Deposito</node>
-    <node x="1192.0" y="237.0">it.polimi.ingsw.model.CartaLeaderSconto</node>
-  </nodes>
+  <nodes />
   <notes />
-  <edges>
-    <edge source="it.polimi.ingsw.model.CartaLeaderProduttiva" target="it.polimi.ingsw.model.CartaLeader">
-      <point x="0.0" y="-38.0" />
-      <point x="882.5" y="217.0" />
-      <point x="1133.0" y="217.0" />
-      <point x="-44.5" y="93.5" />
-    </edge>
-    <edge source="it.polimi.ingsw.model.CartaLeaderDeposito" target="it.polimi.ingsw.model.CartaLeader">
-      <point x="0.0" y="-38.0" />
-      <point x="286.5" y="207.0" />
-      <point x="1044.0" y="207.0" />
-      <point x="-133.5" y="93.5" />
-    </edge>
-    <edge source="it.polimi.ingsw.model.CartaLeaderColor" target="it.polimi.ingsw.model.CartaLeader">
-      <point x="0.0" y="-38.0" />
-      <point x="2049.5" y="207.0" />
-      <point x="1311.0" y="207.0" />
-      <point x="133.5" y="93.5" />
-    </edge>
-    <edge source="it.polimi.ingsw.model.CartaLeaderSconto" target="it.polimi.ingsw.model.CartaLeader">
-      <point x="0.0" y="-38.0" />
-      <point x="1472.5" y="217.0" />
-      <point x="1222.0" y="217.0" />
-      <point x="44.5" y="93.5" />
-    </edge>
-  </edges>
-  <settings layout="Hierarchic Group" zoom="0.7824175824175822" x="2922.934504969737" y="714.3567105336222" />
-  <SelectedNodes>
-    <node>it.polimi.ingsw.model.TesseraPapale</node>
-  </SelectedNodes>
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="582.0" y="335.0" />
+  <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
     <Category>Methods</Category>
