@@ -10,8 +10,11 @@ public class Risorsa {
         this.tipo = tipo;
     }
 
-    @Override
-    public String toString() {
-        return tipo.toString();
+    public static Risorsa getInstance(TipoRisorsa tipoRisorsa){
+        return new Risorsa(tipoRisorsa);
+    }
+
+    public TipoRisorsa getTipo() {
+        return tipo;
     }
 }

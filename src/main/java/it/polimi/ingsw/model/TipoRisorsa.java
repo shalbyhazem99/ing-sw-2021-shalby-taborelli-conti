@@ -4,5 +4,6 @@ public enum TipoRisorsa {
     MONETE,
     PIETRE,
     SERVITORI,
-    SCUDI;
+    SCUDI,
+    FEDE;
 }
