@@ -19,4 +19,13 @@ public class Marble {
     public String toString() {
         return color.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Biglia)) {
+            return false;
+        }
+        Biglia c = (Biglia) obj;
+        return this.getColore().equals(c.getColore());
+    }
 }
