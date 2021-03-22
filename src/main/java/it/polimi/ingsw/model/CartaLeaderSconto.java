@@ -12,7 +12,7 @@ public class CartaLeaderSconto extends CartaLeader {
     }
 
     @Override
-    public boolean attiva(Giocatore giocatore) {
+    public boolean attiva(Player giocatore) {
         //TODO: ATTIVA se attivabile e sistema paramtro giocatore
         return false;
     }

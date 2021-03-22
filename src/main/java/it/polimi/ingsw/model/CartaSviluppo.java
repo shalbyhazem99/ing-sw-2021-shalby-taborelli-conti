@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
+//TODO: final tutti gli attributi
 public class CartaSviluppo {
     private LivelloCartaSviluppo livello;
     private TipologiaCartaSviluppo tipologia;
@@ -21,7 +22,7 @@ public class CartaSviluppo {
         return new CartaSviluppo(livello, tipologia, puntiVittoria, costi, potere);
     }
 
-    public boolean isBuyableFrom(Giocatore giocatore){
+    public boolean isBuyableFrom(Player giocatore){
         //TODO: CONTROLO SUI COSTI
         return false;
     }

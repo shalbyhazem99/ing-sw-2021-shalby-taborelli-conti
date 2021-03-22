@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 public abstract class CartaLeader {
     private boolean attiva;
-    private int puntiVittoria;
-    private java.util.ArrayList<CountRisorse> risorseRichieste;
-    private java.util.ArrayList<CarteSviluppoRichieste> carteSviluppoRichieste;
+    private final int puntiVittoria;
+    //private final TipoRisorsa tipoRisorsa;
+    private final ArrayList<CountRisorse> risorseRichieste; //todo: to remove
+    private final ArrayList<CarteSviluppoRichieste> carteSviluppoRichieste;
 
     public CartaLeader(int puntiVittoria, ArrayList<CountRisorse> risorseRichieste, ArrayList<CarteSviluppoRichieste> carteSviluppoRichieste) {
         this.puntiVittoria = puntiVittoria;
@@ -15,12 +16,12 @@ public abstract class CartaLeader {
         this.attiva=false;
     }
 
-    private boolean attivabile(Giocatore giocatore){
+    private boolean attivabile(Player player){
         //Todo: verificare se attivabile dal giocatore
         return false;
     }
 
-    public abstract boolean attiva(Giocatore gioctore);
+    public abstract boolean attiva(Player gioctore);
 
     public Boolean isAttiva(){
         return attiva;

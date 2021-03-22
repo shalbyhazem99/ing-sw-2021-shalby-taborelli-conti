@@ -1,24 +1,30 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Giocatore {
+public class Player implements Serializable {
     private int posizionePercorso;
-    private java.util.ArrayList<TesseraPapale> tesserePapali;
-    private java.util.ArrayList<CartaLeader> carteLeader;
-    private java.util.ArrayList<SpazioCarteSviluppo> spazioSviluppo;
-    private java.util.ArrayList<Deposito> depositiStandard;
+    private ArrayList<TesseraPapale> tesserePapali;
+    private ArrayList<CartaLeader> carteLeader;
+    private ArrayList<SpazioCarteSviluppo> spazioSviluppo;
+    private ArrayList<Deposito> depositiStandard;
     private ArrayList<Risorsa> forziere;
-    private java.util.ArrayList<Deposito> depositiAggiuntivi;
+    private ArrayList<Deposito> depositiAggiuntivi;
     private ArrayList<CountRisorse> sconti;
     private ArrayList<TipoRisorsa> strategieConversione;
     private ArrayList<PotereProduttivo> poteriAggiuntivi;
 
-    public static Giocatore generatePlayer(){
+    //todo: it has a power?
+    public static Player generatePlayer(){
         //TODO:genera n giocatore
         return null;
     }
 
+    public boolean buyable(CartaSviluppo cartaSviluppo){
+        //TODO: se comprabile dal giocatore
+        return false;
+    }
     public void procediPerorsoFede(int numPosizioni){
         //TODO: va avanti
     }

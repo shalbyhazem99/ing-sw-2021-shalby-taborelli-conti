@@ -11,7 +11,7 @@ public class CartaLeaderProduttiva extends CartaLeader {
         return new CartaLeaderProduttiva(puntiVittoria, risorseRichieste, carteSviluppoRichieste);
     }
     @Override
-    public boolean attiva(Giocatore giocatore) {
+    public boolean attiva(Player giocatore) {
         //TODO: ATTIVA se attivabile e sistema paramtro giocatore
         return false;
     }

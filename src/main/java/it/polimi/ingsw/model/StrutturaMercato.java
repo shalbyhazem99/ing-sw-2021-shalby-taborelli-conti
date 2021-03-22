@@ -48,6 +48,12 @@ public class StrutturaMercato {
         return new StrutturaMercato();
     }
 
+    /**
+     *
+     * @param mossa
+     * @param pos
+     * @return the number of white Marbles is 4 - count of the returned ArrayList
+     */
     public ArrayList<Risorsa> getResources(MOSSA mossa, int pos) {
         ArrayList<Biglia> temp;
         if (mossa == MOSSA.RIGA) {
@@ -62,7 +68,7 @@ public class StrutturaMercato {
                 .filter(elem -> elem.getColore() != ColoreBiglia.BIANCHE)
                 .map(elem -> Risorsa.getInstance(elem.getColore().equivalent))
                 .collect(Collectors.toList());
-        //the number of white Marbles is 4 - count of the returned ArrayList
+
     }
 
     /*public ArrayList<Risorsa> getResources(Integer row, Integer column) {
