@@ -1,21 +1,21 @@
 package it.polimi.ingsw.model;
 
-public class TesseraPapale {
-    private int punti;
-    private boolean abilitata;
+public class PopeTales {
+    private int points;
+    private boolean actvive;
 
-    public TesseraPapale(int punti) {
-        this.punti = punti;
-        this.abilitata = false;
+    public PopeTales(int points) {
+        this.points = points;
+        this.actvive = false;
     }
 
-    public static TesseraPapale getInstance(int punti){
-        return new TesseraPapale(punti);
+    public static PopeTales getInstance(int points){
+        return new PopeTales(points);
     }
 
     public void abilita(){
-        if(!abilitata)
-            abilitata=true;
+        if(!actvive)
+            actvive=true;
     }
 
 }

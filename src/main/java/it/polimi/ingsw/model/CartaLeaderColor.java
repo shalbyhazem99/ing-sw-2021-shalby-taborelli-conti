@@ -2,19 +2,18 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class CartaLeaderColor extends CartaLeader {
+public class LeaderCardColor extends CartaLeader {
 
-    public CartaLeaderColor(int puntiVittoria, ArrayList<CountRisorse> risorseRichieste, ArrayList<CarteSviluppoRichieste> carteSviluppoRichieste) {
-        super(puntiVittoria, risorseRichieste, carteSviluppoRichieste);
+    public LeaderCardColor(int victoryPoints, ArrayList<CountResources> neededResources, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
+        super(victoryPoints, neededResources, developmentCardNeeded);
     }
 
-    public static CartaLeaderColor getInstance(int puntiVittoria, ArrayList<CountRisorse> risorseRichieste, ArrayList<CarteSviluppoRichieste> carteSviluppoRichieste){
-        return new CartaLeaderColor(puntiVittoria, risorseRichieste, carteSviluppoRichieste);
+    public static LeaderCardColor getInstance(int victiryPoints, ArrayList<CountResources> neededResources, ArrayList<DevelopmentCardNeeded> developmentCardNeeded){
+        return new LeaderCardColor(victiryPoints, neededResources, developmentCardNeeded);
     }
 
-    @Override
-    public boolean attiva(Giocatore giocatore) {
-        //TODO: ATTIVA se attivabile e sistema paramtro giocatore
+    public boolean activate(Player player) {
+        //TODO: can activate and set the power to the player
         return false;
     }
 }

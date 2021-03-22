@@ -2,27 +2,27 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public abstract class CartaLeader {
-    private boolean attiva;
-    private int puntiVittoria;
-    private java.util.ArrayList<CountRisorse> risorseRichieste;
-    private java.util.ArrayList<CarteSviluppoRichieste> carteSviluppoRichieste;
+public abstract class LeaderCard {
+    private boolean active;
+    private int victoryPoints;
+    private java.util.ArrayList<CountResources> neededResources;
+    private java.util.ArrayList<DevelopmentCardNeeded> neededDevelopmentCard;
 
-    public CartaLeader(int puntiVittoria, ArrayList<CountRisorse> risorseRichieste, ArrayList<CarteSviluppoRichieste> carteSviluppoRichieste) {
-        this.puntiVittoria = puntiVittoria;
-        this.risorseRichieste = risorseRichieste;
-        this.carteSviluppoRichieste = carteSviluppoRichieste;
-        this.attiva=false;
+    public LeaderCard(int victoyPoints, ArrayList<CountResources> neededResources, ArrayList<DevelopmentCardNeeded> developmentCardNeed ) {
+        this.victoryPoints = victoyPoints;
+        this.neededResources = neededResources;
+        this.carteSviluppoRichieste = developmentCardNeed;
+        this.active=false;
     }
 
-    private boolean attivabile(Giocatore giocatore){
-        //Todo: verificare se attivabile dal giocatore
+    private boolean activable(Player player){
+        //Todo: check if the player can activate the card
         return false;
     }
 
-    public abstract boolean attiva(Giocatore gioctore);
+    public abstract boolean play(Player player);
 
-    public Boolean isAttiva(){
-        return attiva;
+    public Boolean isActive(){
+        return active;
     }
 }

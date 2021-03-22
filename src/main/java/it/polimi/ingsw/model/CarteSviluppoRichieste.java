@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-public class CarteSviluppoRichieste {
+public class DevelopmentCardNeeded {
     private int count;
-    private TipologiaCartaSviluppo tipologia;
-    private LivelloCartaSviluppo livello;
+    private TypeDevepmentCard type;
+    private LevelDevepmentCard livello;
 }

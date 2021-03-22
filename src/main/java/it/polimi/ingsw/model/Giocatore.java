@@ -2,32 +2,33 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Giocatore {
-    private int posizionePercorso;
-    private java.util.ArrayList<TesseraPapale> tesserePapali;
-    private java.util.ArrayList<CartaLeader> carteLeader;
-    private java.util.ArrayList<SpazioCarteSviluppo> spazioSviluppo;
-    private java.util.ArrayList<Deposito> depositiStandard;
-    private ArrayList<Risorsa> forziere;
-    private java.util.ArrayList<Deposito> depositiAggiuntivi;
-    private ArrayList<CountRisorse> sconti;
-    private ArrayList<TipoRisorsa> strategieConversione;
-    private ArrayList<PotereProduttivo> poteriAggiuntivi;
+public class Player {
+    private int locationPath;
+    private java.util.ArrayList<PopeTales> popeTales;
+    private java.util.ArrayList<LeaderCard> leaderCards;
+    private java.util.ArrayList<DevelopmentCardSpace> developmentCardSpaces;
+    private java.util.ArrayList<Resource> standardWarehouse;
+    private ArrayList<Resource> strongbox;
+    private java.util.ArrayList<Warehouse> additionalWarehouses;
+    private ArrayList<CountResources> descounts;
+    private ArrayList<ResourceType> strategyConversion;
+    private ArrayList<ProductivePower> additionalPower;
 
-    public static Giocatore generatePlayer(){
-        //TODO:genera n giocatore
+    public static Player generatePlayer(){
+        //TODO:create player n
         return null;
     }
 
-    public void procediPerorsoFede(int numPosizioni){
-        //TODO: va avanti
+    public void haedPopeFaith(int numberPosition){
+        //TODO: goes haed
     }
 
-    public Boolean addCartaSiluppo(CartaSviluppo cartaSviluppo){
-        //TODO: fare il controllo se i pò agiungere e aggiungerla. bisogna vedere come ricevere lo spazio sviluppo in cui provare ad aggiungerla
+    public Boolean addDevelopmentCard(DevelopmentCard developmentCard){
+        //TODO: check if he can or can't add the card.
+        //TODO: check how to get developmentcardSpace where u should add the card
         return false;
     }
-    public void addRisorsaForziere(Risorsa risorsa){
+    public void addResourceStrongbox(Resource resource){
         //TODO:Aahhiunge una risorsa al forziere
     }
 

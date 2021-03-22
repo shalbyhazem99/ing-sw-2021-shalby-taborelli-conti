@@ -1,22 +1,22 @@
 package it.polimi.ingsw.model;
 
-public class Biglia {
-    private ColoreBiglia colore;
+public class Marble {
+    private ColorMarble color;
 
-    public Biglia(ColoreBiglia colore) {
-        this.colore = colore;
+    public (ColorMarble color) {
+        this.color = color;
     }
 
-    public static Biglia getInstance(ColoreBiglia colore) {
-        return new Biglia(colore);
+    public static  getInstance(ColorMarble color) {
+        return new (color);
     }
 
-    public ColoreBiglia getColore() {
-        return colore;
+    public ColorMarble getColor() {
+        return color;
     }
 
     @Override
     public String toString() {
-        return colore.toString();
+        return color.toString();
     }
 }

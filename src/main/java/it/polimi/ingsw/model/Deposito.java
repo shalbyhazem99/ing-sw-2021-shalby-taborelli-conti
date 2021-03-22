@@ -2,24 +2,24 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Deposito {
-    private int spazioDisponibile;
-    private TipoRisorsa tipoRisorse;
-    private java.util.ArrayList<Risorsa> risorse;
+public class Warehouse {
+    private int availableSpace;
+    private ResourceType resourceType;
+    private java.util.ArrayList<Resource> resources;
 
-    public Deposito(int spazioDisponibile, TipoRisorsa tipoRisorse) {
-        this.spazioDisponibile = spazioDisponibile;
-        this.tipoRisorse = tipoRisorse;
-        this.risorse = new ArrayList<>();
+    public Warehouse(int availableSpace, ResourceType resourceType) {
+        this.availableSpace = availableSpace;
+        this.resourceType = resourceType;
+        this.resources = new ArrayList<>();
     }
 
-    public static Deposito getInstance(int spazioDisponibile, TipoRisorsa tipoRisorse){
-        return new Deposito(spazioDisponibile,tipoRisorse);
+    public static Warehouse getInstance(int availableSpace, ResourceType resourceType){
+        return new Warehouse(availableSpace,resourceType);
     }
-    public boolean addRisorsa(Risorsa risorsa){
-        //TODO: Aggiungi risorsa a deposito
+    public boolean addResource(Resource resource){
+        //TODO: Add resource to warehouse
         return false;
     }
 
-    //TODO: metodi per scambiare le risorse da un deposito all'altro
+    //TODO: methods to change th resources in the warehouses
 }

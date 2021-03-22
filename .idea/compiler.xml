@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ing-sw-2021-shalby-taborelli-conti" />
+        <module name="GC11" />
       </profile>
     </annotationProcessing>
   </component>

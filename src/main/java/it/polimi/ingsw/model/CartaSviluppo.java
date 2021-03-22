@@ -2,43 +2,43 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class CartaSviluppo {
-    private LivelloCartaSviluppo livello;
-    private TipologiaCartaSviluppo tipologia;
-    private int puntiVittoria;
-    private java.util.ArrayList<CountRisorse> costi;
-    private PotereProduttivo potere;
+public class DevelopmentCard {
+    private DevelopmentCardLevel level;
+    private DevelopmentCardType type;
+    private int victoryPoints;
+    private java.util.ArrayList<CountResources> costs;
+    private ProductionPower power;
 
-    public CartaSviluppo(LivelloCartaSviluppo livello, TipologiaCartaSviluppo tipologia, int puntiVittoria, ArrayList<CountRisorse> costi, PotereProduttivo potere) {
-        this.livello = livello;
-        this.tipologia = tipologia;
-        this.puntiVittoria = puntiVittoria;
-        this.costi = costi;
-        this.potere = potere;
+    public DevelopmentCard(DevelopmentCardLevel level, DevelopmentCardType type, int victoryPoints, ArrayList<CountResources> costs, ProductionPower power) {
+        this.level = level;
+        this.type = type;
+        this.victoryPoints = victoryPoints;
+        this.costs = costs;
+        this.power = power;
     }
 
-    public static CartaSviluppo getInstance(LivelloCartaSviluppo livello, TipologiaCartaSviluppo tipologia, int puntiVittoria, ArrayList<CountRisorse> costi, PotereProduttivo potere) {
-        return new CartaSviluppo(livello, tipologia, puntiVittoria, costi, potere);
+    public static DevelopmentCard getInstance(DevelopmentCardLevel level, DevelopmentCardType type, int victoryPoints, ArrayList<CountResources> costs, ProductionPower power) {
+        return new DevelopmentCard(level, type, victoryPoints, costs, power);
     }
 
-    public boolean isBuyableFrom(Giocatore giocatore){
-        //TODO: CONTROLO SUI COSTI
+    public boolean isBuyableFrom(Playeratore player){
+        //TODO: check costs
         return false;
     }
 
-    public LivelloCartaSviluppo getLivello() {
-        return livello;
+    public DevelopmentCardLevel getLevel() {
+        return level;
     }
 
-    public TipologiaCartaSviluppo getTipologia() {
-        return tipologia;
+    public DevelopmentCardType getType() {
+        return type;
     }
 
-    public int getPuntiVittoria() {
-        return puntiVittoria;
+    public int getVictoryPoints() {
+        return victoryPoints;
     }
 
-    public PotereProduttivo getPotere() {
-        return potere;
+    public ProductionPower getPower() {
+        return power;
     }
 }
