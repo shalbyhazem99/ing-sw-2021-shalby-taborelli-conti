@@ -6,6 +6,7 @@ public class Biglia {
     public Biglia(ColoreBiglia colore) {
         this.colore = colore;
     }
+    
 
     public ColoreBiglia getColore() {
         return colore;
