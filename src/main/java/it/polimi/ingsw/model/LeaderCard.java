@@ -39,10 +39,10 @@ public abstract class LeaderCard implements Serializable {
     protected boolean isActivable(Player player){
         for (DevelopmentCardNeeded dev:developmentCardNeeded){
             //todo:maybe only the type must be verified
-            if (dev.getCount() < player.getDevelopmentCard().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
+            if (dev.getCount() < player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
                 return false;
         }
-        return player.isActivatable(resourcesNeeded);
+        return player.isActivable(resourcesNeeded);
     }
 
     /**

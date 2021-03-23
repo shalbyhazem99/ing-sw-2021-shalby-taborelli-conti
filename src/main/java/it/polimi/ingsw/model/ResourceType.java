@@ -7,5 +7,6 @@ public enum ResourceType implements Serializable {
     STONE,
     SERVANT,
     SHIELD,
-    FAITH;
+    FAITH,
+    ANY;
 }

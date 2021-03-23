@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utils.Utils;
+
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,6 +79,21 @@ public class Player implements Serializable {
         return (ArrayList<ResourcesCount>)discounts.clone();
     }
 
+    public ArrayList<DevelopmentCard> getDevelopmentCards(){
+        return null;
+    }
+    public boolean hasDiscount(){
+        return getDiscounts().size()>0;
+    }
+
+    public boolean isActivable(ArrayList<ResourcesCount> resourcesNeeded){
+        ArrayList<ResourcesCount> resNeeded = resourcesNeeded;
+        if(hasDiscount()){
+            resNeeded = Utils.applyDiscount(resourcesNeeded,getDiscounts());
+        }
+        return Utils.compareResources(getResources(),resNeeded);
+    }
+
     /**
      *
      * @return a shallow copy of the warehousestandar's {@link ArrayList} of {@link Warehouse} of the {@link Player}
@@ -102,40 +118,19 @@ public class Player implements Serializable {
         return (ArrayList<Warehouse>)warehousesAdditional.clone();
     }
 
-    //TODO: to remove main
-    public static void main (String [] args)
-    {
-        //warehouse, resource, warehouse
-        ArrayList<Resource> res = new ArrayList<>();
-        res.add(new Resource(ResourceType.COIN));
-        res.add(new Resource(ResourceType.COIN));
-        res.add(new Resource(ResourceType.SERVANT));
-        Warehouse w1 = new Warehouse(1,null,res); //2 monete 1 servo
-        res.add(new Resource(ResourceType.SERVANT));
-        Warehouse w2 = new Warehouse(1,null,res); //2 monete 2 servo
-        res.add(new Resource(ResourceType.SHIELD));
-        ArrayList<Warehouse> tre_depositi_standard = new ArrayList<>(); //struttura che contiene i due depositi sopra
-        tre_depositi_standard.add(w1);
-        tre_depositi_standard.add(w2);
-        Warehouse wadditional = new Warehouse(1,null,res); //2 monete 2 servo 1 scudo
-        ArrayList<Warehouse> lista_additional = new ArrayList<>();
-        lista_additional.add(wadditional);
-        res.remove(0);
-        res.remove(0);
-        res.add(new Resource(ResourceType.FAITH));
-        res.add(new Resource(ResourceType.FAITH));
-        res.add(new Resource(ResourceType.FAITH));
-        res.add(new Resource(ResourceType.FAITH));
-        res.add(new Resource(ResourceType.FAITH));
-        res.add(new Resource(ResourceType.FAITH)); //res sarebbe l'arraylist di risorse ovvero il forziere semplice e illimitato
-        Player p = new Player(tre_depositi_standard,lista_additional,(ArrayList<Resource>)res.clone());
-        ArrayList<Resource> risorsetotali = p.getResources();
-        //2 monete 1 servo
-        //2 monete 2 servo
-        //2 monete 2 servo 1 scudo
-        //0 monete 2 servo 1 scudo 6 fede
-        //totale
-        //6 monete 7 servo 2 scudo 6 fede
-        //risorse totale = 21
+    public void addDiscount(ResourcesCount resourcesCount){
+
+    }
+
+    public void addPower(ProductivePower productivePower){
+
+    }
+
+    public void addConversionStrategies(ResourceType resourceType){
+
+    }
+
+    public void addAdditionalWarehouse(Warehouse warehouse){
+
     }
 }

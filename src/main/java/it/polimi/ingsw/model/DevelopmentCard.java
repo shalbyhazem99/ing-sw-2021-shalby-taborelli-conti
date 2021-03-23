@@ -77,17 +77,5 @@ public class DevelopmentCard implements Serializable {
     public ArrayList<ResourcesCount> getCosts() {
         return (ArrayList<ResourcesCount>) costs.clone();
     }
-    //TODO: remove main
-    public static void main (String [] args)
-    {
-        ArrayList<ResourcesCount> t = new ArrayList<>();
-        t.add(new ResourcesCount(1,ResourceType.COIN));
-        t.add(new ResourcesCount(4,ResourceType.COIN));
-        DevelopmentCard d = new DevelopmentCard(DevelopmentCardLevel.FIRST,DevelopmentCardType.BLUE,1,t,null);
-        ArrayList<ResourcesCount> t1 = d.getCosts();
-        t1.remove(1);
-        System.out.println(t.size());
-        System.out.println(t1.size());
-        System.out.println(d.getCosts().size());
-    }
+
 }
