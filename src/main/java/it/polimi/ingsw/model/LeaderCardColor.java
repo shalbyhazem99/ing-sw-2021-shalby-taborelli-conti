@@ -44,4 +44,24 @@ public class LeaderCardColor extends LeaderCard implements Serializable {
         }
         return false;
     }
+
+    /**
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    /**
+     * clone {@link LeaderCardColor}
+     *
+     * @return a clone of {@link LeaderCardColor}
+     * @throws CloneNotSupportedException
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone());
+    }
 }

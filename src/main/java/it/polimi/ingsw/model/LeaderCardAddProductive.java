@@ -52,4 +52,24 @@ public class LeaderCardAddProductive extends LeaderCard implements Serializable 
         }
         return false;
     }
+
+    /**
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    /**
+     * clone {@link LeaderCardAddProductive}
+     *
+     * @return a clone of {@link LeaderCardAddProductive}
+     * @throws CloneNotSupportedException
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone());
+    }
 }
