@@ -21,6 +21,14 @@ public class Warehouse implements Serializable {
         //TODO: Aggiungi risorsa a deposito
         return false;
     }
+
+    public int getSpaceAvailable() {
+        return spaceAvailable;
+    }
+
+    public ResourceType getResourceType() {
+        return resourceType;
+    }
     //lo implementa tabo
 
     public ArrayList<Resource> getResources() {
