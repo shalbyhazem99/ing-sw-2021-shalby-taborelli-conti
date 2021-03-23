@@ -13,12 +13,6 @@ public class Warehouse implements Serializable {
         this.resourceType = resourceType;
         this.resources = new ArrayList<>();
     }
-    //TODO: va rimosso
-    public Warehouse(int spaceAvailable, ResourceType resourceType,ArrayList<Resource> r) {
-        this.spaceAvailable = spaceAvailable;
-        this.resourceType = resourceType;
-        this.resources = (ArrayList<Resource>) r.clone();
-    }
 
     public static Warehouse getInstance(int spaceAvailable, ResourceType resourceType){
         return new Warehouse(spaceAvailable,resourceType);
@@ -35,4 +29,6 @@ public class Warehouse implements Serializable {
 
 
     //TODO: metodi per scambiare le risorse da un deposito all'altro
+
+    //TODO: Sposta , aggiungi risorse, preleva risorse
 }

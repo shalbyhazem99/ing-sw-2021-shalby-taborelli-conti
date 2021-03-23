@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.utils.Utils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -37,12 +35,17 @@ public abstract class LeaderCard implements Serializable {
      * @return true if tha power is activable, false otherwise
      */
     protected boolean isActivable(Player player){
-        for (DevelopmentCardNeeded dev:developmentCardNeeded){
-            //todo:maybe only the type must be verified
-            if (dev.getCount() < player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
-                return false;
+        if(developmentCardNeeded !=null) {
+            for (DevelopmentCardNeeded dev : developmentCardNeeded) {
+                //todo:maybe only the type must be verified
+                if (dev.getCount() < player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
+                    return false;
+            }
         }
-        return player.isActivable(resourcesNeeded);
+        if(resourcesNeeded != null) { //for future development we decide to not use else
+            return player.isActionable(resourcesNeeded);
+        }
+        return true;
     }
 
     /**

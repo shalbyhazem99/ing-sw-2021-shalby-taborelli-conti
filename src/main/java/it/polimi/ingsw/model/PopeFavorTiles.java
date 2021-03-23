@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class PopeFavorTiles implements Serializable {
     private final int points;

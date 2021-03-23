@@ -11,6 +11,12 @@ import java.util.ArrayList;
  */
 public class Utils {
     /**
+     * the Faith path length
+     */
+    public static int FAITH_LENGTH = 20;
+
+
+    /**
      * compare two {@link ArrayList} to see if the first include the second one
      *
      * @param a the first {@link ArrayList}
