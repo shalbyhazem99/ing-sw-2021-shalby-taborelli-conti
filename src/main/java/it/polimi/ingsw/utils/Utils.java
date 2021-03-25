@@ -13,7 +13,12 @@ public class Utils {
     /**
      * the Faith path length
      */
-    public static int FAITH_LENGTH = 20;
+    public static final int FAITH_LENGTH = 20;
+    public static final int DEV_CARD_ROW_NUMBER=4;
+    public static final int DEV_CARD_COL_NUMBER=4;
+    public static final int COLUMNNUMBER = 4;
+    public static final int ROWNUMBER = 3;
+
 
 
     /**

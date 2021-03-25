@@ -1,17 +1,15 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utils.Utils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class MarketBoard implements Serializable {
-    private static final int COLUMNNUMBER = 4;
-    private static final int ROWNUMBER = 3;
-
-    private Marble[][] MarketMatrix; //[row][column]
+    private Marble[][] marketMatrix; //[row][column]
     private Marble marbleAggiuntiva;
-
     private void generateMarblesMatrix() {
         ArrayList<Marble> lista = new ArrayList<>();
         //Marbles : 4 white, 2 blue, 2 grey, 2 yellow, 2 purple, 1 red
@@ -30,9 +28,9 @@ public class MarketBoard implements Serializable {
         Collections.shuffle(lista);
         //fill the matrix
         int count = 0;
-        for (int row = 0; row < ROWNUMBER; row++) {
-            for (int column = 0; column < COLUMNNUMBER; column++) {
-                MarketMatrix[row][column] = lista.get(count);
+        for (int row = 0; row < Utils.ROWNUMBER; row++) {
+            for (int column = 0; column < Utils.COLUMNNUMBER; column++) {
+                marketMatrix[row][column] = lista.get(count);
                 count++;
             }
         }
@@ -40,6 +38,7 @@ public class MarketBoard implements Serializable {
     }
 
     public MarketBoard() {
+        marketMatrix = new Marble[Utils.ROWNUMBER][Utils.COLUMNNUMBER];
         generateMarblesMatrix();
     }
 
@@ -90,8 +89,8 @@ public class MarketBoard implements Serializable {
      */
     public ArrayList<Marble> getColumn(int column) {
         ArrayList<Marble> temp = new ArrayList<>();
-        for (int r = 0; r < ROWNUMBER; r++) {
-            temp.add(MarketMatrix[r][column]);
+        for (int r = 0; r < Utils.ROWNUMBER; r++) {
+            temp.add(marketMatrix[r][column]);
         }
         return temp;
     }
@@ -102,16 +101,16 @@ public class MarketBoard implements Serializable {
      */
     public ArrayList<Marble> getRow(int row) {
         ArrayList<Marble> temp = new ArrayList<>();
-        for (int c = 0; c < COLUMNNUMBER; c++) {
-            temp.add(MarketMatrix[row][c]);
+        for (int c = 0; c < Utils.COLUMNNUMBER; c++) {
+            temp.add(marketMatrix[row][c]);
         }
         return temp;
     }
 
     public void print() {
-        for (int r = 0; r < ROWNUMBER; r++) {
-            for (int c = 0; c < COLUMNNUMBER; c++) {
-                System.out.print("|" + MarketMatrix[r][c].toString() + "|");
+        for (int r = 0; r < Utils.ROWNUMBER; r++) {
+            for (int c = 0; c < Utils.COLUMNNUMBER; c++) {
+                System.out.print("|" + marketMatrix[r][c].toString() + "|");
             }
             System.out.println();
         }
@@ -124,11 +123,11 @@ public class MarketBoard implements Serializable {
      */
     private void slideRow(int row) {
         Marble oldAdditionalMurble = marbleAggiuntiva;
-        marbleAggiuntiva = MarketMatrix[row][0]; //the murble in the left position of the row will be the next additionalmurble
-        MarketMatrix[row][0] = MarketMatrix[row][1]; //slide to left
-        MarketMatrix[row][1] = MarketMatrix[row][2]; //slide to left
-        MarketMatrix[row][2] = MarketMatrix[row][3]; //slide to left
-        MarketMatrix[row][3] = oldAdditionalMurble; //the old additional murble will be the murble in the right position of the row
+        marbleAggiuntiva = marketMatrix[row][0]; //the murble in the left position of the row will be the next additionalmurble
+        marketMatrix[row][0] = marketMatrix[row][1]; //slide to left
+        marketMatrix[row][1] = marketMatrix[row][2]; //slide to left
+        marketMatrix[row][2] = marketMatrix[row][3]; //slide to left
+        marketMatrix[row][3] = oldAdditionalMurble; //the old additional murble will be the murble in the right position of the row
     }
 
     /*
@@ -136,10 +135,10 @@ public class MarketBoard implements Serializable {
      */
     private void slideColumn(int column) {
         Marble oldAdditionalMurble = marbleAggiuntiva;
-        marbleAggiuntiva = MarketMatrix[0][column]; //the murble in the top position of the column will be the next additionalmurble
-        MarketMatrix[0][column] = MarketMatrix[1][column]; //slide top
-        MarketMatrix[1][column] = MarketMatrix[2][column]; //slide top
-        MarketMatrix[2][column] = oldAdditionalMurble;  //the old additional murble will be the murble in the bottom position of the column
+        marbleAggiuntiva = marketMatrix[0][column]; //the murble in the top position of the column will be the next additionalmurble
+        marketMatrix[0][column] = marketMatrix[1][column]; //slide top
+        marketMatrix[1][column] = marketMatrix[2][column]; //slide top
+        marketMatrix[2][column] = oldAdditionalMurble;  //the old additional murble will be the murble in the bottom position of the column
     }
 
    /* public static void main(String[] args) {
@@ -156,4 +155,9 @@ public class MarketBoard implements Serializable {
         COLONNA;
     }
 
+    //TODO: implementare
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
