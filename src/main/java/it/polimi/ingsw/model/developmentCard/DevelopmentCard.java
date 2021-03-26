@@ -1,4 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.developmentCard;
+
+import it.polimi.ingsw.model.ProductivePower;
+import it.polimi.ingsw.model.ResourcesCount;
 
 import java.io.Serializable;
 import java.util.ArrayList;

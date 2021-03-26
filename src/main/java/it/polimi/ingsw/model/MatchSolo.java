@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+
 import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;

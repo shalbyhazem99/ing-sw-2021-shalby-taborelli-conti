@@ -1,4 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.leaderCard;
+
+import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
 
 import java.io.Serializable;
 import java.util.ArrayList;

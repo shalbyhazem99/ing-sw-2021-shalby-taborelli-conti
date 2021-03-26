@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+
 import java.io.Serializable;
 
 public class DamageCounterAction implements Serializable {

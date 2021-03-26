@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.model.market.MarketBoard;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.FileOutputStream;

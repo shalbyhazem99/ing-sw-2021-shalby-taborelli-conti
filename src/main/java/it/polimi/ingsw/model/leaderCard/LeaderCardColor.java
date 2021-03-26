@@ -1,4 +1,9 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.leaderCard;
+
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.ResourcesCount;
 
 import java.io.Serializable;
 import java.util.ArrayList;

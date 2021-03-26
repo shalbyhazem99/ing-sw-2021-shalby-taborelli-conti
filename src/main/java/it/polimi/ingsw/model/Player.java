@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
@@ -231,19 +234,19 @@ public class Player implements Serializable {
     }
 
     //setter Leader Card
-    protected void addDiscount(ResourcesCount resourcesCount) {
+    public void addDiscount(ResourcesCount resourcesCount) {
         discounts.add(resourcesCount);
     }
 
-    protected void addPower(ProductivePower productivePower) {
+    public void addPower(ProductivePower productivePower) {
         addedPower.add(productivePower);
     }
 
-    protected void addConversionStrategies(ResourceType resourceType) {
+    public void addConversionStrategies(ResourceType resourceType) {
         conversionStrategies.add(resourceType);
     }
 
-    protected void addAdditionalWarehouse(Warehouse warehouse) {
+    public void addAdditionalWarehouse(Warehouse warehouse) {
         warehousesAdditional.add(warehouse);
     }
 }

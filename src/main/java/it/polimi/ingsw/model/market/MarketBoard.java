@@ -1,5 +1,6 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.market;
 
+import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;

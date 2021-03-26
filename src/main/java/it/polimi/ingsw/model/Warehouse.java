@@ -13,10 +13,22 @@ public class Warehouse implements Serializable {
      * @param spaceAvailable it's the amount of resources that a player can store
      * @param resourceType it's the type of the resource that can be stored inside
      */
-    public Warehouse(int spaceAvailable, ResourceType resourceType, int numberSpace) {
+    public Warehouse(int spaceAvailable, ResourceType resourceType) {
         this.spaceAvailable = spaceAvailable;
         this.resourceType = resourceType;
         this.resources = new ArrayList<>();
+    }
+
+    public ResourceType getResourceType() {
+        return resourceType;
+    }
+
+    public int getSpaceAvailable() {
+        return spaceAvailable;
+    }
+
+    public ArrayList<Resource> getResources() {
+        return resources;
     }
 
     /**
@@ -25,8 +37,8 @@ public class Warehouse implements Serializable {
      * @param resourceType it's the type of the resource that can be stored inside
      * @return the new warehouse obj created
      */
-    public static Warehouse getInstance(int spaceAvailable, ResourceType resourceType, int numberSpace){
-        return new Warehouse(spaceAvailable,resourceType, numberSpace);
+    public static Warehouse getInstance(int spaceAvailable, ResourceType resourceType){
+        return new Warehouse(spaceAvailable,resourceType);
     }
 
     /**
