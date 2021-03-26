@@ -35,7 +35,7 @@ public class Warehouse implements Serializable {
      * @return a boolean state if it works correctly
      */
     public boolean addResource(Resource resource){
-        if (resources.size() >= 0){
+        if (resources.size() > 0){
             resources.add(resource);
             spaceAvailable=spaceAvailable-1;
         }
@@ -65,11 +65,37 @@ public class Warehouse implements Serializable {
      * @param donator is the other warehouse that player wants to swap
      * @return true when it has finished to work
      */
+
+    //Check the behavioral of the warehouses in view mode when something is changed
     public boolean changeResources (Warehouse donator){
 
         int temp = donator.spaceAvailable;
         donator.changeAvailability(this.spaceAvailable);
         this.spaceAvailable=temp;
+
+        return true;
+    }
+
+    /**
+     *
+     * @param resourcesCount object of the items I wanted to remove
+     * @return if the method worked correctly
+     */
+    public boolean getResources(ResourcesCount resourcesCount) {
+
+        if(resourcesCount.getType()!= resourceType)
+        {
+            return false;
+        }
+        if (resourcesCount.getCount()> resources.size()){
+            return false;
+        }
+        else {
+            for (int i=0; i<resourcesCount.getCount(); i++)
+            {
+                if(resources.remove(1)!=null);
+            }
+        }
 
         return true;
     }
