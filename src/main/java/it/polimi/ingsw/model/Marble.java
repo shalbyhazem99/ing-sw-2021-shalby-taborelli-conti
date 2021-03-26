@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import java.io.Serializable;
 
 public class Marble implements Serializable {
-    private MarbleColor color;
+    private final MarbleColor color;
 
     public Marble(MarbleColor color) {
         this.color = color;

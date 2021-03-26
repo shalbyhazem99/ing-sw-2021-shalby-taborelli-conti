@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @generated
  */
 public class Resource implements Serializable {
-    private ResourceType type;
+    private final ResourceType type;
     public Resource(ResourceType type) {
         this.type = type;
     }
@@ -19,4 +19,6 @@ public class Resource implements Serializable {
     public ResourceType getType() {
         return type;
     }
+
+    //TODO: Tostring serve?
 }
