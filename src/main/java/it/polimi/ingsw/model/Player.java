@@ -58,9 +58,7 @@ public class Player implements Serializable {
                 new ArrayList<>(Arrays.asList(Resource.getInstance(ResourceType.ANY))))));
     }
 
-    //TODO: can activate a set of productive power to see if they could be activated
     //TODO: production
-    //TODO: add to warehouseMethod;
     /**
      * move the Faith Marker Ahead
      *
@@ -187,6 +185,49 @@ public class Player implements Serializable {
 
     public void addResourceToStrongBox(Resource resource) {
         strongBox.add(resource);
+    }
+    public void addResourceToStrongBox(ArrayList<Resource> resources) {
+        strongBox.addAll(resources);
+    }
+
+    public boolean addResourceToWarehouseAdditional(Resource resource, int index){
+        if(index>warehousesAdditional.size())
+            return false;
+        if(!resource.getType().equals(warehousesAdditional.get(index).getResourceType()) || warehousesAdditional.get(index).getSpaceAvailable()< warehousesAdditional.get(index).getResources().size()+1)
+            return false;
+        warehousesAdditional.get(index).addResource(resource);
+        return true;
+    }
+
+    public boolean addResourceToWarehouseAdditional(ArrayList<Resource> resources, int index){
+        for (Resource resource:resources){
+            if(!addResourceToWarehouseAdditional(resource,index))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean addResourceToWarehouseStandard(Resource resource, int index){
+        if(index>warehousesStandard.size())
+            return false;
+        if(!resource.getType().equals(warehousesStandard.get(index).getResourceType()) || warehousesAdditional.get(index).getSpaceAvailable()< warehousesAdditional.get(index).getResources().size()+1)
+            return false;
+        //if there are other warehouses with the same type of card
+        if(0 <warehousesStandard.stream()
+                .filter(elem-> !elem.equals(warehousesStandard.get(index)) &&
+                        elem.getResourceType().equals(warehousesStandard.get(index).getResourceType()))
+                .count())
+            return false;
+        warehousesAdditional.get(index).addResource(resource);
+        return true;
+    }
+
+    public boolean addResourceToWarehouseStandard(ArrayList<Resource> resources, int index){
+        for (Resource resource:resources){
+            if(!addResourceToWarehouseStandard(resource,index))
+                return false;
+        }
+        return true;
     }
 
     //setter Leader Card
