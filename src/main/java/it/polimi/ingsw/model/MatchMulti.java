@@ -38,14 +38,4 @@ public class MatchMulti extends Match implements Serializable {
         this.posInkwell = (int) (Math.random() * (0 - getPlayers().size())) + getPlayers().size();
         return this.posInkwell;
     }
-
-    public static void main (String [] args)
-    {
-        MatchMulti m = new MatchMulti(3);
-        System.out.println(m.getPlayers().size());
-        Stack<String> s = new Stack<>();
-        s.push("a");
-        s.pop();
-        System.out.println(s.pop().toString());
-    }
 }

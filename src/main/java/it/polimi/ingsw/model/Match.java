@@ -127,4 +127,9 @@ public abstract class Match implements Serializable {
         }
         return true;
     }
+
+    public void nextRound(){
+        //TODO: go ahead in the round
+        //TODO: serialize
+    }
 }
