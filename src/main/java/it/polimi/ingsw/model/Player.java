@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Player implements Serializable {
+    private String name;
     private int posFaithMarker;
     private ArrayList<PopeFavorTiles> popeFavorTiles;
     private ArrayList<LeaderCard> leaderCards;
@@ -23,7 +24,8 @@ public class Player implements Serializable {
     private ArrayList<ResourceType> conversionStrategies;
     private ArrayList<ProductivePower> addedPower;
 
-    public Player() {
+    public Player(String name) {
+        this.name=name;
         popeFavorTiles = generatePopeFavorTiles();
         leaderCards = new ArrayList<>();
         developmentCardSpaces = new ArrayList<>();
@@ -35,8 +37,11 @@ public class Player implements Serializable {
         addedPower = generatePower();
     }
 
+    public static Player getInstance(String name) {
+        return new Player(name);
+    }
     public static Player getInstance() {
-        return new Player();
+        return new Player("unknown");
     }
 
     public static ArrayList<PopeFavorTiles> generatePopeFavorTiles() {

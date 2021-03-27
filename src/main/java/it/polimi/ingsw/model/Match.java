@@ -1,8 +1,15 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.move.response.MoveResponse;
+import it.polimi.ingsw.exceptions.NotEnoughResources;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.model.market.MarketBoard;
+import it.polimi.ingsw.model.market.MoveType;
+import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.utils.FileReader;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.FileOutputStream;
@@ -12,26 +19,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
-public abstract class Match implements Serializable {
-    /*private int posInkwell; //MULTI utile solo per indentificare quale tra i vari player è il primo giocatore
-    private ArrayList<Player> players; //ENTRAMBI
-    private ArrayList<LeaderCard> leaderCards; //ENTRAMBI
-    private Stack<DevelopmentCard>[][] DevelopmentCards; //ENTRAMBI
-    private MarketBoard marketBoard; //ENTRAMBI
-    private ArrayList<ActionToken> actionTokens; //SOLO
-    private boolean solo; //RIMOSSA
-    private int posBlackCross; //SOLO
-
-    public Match(boolean solo) {
-        this.solo = solo;
-    }
-
-    public void buyCard(Player player, DevelopmentCardType developmentCardType, int livello, int posSpazio){
-        //todo:add card to the palyer
-    }*/
-    /**
-     * Abstract class containing the attributes and the methods shared by MatchSolo and MatchMulti
-     */
+/**
+ * Abstract class containing the attributes and the methods shared by MatchSolo and MatchMulti
+ */
+public abstract class Match extends Observable<MoveResponse> implements Serializable {
     protected ArrayList<Player> players;
     protected ArrayList<LeaderCard> leaderCards;
     protected Stack<DevelopmentCard>[][] developmentCards;
@@ -48,9 +39,9 @@ public abstract class Match implements Serializable {
         {
             players.add(null);
         }
-        leaderCards = new ArrayList<>();
-        developmentCards = new Stack[Utils.DEV_CARD_ROW_NUMBER][Utils.DEV_CARD_COL_NUMBER];
-        marketBoard = new MarketBoard();
+        leaderCards = FileReader.readLeaderCard();
+        developmentCards = FileReader.readDevelopmentCards();
+        marketBoard = MarketBoard.getInstance();
     }
 
     /**
@@ -134,5 +125,25 @@ public abstract class Match implements Serializable {
     public void nextRound(){
         //TODO: go ahead in the round
         //TODO: serialize
+    }
+
+    public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level) throws NotEnoughResources {
+        //todo: success of failure response notify();
+    }
+
+    public void discardLeaderCard(LeaderCard leaderCard) {
+    }
+
+    public void enableLeaderCard(LeaderCard leaderCard) throws NotEnoughResources {
+    }
+
+    public void enableProductionMove(ArrayList<ProductivePower> productivePowers) throws NotEnoughResources {
+    }
+
+    public void marketInteraction(MoveType moveType, int pos) {
+    }
+
+    public void updateTurn(){
+
     }
 }
