@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.controller.move.response.MoveResponse;
+import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;

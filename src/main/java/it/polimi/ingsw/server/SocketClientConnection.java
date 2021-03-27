@@ -84,7 +84,8 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
             String name = (String) in.readObject();
             if(isFirstPlayer){
                 send("You are the first. how many player do you want?");
-                numOfPlayer = in.readInt();
+                numOfPlayer = Integer.parseInt((String) in.readObject());
+                send("match created!\n");
                 server.lobby(this, name,numOfPlayer);
             }else {
                 server.lobby(this, name);
