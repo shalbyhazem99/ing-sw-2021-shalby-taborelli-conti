@@ -7,6 +7,18 @@ public class DevelopmentCardNeeded implements Serializable {
     private DevelopmentCardType type;
     private DevelopmentCardLevel level;
 
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public void setType(DevelopmentCardType type) {
+        this.type = type;
+    }
+
+    public void setLevel(DevelopmentCardLevel level) {
+        this.level = level;
+    }
+
     public int getCount() {
         return count;
     }

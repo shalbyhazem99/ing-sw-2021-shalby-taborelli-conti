@@ -14,6 +14,7 @@ public class DevelopmentCard implements Serializable {
     private ArrayList<ResourcesCount> costs;
     private final ProductivePower powers;
 
+
     /**
      *
      * @param level {@link DevelopmentCardLevel} can be 0,1,2
@@ -29,6 +30,7 @@ public class DevelopmentCard implements Serializable {
         this.costs = costs;
         this.powers = powers;
     }
+
     /**
      *
      * @param level {@link DevelopmentCardLevel} can be 0,1,2
