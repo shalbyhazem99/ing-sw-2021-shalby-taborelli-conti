@@ -17,6 +17,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.io.IOException;
 
+// todo: add the link to image
 
 
 public class DevelopmentCard2JSON {

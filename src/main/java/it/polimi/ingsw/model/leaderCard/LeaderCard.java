@@ -16,6 +16,7 @@ public abstract class LeaderCard implements Serializable {
     //requirements
     protected final ArrayList<ResourcesCount> resourcesNeeded;
     protected final ArrayList<DevelopmentCardNeeded> developmentCardNeeded;
+    protected final String image;
 
     /**
      * constructor of {@link LeaderCard}
@@ -23,12 +24,14 @@ public abstract class LeaderCard implements Serializable {
      * @param resourceTypeRelated the {@link ResourceType} that is associated to the {@link LeaderCard} power
      * @param resourcesNeeded an {@link ArrayList} of the {@link ResourcesCount} needed to activate the {@link LeaderCard} power
      * @param developmentCardNeeded an {@link ArrayList} of the {@link DevelopmentCardNeeded} to activate the {@link LeaderCard} power
+     * @param image
      */
-    public LeaderCard(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
+    public LeaderCard(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded, String image) {
         this.points = points;
         this.resourceTypeRelated = resourceTypeRelated;
         this.resourcesNeeded = resourcesNeeded;
         this.developmentCardNeeded = developmentCardNeeded;
+        this.image = image;
         this.active=false;
     }
 

@@ -13,22 +13,24 @@ public class DevelopmentCard implements Serializable {
     private final int equivalentPoint;
     private ArrayList<ResourcesCount> costs;
     private final ProductivePower powers;
+    private final String image;
 
 
     /**
-     *
-     * @param level {@link DevelopmentCardLevel} can be 0,1,2
+     *  @param level {@link DevelopmentCardLevel} can be 0,1,2
      * @param type {@link DevelopmentCardType} can be green,blue,yellow,red
      * @param equivalentPoint point to be considered at the end of the game
      * @param costs {@link ArrayList} of {@link ResourcesCount} representing how much resources a player has to pay in order to buy the card
      * @param powers {@link ArrayList} of {@link ProductivePower} representing how the card can convert resources
+     * @param image
      */
-    public DevelopmentCard(DevelopmentCardLevel level, DevelopmentCardType type, int equivalentPoint, ArrayList<ResourcesCount> costs, ProductivePower powers) {
+    public DevelopmentCard(DevelopmentCardLevel level, DevelopmentCardType type, int equivalentPoint, ArrayList<ResourcesCount> costs, ProductivePower powers, String image) {
         this.level = level;
         this.type = type;
         this.equivalentPoint = equivalentPoint;
         this.costs = costs;
         this.powers = powers;
+        this.image = image;
     }
 
     /**
@@ -38,9 +40,10 @@ public class DevelopmentCard implements Serializable {
      * @param equivalentPoint point to be considered at the end of the game
      * @param costs {@link ArrayList} of {@link ResourcesCount} representing how much resources a player has to pay in order to buy the card
      * @param powers {@link ArrayList} of {@link ProductivePower} representing how the card can convert resources
+     * @param image
      */
-    public static DevelopmentCard getInstance(DevelopmentCardLevel level, DevelopmentCardType type, int equivalentPoint, ArrayList<ResourcesCount> costs, ProductivePower powers) {
-        return new DevelopmentCard(level, type, equivalentPoint, costs, powers);
+    public static DevelopmentCard getInstance(DevelopmentCardLevel level, DevelopmentCardType type, int equivalentPoint, ArrayList<ResourcesCount> costs, ProductivePower powers, String image) {
+        return new DevelopmentCard(level, type, equivalentPoint, costs, powers, image);
     }
 
     /**
