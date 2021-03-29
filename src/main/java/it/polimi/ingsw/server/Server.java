@@ -79,7 +79,7 @@ public class Server {
     }
 
     public Server() throws IOException {
-        //todo:see if this work or not this.serverSocket = new ServerSocket(PORT);
+        //this assign the first free port to the serverSocket
         this.serverSocket = new ServerSocket(0);
         System.out.println("listening on port: " + serverSocket.getLocalPort());
     }
