@@ -1,20 +1,30 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.utils;
 
 import com.google.gson.Gson;
 import java.io.FileWriter;
+
+import it.polimi.ingsw.model.ProductivePower;
+import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.*;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.model.leaderCard.LeaderCardAddProductive;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.io.IOException;
 
-public class DevelopmentCrad2JSON {
+
+
+public class DevelopmentCard2JSON {
 
     public static void main(String[] args) {
         InputStreamReader reader = new InputStreamReader (System.in);
         BufferedReader myInput = new BufferedReader (reader);
-        String name = "Masters of Renaissance_Cards_FRONT_3mmBleed_1-";
+        String name = "Masters of Renaissance_Cards_FRONT";
         String str ="";
         String path ="C:\\Users\\tabot\\Desktop\\Json\\";
         DevelopmentCardLevel level = null;
@@ -25,10 +35,10 @@ public class DevelopmentCrad2JSON {
         ArrayList<ResourcesCount> costs = new ArrayList<ResourcesCount>();
         ArrayList<ResourcesCount> from = new ArrayList<ResourcesCount>();
         ArrayList<Resource> to = new ArrayList<Resource>();
+        ArrayList<DevelopmentCard> list = new ArrayList<DevelopmentCard>();
 
 
-
-        for (int i = 1; i < 49; i++) {
+        for (int i = 0; i < 2; i++) {
             // Asking the level of the card
             do {
                 System.out.println("Which is the level of the card? 1/2/3");
@@ -254,18 +264,23 @@ public class DevelopmentCrad2JSON {
                 }
 
             }
-            ProductivePower powers = new ProductivePower(from, to);
-            DevelopmentCard card = new DevelopmentCard(level, color, victoryPoints, costs, powers);
-            // Catching the name of the file that will be created
-            try {
-                FileWriter myWriter = new FileWriter(path+name+i+".json");
-                myWriter.write((new Gson().toJson(card)));
-                myWriter.close();
-            } catch (IOException e) {
-                System.out.println("An error occurred.");
-                e.printStackTrace();
-            }
 
+
+            ProductivePower powers = ProductivePower.getInstance(from, to);
+            DevelopmentCard card = DevelopmentCard.getInstance(level, color, victoryPoints, costs, powers);
+            list.add(card);
+
+
+        }
+
+        // Catching the name of the file that will be created
+        try {
+            FileWriter myWriter = new FileWriter(path+name+".json");
+            myWriter.write((new Gson().toJson(list)));
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
     }
 }
