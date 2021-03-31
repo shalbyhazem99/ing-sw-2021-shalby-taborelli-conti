@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class DevelopmentCard implements Serializable {
     private final DevelopmentCardLevel level;
     private final DevelopmentCardType type;
-    private final int equivalentPoint;
+    private int equivalentPoint;
     private ArrayList<ResourcesCount> costs;
-    private final ProductivePower powers;
+    private ProductivePower powers;
 
     /**
      *
@@ -29,6 +29,10 @@ public class DevelopmentCard implements Serializable {
         this.costs = costs;
         this.powers = powers;
     }
+    public DevelopmentCard(DevelopmentCardLevel level, DevelopmentCardType type) {
+        this.level = level;
+        this.type = type;
+    }
     /**
      *
      * @param level {@link DevelopmentCardLevel} can be 0,1,2
@@ -39,6 +43,16 @@ public class DevelopmentCard implements Serializable {
      */
     public static DevelopmentCard getInstance(DevelopmentCardLevel level, DevelopmentCardType type, int equivalentPoint, ArrayList<ResourcesCount> costs, ProductivePower powers) {
         return new DevelopmentCard(level, type, equivalentPoint, costs, powers);
+    }
+
+    /**
+     *
+     * @param level {@link DevelopmentCardLevel} can be 0,1,2
+     * @param type {@link DevelopmentCardType} can be green,blue,yellow,red
+     */
+    public static DevelopmentCard getInstance(DevelopmentCardLevel level, DevelopmentCardType type)
+    {
+        return new DevelopmentCard(level, type);
     }
 
     /**

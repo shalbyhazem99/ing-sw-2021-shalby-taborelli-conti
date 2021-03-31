@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class containing the attributes and the methods shared by MatchSolo and MatchMulti
@@ -133,8 +134,40 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         //TODO: serialize
     }
 
-    public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level) throws NotEnoughResources {
+    /**
+     * Method to get the top {@link DevelopmentCard} of a {@link Stack} (combination of {@link DevelopmentCardLevel} and {@link DevelopmentCardType})
+     * @param type {@link DevelopmentCardType} can be GREEN, BLUE, YELLOW,PURPLE
+     * @param level {@link DevelopmentCardLevel} can be 1,2,3
+     * @return The top {@link DevelopmentCard} of the {@link Stack}
+     */
+    public DevelopmentCard getDevelopmentCardOnTop(DevelopmentCardType type, DevelopmentCardLevel level)
+    {
+        return developmentCards[level.label][type.label].peek();
+    }
+
+    /**
+     * Method to pick (get and remove) the top {@link DevelopmentCard} of a {@link Stack} (combination of {@link DevelopmentCardLevel} and {@link DevelopmentCardType})
+     * @param type {@link DevelopmentCardType} can be GREEN, BLUE, YELLOW,PURPLE
+     * @param level {@link DevelopmentCardLevel} can be 1,2,3
+     * @return The top {@link DevelopmentCard} of the {@link Stack}
+     */
+    public DevelopmentCard pickDevelopmentCardOnTop(DevelopmentCardType type, DevelopmentCardLevel level)
+    {
+        return developmentCards[level.label][type.label].pop();
+    }
+
+    public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, String name_of_user, int posToAdd) throws NotEnoughResources {
         //todo: success of failure response notify();
+        Player p = getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user)));
+        //if the player can afford the development card requested
+        if(p.canAfford(new ArrayList<DevelopmentCard>(){{add(getDevelopmentCardOnTop(type,level));}})&&p.developmentCardCanBeAdded(DevelopmentCard.getInstance(level,type),posToAdd))
+        {
+            p.addDevelopmentCard(pickDevelopmentCardOnTop(type, level),posToAdd);
+        }
+        else if(!p.canAfford(new ArrayList<DevelopmentCard>(){{add(getDevelopmentCardOnTop(type,level));}}))
+        {
+            throw new NotEnoughResources();
+        }
     }
 
     public void discardLeaderCard(LeaderCard leaderCard) {
@@ -146,13 +179,32 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void enableProductionMove(ArrayList<ProductivePower> productivePowers) throws NotEnoughResources {
     }
 
-    public void marketInteraction(MoveType moveType, int pos) {
+    public void marketInteraction(MoveType moveType, int pos, String name_of_user) {
         ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
-        //todo: not finisced yet this is a draft.
-        if (moveType.equals(MoveType.COLONNA))
-            notify(MarketResponse.getInstance(resourcesGained, Utils.COLUMNNUMBER - resourcesGained.size()));
+        int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
+         if (moveType.equals(MoveType.COLONNA))
+         {
+             numOfWhiteMarbleToBeConverted = Utils.COLUMNNUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
+         }
         else
-            notify(MarketResponse.getInstance(resourcesGained, Utils.ROWNUMBER - resourcesGained.size()));
+        {
+            numOfWhiteMarbleToBeConverted = Utils.ROWNUMBER - resourcesGained.size(); //how many white marbles are there in the selected ROW
+        }
+        /*
+                If there are any white marbles selected and if the user which is requesting the marketInteraction
+                has an additional strategy to convert white marbles we need to know if he wants to enable it,
+                otherwise white marbles won't be converted
+         */
+        if(!getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user))).hasWhiteMurbleConvertionStrategy()||numOfWhiteMarbleToBeConverted==0)
+        {
+            numOfWhiteMarbleToBeConverted = 0; //we don't need to convert anything (we have no white marbles or we don't have additional convertion strategies
+        }
+        notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted));
+    }
+
+    public void marketMarbleConvert(ArrayList<ResourceType> convertionStrategyList)
+    {
+        notify(MarketResponse.getInstance((ArrayList<Resource>) convertionStrategyList.stream().map(el->Resource.getInstance(el)).collect(Collectors.toList()), 0));
     }
 
     public void updateTurn() {

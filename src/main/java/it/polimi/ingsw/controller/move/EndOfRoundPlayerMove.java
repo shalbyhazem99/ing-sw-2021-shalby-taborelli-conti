@@ -2,10 +2,14 @@ package it.polimi.ingsw.controller.move;
 
 import it.polimi.ingsw.model.Match;
 
-public class EndOfRoundPlayerMove implements PlayerMove {
+public class EndOfRoundPlayerMove extends PlayerMove {
 
     @Override
-    public void exectute(Match match) {
+    public void execute(Match match) {
 
+    }
+    public EndOfRoundPlayerMove(String name_of_user)
+    {
+        super(name_of_user);
     }
 }

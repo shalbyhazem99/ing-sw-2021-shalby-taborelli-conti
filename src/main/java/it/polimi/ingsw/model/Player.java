@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
@@ -16,7 +17,7 @@ public class Player implements Serializable {
     private int posFaithMarker;
     private ArrayList<PopeFavorTiles> popeFavorTiles;
     private ArrayList<LeaderCard> leaderCards;
-    private ArrayList<DevelopmentCardSpace> developmentCardSpaces;
+    private ArrayList<DevelopmentCardSpace> developmentCardSpaces; //percè non pila?
     private ArrayList<Warehouse> warehousesStandard;
     private ArrayList<Resource> strongBox;
     private ArrayList<Warehouse> warehousesAdditional;
@@ -35,6 +36,11 @@ public class Player implements Serializable {
         discounts = new ArrayList<>();
         conversionStrategies = new ArrayList<>();
         addedPower = generatePower();
+    }
+
+    public String getName()
+    {
+        return name;
     }
 
     public static Player getInstance(String name) {
@@ -191,6 +197,13 @@ public class Player implements Serializable {
         return false;
     }
 
+    public boolean developmentCardCanBeAdded(DevelopmentCard developmentCard,int spacePos)
+    {
+        if (developmentCardSpaces.size() <= spacePos) {
+            return false;
+        }
+        return (developmentCardSpaces.get(spacePos).canBeAdded(developmentCard));
+    }
     public void addResourceToStrongBox(Resource resource) {
         strongBox.add(resource);
     }
@@ -253,5 +266,18 @@ public class Player implements Serializable {
 
     public void addAdditionalWarehouse(Warehouse warehouse) {
         warehousesAdditional.add(warehouse);
+    }
+
+    //TODO: da implementare
+    public boolean hasWhiteMurbleConvertionStrategy()
+    {
+        return false;
+    }
+    @Override
+    public boolean equals(Object obj) {
+       if (!(obj instanceof Player)) {
+            return false;
+        }
+        return this.name.equals(((Player) obj).getName());
     }
 }

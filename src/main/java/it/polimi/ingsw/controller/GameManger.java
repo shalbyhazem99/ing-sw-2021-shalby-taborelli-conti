@@ -2,7 +2,6 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.MatchMulti;
 import it.polimi.ingsw.observer.Observer;
 
 public class GameManger implements Observer<PlayerMove> {
@@ -19,7 +18,7 @@ public class GameManger implements Observer<PlayerMove> {
 
     private synchronized void excuteMove(PlayerMove playerMove){
         //todo: something to report error if is not the player turn
-        playerMove.exectute(match);
+        playerMove.execute(match);
         match.updateTurn();
     }
 

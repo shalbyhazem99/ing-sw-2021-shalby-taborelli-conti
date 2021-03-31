@@ -2,9 +2,13 @@ package it.polimi.ingsw.controller.move;
 
 import it.polimi.ingsw.model.Match;
 
-public class SwapWarehousePlayerMove implements PlayerMove {
+public class SwapWarehousePlayerMove extends PlayerMove {
     @Override
-    public void exectute(Match match) {
+    public void execute(Match match) {
 
+    }
+    public SwapWarehousePlayerMove(String name_of_user)
+    {
+        super(name_of_user);
     }
 }

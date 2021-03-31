@@ -6,14 +6,18 @@ import it.polimi.ingsw.model.ProductivePower;
 
 import java.util.ArrayList;
 
-public class EnableProductionPlayerMove implements PlayerMove {
+public class EnableProductionPlayerMove extends PlayerMove {
     ArrayList<ProductivePower> productivePowers;
     @Override
-    public void exectute(Match match) {
+    public void execute(Match match) {
         try {
             match.enableProductionMove(productivePowers);
         }catch (NotEnoughResources e){
             e.printStackTrace();
         }
+    }
+    public EnableProductionPlayerMove(String name_of_user)
+    {
+        super(name_of_user);
     }
 }

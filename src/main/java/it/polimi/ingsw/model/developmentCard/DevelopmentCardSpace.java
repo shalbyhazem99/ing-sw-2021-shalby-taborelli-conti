@@ -30,10 +30,19 @@ public class DevelopmentCardSpace implements Serializable {
      * @return true is successful, false otherwise
      */
     public boolean add(DevelopmentCard developmentCard) {
-        if (developmentCards.size() == developmentCard.getLevel().label) {
+        if (canBeAdded(developmentCard)) {
             return developmentCards.push(developmentCard) != null;
         }
         return false;
+    }
+
+    /**
+     * Method to know if a {@link DevelopmentCard} can be added in this {@link DevelopmentCardSpace}
+     * @param developmentCard the {@link DevelopmentCard} to check if it can be added
+     * @return true <==> the {@link DevelopmentCard} can be added
+     */
+    public boolean canBeAdded(DevelopmentCard developmentCard) {
+        return developmentCards.size() == developmentCard.getLevel().label;
     }
 
     /**

@@ -2,9 +2,13 @@ package it.polimi.ingsw.controller.move;
 
 import it.polimi.ingsw.model.Match;
 
-public class ResourcePositioningMove  implements PlayerMove{
+public class ResourcePositioningMove  extends PlayerMove{
     @Override
-    public void exectute(Match match) {
+    public void execute(Match match) {
 
+    }
+    public ResourcePositioningMove(String name_of_user)
+    {
+        super(name_of_user);
     }
 }
