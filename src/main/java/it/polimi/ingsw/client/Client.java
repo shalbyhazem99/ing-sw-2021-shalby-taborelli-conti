@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Client {
+public class  Client {
 
     private String ip;
     private int port;

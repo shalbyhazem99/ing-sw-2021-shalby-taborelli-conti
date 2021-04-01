@@ -18,31 +18,36 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 // todo: add the link to image
+// todo: add the documentation of parms
 
 
 public class DevelopmentCard2JSON {
 
+
     public static void main(String[] args) {
+
         InputStreamReader reader = new InputStreamReader (System.in);
         BufferedReader myInput = new BufferedReader (reader);
-        String name = "Masters of Renaissance_Cards_FRONT";
+        String name = "DevelopmentCard_";
         String str ="";
-        String path ="C:\\Users\\tabot\\Desktop\\Json\\";
+        String path ="C:\\Users\\tabot\\Desktop\\Json\\DevelopmentCard\\";
         DevelopmentCardLevel level = null;
         DevelopmentCardType color =null;
         int victoryPoints;
         int neededResource;
         ResourceType resourceType = null;
-        ArrayList<ResourcesCount> costs = new ArrayList<ResourcesCount>();
-        ArrayList<ResourcesCount> from = new ArrayList<ResourcesCount>();
-        ArrayList<Resource> to = new ArrayList<Resource>();
-        ArrayList<DevelopmentCard> list = new ArrayList<DevelopmentCard>();
+        //ArrayList<DevelopmentCard> list = new ArrayList<DevelopmentCard>();
 
 
-        for (int i = 0; i < 2; i++) {
+
+
+        for (int i = 1; i <= 48; i++) {
+            ArrayList<ResourcesCount> costs = new ArrayList<ResourcesCount>();
+            ArrayList<ResourcesCount> from = new ArrayList<ResourcesCount>();
+            ArrayList<Resource> to = new ArrayList<Resource>();
             // Asking the level of the card
             do {
-                System.out.println("Which is the level of the card? 1/2/3");
+                System.out.println("Which is the level of the card " + i +" ? 1/2/3");
                 try {str = myInput.readLine(); }
                 catch (IOException e) {
                     System.out.println ("An error occurred: " + e);
@@ -267,21 +272,23 @@ public class DevelopmentCard2JSON {
             }
 
 
+            // insert the conversion i into string
             ProductivePower powers = ProductivePower.getInstance(from, to);
-            DevelopmentCard card = DevelopmentCard.getInstance(level, color, victoryPoints, costs, powers);
-            list.add(card);
+            DevelopmentCard card = DevelopmentCard.getInstance(level, color, victoryPoints, costs, powers, String.valueOf(i));
+            //list.add(card);
 
+            // Catching the name of the file that will be created
+            try {
+                FileWriter myWriter = new FileWriter(path+name+i+".json");
+                myWriter.write((new Gson().toJson(card)));
+                myWriter.close();
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
 
         }
 
-        // Catching the name of the file that will be created
-        try {
-            FileWriter myWriter = new FileWriter(path+name+".json");
-            myWriter.write((new Gson().toJson(list)));
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+
     }
 }
