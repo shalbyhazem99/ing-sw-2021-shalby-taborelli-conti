@@ -52,4 +52,13 @@ public class DevelopmentCardSpace implements Serializable {
     public ArrayList<DevelopmentCard> linearize(){
         return new ArrayList<>(developmentCards);
     }
+
+    /**
+     * Method used to get (not remove) the card placed on the top
+     * @return the {@link DevelopmentCard} placed on the top of the {@link Stack} of the {@link DevelopmentCardSpace}
+     */
+    public DevelopmentCard pickTopCard()
+    {
+        return developmentCards.peek();
+    }
 }

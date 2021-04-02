@@ -197,6 +197,30 @@ public class Player implements Serializable {
         return false;
     }
 
+    /**
+     * Method used to know if the {@link Player} has enough {@link Resource} to enable the {@link ArrayList} of {@link ProductivePower}
+     * @param productivePowers the {@link ArrayList} containing all the {@link ProductivePower} that the {@link Player} want to enable
+     * @return true <==> all the {@link ProductivePower} can be enabled
+     */
+    public boolean canEnableProductivePowers(ArrayList<ProductivePower> productivePowers)
+    {
+        //Each productivePower contains an ArrayList of ResourceCount "from" which represents the resources needed to perform the production
+        //Utils.comapre(a,b) return true <==> a include b
+        //setOfE.parallelStream().anyMatch(e->eval(e));
+        /*
+        boolean anyTrue() {
+            for (Element e : setOfE) {
+                if (eval(e)) {
+                    return true;
+                  }
+                }
+            return false;
+            }
+         */
+        //TODO: testare assolutamente e eventualmente rimuovere commenti sopra
+        return productivePowers.parallelStream().anyMatch(elem->Utils.compareResources(getResources(), elem.getFrom()));
+    }
+
     public boolean developmentCardCanBeAdded(DevelopmentCard developmentCard,int spacePos)
     {
         if (developmentCardSpaces.size() <= spacePos) {
@@ -279,5 +303,59 @@ public class Player implements Serializable {
             return false;
         }
         return this.name.equals(((Player) obj).getName());
+    }
+
+    /**
+     * Method used to remove the {@link Resource} specified in the parameter from the {@link Warehouse} of the {@link Player} if they exists
+     * PAY ATTENTION -> if
+     * @param resources the {@link ArrayList} containing the {@link Resource} to be removed
+     * @return true <==> no error occurs in the removing
+     */
+    //TODO: da rimuovere commento, ho testato col main e funziona
+    public boolean removeResources(ArrayList<Resource> resources)
+    {
+        if(resources==null) { return true; }
+        ArrayList<Warehouse> warehouses = (ArrayList<Warehouse>) Stream.concat(getWarehousesStandard().stream(),getWarehousesAdditional().stream()).collect(Collectors.toList());
+        for (int resourceIndex = 0;resourceIndex<resources.size();resourceIndex++)
+        {
+            boolean removed = false;
+            int warehouseIndex = 0;
+            do{
+                removed = warehouses.get(warehouseIndex).getResource(resources.get(resourceIndex));
+                warehouseIndex++;
+            } while (!removed && warehouseIndex<warehouses.size());
+            if(!removed)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    //TODO : remove
+    public void addToWar(Resource r,int n)
+    {
+        warehousesStandard.get(n).addResource(r);
+    }
+    public static void main (String [] args)
+    {
+        //[0]-->3
+        //[1]-->2
+        //[2]-->1
+        Player p = new Player("user");
+        p.addToWar(new Resource(ResourceType.COIN),0);
+        p.addToWar(new Resource(ResourceType.COIN),0);
+        p.addToWar(new Resource(ResourceType.COIN),0);
+        p.addToWar(new Resource(ResourceType.SHIELD),1);
+        p.addToWar(new Resource(ResourceType.SHIELD),1);
+        p.addToWar(new Resource(ResourceType.COIN),2);
+        ArrayList<Resource> v = new ArrayList<>();
+        v.add(new Resource(ResourceType.COIN));
+        v.add(new Resource(ResourceType.COIN));
+        v.add(new Resource(ResourceType.SHIELD));
+        v.add(new Resource(ResourceType.SHIELD));
+        v.add(new Resource(ResourceType.SHIELD));
+        boolean a = p.removeResources(null);
+        System.out.println("asa");
+
     }
 }

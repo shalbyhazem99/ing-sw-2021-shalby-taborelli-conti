@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.development;
+package it.polimi.ingsw.controller.move.development;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.exceptions.NotEnoughResources;
@@ -21,7 +21,7 @@ public class BuyDevelopmentCardPlayerMove extends PlayerMove {
     @Override
     public void execute(Match match) {
         try {
-            match.buyDevelopmentCard(type, level,getName_of_user(),posToAdd);
+            match.buyDevelopmentCardInteraction(type, level,getName_of_user(),posToAdd);
         }catch(NotEnoughResources e){
             e.printStackTrace();
             //todo:ask to make another move

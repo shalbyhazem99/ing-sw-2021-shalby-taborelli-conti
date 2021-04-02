@@ -46,6 +46,7 @@ public class Warehouse implements Serializable {
      * @param resource is what the player wants to add to the warehouse
      * @return a boolean state if it works correctly
      */
+    //TODO: NON MANCA UN CONTROLLO PER VEDERE IL TIPO DELLA RISORSA
     public boolean addResource(Resource resource){
         if (resources.size() > 0){
             resources.add(resource);
@@ -55,9 +56,7 @@ public class Warehouse implements Serializable {
             resourceType=resource.getType();
             resources.add(resource);
             spaceAvailable=spaceAvailable-1;
-
         }
-
         return true;
     }
 
@@ -105,10 +104,21 @@ public class Warehouse implements Serializable {
         else {
             for (int i=0; i<resourcesCount.getCount(); i++)
             {
-                if(resources.remove(1)!=null);
+                if(resources.remove(1)!=null); //TODO: perchè 1 e non 0???
             }
         }
 
         return true;
+    }
+
+    public boolean getResource(Resource resource)
+    {
+        //Dovrebbe funzionare correttamente avendo ridefinito equals di resource
+        if(resources.remove(resource))
+        {
+            spaceAvailable--;
+            return true;
+        }
+        return false;
     }
 }

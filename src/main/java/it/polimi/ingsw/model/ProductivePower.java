@@ -16,5 +16,13 @@ public class ProductivePower implements Serializable {
         return new ProductivePower(from,to);
     }
 
+    public ArrayList<ResourcesCount> getFrom() {
+        return (ArrayList<ResourcesCount>) from.clone();
+    }
+
+    public ArrayList<Resource> getTo() {
+        return (ArrayList<Resource>) to.clone();
+    }
+
     //TODO: getter con clone
 }

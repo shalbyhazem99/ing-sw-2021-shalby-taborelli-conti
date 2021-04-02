@@ -15,6 +15,6 @@ public class MarketMarbleConversionMove extends PlayerMove {
     }
     @Override
     public void execute(Match match) {
-        match.marketMarbleConvert(convertionStrategyList);
+        match.marketMarbleConvertInteraction(convertionStrategyList);
     }
 }
