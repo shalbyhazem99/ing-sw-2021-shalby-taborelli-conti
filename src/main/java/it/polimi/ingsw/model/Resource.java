@@ -28,5 +28,10 @@ public class Resource implements Serializable {
         return type.equals(((Resource) obj).getType());
     }
 
+    @Override
+    protected Object clone()   {
+        return getInstance(type);
+    }
+
     //TODO: Tostring serve?
 }

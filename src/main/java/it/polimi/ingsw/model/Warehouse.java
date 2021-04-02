@@ -46,13 +46,20 @@ public class Warehouse implements Serializable {
      * @param resource is what the player wants to add to the warehouse
      * @return a boolean state if it works correctly
      */
-    //TODO: NON MANCA UN CONTROLLO PER VEDERE IL TIPO DELLA RISORSA
     public boolean addResource(Resource resource){
-        if (resources.size() > 0){
+        if(spaceAvailable==0)
+        {
+            return false;
+        }
+        if (resources.size() > 0){ //something is already stored in the box
+            if(!(resourceType==ResourceType.ANY)&&(resourceType!=resource.getType())) //no match about the type
+            {
+                return false;
+            }
             resources.add(resource);
             spaceAvailable=spaceAvailable-1;
         }
-        else {
+        else { //the element we're storing is the first of the box
             resourceType=resource.getType();
             resources.add(resource);
             spaceAvailable=spaceAvailable-1;

@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.market.MarketResponse;
 import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
+import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
 import it.polimi.ingsw.exceptions.NotEnoughResources;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
@@ -173,6 +174,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void enableProductionMove(ArrayList<ProductivePower> productivePowers) throws NotEnoughResources {
     }
 
+    /**
+     * Method used to perform a {@link it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove} to let the {@link Player} to gain {@link Resource} from the {@link MarketBoard}
+     * @param moveType {@link MoveType} can be ROW / COlULMN
+     * @param pos
+     * @param name_of_user
+     */
     public void marketInteraction(MoveType moveType, int pos, String name_of_user) {
         ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
         int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
@@ -264,7 +271,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         if(p.canEnableProductivePowers(productivePowers))
         {
             //the Player has enough resources to enable all the ProductivePowers
-            //togliere risorse a tizio e dargliene di nuove
             //potere produttivo->resourcecount->resource
             ArrayList<Resource> res=(ArrayList<Resource>)productivePowers.stream().
                     flatMap(el->el.getFrom().stream()).
@@ -275,13 +281,102 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             ArrayList<Resource> resGot = (ArrayList<Resource>)productivePowers.stream()
                     .flatMap(el->el.getTo().stream()).collect(Collectors.toList());
             resGot.stream().map(el-> p.getStrongBox().add(el));
-            //bisogna fare il notify
             notify(EnableProductionResponse.getInstance(resGot));
         }
         else
         {
             throw new NotEnoughResources();
         }
+    }
+
+    /**
+     * Method used by the {@link Player} to place {@link Resource} inside of {@link Warehouse}
+     * If anything goes well the pendingResources {@link ArrayList} will be empty and the {@link Resource} which were inside of it will be stored inside {@link Warehouse}
+     * @param whereToPlace an {@link ArrayList} containing where to add (in which {@link Warehouse}) the iTH {@link Resource} of the pendingResources
+     * @param player the {@link Player} performing the action
+     * @throws Exception an {@link Exception} to indicate if any error has happened
+     */
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) throws Exception
+    {
+        /*
+            Check
+            1) if are there any resources to be placed
+            2) if the 2 arraylist sizes are equal
+            3) if the warehouses can correctly store everything (simulating all the transferring process using .clone())
+            If no errors ==>
+                            4) add resources to warehouse
+                            5) empty the pendingResources
+                            if some Resource got discarded ==> 6) move ahead other players on the Faith Path
+         */
+        //CHECK 1)
+        if(pendingResources.size()==0)
+        {
+            throw new Exception("No Resources to be placed");
+        }
+        //CHECK 2)
+        else if((pendingResources.size()!=whereToPlace.size()))
+        {
+            throw new Exception("Error with the positioning array");
+        }
+        //CHECK 3)
+        ArrayList<Warehouse> standardTemp = player.getWarehousesStandard(); //TODO: CONTROLLARE CHE NON INCASINI IL MODEL IMPATTANDO DIRETTAMENTE (CON CLONE NON DOVREBBE SUCCEDERE)
+        ArrayList<Warehouse> additionalTemp = player.getWarehousesAdditional();
+        for(int i=0;i<whereToPlace.size();i++)
+        {
+            if(whereToPlace.get(i) == null)
+            {
+                //the resource will be discarded
+            }
+            else if(whereToPlace.get(i)>=0&&whereToPlace.get(i)<3)
+            {
+                if(!standardTemp.get(whereToPlace.get(i)).addResource((Resource) pendingResources.get(i).clone())) //if any error happens -> notify error
+                {
+                    throw new Exception("error in adding res #" + i + "to warehouse #" + whereToPlace.get(i));
+                }
+            }
+            else
+            {
+                if(!additionalTemp.get(whereToPlace.get(i)).addResource((Resource) pendingResources.get(i).clone())) //if any error happens -> notify error
+                {
+                    throw new Exception("error in adding res #" + i + "to warehouse #" + whereToPlace.get(i));
+                }
+            }
+        }
+        //no errors --> we can correctly perform all the actions
+        //START 4)
+        int numberOfDiscardedResources = 0;
+        int numberOfGainedResources = whereToPlace.size();
+        for(int i=0;i<whereToPlace.size();i++)
+        {
+            if(whereToPlace.get(i) == null)
+            {
+                //the resource will be discarded
+                numberOfDiscardedResources++;
+                numberOfGainedResources--;
+            }
+            else if(whereToPlace.get(i)>=0&&whereToPlace.get(i)<3)
+            {
+                player.getWarehousesStandard().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
+            }
+            else
+            {
+                player.getWarehousesAdditional().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
+            }
+        }
+        //START 5)
+        pendingResources = new ArrayList<>();
+        //START 6)
+        if(numberOfDiscardedResources!=0)
+        {
+            for (Player p:players)
+            {
+                if(!p.equals(player))
+                {
+                    p.moveAheadFaith(numberOfDiscardedResources);
+                }
+            }
+        }
+        notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources,numberOfGainedResources));
     }
 
     public void updateTurn() {

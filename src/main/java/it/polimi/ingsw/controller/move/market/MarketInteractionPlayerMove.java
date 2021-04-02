@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.market.MoveType;
 
 public class MarketInteractionPlayerMove extends PlayerMove {
+    /**
+     * Class representing the {@link PlayerMove} performed by the {@link it.polimi.ingsw.model.Player} in order to get {@link it.polimi.ingsw.model.Resource} from the {@link it.polimi.ingsw.model.market.MarketBoard}
+     */
     MoveType moveType;
     int pos;
 

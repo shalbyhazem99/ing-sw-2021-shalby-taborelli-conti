@@ -17,7 +17,7 @@ public class GameManger implements Observer<PlayerMove> {
     }
 
     private synchronized void excuteMove(PlayerMove playerMove){
-        //todo: something to report error if is not the player turn
+        //todo: something to report error if is not the player turn or if the Player cannot do that move it has already done a market/dev/production move
         playerMove.execute(match);
         match.updateTurn();
     }
