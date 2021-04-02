@@ -4,15 +4,15 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
 public abstract class PlayerMove {
-    private String name_of_user;
-    public PlayerMove (String name_of_user)
+    private Player player;
+    public PlayerMove (Player player)
     {
-        this.name_of_user = name_of_user;
+        this.player = player;
     }
     public abstract void execute(Match match);
-    public String getName_of_user()
+    public Player getPlayer()
     {
-        return name_of_user;
+        return player;
     }
     //TODO: add player al posto di stringa
 }

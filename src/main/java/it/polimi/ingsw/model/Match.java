@@ -176,11 +176,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     /**
      * Method used to perform a {@link it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove} to let the {@link Player} to gain {@link Resource} from the {@link MarketBoard}
+     * the resources gained are placed into pendingResources {@link ArrayList}
      * @param moveType {@link MoveType} can be ROW / COlULMN
-     * @param pos
-     * @param name_of_user
+     * @param pos which ROW/COLUMN to select
+     * @param player the {@link Player} performing the interaction
      */
-    public void marketInteraction(MoveType moveType, int pos, String name_of_user) {
+    public void marketInteraction(MoveType moveType, int pos, Player player) {
         ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
         int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
          if (moveType.equals(MoveType.COLONNA))
@@ -197,7 +198,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 otherwise white marbles won't be converted
          */
         //TODO: dovrei fare un .size
-        if(!getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user))).hasWhiteMurbleConvertionStrategy()||numOfWhiteMarbleToBeConverted==0)
+        if(!player.hasWhiteMurbleConvertionStrategy()||numOfWhiteMarbleToBeConverted==0)
         {
             numOfWhiteMarbleToBeConverted = 0; //we don't need to convert anything (we have no white marbles or we don't have additional convertion strategies
         }
@@ -206,7 +207,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     }
 
     /**
-     * Method used to perform the conversion of the white marbles
+     * Method used to perform the conversion of the white marbles, the {@link Resource} gained are placed into pendingResources {@link ArrayList}
      * @param conversionStrategyList the {@link ArrayList} of {@link ResourceType} which represent in which type of {@link Resource} convert each white {@link it.polimi.ingsw.model.market.Marble}
      */
     public void marketMarbleConvertInteraction(ArrayList<ResourceType> conversionStrategyList)
@@ -251,12 +252,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * Method used to perform the enable of the interaction
      * @param productivePowers {@link ArrayList} containing the default {@link ProductivePower} enabled
      * @param devCardProductivePlayerSelected {@link ArrayList} containing {@link Integer} representing which {@link DevelopmentCard} 's {@link ProductivePower} is enabled
-     * @param name_of_user {@link String} used to retrieve the {@link Player}
+     * @param p {@link Player} performing the {@link it.polimi.ingsw.controller.move.PlayerMove}
      * @throws NotEnoughResources {@link NotEnoughResources} thrown if the Productions can't be enabled
      */
-    public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected,String name_of_user) throws NotEnoughResources
+    public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected,Player p) throws NotEnoughResources
     {
-        Player p = getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user)));
+        //Player p = getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user))); //todo: possiamo anche rimuoverlo
         if(devCardProductivePlayerSelected!=null)
         {
             //list containing the merging of the card productive powers and the "default" productive powers
@@ -279,8 +280,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             p.removeResources(res);
             //add resources to strongbox
             ArrayList<Resource> resGot = (ArrayList<Resource>)productivePowers.stream()
-                    .flatMap(el->el.getTo().stream()).collect(Collectors.toList());
-            resGot.stream().map(el-> p.getStrongBox().add(el));
+                    .flatMap(el->el.getTo().stream())
+                    .collect(Collectors.toList());
+            resGot.stream().map(el-> p.getStrongBox().add(el)); //add to strongbox
             notify(EnableProductionResponse.getInstance(resGot));
         }
         else

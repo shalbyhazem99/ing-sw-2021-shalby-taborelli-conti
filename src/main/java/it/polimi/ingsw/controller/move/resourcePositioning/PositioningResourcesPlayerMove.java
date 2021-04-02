@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 public class PositioningResourcesPlayerMove extends PlayerMove {
     private ArrayList<Integer> whereToPlaceResources;
-    Player p; //va tolto
-
 
     /**
      * Default constructor
@@ -18,10 +16,10 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
      *                              waiting to be placed, the value contained in the position i indicates where to add the iTH Resource,
      *                              the value can be {0,1,2,3,4,null}, {0,1,2} refers to standard {@link it.polimi.ingsw.model.Warehouse} {3,4} to additional {@link it.polimi.ingsw.model.Warehouse}
      *                              null means that the Resource has to be discarded
-     * @param name_of_user {@link String} of user
+     * @param player the {@link Player} performing the {@link PlayerMove}
      */
-    public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources, String name_of_user) throws Exception {
-        super(name_of_user);
+    public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources, Player player) throws Exception {
+        super(player);
         if(whereToPlaceResources==null||!check(whereToPlaceResources))
         {
             throw new Exception("Selected not existing warehouse!");
@@ -32,35 +30,40 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
     /**
      * Default method getInstance
      * @param whereToPlaceResources an {@link ArrayList} of {@link Integer}
-     * @param name_of_user {@link String} of user
+     * @param player the {@link Player} performing the {@link PlayerMove}
      * @return an instance of {@link PositioningResourcesPlayerMove}
      */
-    public PositioningResourcesPlayerMove getInstance(ArrayList<Integer> whereToPlaceResources, String name_of_user) throws Exception
+    public PositioningResourcesPlayerMove getInstance(ArrayList<Integer> whereToPlaceResources, Player player) throws Exception
     {
-        return new PositioningResourcesPlayerMove(whereToPlaceResources, name_of_user);
+        return new PositioningResourcesPlayerMove(whereToPlaceResources, player);
     }
 
     @Override
     public void execute(Match match) {
         try {
-            match.positioningResourcesInteraction(whereToPlaceResources, p);
+            match.positioningResourcesInteraction(whereToPlaceResources, getPlayer());
         }catch (Exception e) {
             e.printStackTrace();
             //todo:ask to make another move
         }
     }
 
+    /**
+     * Method to check if an invalid {@link it.polimi.ingsw.model.Warehouse} is contained in the whereToPlaceResources {@link ArrayList}
+     * @param whereToPlaceResources
+     * @return
+     */
     public boolean check(ArrayList<Integer> whereToPlaceResources)
     {
         boolean somethingAddedToFirstAdditionalWarehouse = whereToPlaceResources.indexOf(3)!=-1;
         boolean somethingAddedToSecondAdditionalWarehouse = whereToPlaceResources.indexOf(4)!=-1;
         if(somethingAddedToFirstAdditionalWarehouse)
         {
-            if(p.getWarehousesAdditional().size()<1) {return false;}
+            if(getPlayer().getWarehousesAdditional().size()<1) {return false;}
         }
         if(somethingAddedToSecondAdditionalWarehouse)
         {
-            if(p.getWarehousesAdditional().size()<2) {return false;}
+            if(getPlayer().getWarehousesAdditional().size()<2) {return false;}
         }
         return true;
     }

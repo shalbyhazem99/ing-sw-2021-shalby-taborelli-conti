@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.market;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.market.MoveType;
 
 public class MarketInteractionPlayerMove extends PlayerMove {
@@ -16,14 +17,14 @@ public class MarketInteractionPlayerMove extends PlayerMove {
      * @param moveType can be ROW / COLUMN
      * @param pos which ROW / COLUMN is selected
      */
-    public MarketInteractionPlayerMove(MoveType moveType, int pos, String name_of_user) {
-        super(name_of_user);
+    public MarketInteractionPlayerMove(MoveType moveType, int pos, Player player) {
+        super(player);
         this.moveType = moveType;
         this.pos = pos;
     }
 
     @Override
     public void execute(Match match) {
-        match.marketInteraction(moveType, pos, getName_of_user());
+        match.marketInteraction(moveType, pos, getPlayer());
     }
 }
