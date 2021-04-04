@@ -96,7 +96,7 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
                 if(readied instanceof PlayerMove){
                     notify((PlayerMove)readied);
                 }else {
-                    asyncSend(IllegalMoveResponse.getInstance());
+                    asyncSend(IllegalMoveResponse.getInstance("risposta scorretta"));
                 }
             }
         } catch (Exception e) {

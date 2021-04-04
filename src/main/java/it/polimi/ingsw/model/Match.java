@@ -5,7 +5,9 @@ import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.market.MarketResponse;
 import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
-import it.polimi.ingsw.exceptions.NotEnoughResources;
+import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
+import it.polimi.ingsw.exceptions.DevelopmentSpaceException;
+import it.polimi.ingsw.exceptions.NotEnoughResourcesException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -168,10 +170,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void discardLeaderCard(LeaderCard leaderCard) {
     }
 
-    public void enableLeaderCard(LeaderCard leaderCard) throws NotEnoughResources {
+    public void enableLeaderCard(LeaderCard leaderCard) throws NotEnoughResourcesException {
     }
 
-    public void enableProductionMove(ArrayList<ProductivePower> productivePowers) throws NotEnoughResources {
+    public void enableProductionMove(ArrayList<ProductivePower> productivePowers) throws NotEnoughResourcesException {
     }
 
     /**
@@ -221,30 +223,26 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * Method used to perform the user's purchase of a {@link DevelopmentCard}
      * @param type the {@link DevelopmentCardType} which specifies which column of the {@link DevelopmentCard} {@link Stack} needs to be selected
      * @param level the {@link DevelopmentCardLevel} which specifies which row of the {@link DevelopmentCard} {@link Stack} needs to be selected
-     * @param name_of_user the {@link String} which lets the system to retrieve {@link Player} object
+     * @param player the {@link Player} which call the Move
      * @param posToAdd the int that specify in which user's {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} the new {@link DevelopmentCard} has to be placed into
-     * @throws NotEnoughResources the {@link NotEnoughResources} exception is thrown if the user cannot afford the {@link DevelopmentCard} passed as parameter
-     */
-    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, String name_of_user, int posToAdd) throws NotEnoughResources {
-        Player p = getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user)));
+      */
+    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd) {
         //if the player can afford the development card requested
-        if(p.canAfford(new ArrayList<DevelopmentCard>(){{add(getDevelopmentCardOnTop(type,level));}})&&p.developmentCardCanBeAdded(DevelopmentCard.getInstance(level,type),posToAdd))
+        if(player.canAfford(new ArrayList<DevelopmentCard>(){{add(getDevelopmentCardOnTop(type,level));}})&&player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level,type),posToAdd))
         {
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
-            if(p.addDevelopmentCard(temp_card,posToAdd)) //no errors
+            if(player.addDevelopmentCard(temp_card,posToAdd)) //no errors
             {
                 notify(BuyDevelopmentCardReponse.getInstance(temp_card));
             }
             else
             {
-                //if any error occurs an exception is thrown
-                throw new NotEnoughResources();
+                notify(IllegalMoveResponse.getInstance((new DevelopmentSpaceException()).getMessage()));
             }
         }
-        else if(!p.canAfford(new ArrayList<DevelopmentCard>(){{add(getDevelopmentCardOnTop(type,level));}}))
+        else if(!player.canAfford(new ArrayList<DevelopmentCard>(){{add(getDevelopmentCardOnTop(type,level));}}))
         {
-            //if the player cannot afford the card an exception is thrown
-            throw new NotEnoughResources();
+            notify(IllegalMoveResponse.getInstance((new NotEnoughResourcesException()).getMessage()));
         }
     }
 
@@ -253,9 +251,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param productivePowers {@link ArrayList} containing the default {@link ProductivePower} enabled
      * @param devCardProductivePlayerSelected {@link ArrayList} containing {@link Integer} representing which {@link DevelopmentCard} 's {@link ProductivePower} is enabled
      * @param p {@link Player} performing the {@link it.polimi.ingsw.controller.move.PlayerMove}
-     * @throws NotEnoughResources {@link NotEnoughResources} thrown if the Productions can't be enabled
+     * @throws NotEnoughResourcesException {@link NotEnoughResourcesException} thrown if the Productions can't be enabled
      */
-    public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected,Player p) throws NotEnoughResources
+    public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected,Player p) throws NotEnoughResourcesException
     {
         //Player p = getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user))); //todo: possiamo anche rimuoverlo
         if(devCardProductivePlayerSelected!=null)
@@ -287,7 +285,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         else
         {
-            throw new NotEnoughResources();
+            throw new NotEnoughResourcesException();
         }
     }
 

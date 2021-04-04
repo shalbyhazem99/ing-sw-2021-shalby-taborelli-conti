@@ -19,7 +19,6 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
      * @param player the {@link Player} performing the {@link PlayerMove}
      */
     public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources, Player player) throws Exception {
-        super(player);
         if(whereToPlaceResources==null||!check(whereToPlaceResources))
         {
             throw new Exception("Selected not existing warehouse!");

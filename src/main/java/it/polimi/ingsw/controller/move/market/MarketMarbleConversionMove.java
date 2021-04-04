@@ -11,19 +11,17 @@ public class MarketMarbleConversionMove extends PlayerMove {
     /**
      * Class which represent a {@link PlayerMove} which let the {@link Player} to convert white {@link it.polimi.ingsw.model.market.Marble}
      */
-    private ArrayList<ResourceType> convertionStrategyList;
+    private ArrayList<ResourceType> conversionStrategyList;
     /**
      * Default constructor
-     * @param player the {@link Player} performing the action
-     * @param convertionStrategyList an {@link ArrayList} of {@link ResourceType} representing how to convert each white {@link it.polimi.ingsw.model.market.Marble}
+    * @param conversionStrategyList an {@link ArrayList} of {@link ResourceType} representing how to convert each white {@link it.polimi.ingsw.model.market.Marble}
      */
-    public MarketMarbleConversionMove(Player player, ArrayList<ResourceType> convertionStrategyList)
+    public MarketMarbleConversionMove(ArrayList<ResourceType> conversionStrategyList)
     {
-        super(player);
-        this.convertionStrategyList =  convertionStrategyList;
+        this.conversionStrategyList = conversionStrategyList;
     }
     @Override
     public void execute(Match match) {
-        match.marketMarbleConvertInteraction(convertionStrategyList);
+        match.marketMarbleConvertInteraction(conversionStrategyList);
     }
 }

@@ -9,6 +9,6 @@ public class SwapWarehousePlayerMove extends PlayerMove {
     }
     public SwapWarehousePlayerMove(String name_of_user)
     {
-        super(name_of_user);
+        ;
     }
 }

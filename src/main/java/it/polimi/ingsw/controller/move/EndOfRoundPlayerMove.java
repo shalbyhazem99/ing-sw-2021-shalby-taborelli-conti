@@ -9,7 +9,5 @@ public class EndOfRoundPlayerMove extends PlayerMove {
 
     }
     public EndOfRoundPlayerMove(String name_of_user)
-    {
-        super(name_of_user);
-    }
+    { }
 }

@@ -1,12 +1,9 @@
 package it.polimi.ingsw.controller.move.production;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.exceptions.NotEnoughResources;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductivePower;
-import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
-import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 
 import java.util.ArrayList;
 
@@ -24,7 +21,6 @@ public class EnableProductionPlayerMove extends PlayerMove {
      * @param devCardProductivePlayerSelected {@link ArrayList} of {@link Integer} containing the indexes of the {@link ProductivePower} of the {@link it.polimi.ingsw.model.developmentCard.DevelopmentCard}
      */
     public EnableProductionPlayerMove(Player player, ArrayList<ProductivePower> defaultProductivePowers,ArrayList<Integer> devCardProductivePlayerSelected) {
-        super(player);
         this.productivePowers = (ArrayList<ProductivePower>) defaultProductivePowers.clone();
         this.devCardProductivePlayerSelected = (ArrayList<Integer>) devCardProductivePlayerSelected.clone();
     }

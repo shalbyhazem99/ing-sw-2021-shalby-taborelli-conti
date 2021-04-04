@@ -9,6 +9,6 @@ public class ResourcePositioningMove  extends PlayerMove{
     }
     public ResourcePositioningMove(String name_of_user)
     {
-        super(name_of_user);
+        ;
     }
 }

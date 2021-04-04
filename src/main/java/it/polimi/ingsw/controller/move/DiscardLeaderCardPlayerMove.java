@@ -11,6 +11,6 @@ public class DiscardLeaderCardPlayerMove extends PlayerMove {
     }
     public DiscardLeaderCardPlayerMove(String name_of_user)
     {
-        super(name_of_user);
+
     }
 }
