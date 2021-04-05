@@ -10,7 +10,7 @@ public class DiscardLeaderCardPlayerMove implements PlayerMove {
     private Player player;
 
     /**
-     *
+     *classic setter
      * @param player
      * @param leaderCard
      */
@@ -20,7 +20,7 @@ public class DiscardLeaderCardPlayerMove implements PlayerMove {
     }
 
     @Override
-    public void exectute(Match match) {
+    public void exectute(Player player) {
        player.discardLeaderCard(leaderCard);
     }
 }

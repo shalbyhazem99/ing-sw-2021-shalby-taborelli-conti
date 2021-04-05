@@ -7,8 +7,15 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 public class EnableLeaderCardPlayerMove implements PlayerMove {
+
     private LeaderCard leaderCard;
     private Player player;
+
+    /**
+     * default constructor
+     * @param leaderCard
+     * @param player
+     */
 
     public EnableLeaderCardPlayerMove(LeaderCard leaderCard, Player player){
         this.leaderCard = leaderCard;
@@ -19,7 +26,7 @@ public class EnableLeaderCardPlayerMove implements PlayerMove {
     @Override
     public void exectute(Match match) {
         try {
-            player.e;
+            leaderCard.active(player);
         }catch (NotEnoughResources e){
             e.printStackTrace();
         }
