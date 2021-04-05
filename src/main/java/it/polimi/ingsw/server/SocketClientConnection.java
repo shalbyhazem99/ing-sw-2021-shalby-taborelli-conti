@@ -2,6 +2,10 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
+import it.polimi.ingsw.controller.move.settings.AskForData;
+import it.polimi.ingsw.controller.move.settings.AskForMove;
+import it.polimi.ingsw.controller.move.settings.MessageMove;
+import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.IOException;
@@ -80,12 +84,12 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
             //todo: to be modified so that all the request send will be as Response class
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            send("Welcome!\nWhat is your name?");
-            String name = (String) in.readObject();
+            send(AskForData.getInstance("Welcome!\nWhat is your name?"));
+            String name = ((MessageMove) in.readObject()).getMessage();
             if(isFirstPlayer){
-                send("You are the first. how many player do you want?");
-                numOfPlayer = Integer.parseInt((String) in.readObject());
-                send("match created!\n");
+                send(AskForData.getInstance("You are the first. how many player do you want?"));
+                numOfPlayer = Integer.parseInt(((MessageMove) in.readObject()).getMessage());
+                send(SendMessage.getInstance("match created!\nWaiting for other to join!\n"));
                 server.lobby(this, name,numOfPlayer);
             }else {
                 server.lobby(this, name);
@@ -96,7 +100,7 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
                 if(readied instanceof PlayerMove){
                     notify((PlayerMove)readied);
                 }else {
-                    asyncSend(IllegalMoveResponse.getInstance("risposta scorretta"));
+                    //asyncSend(IllegalMoveResponse.getInstance("risposta scorretta"));
                 }
             }
         } catch (Exception e) {
