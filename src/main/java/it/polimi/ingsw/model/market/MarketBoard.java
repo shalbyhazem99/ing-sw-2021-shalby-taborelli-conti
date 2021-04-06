@@ -14,7 +14,7 @@ public class MarketBoard implements Serializable {
     private Marble additionalMarble;
 
     public MarketBoard() {
-        marketMatrix = new Marble[Utils.ROWNUMBER][Utils.COLUMNNUMBER];
+        marketMatrix = new Marble[Utils.MARKET_ROW_NUMBER][Utils.MARKET_COL_NUMBER];
         generateMarblesMatrix();
     }
 
@@ -46,7 +46,7 @@ public class MarketBoard implements Serializable {
 
     private ArrayList<Marble> getColumn(int column) {
         ArrayList<Marble> temp = new ArrayList<>();
-        for (int r = 0; r < Utils.ROWNUMBER; r++) {
+        for (int r = 0; r < Utils.MARKET_ROW_NUMBER; r++) {
             temp.add(marketMatrix[r][column]);
         }
         return temp;
@@ -54,7 +54,7 @@ public class MarketBoard implements Serializable {
 
     private ArrayList<Marble> getRow(int row) {
         ArrayList<Marble> temp = new ArrayList<>();
-        for (int c = 0; c < Utils.COLUMNNUMBER; c++) {
+        for (int c = 0; c < Utils.MARKET_COL_NUMBER; c++) {
             temp.add(marketMatrix[row][c]);
         }
         return temp;
@@ -78,8 +78,8 @@ public class MarketBoard implements Serializable {
         Collections.shuffle(lista);
         //fill the matrix
         int count = 0;
-        for (int row = 0; row < Utils.ROWNUMBER; row++) {
-            for (int column = 0; column < Utils.COLUMNNUMBER; column++) {
+        for (int row = 0; row < Utils.MARKET_ROW_NUMBER; row++) {
+            for (int column = 0; column < Utils.MARKET_COL_NUMBER; column++) {
                 marketMatrix[row][column] = lista.get(count);
                 count++;
             }

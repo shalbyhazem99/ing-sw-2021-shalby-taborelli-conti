@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
+import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
 
 import java.io.IOException;
@@ -40,10 +41,11 @@ public class ClientCLI {
                     while (isActive()) {
                         //todo: something to print the match
                         Object inputObject = socketIn.readObject();
-                        if (inputObject instanceof MoveResponse) {
+                        if (inputObject instanceof SendModel) {
+                            match = ((SendModel) inputObject).getMatch();
                             manageResponse((MoveResponse) inputObject, stdin, socketOut);
-                        } else if (inputObject instanceof Match) {
-                            match = (Match) inputObject;
+                        } else if (inputObject instanceof MoveResponse) {
+                            manageResponse((MoveResponse) inputObject, stdin, socketOut);
                         } else {
                             throw new IllegalArgumentException();
                         }
@@ -61,7 +63,7 @@ public class ClientCLI {
         try {
             System.out.println(moveResponse.toString());
             String inputLine = stdin.nextLine();
-            socketOut.writeObject(moveResponse.elaborateCliInput(inputLine,stdin));
+            socketOut.writeObject(moveResponse.elaborateCliInput(inputLine, stdin));
             socketOut.flush();
         } catch (Exception e) {
             setActive(false);

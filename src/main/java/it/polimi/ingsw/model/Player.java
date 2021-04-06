@@ -72,6 +72,10 @@ public class Player implements Serializable {
                 new ArrayList<>(Arrays.asList(Resource.getInstance(ResourceType.ANY))))));
     }
 
+    public void addLeaderCard(LeaderCard leaderCard){
+        leaderCards.add(leaderCard);
+    }
+
     //TODO: production
     /**
      * move the Faith Marker Ahead

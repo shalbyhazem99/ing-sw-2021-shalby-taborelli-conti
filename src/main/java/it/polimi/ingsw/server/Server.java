@@ -72,6 +72,7 @@ public class Server {
                 //if match turn send something async
                 clientConnection.asyncSend(SendMessage.getInstance("Game starts!\n"));
             }
+            match.startMatch();
             waitingConnection.clear();
             numPlayer = -1;
         } else {
