@@ -1,12 +1,9 @@
 package it.polimi.ingsw.controller.move.resourcePositioning;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
-import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 
-import java.util.Scanner;
-
-public class PositioningResourcesResponse extends MoveResponse {
+public class PositioningResourcesResponse implements MoveResponse {
     /**
      * Class used to represent the response of the system when the {@link it.polimi.ingsw.model.Player} asks to position his {@link it.polimi.ingsw.model.Resource}
      */
@@ -32,10 +29,5 @@ public class PositioningResourcesResponse extends MoveResponse {
      */
     public static PositioningResourcesResponse getInstance(int numberOfDiscardedResources, int numberOfGainedResources) {
         return new PositioningResourcesResponse(numberOfDiscardedResources,numberOfGainedResources);
-    }
-
-    @Override
-    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
-        return null;
     }
 }

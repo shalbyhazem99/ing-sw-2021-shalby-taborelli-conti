@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.GameManger;
-import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.MatchMulti;
 import it.polimi.ingsw.model.MatchSolo;
@@ -70,12 +69,12 @@ public class Server {
                 match.addObserver(playerView);
                 playerView.addObserver(gameManger);
                 //if match turn send something async
-                clientConnection.asyncSend(SendMessage.getInstance("Game starts!\n"));
+                clientConnection.asyncSend("Game starts!\n");
             }
             waitingConnection.clear();
             numPlayer = -1;
         } else {
-            c.asyncSend(SendMessage.getInstance("Waiting for other to join!\n"));
+            c.asyncSend("Waiting for other to join!\n");
         }
     }
 

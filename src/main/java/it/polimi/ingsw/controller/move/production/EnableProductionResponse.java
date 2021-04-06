@@ -1,15 +1,13 @@
 package it.polimi.ingsw.controller.move.production;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
-import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class EnableProductionResponse extends MoveResponse {
+public class EnableProductionResponse implements MoveResponse {
     /**
      * Class used to represent the response of the system when the {@link it.polimi.ingsw.model.Player} interacts with the ProductionSystem
      */
@@ -30,10 +28,5 @@ public class EnableProductionResponse extends MoveResponse {
      */
     public static EnableProductionResponse getInstance(ArrayList<Resource> resourcesGot) {
         return new EnableProductionResponse(resourcesGot);
-    }
-
-    @Override
-    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
-        return null;
     }
 }
