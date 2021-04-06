@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ public class EnableProductionResponse extends MoveResponse {
      * Default constructor
      * @param resourcesGot {@link ArrayList} containing the {@link Resource} obtained by the Production
      */
-    public EnableProductionResponse(ArrayList<Resource> resourcesGot) {
+    public EnableProductionResponse(ArrayList<Resource> resourcesGot, ArrayList<Player> players) {
+        super(players);
         this.resourcesGot = resourcesGot;
     }
 
@@ -28,8 +30,8 @@ public class EnableProductionResponse extends MoveResponse {
      * @param resourcesGot {@link ArrayList} containing the {@link Resource}
      * @return an istance of {@link EnableProductionResponse}
      */
-    public static EnableProductionResponse getInstance(ArrayList<Resource> resourcesGot) {
-        return new EnableProductionResponse(resourcesGot);
+    public static EnableProductionResponse getInstance(ArrayList<Resource> resourcesGot,ArrayList<Player> players) {
+        return new EnableProductionResponse(resourcesGot,players);
     }
 
     @Override

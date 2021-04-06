@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.market;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
@@ -29,7 +30,8 @@ public class MarketResponse extends MoveResponse {
      * @param numOfMarbleToBeCoverted the int which specifies how many Conversion Strategy the {@link it.polimi.ingsw.model.Player} has to communicate
      *                                to the system
      */
-    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted) {
+    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players) {
+        super(players);
         this.resources = resources;
         this.numOfMarbleToBeCoverted = numOfMarbleToBeCoverted;
     }
@@ -41,8 +43,8 @@ public class MarketResponse extends MoveResponse {
      *                               to the system
      * @return an instance of {@link MarketResponse}
      */
-    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted) {
-        return new MarketResponse(resources,numOfMarbleToBeCoverted);
+    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players) {
+        return new MarketResponse(resources,numOfMarbleToBeCoverted,players);
     }
 
     @Override

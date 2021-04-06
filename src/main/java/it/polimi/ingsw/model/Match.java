@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -61,8 +62,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             for (int i = 0; i < 4; i++)
                 player.addLeaderCard(leaderCards.pop());
         }
-        notify(SendModel.getInstance(this));
-        notify(SendMessage.getInstance("hshdhdh"));
+        notify(SendModel.getInstance(this, players));
     }
 
 
@@ -214,7 +214,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             numOfWhiteMarbleToBeConverted = 0; //we don't need to convert anything (we have no white marbles or we don't have additional convertion strategies
         }
         resourcesGained.stream().map(el -> pendingResources.add(el)); //add the Resources to the Box containing the resources waiting to be placed
-        notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted));
+        notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
     }
 
     /**
@@ -222,10 +222,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      *
      * @param conversionStrategyList the {@link ArrayList} of {@link ResourceType} which represent in which type of {@link Resource} convert each white {@link it.polimi.ingsw.model.market.Marble}
      */
-    public void marketMarbleConvertInteraction(ArrayList<ResourceType> conversionStrategyList) {
+    public void marketMarbleConvertInteraction(ArrayList<ResourceType> conversionStrategyList,Player player) {
         ArrayList<Resource> resourcesGained = (ArrayList<Resource>) conversionStrategyList.stream().map(el -> Resource.getInstance(el)).collect(Collectors.toList());
         resourcesGained.stream().map(el -> pendingResources.add(el)); //add the resources to the box conitaning the resources waiting to be placed
-        notify(MarketResponse.getInstance(resourcesGained, 0));
+        notify(MarketResponse.getInstance(resourcesGained, 0, new ArrayList<>(Arrays.asList(player))));
     }
 
     /**
@@ -244,14 +244,14 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
             if (player.addDevelopmentCard(temp_card, posToAdd)) //no errors
             {
-                notify(BuyDevelopmentCardReponse.getInstance(temp_card));
+                notify(BuyDevelopmentCardReponse.getInstance(temp_card, new ArrayList<>(Arrays.asList(player))));
             } else {
-                notify(IllegalMoveResponse.getInstance((new DevelopmentSpaceException()).getMessage()));
+                notify(IllegalMoveResponse.getInstance((new DevelopmentSpaceException()).getMessage(), new ArrayList<>(Arrays.asList(player))));
             }
         } else if (!player.canAfford(new ArrayList<DevelopmentCard>() {{
             add(getDevelopmentCardOnTop(type, level));
         }})) {
-            notify(IllegalMoveResponse.getInstance((new NotEnoughResourcesException()).getMessage()));
+            notify(IllegalMoveResponse.getInstance((new NotEnoughResourcesException()).getMessage(), new ArrayList<>(Arrays.asList(player))));
         }
     }
 
@@ -260,35 +260,35 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      *
      * @param productivePowers                {@link ArrayList} containing the default {@link ProductivePower} enabled
      * @param devCardProductivePlayerSelected {@link ArrayList} containing {@link Integer} representing which {@link DevelopmentCard} 's {@link ProductivePower} is enabled
-     * @param p                               {@link Player} performing the {@link it.polimi.ingsw.controller.move.PlayerMove}
+     * @param player                               {@link Player} performing the {@link it.polimi.ingsw.controller.move.PlayerMove}
      * @throws NotEnoughResourcesException {@link NotEnoughResourcesException} thrown if the Productions can't be enabled
      */
-    public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected, Player p) throws NotEnoughResourcesException {
+    public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected, Player player) throws NotEnoughResourcesException {
         //Player p = getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user))); //todo: possiamo anche rimuoverlo
         if (devCardProductivePlayerSelected != null) {
             //list containing the merging of the card productive powers and the "default" productive powers
             productivePowers = (ArrayList<ProductivePower>)
                     Stream.concat(
                             devCardProductivePlayerSelected.stream()
-                                    .map(elem -> p.getDevelopmentCards().get(elem).getPowers()),
+                                    .map(elem -> player.getDevelopmentCards().get(elem).getPowers()),
                             productivePowers.stream())
                             .collect(Collectors.toList());
         }
         //productivePowers contains all the ProductivePower that has to be enabled
-        if (p.canEnableProductivePowers(productivePowers)) {
+        if (player.canEnableProductivePowers(productivePowers)) {
             //the Player has enough resources to enable all the ProductivePowers
             //potere produttivo->resourcecount->resource
             ArrayList<Resource> res = (ArrayList<Resource>) productivePowers.stream().
                     flatMap(el -> el.getFrom().stream()).
                     flatMap(el -> el.toArrayListResources().stream()).
                     collect(Collectors.toList());
-            p.removeResources(res);
+            player.removeResources(res);
             //add resources to strongbox
             ArrayList<Resource> resGot = (ArrayList<Resource>) productivePowers.stream()
                     .flatMap(el -> el.getTo().stream())
                     .collect(Collectors.toList());
-            resGot.stream().map(el -> p.getStrongBox().add(el)); //add to strongbox
-            notify(EnableProductionResponse.getInstance(resGot));
+            resGot.stream().map(el -> player.getStrongBox().add(el)); //add to strongbox
+            notify(EnableProductionResponse.getInstance(resGot, new ArrayList<>(Arrays.asList(player))));
         } else {
             throw new NotEnoughResourcesException();
         }
@@ -364,7 +364,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 }
             }
         }
-        notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources, numberOfGainedResources));
+        notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources, numberOfGainedResources, new ArrayList<>(Arrays.asList(player))));
     }
 
     public void updateTurn() {
@@ -374,4 +374,18 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             - l'arraylist<Resource> pendingResources è vuoto
          */
     }
+
+    public boolean isMyTurn(Player player) {
+        return false;
+    }
+
+    public void setCanChangeTurn(boolean canChangeTurn) {
+
+    }
+
+    public boolean getCanChangeTurn() {
+        return false;
+    }
+
+
 }

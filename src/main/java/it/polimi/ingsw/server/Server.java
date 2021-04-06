@@ -49,6 +49,10 @@ public class Server {
         lobby(socketClientConnection, name);
     }
 
+    public int getNumPlayer() {
+        return numPlayer;
+    }
+
     //Wait for another player
     public synchronized void lobby(ClientConnection c, String name) {
         waitingConnection.put(name, c);
@@ -70,18 +74,17 @@ public class Server {
                 match.addObserver(playerView);
                 playerView.addObserver(gameManger);
                 //if match turn send something async
-                clientConnection.asyncSend(SendMessage.getInstance("Game starts!\n"));
+                clientConnection.asyncSend(SendMessage.getInstance("Game starts!\n",null));
             }
             match.startMatch();
             waitingConnection.clear();
             numPlayer = -1;
         } else {
-            c.asyncSend(SendMessage.getInstance("Waiting for other to join!\n"));
+            c.asyncSend(SendMessage.getInstance("Waiting for other to join!\n",null));
         }
     }
 
     public Server() throws IOException {
-        //todo:see if this work or not this.serverSocket = new ServerSocket(PORT);
         this.serverSocket = new ServerSocket(0);
         System.out.println("listening on port: " + serverSocket.getLocalPort());
     }
@@ -91,12 +94,7 @@ public class Server {
             try {
                 Socket newSocket = serverSocket.accept();
                 SocketClientConnection socketConnection;
-                if (numPlayer == -1) {
-                    socketConnection = new SocketClientConnection(newSocket, this, true);
-                    numPlayer = 0; //so that the next player will not be considered the first
-                } else {
-                    socketConnection = new SocketClientConnection(newSocket, this, false);
-                }
+                    socketConnection = new SocketClientConnection(newSocket, this);
                 executor.submit(socketConnection);
             } catch (IOException e) {
                 System.out.println("Connection Error!");

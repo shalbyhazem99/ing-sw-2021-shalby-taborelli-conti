@@ -45,7 +45,8 @@ public class ClientCLI {
                         Object inputObject = socketIn.readObject();
                         if (inputObject instanceof SendModel) {
                             match = ((SendModel) inputObject).getMatch();
-                            manageResponse((MoveResponse) inputObject, stdin, socketOut);
+                            match.toString();
+                            //manageResponse((MoveResponse) inputObject, stdin, socketOut);
                         } else if (inputObject instanceof SendMessage) {
                             System.out.println(inputObject.toString());
                         } else if (inputObject instanceof MoveResponse) {

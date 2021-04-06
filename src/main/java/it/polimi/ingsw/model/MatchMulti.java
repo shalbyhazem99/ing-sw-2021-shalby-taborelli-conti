@@ -1,15 +1,17 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.move.settings.AskForMove;
+
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 public class MatchMulti extends Match implements Serializable {
     /**
      * Class concerning a Match of many players
      */
     private int posInkwell;
+    private int turn;
+    private boolean canChangeTurn;
 
     /**
      * Call method of superclass, posInkwell will be initially set to '-1' and then it will be correctly modified just before the match's starting
@@ -22,6 +24,7 @@ public class MatchMulti extends Match implements Serializable {
 
     /**
      * Get the index of the first player in the playing order
+     *
      * @return the index of the first plauer in the playing order
      */
     public int getPosInkwell() {
@@ -30,12 +33,49 @@ public class MatchMulti extends Match implements Serializable {
 
     /**
      * The method randomly choose the player with the inkwell
+     *
      * @return the index of the {@link Player} with the inkwell
      */
-    public int randomlyPickInkwellPlayer()
-    {
-        if(this.posInkwell!=-1) { return this.posInkwell; }
+    public int randomlyPickInkwellPlayer() {
+        if (this.posInkwell != -1) {
+            return this.posInkwell;
+        }
         this.posInkwell = (int) (Math.random() * (0 - getPlayers().size())) + getPlayers().size();
         return this.posInkwell;
+    }
+
+
+    @Override
+    public void startMatch() {
+        randomlyPickInkwellPlayer();
+        turn = posInkwell;
+        super.startMatch();
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn - 1)))));
+    }
+
+    @Override
+    public void updateTurn() {
+        if (canChangeTurn) {
+            canChangeTurn = false;
+            if (turn < getPlayers().size())
+                turn++;
+            else
+                turn = 0;
+        }
+    }
+
+    @Override
+    public void setCanChangeTurn(boolean canChangeTurn) {
+        this.canChangeTurn = canChangeTurn;
+    }
+
+    @Override
+    public boolean getCanChangeTurn() {
+        return this.canChangeTurn;
+    }
+
+    @Override
+    public boolean isMyTurn(Player player) {
+        return getPlayers().get(turn).equals(player);
     }
 }

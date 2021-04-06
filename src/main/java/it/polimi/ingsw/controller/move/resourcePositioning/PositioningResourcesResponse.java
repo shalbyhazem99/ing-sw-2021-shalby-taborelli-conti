@@ -2,8 +2,10 @@ package it.polimi.ingsw.controller.move.resourcePositioning;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PositioningResourcesResponse extends MoveResponse {
@@ -19,7 +21,8 @@ public class PositioningResourcesResponse extends MoveResponse {
      * @param numberOfDiscardedResources how many {@link it.polimi.ingsw.model.Resource} got discarded
      * @param numberOfGainedResources how many {@link it.polimi.ingsw.model.Resource} got gained
      */
-    public PositioningResourcesResponse(int numberOfDiscardedResources, int numberOfGainedResources) {
+    public PositioningResourcesResponse(int numberOfDiscardedResources, int numberOfGainedResources, ArrayList<Player> players) {
+        super(players);
         this.numberOfDiscardedResources = numberOfDiscardedResources;
         this.numberOfGainedResources = numberOfGainedResources;
     }
@@ -30,8 +33,8 @@ public class PositioningResourcesResponse extends MoveResponse {
      * @param numberOfGainedResources how many {@link it.polimi.ingsw.model.Resource} got gained
      * @return an instance of {@link PositioningResourcesResponse}
      */
-    public static PositioningResourcesResponse getInstance(int numberOfDiscardedResources, int numberOfGainedResources) {
-        return new PositioningResourcesResponse(numberOfDiscardedResources,numberOfGainedResources);
+    public static PositioningResourcesResponse getInstance(int numberOfDiscardedResources, int numberOfGainedResources, ArrayList<Player> players) {
+        return new PositioningResourcesResponse(numberOfDiscardedResources,numberOfGainedResources,players);
     }
 
     @Override

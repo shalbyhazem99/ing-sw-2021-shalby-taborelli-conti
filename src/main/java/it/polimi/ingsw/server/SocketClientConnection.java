@@ -21,16 +21,14 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
 
     private Socket socket;
     private ObjectOutputStream out;
-    ObjectInputStream in;
+    private ObjectInputStream in;
     private Server server;
-    private boolean isFirstPlayer;
 
     private boolean active = true;
 
-    public SocketClientConnection(Socket socket, Server server,boolean isFirstPlayer) {
+    public SocketClientConnection(Socket socket, Server server) {
         this.socket = socket;
         this.server = server;
-        this.isFirstPlayer = isFirstPlayer;
     }
 
     private synchronized boolean isActive(){
@@ -81,15 +79,15 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
     public void run() {
         int numOfPlayer;
         try{
-            //todo: to be modified so that all the request send will be as Response class
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            send(AskForData.getInstance("Welcome!\nWhat is your name?"));
+            send(AskForData.getInstance("Welcome!\nWhat is your name?",null));
             String name = ((MessageMove) in.readObject()).getMessage();
-            if(isFirstPlayer){
-                send(AskForData.getInstance("You are the first. how many player do you want?"));
+            //todo: generates error if two client run together
+            if(server.getNumPlayer()==-1){
+                send(AskForData.getInstance("You are the first. how many player do you want?",null));
                 numOfPlayer = Integer.parseInt(((MessageMove) in.readObject()).getMessage());
-                send(SendMessage.getInstance("match created!\n"));
+                send(SendMessage.getInstance("match created!\n",null));
                 server.lobby(this, name,numOfPlayer);
             }else {
                 server.lobby(this, name);
@@ -100,7 +98,7 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
                 if(readied instanceof PlayerMove){
                     notify((PlayerMove)readied);
                 }else {
-                    asyncSend(IllegalMoveResponse.getInstance("risposta scorretta"));
+                    asyncSend(IllegalMoveResponse.getInstance("risposta scorretta",null));
                 }
             }
         } catch (Exception e) {
