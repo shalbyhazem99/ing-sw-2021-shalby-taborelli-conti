@@ -1,11 +1,13 @@
 package it.polimi.ingsw.controller.move.market;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
+import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class MarketResponse implements MoveResponse {
+public class MarketResponse extends MoveResponse {
     /**
      * Class used to represent the response of the system when the {@link it.polimi.ingsw.model.Player} interacts with the {@link it.polimi.ingsw.model.market.MarketBoard}
      * This class can represent 2 different responses based on the kind of {@link it.polimi.ingsw.controller.move.PlayerMove}:
@@ -41,5 +43,10 @@ public class MarketResponse implements MoveResponse {
      */
     public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted) {
         return new MarketResponse(resources,numOfMarbleToBeCoverted);
+    }
+
+    @Override
+    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
+        return null;
     }
 }

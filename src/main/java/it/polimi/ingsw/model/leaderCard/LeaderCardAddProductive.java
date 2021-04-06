@@ -19,8 +19,8 @@ public class LeaderCardAddProductive extends LeaderCard implements Serializable 
      * @param resourcesNeeded       an {@link ArrayList} of the {@link ResourcesCount} needed to activate the {@link LeaderCardAddProductive} power
      * @param developmentCardNeeded an {@link ArrayList} of the {@link DevelopmentCardNeeded} to activate the {@link LeaderCardAddProductive} power
      */
-    public LeaderCardAddProductive(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded, String image) {
-        super(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded, image);
+    public LeaderCardAddProductive(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
+        super(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded);
     }
 
     /**
@@ -32,8 +32,8 @@ public class LeaderCardAddProductive extends LeaderCard implements Serializable 
      * @param developmentCardNeeded an {@link ArrayList} of the {@link DevelopmentCardNeeded} to activate the {@link LeaderCardAddProductive} power
      * @return  an Instance of the {@link LeaderCardAddProductive}
      */
-    public static LeaderCardAddProductive getInstance(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded, String image) {
-        return new LeaderCardAddProductive(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded, image);
+    public static LeaderCardAddProductive getInstance(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
+        return new LeaderCardAddProductive(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded);
     }
 
     /**
@@ -73,6 +73,6 @@ public class LeaderCardAddProductive extends LeaderCard implements Serializable 
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone(), image);
+        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone());
     }
 }

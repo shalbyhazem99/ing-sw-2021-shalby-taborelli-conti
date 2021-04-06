@@ -30,14 +30,14 @@ public class RemoteView extends Observable<PlayerMove> implements Observer<MoveR
     }
 
     void handleMove(PlayerMove playerMove) {
+        playerMove.concatPlayer(player);
         notify(playerMove); //notify it to the controller
     }
 
     @Override
     public void update(MoveResponse message) {
-        if(message.getPlayers().contains(player)) {
-            clientConnection.asyncSend(message);
-        }
+        //todo: see to which player to send
+        clientConnection.asyncSend(message);
     }
 
 }

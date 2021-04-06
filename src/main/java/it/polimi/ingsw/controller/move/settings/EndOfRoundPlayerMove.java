@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.move.EndRound;
+package it.polimi.ingsw.controller.move.settings;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;

@@ -1,10 +1,11 @@
-
 package it.polimi.ingsw.controller.move;
 
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
-public abstract class PlayerMove {
+import java.io.Serializable;
+
+public abstract class PlayerMove implements Serializable {
     protected Player player;
 
     public abstract void execute(Match match);
