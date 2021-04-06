@@ -19,8 +19,8 @@ public class LeaderCardDiscount extends LeaderCard implements Serializable {
      * @param resourcesNeeded       an {@link ArrayList} of the {@link ResourcesCount} needed to activate the {@link LeaderCardDiscount} power
      * @param developmentCardNeeded an {@link ArrayList} of the {@link DevelopmentCardNeeded} to activate the {@link LeaderCardDiscount} power
      */
-    public LeaderCardDiscount(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
-        super(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded);
+    public LeaderCardDiscount(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded, String image) {
+        super(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded, image);
     }
 
     /**
@@ -32,8 +32,8 @@ public class LeaderCardDiscount extends LeaderCard implements Serializable {
      * @param developmentCardNeeded an {@link ArrayList} of the {@link DevelopmentCardNeeded} to activate the {@link LeaderCardDiscount} power
      * @return an Instance of the {@link LeaderCardDiscount}
      */
-    public static LeaderCardDiscount getInstance(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
-        return new LeaderCardDiscount(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded);
+    public static LeaderCardDiscount getInstance(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded, String image) {
+        return new LeaderCardDiscount(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded, image);
     }
 
     /**
@@ -67,6 +67,6 @@ public class LeaderCardDiscount extends LeaderCard implements Serializable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone());
+        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone(), image);
     }
 }

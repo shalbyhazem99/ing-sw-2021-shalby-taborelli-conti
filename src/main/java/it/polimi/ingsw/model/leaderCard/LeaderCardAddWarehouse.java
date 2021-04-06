@@ -18,8 +18,8 @@ public class LeaderCardAddWarehouse extends LeaderCard implements Serializable {
      * @param resourcesNeeded       an {@link ArrayList} of the {@link ResourcesCount} needed to activate the {@link LeaderCardAddWarehouse} power
      * @param developmentCardNeeded an {@link ArrayList} of the {@link DevelopmentCardNeeded} to activate the {@link LeaderCardAddWarehouse} power
      */
-    public LeaderCardAddWarehouse(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
-        super(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded);
+    public LeaderCardAddWarehouse(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded, String image) {
+        super(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded, image);
     }
 
     /**
@@ -31,8 +31,8 @@ public class LeaderCardAddWarehouse extends LeaderCard implements Serializable {
      * @param developmentCardNeeded an {@link ArrayList} of the {@link DevelopmentCardNeeded} to activate the {@link LeaderCardAddWarehouse} power
      * @return an Instance of the {@link LeaderCardAddWarehouse}
      */
-    public static LeaderCardAddWarehouse getInstance(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded) {
-        return new LeaderCardAddWarehouse(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded);
+    public static LeaderCardAddWarehouse getInstance(int points, ResourceType resourceTypeRelated, ArrayList<ResourcesCount> resourcesNeeded, ArrayList<DevelopmentCardNeeded> developmentCardNeeded, String image) {
+        return new LeaderCardAddWarehouse(points, resourceTypeRelated, resourcesNeeded, developmentCardNeeded, image);
     }
 
     /**
@@ -66,6 +66,6 @@ public class LeaderCardAddWarehouse extends LeaderCard implements Serializable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone());
+        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone(), image);
     }
 }
