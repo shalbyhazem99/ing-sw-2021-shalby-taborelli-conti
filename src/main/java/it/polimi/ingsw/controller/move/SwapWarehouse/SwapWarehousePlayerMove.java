@@ -4,14 +4,13 @@ import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Warehouse;
 
-public class SwapWarehousePlayerMove implements PlayerMove {
+public class SwapWarehousePlayerMove extends PlayerMove {
 
     private Warehouse donator;
     private Warehouse giver;
 
-
     @Override
-    public void exectute(Match match) {
+    public void execute(Match match) {
 
     }
 }

@@ -186,10 +186,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void marketInteraction(MoveType moveType, int pos, Player player) {
         ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
         int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
-         if (moveType.equals(MoveType.COLONNA))
-         {
-             numOfWhiteMarbleToBeConverted = Utils.COLUMNNUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
-         }
+        if (moveType.equals(MoveType.COLONNA))
+        {
+            numOfWhiteMarbleToBeConverted = Utils.COLUMNNUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
+        }
         else
         {
             numOfWhiteMarbleToBeConverted = Utils.ROWNUMBER - resourcesGained.size(); //how many white marbles are there in the selected ROW
@@ -225,7 +225,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param level the {@link DevelopmentCardLevel} which specifies which row of the {@link DevelopmentCard} {@link Stack} needs to be selected
      * @param player the {@link Player} which call the Move
      * @param posToAdd the int that specify in which user's {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} the new {@link DevelopmentCard} has to be placed into
-      */
+     */
     public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd) {
         //if the player can afford the development card requested
         if(player.canAfford(new ArrayList<DevelopmentCard>(){{add(getDevelopmentCardOnTop(type,level));}})&&player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level,type),posToAdd))
@@ -261,10 +261,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             //list containing the merging of the card productive powers and the "default" productive powers
             productivePowers = (ArrayList<ProductivePower>)
                     Stream.concat(
-                    devCardProductivePlayerSelected.stream()
-                    .map(elem->p.getDevelopmentCards().get(elem).getPowers()),
-                    productivePowers.stream())
-            .collect(Collectors.toList());
+                            devCardProductivePlayerSelected.stream()
+                                    .map(elem->p.getDevelopmentCards().get(elem).getPowers()),
+                            productivePowers.stream())
+                            .collect(Collectors.toList());
         }
         //productivePowers contains all the ProductivePower that has to be enabled
         if(p.canEnableProductivePowers(productivePowers))

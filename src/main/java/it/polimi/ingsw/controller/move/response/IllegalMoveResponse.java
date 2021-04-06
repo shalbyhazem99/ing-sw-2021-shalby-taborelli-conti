@@ -1,17 +1,23 @@
 package it.polimi.ingsw.controller.move.response;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.controller.move.PlayerMove;
 
-import java.util.ArrayList;
+import java.util.Scanner;
 
-public class IllegalMoveResponse implements MoveResponse {
-    public static IllegalMoveResponse getInstance() {
-        return new IllegalMoveResponse();
+public class IllegalMoveResponse extends MoveResponse {
+    String message; //todo:or type;
+
+    public IllegalMoveResponse(String message) {
+        this.message = message;
+    }
+
+    public static IllegalMoveResponse getInstance(String message) {
+        return new IllegalMoveResponse(message);
     }
 
     @Override
-    public ArrayList<Player> getPlayers() {
+    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
         return null;
     }
 }

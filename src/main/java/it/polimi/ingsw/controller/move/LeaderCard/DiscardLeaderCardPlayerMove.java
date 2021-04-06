@@ -5,22 +5,19 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
-public class DiscardLeaderCardPlayerMove implements PlayerMove {
+public class DiscardLeaderCardPlayerMove extends PlayerMove {
     private LeaderCard leaderCard;
-    private Player player;
 
     /**
      *classic setter
-     * @param player
      * @param leaderCard
      */
-    public DiscardLeaderCardPlayerMove(Player player, LeaderCard leaderCard){
-        this.player = player;
+    public DiscardLeaderCardPlayerMove(LeaderCard leaderCard){
         this.leaderCard = leaderCard;
     }
 
     @Override
-    public void exectute(Player player) {
-       player.discardLeaderCard(leaderCard);
+    public void execute(Match match) {
+        player.discardLeaderCard(leaderCard);
     }
 }

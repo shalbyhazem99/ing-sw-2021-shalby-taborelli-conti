@@ -1,12 +1,11 @@
 package it.polimi.ingsw.controller.move.LeaderCard;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.exceptions.NotEnoughResources;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
-public class EnableLeaderCardPlayerMove implements PlayerMove {
+public class EnableLeaderCardPlayerMove extends PlayerMove {
 
     private LeaderCard leaderCard;
     private Player player;
@@ -22,13 +21,8 @@ public class EnableLeaderCardPlayerMove implements PlayerMove {
         this.player = player;
     }
 
-
     @Override
-    public void exectute(Match match) {
-        try {
-            leaderCard.active(player);
-        }catch (NotEnoughResources e){
-            e.printStackTrace();
-        }
+    public void execute(Match match) {
+        leaderCard.active(player);
     }
 }

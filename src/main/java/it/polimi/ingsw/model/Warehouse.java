@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import io.Serializable;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Warehouse implements Serializable {

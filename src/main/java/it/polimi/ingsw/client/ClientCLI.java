@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.model.Match;
 
 import java.io.IOException;
@@ -10,43 +11,44 @@ import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class  Client {
+public class ClientCLI {
 
-    private String ip;
-    private int port;
+    final private String ip;
+    final private int port;
+    private Match match;
 
-    public Client(String ip, int port){
+    public ClientCLI(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
 
     private boolean active = true;
 
-    public synchronized boolean isActive(){
+    public synchronized boolean isActive() {
         return active;
     }
 
-    public synchronized void setActive(boolean active){
+    public synchronized void setActive(boolean active) {
         this.active = active;
     }
 
-    public Thread asyncReadFromSocket(final ObjectInputStream socketIn){
+    public Thread asyncReadFromSocket(final Scanner stdin, final ObjectInputStream socketIn, final ObjectOutputStream socketOut) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (isActive()) {
-                        //todo: react to every type of response
+                        //todo: something to print the match
                         Object inputObject = socketIn.readObject();
-                        if(inputObject instanceof String){
-                            System.out.println((String)inputObject);
-                        } else if (inputObject instanceof Match){
-                            System.out.println((Match)inputObject);
+                        if (inputObject instanceof MoveResponse) {
+                            manageResponse((MoveResponse) inputObject, stdin, socketOut);
+                        } else if (inputObject instanceof Match) {
+                            match = (Match) inputObject;
                         } else {
                             throw new IllegalArgumentException();
                         }
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     setActive(false);
                 }
             }
@@ -55,23 +57,16 @@ public class  Client {
         return t;
     }
 
-    public Thread asyncWriteToSocket(final Scanner stdin, final ObjectOutputStream socketOut){
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (isActive()) {
-                        String inputLine = stdin.nextLine();
-                        socketOut.writeObject(inputLine);
-                        socketOut.flush();
-                    }
-                }catch(Exception e){
-                    setActive(false);
-                }
-            }
-        });
-        t.start();
-        return t;
+    public synchronized void manageResponse(MoveResponse moveResponse, final Scanner stdin, final ObjectOutputStream socketOut) {
+        try {
+            System.out.println(moveResponse.toString());
+            String inputLine = stdin.nextLine();
+            socketOut.writeObject(moveResponse.elaborateCliInput(inputLine,stdin));
+            socketOut.flush();
+        } catch (Exception e) {
+            setActive(false);
+        }
+
     }
 
     public void run() throws IOException {
@@ -79,20 +74,15 @@ public class  Client {
         System.out.println("Connection established");
         ObjectOutputStream socketOut = new ObjectOutputStream(socket.getOutputStream());
         ObjectInputStream socketIn = new ObjectInputStream(socket.getInputStream());
-        //PrintWriter socketOut = new PrintWriter(socket.getOutputStream());
         Scanner stdin = new Scanner(System.in);
-
-        try{
-            Thread t0 = asyncReadFromSocket(socketIn);
-            Thread t1 = asyncWriteToSocket(stdin, socketOut);
+        try {
+            Thread t0 = asyncReadFromSocket(stdin, socketIn, socketOut);
             t0.join();
-            t1.join();
-        } catch(InterruptedException | NoSuchElementException e){
+        } catch (InterruptedException | NoSuchElementException e) {
             System.out.println("Connection closed from the client side");
         } finally {
             socketOut.close();
             socketIn.close();
-            //socketOut.close();
             socket.close();
         }
     }
