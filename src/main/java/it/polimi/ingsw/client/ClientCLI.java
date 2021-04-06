@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
+import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
 
@@ -39,13 +40,18 @@ public class ClientCLI {
             public void run() {
                 try {
                     while (isActive()) {
+                        //System.err.println("message recived...");
                         //todo: something to print the match
                         Object inputObject = socketIn.readObject();
                         if (inputObject instanceof SendModel) {
                             match = ((SendModel) inputObject).getMatch();
                             manageResponse((MoveResponse) inputObject, stdin, socketOut);
+                        } else if (inputObject instanceof SendMessage) {
+                            System.out.println(inputObject.toString());
                         } else if (inputObject instanceof MoveResponse) {
                             manageResponse((MoveResponse) inputObject, stdin, socketOut);
+                        } else if (inputObject instanceof String) {
+                            System.out.println(inputObject.toString());
                         } else {
                             throw new IllegalArgumentException();
                         }
@@ -59,7 +65,7 @@ public class ClientCLI {
         return t;
     }
 
-    public synchronized void manageResponse(MoveResponse moveResponse, final Scanner stdin, final ObjectOutputStream socketOut) {
+    public void manageResponse(MoveResponse moveResponse, final Scanner stdin, final ObjectOutputStream socketOut) {
         try {
             System.out.println(moveResponse.toString());
             String inputLine = stdin.nextLine();
@@ -71,6 +77,25 @@ public class ClientCLI {
 
     }
 
+    public Thread asyncWriteToSocket(final Scanner stdin, final ObjectOutputStream socketOut) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (isActive()) {
+                        String inputLine = stdin.nextLine();
+                        socketOut.writeObject(inputLine);
+                        socketOut.flush();
+                    }
+                } catch (Exception e) {
+                    setActive(false);
+                }
+            }
+        });
+        t.start();
+        return t;
+    }
+
     public void run() throws IOException {
         Socket socket = new Socket(ip, port);
         System.out.println("Connection established");
@@ -79,7 +104,9 @@ public class ClientCLI {
         Scanner stdin = new Scanner(System.in);
         try {
             Thread t0 = asyncReadFromSocket(stdin, socketIn, socketOut);
+            //Thread t1 = asyncWriteToSocket(stdin, socketOut);
             t0.join();
+            //t1.join();
         } catch (InterruptedException | NoSuchElementException e) {
             System.out.println("Connection closed from the client side");
         } finally {

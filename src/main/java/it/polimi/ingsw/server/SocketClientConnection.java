@@ -89,7 +89,7 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
             if(isFirstPlayer){
                 send(AskForData.getInstance("You are the first. how many player do you want?"));
                 numOfPlayer = Integer.parseInt(((MessageMove) in.readObject()).getMessage());
-                send(SendMessage.getInstance("match created!\nWaiting for other to join!\n"));
+                send(SendMessage.getInstance("match created!\n"));
                 server.lobby(this, name,numOfPlayer);
             }else {
                 server.lobby(this, name);
@@ -100,7 +100,7 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
                 if(readied instanceof PlayerMove){
                     notify((PlayerMove)readied);
                 }else {
-                    //asyncSend(IllegalMoveResponse.getInstance("risposta scorretta"));
+                    asyncSend(IllegalMoveResponse.getInstance("risposta scorretta"));
                 }
             }
         } catch (Exception e) {

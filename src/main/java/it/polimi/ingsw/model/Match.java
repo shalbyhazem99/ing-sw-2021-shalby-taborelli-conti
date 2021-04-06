@@ -6,6 +6,7 @@ import it.polimi.ingsw.controller.move.market.MarketResponse;
 import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
 import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
+import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.exceptions.DevelopmentSpaceException;
 import it.polimi.ingsw.exceptions.NotEnoughResourcesException;
@@ -61,6 +62,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 player.addLeaderCard(leaderCards.pop());
         }
         notify(SendModel.getInstance(this));
+        notify(SendMessage.getInstance("hshdhdh"));
     }
 
 
