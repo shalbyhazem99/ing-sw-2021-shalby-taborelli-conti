@@ -47,17 +47,23 @@ public class Warehouse implements Serializable {
      * @return a boolean state if it works correctly
      */
     public boolean addResource(Resource resource){
-        if (resources.size() > 0){
+        if(spaceAvailable==0)
+        {
+            return false;
+        }
+        if (resources.size() > 0){ //something is already stored in the box
+            if(!(resourceType==ResourceType.ANY)&&(resourceType!=resource.getType())) //no match about the type
+            {
+                return false;
+            }
             resources.add(resource);
             spaceAvailable=spaceAvailable-1;
         }
-        else {
+        else { //the element we're storing is the first of the box
             resourceType=resource.getType();
             resources.add(resource);
             spaceAvailable=spaceAvailable-1;
-
         }
-
         return true;
     }
 
@@ -105,10 +111,21 @@ public class Warehouse implements Serializable {
         else {
             for (int i=0; i<resourcesCount.getCount(); i++)
             {
-                if(resources.remove(1)!=null);
+                if(resources.remove(1)!=null); //TODO: perchè 1 e non 0???
             }
         }
 
         return true;
+    }
+
+    public boolean getResource(Resource resource)
+    {
+        //Dovrebbe funzionare correttamente avendo ridefinito equals di resource
+        if(resources.remove(resource))
+        {
+            spaceAvailable--;
+            return true;
+        }
+        return false;
     }
 }

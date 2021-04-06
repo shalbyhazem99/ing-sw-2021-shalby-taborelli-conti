@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class ResourcesCount implements Serializable {
     private int count;
@@ -21,5 +22,19 @@ public class ResourcesCount implements Serializable {
 
     public ResourceType getType() {
         return type;
+    }
+
+    /**
+     * Method to convert the {@link ResourcesCount} class to an {@link ArrayList} of {@link Resource}
+     * @return a {@link ArrayList} of {@link Resource} equivalent to the object
+     */
+    public ArrayList<Resource> toArrayListResources()
+    {
+        return new ArrayList<Resource>() {{
+            for(int i = count;i!=0;i++)
+            {
+                add(Resource.getInstance(type));
+            }
+        }};
     }
 }
