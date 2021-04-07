@@ -20,7 +20,7 @@ public class SendModel extends MoveResponse {
         return new SendModel(match,players);
     }
     @Override
-    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
+    public PlayerMove elaborateCliInput(Scanner stdin) {
         //TODO: require which to discard
         return null;
     }

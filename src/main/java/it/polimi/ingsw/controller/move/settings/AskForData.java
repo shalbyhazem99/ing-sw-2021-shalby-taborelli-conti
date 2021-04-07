@@ -19,8 +19,9 @@ public class AskForData extends MoveResponse {
         return new AskForData(message,players);
     }
     @Override
-    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
-        return MessageMove.getInstance(message);
+    public PlayerMove elaborateCliInput(Scanner stdin) {
+        System.out.println(message);
+        return MessageMove.getInstance(stdin.nextLine());
     }
 
     @Override

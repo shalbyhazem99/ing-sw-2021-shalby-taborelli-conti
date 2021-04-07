@@ -19,7 +19,7 @@ public class SendMessage extends MoveResponse {
         return new SendMessage(message,players);
     }
     @Override
-    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
+    public PlayerMove elaborateCliInput( Scanner stdin) {
         return null;
     }
 

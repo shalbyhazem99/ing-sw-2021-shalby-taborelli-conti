@@ -20,7 +20,7 @@ public class IllegalMoveResponse extends MoveResponse {
     }
 
     @Override
-    public PlayerMove elaborateCliInput(String message, Scanner stdin) {
+    public PlayerMove elaborateCliInput( Scanner stdin) {
         return null;
     }
 }

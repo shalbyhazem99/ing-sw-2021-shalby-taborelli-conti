@@ -45,7 +45,7 @@ public class ClientCLI {
                         Object inputObject = socketIn.readObject();
                         if (inputObject instanceof SendModel) {
                             match = ((SendModel) inputObject).getMatch();
-                            match.toString();
+                            System.out.println(match.toString());
                             //manageResponse((MoveResponse) inputObject, stdin, socketOut);
                         } else if (inputObject instanceof SendMessage) {
                             System.out.println(inputObject.toString());
@@ -68,9 +68,7 @@ public class ClientCLI {
 
     public void manageResponse(MoveResponse moveResponse, final Scanner stdin, final ObjectOutputStream socketOut) {
         try {
-            System.out.println(moveResponse.toString());
-            String inputLine = stdin.nextLine();
-            socketOut.writeObject(moveResponse.elaborateCliInput(inputLine, stdin));
+            socketOut.writeObject(moveResponse.elaborateCliInput(stdin));
             socketOut.flush();
         } catch (Exception e) {
             setActive(false);

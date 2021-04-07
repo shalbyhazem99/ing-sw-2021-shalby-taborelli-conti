@@ -22,5 +22,5 @@ public abstract class MoveResponse implements Serializable {
     }
 
     //todo: method that indicate something that the user must do in response to a GameManagerResponse
-    public abstract PlayerMove elaborateCliInput(String message, final Scanner stdin);
+    public abstract PlayerMove elaborateCliInput(final Scanner stdin);
 }

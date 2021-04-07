@@ -17,11 +17,14 @@ public class MarketInteractionPlayerMove extends PlayerMove {
      * @param moveType can be ROW / COLUMN
      * @param pos which ROW / COLUMN is selected
      */
-    public MarketInteractionPlayerMove(MoveType moveType, int pos, Player player) {
+    public MarketInteractionPlayerMove(MoveType moveType, int pos) {
         this.moveType = moveType;
         this.pos = pos;
     }
 
+    public static MarketInteractionPlayerMove getInstance(MoveType moveType, int pos) {
+        return new MarketInteractionPlayerMove(moveType, pos);
+    }
     @Override
     public void execute(Match match) {
         if(match.getCanChangeTurn()) {

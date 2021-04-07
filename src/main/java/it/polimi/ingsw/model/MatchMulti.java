@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 
 import java.io.Serializable;
@@ -50,7 +51,17 @@ public class MatchMulti extends Match implements Serializable {
         randomlyPickInkwellPlayer();
         turn = posInkwell;
         super.startMatch();
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn - 1)))));
+        askForMove();
+    }
+
+    private void askForMove() {
+        //TODO: choose what move to add
+        ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
+        possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
+        possibleMove.add(MovePlayerType.MARKET_INTERACTION);
+        possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
+        possibleMove.add(MovePlayerType.MARKET_INTERACTION);
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn - 1))), possibleMove));
     }
 
     @Override
