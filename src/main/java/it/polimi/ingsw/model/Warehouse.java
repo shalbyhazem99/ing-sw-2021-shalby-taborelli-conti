@@ -57,12 +57,10 @@ public class Warehouse implements Serializable {
                 return false;
             }
             resources.add(resource);
-            spaceAvailable=spaceAvailable-1;
         }
         else { //the element we're storing is the first of the box
             resourceType=resource.getType();
             resources.add(resource);
-            spaceAvailable=spaceAvailable-1;
         }
         return true;
     }
@@ -74,23 +72,6 @@ public class Warehouse implements Serializable {
      */
     public boolean changeAvailability (int newAvailability){
         spaceAvailable = newAvailability;
-        return true;
-    }
-
-
-    /**
-     *
-     * @param donator is the other warehouse that player wants to swap
-     * @return true when it has finished to work
-     */
-
-    //Check the behavioral of the warehouses in view mode when something is changed
-    public boolean changeResources (Warehouse donator){
-
-        int temp = donator.spaceAvailable;
-        donator.changeAvailability(this.spaceAvailable);
-        this.spaceAvailable=temp;
-
         return true;
     }
 
@@ -118,12 +99,16 @@ public class Warehouse implements Serializable {
         return true;
     }
 
+    public void changeResources(ArrayList<Resource> temp)
+    {
+        this.resources = temp;
+    }
+
     public boolean getResource(Resource resource)
     {
         //Dovrebbe funzionare correttamente avendo ridefinito equals di resource
         if(resources.remove(resource))
         {
-            spaceAvailable--;
             return true;
         }
         return false;

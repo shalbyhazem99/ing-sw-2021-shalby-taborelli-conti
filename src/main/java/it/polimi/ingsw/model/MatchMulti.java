@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 
 import java.io.Serializable;
@@ -44,6 +43,37 @@ public class MatchMulti extends Match implements Serializable {
         this.posInkwell = (int) (Math.random() * (0 - getPlayers().size())) + getPlayers().size();
         return this.posInkwell;
     }
+    /**
+     * ATTENZIONE QUESTO METODO POI ANDRA' GESTITO DIVERSAMENTE DENTRO MATCHSOLO E MATCHMULTI, IO PER ORA LO METTO QUI E LO FACCIO PER MATCHMULTI
+     * Method used by the {@link Player} to end his round
+     * @param player the {@link Player} who wants to end his round
+     */
+    public void endRoundInteraction(Player player) throws EndRoundException
+    {
+        if(!isMyTurn(player))
+        {
+            throw new EndRoundException();
+        }
+        if(pendingResources.size()!=0)
+        {
+            throw new EndRoundException();
+        }
+        if(!getCanChangeTurn())
+        {
+            throw new EndRoundException();
+        }
+        if(turn==getPlayers().size()-1)
+        {
+            turn = 0;
+        }
+        else
+        {
+            turn++;
+        }
+        this.canChangeTurn = false;
+        this.pendingResources = new ArrayList<>();
+        notify(EndRoundResponse.getInstance(getPlayers(),true));
+    }
 
 
     @Override
@@ -75,14 +105,22 @@ public class MatchMulti extends Match implements Serializable {
         }
     }
 
-    @Override
-    public void setCanChangeTurn(boolean canChangeTurn) {
-        this.canChangeTurn = canChangeTurn;
-    }
-
-    @Override
-    public boolean getCanChangeTurn() {
-        return this.canChangeTurn;
+    /**
+     * Setter
+     *   It will be invoked passing a true parameter as soon as a "main" {@link it.polimi.ingsw.controller.move.PlayerMove} is executed
+     *   When is it invoked:
+     *  - When a {@link it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove} is executed and NO WHITE {@link it.polimi.ingsw.model.market.Marble} has to be converted
+     *  - When a {@link it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove} is executed
+     *  - When a {@link it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove} is executed
+     *  - When a {@link it.polimi.ingsw.controller.move.production.EnableProductionPlayerMove} is executed
+     * @param canChangeTurn boolean value to be set
+     * @param player {@link Player} that perform the action
+     */
+    public void setCanChangeTurn(boolean canChangeTurn, Player player) {
+        if(isMyTurn(player))
+        {
+            this.canChangeTurn = canChangeTurn;
+        }
     }
 
     @Override

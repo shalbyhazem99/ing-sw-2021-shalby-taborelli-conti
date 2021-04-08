@@ -28,7 +28,6 @@ public class MarketInteractionPlayerMove extends PlayerMove {
     @Override
     public void execute(Match match) {
         if(match.getCanChangeTurn()) {
-            match.setCanChangeTurn(true);
             match.marketInteraction(moveType, pos, player);
         }
     }
