@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
+import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -135,5 +137,28 @@ public class MatchSolo extends Match implements Serializable {
             }
         } while(numberOfCardsToDiscard!=0 && cardLevel!=null); //stop if the correct amount of cards is discarded or if there are no more cards of that color left
         return temp;
+    }
+
+    @Override
+    public boolean isMyTurn(Player player) {
+        return true;
+    }
+
+    @Override
+    public void setCanChangeTurn(boolean canChangeTurn, Player player) {
+        this.canChangeTurn = canChangeTurn;
+    }
+
+    /**
+     * Method used by the {@link Player} to end a {@link MatchSolo} round
+     * @param player {@link Player} who wants to end the round
+     * @throws EndRoundException {@link EndRoundException} thrown when an error occurs
+     */
+    public void endRoundInteraction(Player player) throws EndRoundException
+    {
+        setCanChangeTurn(false,player);
+        pendingResources = new ArrayList<>();
+        notify(EndRoundResponse.getInstance(getPlayers(),true));
+        //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
     }
 }

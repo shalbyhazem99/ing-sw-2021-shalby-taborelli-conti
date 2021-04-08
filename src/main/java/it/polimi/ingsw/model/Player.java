@@ -336,10 +336,111 @@ public class Player implements Serializable {
         return true;
     }
     //TODO : remove
-    public void addToWar(Resource r,int n)
+    public boolean addToWar(Resource r,int n)
     {
-        warehousesStandard.get(n).addResource(r);
+        return warehousesStandard.get(n).addResource(r);
+
     }
+
+    /**
+     * Va fatto dentro player necessariamente perchè non possiamo esporre l'oggetto warehouse, i controlli sui parametri chiamati devono già essere stati fatti
+     * @param indexFirstWarehouse
+     * @param indexSecondWarehouse
+     * @return
+     */
+    public int swapWarehouses(int indexFirstWarehouse, int indexSecondWarehouse)
+    {
+        /*
+            CASES THAT MAY HAPPEN (S=STD,A=ADDITIONAL)
+               w1    w2
+            1) S <--> S
+            2) A <--> A
+            3) A <--> S
+            4) S <--> A
+         */
+        Warehouse w1,w2;
+        boolean firstIsStandard = true,secondIsStandard = true;
+        if(indexFirstWarehouse==3||indexFirstWarehouse==4)
+        {
+            w1 = getWarehousesAdditional().get(indexFirstWarehouse-3);
+            firstIsStandard = false;
+        }
+        else //0,1,2
+        {
+            w1 = getWarehousesStandard().get(indexFirstWarehouse);
+        }
+        if(indexSecondWarehouse==3||indexSecondWarehouse==4)
+        {
+            w2 = getWarehousesAdditional().get(indexSecondWarehouse-3);
+            secondIsStandard = false;
+        }
+        else //0,1,2
+        {
+            w2 = getWarehousesStandard().get(indexSecondWarehouse);
+        }
+        if(firstIsStandard&&secondIsStandard) //1)
+        {
+            /*
+                      WAR.SPACE      #RES CONTAINED
+
+                    1) spaceMax = 1, 1 resource
+                    3) spacemax = 3, 1 resource
+                    ---------------------------
+                    1) SWAP 3) ==> OKAY
+
+                    1) spaceMax = 1, 1 resource
+                    3) spacemax = 3, 2 resource
+                    ---------------------------
+                    1) SWAP 3) ==> ERROR
+
+             */
+            if(w1.getResources().size()<=w2.getSpaceAvailable() && w1.getResources().size()<=w2.getSpaceAvailable()) //check for space
+            {
+                //simply change the arraylist of resources
+                ArrayList<Resource> temp = w1.getResources();
+                w1.changeResources(w2.getResources());
+                w2.changeResources(temp);
+                return -1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        else if(!firstIsStandard&&!secondIsStandard) //2) A <==> A, we need to check the resType correctness, no space check, both of them can store max 2 resources
+        {
+            if(w1.getResourceType()!=w2.getResourceType())
+            {
+                return -1;
+            }
+            //simply change the arraylist of resources
+            ArrayList<Resource> temp = w1.getResources();
+            w1.changeResources(w2.getResources());
+            w2.changeResources(temp);
+            return w1.getResources().size()+w2.getResources().size();
+
+        }
+        else  //3) A <==> S 0R 4) S <==> A
+        {
+            if(w1.getResourceType()!=w2.getResourceType())
+            {
+                return -1;
+            }
+            if(w1.getResources().size()<=w2.getSpaceAvailable() && w1.getResources().size()<=w2.getSpaceAvailable()) //check for space
+            {
+                //simply change the arraylist of resources
+                ArrayList<Resource> temp = w1.getResources();
+                w1.changeResources(w2.getResources());
+                w2.changeResources(temp);
+                return w1.getResources().size()+w2.getResources().size();
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
+
     public static void main (String [] args)
     {
         //[0]-->3
