@@ -49,6 +49,9 @@ public class MarketResponse extends MoveResponse {
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin) {
+        System.out.print("Resource gained: ");
+        resources.stream().forEach(elem->System.out.print(elem.getType().toString()+" "));
+        System.out.println("\n");
         return null;
     }
 }

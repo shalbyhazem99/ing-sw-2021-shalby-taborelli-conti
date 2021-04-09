@@ -19,7 +19,7 @@ public class GameManger implements Observer<PlayerMove> {
     private synchronized void excuteMove(PlayerMove playerMove){
         if(match.isMyTurn(playerMove.getPlayer())) {
             playerMove.execute(match);
-            match.updateTurn();
+            //match.updateTurn();
             //TODO: control if someone won the match
         }
     }

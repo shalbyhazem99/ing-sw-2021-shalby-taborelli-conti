@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.move.MovePlayerType;
+import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
+import it.polimi.ingsw.exceptions.EndRoundException;
+import it.polimi.ingsw.model.market.MoveType;
 
 import java.io.Serializable;
 import java.util.*;
@@ -40,7 +44,9 @@ public class MatchMulti extends Match implements Serializable {
         if (this.posInkwell != -1) {
             return this.posInkwell;
         }
-        this.posInkwell = (int) (Math.random() * (0 - getPlayers().size())) + getPlayers().size();
+
+        Random rand = new Random();
+        this.posInkwell = rand.nextInt(getPlayers().size());
         return this.posInkwell;
     }
     /**
@@ -91,14 +97,22 @@ public class MatchMulti extends Match implements Serializable {
         possibleMove.add(MovePlayerType.MARKET_INTERACTION);
         possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
         possibleMove.add(MovePlayerType.MARKET_INTERACTION);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn - 1))), possibleMove));
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove));
+    }
+
+    @Override
+    public void marketInteraction(MoveType moveType, int pos, Player player) {
+        super.marketInteraction(moveType, pos, player);
+        //todo: to be remove
+        updateTurn();
+        askForMove();
     }
 
     @Override
     public void updateTurn() {
         if (canChangeTurn) {
             canChangeTurn = false;
-            if (turn < getPlayers().size())
+            if (turn < getPlayers().size()-1)
                 turn++;
             else
                 turn = 0;

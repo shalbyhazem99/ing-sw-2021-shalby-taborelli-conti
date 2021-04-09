@@ -76,25 +76,6 @@ public class ClientCLI {
 
     }
 
-    public Thread asyncWriteToSocket(final Scanner stdin, final ObjectOutputStream socketOut) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (isActive()) {
-                        String inputLine = stdin.nextLine();
-                        socketOut.writeObject(inputLine);
-                        socketOut.flush();
-                    }
-                } catch (Exception e) {
-                    setActive(false);
-                }
-            }
-        });
-        t.start();
-        return t;
-    }
-
     public void run() throws IOException {
         Socket socket = new Socket(ip, port);
         System.out.println("Connection established");
@@ -103,9 +84,7 @@ public class ClientCLI {
         Scanner stdin = new Scanner(System.in);
         try {
             Thread t0 = asyncReadFromSocket(stdin, socketIn, socketOut);
-            //Thread t1 = asyncWriteToSocket(stdin, socketOut);
             t0.join();
-            //t1.join();
         } catch (InterruptedException | NoSuchElementException e) {
             System.out.println("Connection closed from the client side");
         } finally {
