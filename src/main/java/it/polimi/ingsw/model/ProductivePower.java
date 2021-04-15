@@ -24,5 +24,4 @@ public class ProductivePower implements Serializable {
         return (ArrayList<Resource>) to.clone();
     }
 
-    //TODO: getter con clone
 }

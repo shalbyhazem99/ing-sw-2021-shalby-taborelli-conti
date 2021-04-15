@@ -9,6 +9,7 @@ public class ActionToken implements Serializable {
     private int count;
     private DevelopmentCardType cardToReject;
 
+
     /**
      * Default constructor
      * @param action {@link MarkerType} action

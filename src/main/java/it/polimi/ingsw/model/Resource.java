@@ -33,5 +33,4 @@ public class Resource implements Serializable {
         return getInstance(type);
     }
 
-    //TODO: Tostring serve?
 }
