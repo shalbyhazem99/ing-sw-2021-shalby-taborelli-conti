@@ -18,7 +18,6 @@ class ResourcesCountTest {
         assertEquals(type, resourcesCount.getType());
     }
 
-    //é giusto la doppia parentesi graffa?
     @Test
     public void toArrayListResources() {
     }

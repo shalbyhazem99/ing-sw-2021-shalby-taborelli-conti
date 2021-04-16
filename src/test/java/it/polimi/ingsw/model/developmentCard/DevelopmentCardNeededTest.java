@@ -6,7 +6,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertSame;
 class DevelopmentCardNeededTest {
 
-    public void testDevelopmentCarNeeded{
+    public void testDevelopmentCarNeeded(){
 
     }
 

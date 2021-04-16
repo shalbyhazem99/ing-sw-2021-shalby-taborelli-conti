@@ -61,7 +61,7 @@ class WarehouseTest {
         assertEquals(newAvailability, warehouse.getSpaceAvailable());
     }
 
-    //è giusto che funzioni così il metodo originale
+
     @Test
     public void changeResources() {
         final int spaceAvailable = 0;

@@ -42,7 +42,16 @@ public class DevelopmentCardSpace implements Serializable {
      * @return true <==> the {@link DevelopmentCard} can be added
      */
     public boolean canBeAdded(DevelopmentCard developmentCard) {
-        return developmentCards.size() == developmentCard.getLevel().label;
+        if (developmentCard.getLevel().label== DevelopmentCardLevel.FIRST.label){
+           return developmentCards.size() == 0;
+        }
+        else if (developmentCard.getLevel().label== DevelopmentCardLevel.SECOND.label){
+            return developmentCards.size() == 1;
+        }
+        else if (developmentCard.getLevel().label== DevelopmentCardLevel.THIRD.label){
+            return developmentCards.size() == 2;
+        }
+        return false;
     }
 
     /**

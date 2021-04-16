@@ -15,15 +15,7 @@ class ResourceTest {
         assertEquals(resourceType, resource.getType());
     }
 
-    //Così funziona?
-    /*
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Resource)) {
-            return false;
-        }
-        return type.equals(((Resource) obj).getType());
-    }
-     */
+
 
     @Test
     public void testEquals() {
