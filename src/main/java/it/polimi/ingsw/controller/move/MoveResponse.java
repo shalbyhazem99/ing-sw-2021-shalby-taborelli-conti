@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.move;
 
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.view.MatchProxy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,4 +24,8 @@ public abstract class MoveResponse implements Serializable {
 
     //todo: method that indicate something that the user must do in response to a GameManagerResponse
     public abstract PlayerMove elaborateCliInput(final Scanner stdin);
+
+    public void updateLocalMatch(MatchProxy matchProxy){
+        //todo: to update the local view.
+    }
 }

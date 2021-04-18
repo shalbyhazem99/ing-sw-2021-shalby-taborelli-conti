@@ -12,6 +12,7 @@ import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
 import it.polimi.ingsw.exceptions.DevelopmentSpaceException;
+import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.exceptions.NotEnoughResourcesException;
 import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
@@ -189,7 +190,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void discardLeaderCard(LeaderCard leaderCard) {
     }
 
-    public void enableLeaderCard(LeaderCard leaderCard) throws NotEnoughResourcesException {
+    public void enableLeaderCard(int leaderCardPosition) throws NotEnoughResourcesException {
     }
 
     public void enableProductionMove(ArrayList<ProductivePower> productivePowers) throws NotEnoughResourcesException {
@@ -450,4 +451,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     {
         return canChangeTurn;
     }
+
+    public abstract void endRoundInteraction(Player player) throws EndRoundException;
 }

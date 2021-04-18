@@ -16,29 +16,15 @@ public class EndRoundPlayerMove extends PlayerMove {
      */
 
 
+    public static EndRoundPlayerMove getInstance() {
+        return new EndRoundPlayerMove();
+    }
+
     @Override
     public void execute(Match match) {
-        //forse da pensare meglio per sfruttare meglio ereditarietà, in teoria si potrebbe togleire l'if
-        try
-        {
-            if( (match instanceof MatchMulti))
-            {
-                MatchMulti matchMulti = (MatchMulti) match;
-                matchMulti.endRoundInteraction(getPlayer());
-            }
-            else if((match instanceof MatchSolo))
-            {
-                MatchSolo matchSolo = (MatchSolo) match;
-                matchSolo.endRoundInteraction(getPlayer());
-            }
-            else
-            {
-                match.illegalPlayerMoveInteraction("error not multi",player);
-                return;
-            }
-
-        }catch (Exception e)
-        {
+        try {
+            match.endRoundInteraction(getPlayer());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

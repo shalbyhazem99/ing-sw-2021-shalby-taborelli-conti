@@ -1,9 +1,13 @@
 package it.polimi.ingsw.controller.move;
 
+import it.polimi.ingsw.controller.move.LeaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
+import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
+import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.model.market.MoveType;
 
 import java.util.Arrays;
@@ -56,17 +60,39 @@ public enum MovePlayerType {
                 MoveType type = moveTypes[stdin.nextInt()];
 
                 //pos
-                System.out.println("insert development card position( 0,...)");
+                System.out.println("insert column/row position( 0,...)");
                 int pos = stdin.nextInt();
 
-               marketInteractionPlayerMove = MarketInteractionPlayerMove.getInstance(type, pos);
+                marketInteractionPlayerMove = MarketInteractionPlayerMove.getInstance(type, pos);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin);
             }
             return marketInteractionPlayerMove;
         }
+    },
+    ENABLE_LEADER_CARD("Enable Leader Card") {
+        @Override
+        public PlayerMove elaborateMoveForCLI(Scanner stdin) {
+            EnableLeaderCardPlayerMove enableLeaderCardPlayerMove = null;
+            try {
+                //position
+                System.out.print("insert the pos of the leader card to enable (0...)");
+                enableLeaderCardPlayerMove = EnableLeaderCardPlayerMove.getInstance(stdin.nextInt());
+            } catch (Exception e) {
+                System.out.println("Error retry:");
+                elaborateMoveForCLI(stdin);
+            }
+            return enableLeaderCardPlayerMove;
+        }
+    },
+    END_TURN("End turn") {
+        @Override
+        public PlayerMove elaborateMoveForCLI(Scanner stdin) {
+          return EndRoundPlayerMove.getInstance();
+        }
     };
+
 
     private String description;
 

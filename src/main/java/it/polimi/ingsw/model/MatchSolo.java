@@ -154,7 +154,7 @@ public class MatchSolo extends Match implements Serializable {
      * @param player {@link Player} who wants to end the round
      * @throws EndRoundException {@link EndRoundException} thrown when an error occurs
      */
-    public void endRoundInteraction(Player player) throws EndRoundException
+    public void endRoundInteraction(Player player)
     {
         setCanChangeTurn(false,player);
         pendingResources = new ArrayList<>();
