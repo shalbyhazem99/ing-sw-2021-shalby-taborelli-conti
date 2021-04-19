@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.market;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 
@@ -48,7 +49,8 @@ public class MarketResponse extends MoveResponse {
     }
 
     @Override
-    public PlayerMove elaborateCliInput(Scanner stdin) {
+    public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
+        //todo: control the number of marbel to be converted
         System.out.print("Resource gained: ");
         resources.stream().forEach(elem->System.out.print(elem.getType().toString()+" "));
         System.out.println("\n");

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
+import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMove;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.model.market.MoveType;
@@ -126,7 +127,7 @@ public class MatchMulti extends Match implements Serializable {
      *  - When a {@link it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove} is executed and NO WHITE {@link it.polimi.ingsw.model.market.Marble} has to be converted
      *  - When a {@link it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove} is executed
      *  - When a {@link it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove} is executed
-     *  - When a {@link it.polimi.ingsw.controller.move.production.EnableProductionPlayerMove} is executed
+     *  - When a {@link EnableProductionPlayerMove} is executed
      * @param canChangeTurn boolean value to be set
      * @param player {@link Player} that perform the action
      */

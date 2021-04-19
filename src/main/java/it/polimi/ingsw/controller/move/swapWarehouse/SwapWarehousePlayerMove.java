@@ -22,6 +22,10 @@ public class SwapWarehousePlayerMove extends PlayerMove {
         this.secondWarehouseIndex = secondWarehouseIndex;
     }
 
+    public static SwapWarehousePlayerMove getInstance(int firstWarehouseIndex, int secondWarehouseIndex) {
+        return new SwapWarehousePlayerMove(firstWarehouseIndex, secondWarehouseIndex);
+    }
+
     @Override
     public void execute(Match match) {
         try

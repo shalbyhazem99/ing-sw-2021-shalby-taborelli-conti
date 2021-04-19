@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.settings;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class SendMessage extends MoveResponse {
         return new SendMessage(message,players);
     }
     @Override
-    public PlayerMove elaborateCliInput( Scanner stdin) {
+    public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         return null;
     }
 

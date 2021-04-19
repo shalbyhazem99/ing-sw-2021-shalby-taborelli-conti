@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.endRound;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 
@@ -26,7 +27,7 @@ public class EndRoundResponse extends MoveResponse {
     }
 
     @Override
-    public PlayerMove elaborateCliInput( Scanner stdin) {
+    public PlayerMove elaborateCliInput( Scanner stdin, Match match) {
         return null;
     }
 }

@@ -1,10 +1,13 @@
 package it.polimi.ingsw.controller.move;
 
+import it.polimi.ingsw.controller.move.LeaderCard.DiscardLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.LeaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
+import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
+import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
@@ -14,9 +17,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public enum MovePlayerType {
-    BUY_DEVELOPMENT_CARD("Buy development card") {
+    BUY_DEVELOPMENT_CARD("Buy Development Card") {
         @Override
-        public PlayerMove elaborateMoveForCLI(Scanner stdin) {
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
             BuyDevelopmentCardPlayerMove developmentCardPlayerMove = null;
             try {
                 //type
@@ -40,14 +43,50 @@ public enum MovePlayerType {
                 developmentCardPlayerMove = BuyDevelopmentCardPlayerMove.getInstance(type, level, pos);
             } catch (Exception e) {
                 System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin);
+                elaborateMoveForCLI(stdin,match);
             }
             return developmentCardPlayerMove;
         }
     },
-    MARKET_INTERACTION("Market interaction") {
+    END_TURN("End Turn") {
         @Override
-        public PlayerMove elaborateMoveForCLI(Scanner stdin) {
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
+            return EndRoundPlayerMove.getInstance();
+        }
+    },
+    ENABLE_LEADER_CARD("Enable Leader Card") {
+        @Override
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
+            EnableLeaderCardPlayerMove enableLeaderCardPlayerMove = null;
+            try {
+                //position
+                System.out.print("insert the pos of the leader card to enable (0,1)");
+                enableLeaderCardPlayerMove = EnableLeaderCardPlayerMove.getInstance(stdin.nextInt());
+            } catch (Exception e) {
+                System.out.println("Error retry:");
+                elaborateMoveForCLI(stdin,match);
+            }
+            return enableLeaderCardPlayerMove;
+        }
+    },
+    DISCARD_LEADER_CARD("Discard Leader Card") {
+        @Override
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
+            DiscardLeaderCardPlayerMove discardLeaderCardPlayerMove = null;
+            try {
+                //position
+                System.out.print("insert the pos of the leader card to discard (0,1)");
+                discardLeaderCardPlayerMove = DiscardLeaderCardPlayerMove.getInstance(stdin.nextInt());
+            } catch (Exception e) {
+                System.out.println("Error retry:");
+                elaborateMoveForCLI(stdin,match);
+            }
+            return discardLeaderCardPlayerMove;
+        }
+    },
+    MARKET_INTERACTION("Market Interaction") {
+        @Override
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
             MarketInteractionPlayerMove marketInteractionPlayerMove = null;
             try {
                 //type
@@ -66,30 +105,34 @@ public enum MovePlayerType {
                 marketInteractionPlayerMove = MarketInteractionPlayerMove.getInstance(type, pos);
             } catch (Exception e) {
                 System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin);
+                elaborateMoveForCLI(stdin,match);
             }
             return marketInteractionPlayerMove;
         }
     },
-    ENABLE_LEADER_CARD("Enable Leader Card") {
+    ENABLE_PRODUCTION("Enable A Production") {
         @Override
-        public PlayerMove elaborateMoveForCLI(Scanner stdin) {
-            EnableLeaderCardPlayerMove enableLeaderCardPlayerMove = null;
-            try {
-                //position
-                System.out.print("insert the pos of the leader card to enable (0...)");
-                enableLeaderCardPlayerMove = EnableLeaderCardPlayerMove.getInstance(stdin.nextInt());
-            } catch (Exception e) {
-                System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin);
-            }
-            return enableLeaderCardPlayerMove;
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
+            //todo: da pensare
+            return null;
         }
     },
-    END_TURN("End turn") {
+
+    SWAP_WAREHOUSE("Swap Warehouse") {
         @Override
-        public PlayerMove elaborateMoveForCLI(Scanner stdin) {
-          return EndRoundPlayerMove.getInstance();
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
+            SwapWarehousePlayerMove swapWarehousePlayerMove = null;
+            try {
+                //position
+                System.out.print("insert the pos of the first warehouse to swap (0...)");
+                int first = stdin.nextByte();
+                System.out.print("insert the pos of the second warehouse to swap (0...)");
+                swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, stdin.nextInt());
+            } catch (Exception e) {
+                System.out.println("Error retry:");
+                elaborateMoveForCLI(stdin,match);
+            }
+            return swapWarehousePlayerMove;
         }
     };
 
@@ -104,5 +147,5 @@ public enum MovePlayerType {
         this.description = description;
     }
 
-    public abstract PlayerMove elaborateMoveForCLI(Scanner stdin);
+    public abstract PlayerMove elaborateMoveForCLI(Scanner stdin, Match match);
 }

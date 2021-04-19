@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.move.settings;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
 import java.util.ArrayList;
@@ -23,12 +24,12 @@ public class AskForMove extends MoveResponse {
     }
 
     @Override
-    public PlayerMove elaborateCliInput(Scanner stdin) {
+    public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         System.out.println("Choose from the following move:");
         for (int i = 0; i < possibleMove.size() ; i++) {
             System.out.println(i+") "+possibleMove.get(i).getDescription());
         }
         int move = stdin.nextInt();
-        return possibleMove.get(move).elaborateMoveForCLI(stdin);
+        return possibleMove.get(move).elaborateMoveForCLI(stdin,match);
     }
 }

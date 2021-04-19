@@ -187,7 +187,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return developmentCards[level.label][type.label].pop();
     }
 
-    public void discardLeaderCard(LeaderCard leaderCard) {
+    public void discardLeaderCard(int leaderCardPosition) {
     }
 
     public void enableLeaderCard(int leaderCardPosition) throws NotEnoughResourcesException {

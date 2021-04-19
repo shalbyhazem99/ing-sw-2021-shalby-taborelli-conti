@@ -28,7 +28,7 @@ public class FileReader {
             }
         }
         Gson gson = new Gson();
-        String filePath = new File("JSON\\DevelopmentCard\\DevelopmentCard.json").getAbsolutePath();
+        String filePath = new File("JSON/DevelopmentCard/DevelopmentCard.json").getAbsolutePath();
         try (Reader reader = new java.io.FileReader(filePath)) {
 
             // Convert JSON File to Java Object
@@ -54,10 +54,10 @@ public class FileReader {
         ArrayList<LeaderCard> leaderCards = new ArrayList<>();
         Gson gson = new Gson();
         Map<String, Type> fileSet = new HashMap<>();
-        fileSet.put(new File("JSON\\LeaderCard\\LeaderCard_AddProductive.json").getAbsolutePath(), LeaderCardAddProductive[].class);
-        fileSet.put(new File("JSON\\LeaderCard\\LeaderCard_AddWarehouse.json").getAbsolutePath(), LeaderCardAddWarehouse[].class);
-        fileSet.put(new File("JSON\\LeaderCard\\LeaderCard_Color.json").getAbsolutePath(), LeaderCardColor[].class);
-        fileSet.put(new File("JSON\\LeaderCard\\LeaderCard_Discount.json").getAbsolutePath(), LeaderCardDiscount[].class);
+        fileSet.put(new File("JSON/LeaderCard/LeaderCard_AddProductive.json").getAbsolutePath(), LeaderCardAddProductive[].class);
+        fileSet.put(new File("JSON/LeaderCard/LeaderCard_AddWarehouse.json").getAbsolutePath(), LeaderCardAddWarehouse[].class);
+        fileSet.put(new File("JSON/LeaderCard/LeaderCard_Color.json").getAbsolutePath(), LeaderCardColor[].class);
+        fileSet.put(new File("JSON/LeaderCard/LeaderCard_Discount.json").getAbsolutePath(), LeaderCardDiscount[].class);
         for (Map.Entry<String, Type> entry : fileSet.entrySet()) {
             try (Reader reader = new java.io.FileReader(entry.getKey())) {
                 //read data from file;

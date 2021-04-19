@@ -1,16 +1,22 @@
-package it.polimi.ingsw.controller.move;
+package it.polimi.ingsw.controller.move.LeaderCard;
 
+import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 public class DiscardLeaderCardPlayerMove extends PlayerMove {
-    private LeaderCard leaderCard;
+    private int leaderCardPosition;
+
+    public DiscardLeaderCardPlayerMove(int leaderCardPosition) {
+        this.leaderCardPosition = leaderCardPosition;
+    }
+
+    public static DiscardLeaderCardPlayerMove getInstance(int leaderCardPosition) {
+        return new DiscardLeaderCardPlayerMove(leaderCardPosition);
+    }
+
     @Override
     public void execute(Match match) {
-        match.discardLeaderCard(leaderCard); //todo: the leader card is not the same instance so equal must be written
+        match.discardLeaderCard(leaderCardPosition);
     }
-    public DiscardLeaderCardPlayerMove(String name_of_user)
-    {
 
-    }
 }

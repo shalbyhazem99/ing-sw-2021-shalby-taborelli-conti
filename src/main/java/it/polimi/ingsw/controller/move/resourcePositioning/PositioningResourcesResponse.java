@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.resourcePositioning;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 
@@ -38,7 +39,7 @@ public class PositioningResourcesResponse extends MoveResponse {
     }
 
     @Override
-    public PlayerMove elaborateCliInput( Scanner stdin) {
+    public PlayerMove elaborateCliInput( Scanner stdin, Match match) {
         return null;
     }
 }

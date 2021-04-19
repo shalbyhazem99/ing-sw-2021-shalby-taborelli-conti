@@ -68,7 +68,7 @@ public class ClientCLI {
 
     public void manageResponse(MoveResponse moveResponse, final Scanner stdin, final ObjectOutputStream socketOut) {
         try {
-            socketOut.writeObject(moveResponse.elaborateCliInput(stdin));
+            socketOut.writeObject(moveResponse.elaborateCliInput(stdin,match));
             socketOut.flush();
         } catch (Exception e) {
             setActive(false);
