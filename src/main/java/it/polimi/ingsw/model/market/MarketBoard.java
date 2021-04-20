@@ -28,7 +28,21 @@ public class MarketBoard implements Serializable {
      * @return the number of white Marbles is 4 - count of the returned ArrayList
      */
     public ArrayList<Resource> getResources(MoveType moveType, int pos) {
-        ArrayList<Marble> temp;
+        if(moveType.equals(MoveType.RIGA))
+        {
+            if(pos<0||pos>2)
+            {
+                return new ArrayList<>();
+            }
+        }
+        else
+        {
+            if(pos<0||pos>3)
+            {
+                return new ArrayList<>();
+            }
+        }
+        ArrayList<Marble> temp = new ArrayList<>();
         if (moveType == MoveType.RIGA) {
             temp = getRow(pos);
             slideRow(pos);
@@ -44,7 +58,7 @@ public class MarketBoard implements Serializable {
 
     }
 
-    private ArrayList<Marble> getColumn(int column) {
+    public ArrayList<Marble> getColumn(int column) {
         ArrayList<Marble> temp = new ArrayList<>();
         for (int r = 0; r < Utils.MARKET_ROW_NUMBER; r++) {
             temp.add(marketMatrix[r][column]);
@@ -52,7 +66,15 @@ public class MarketBoard implements Serializable {
         return temp;
     }
 
-    private ArrayList<Marble> getRow(int row) {
+    public Marble[][] getMarketMatrix() {
+        return marketMatrix.clone();
+    }
+
+    public Marble getAdditionalMarble() {
+        return additionalMarble;
+    }
+
+    public ArrayList<Marble> getRow(int row) {
         ArrayList<Marble> temp = new ArrayList<>();
         for (int c = 0; c < Utils.MARKET_COL_NUMBER; c++) {
             temp.add(marketMatrix[row][c]);

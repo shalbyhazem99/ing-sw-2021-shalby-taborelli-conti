@@ -184,6 +184,10 @@ public class Player implements Serializable {
                 .collect(Collectors.toList());
     }
 
+    public ArrayList<DevelopmentCardSpace> getDevelopmentCardSpaces() {
+        return developmentCardSpaces;
+    }
+
     public boolean hasDiscount() {
         return getDiscounts().size() > 0;
     }

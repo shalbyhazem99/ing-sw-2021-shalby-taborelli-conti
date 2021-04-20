@@ -75,4 +75,11 @@ public abstract class LeaderCard implements Serializable {
         else
             return 0;
     }
+
+    @Override
+    public String toString() {
+
+        //protected final ArrayList<DevelopmentCardNeeded> developmentCardNeeded;
+        return "Act: "+active+"/Point: "+points+"/Type: "+resourceTypeRelated+"/ResNeed: "+resourcesNeeded.toString();
+    }
 }

@@ -3,7 +3,6 @@ package it.polimi.ingsw.utils;
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.leaderCard.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;

@@ -95,4 +95,8 @@ public class DevelopmentCard implements Serializable {
         return (ArrayList<ResourcesCount>) costs.clone();
     }
 
+    @Override
+    public String toString() {
+        return level.toString()+"/"+type.toString()+"/eq_point:"+equivalentPoint+"/Pot_prod:"+powers.toString()+"/Cost:"+costs.toString()+"|||||";
+    }
 }

@@ -142,4 +142,67 @@ public class MatchMulti extends Match implements Serializable {
     public boolean isMyTurn(Player player) {
         return getPlayers().get(turn).equals(player);
     }
+
+    public String toString()
+    {
+        System.out.println("MERCATO");
+        System.out.println(marketBoard.getAdditionalMarble().toString());
+        for(int i = 0;i<3;i++)
+        {
+            for(int j = 0;j<4;j++)
+            {
+                System.out.print(marketBoard.getRow(i).get(j).toString()+"|");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println("CARTE SVILUPPO");
+        for(int i = 0;i<3;i++)
+        {
+            for(int j = 0; j<4; j++)
+            {
+                System.out.print(developmentCards[i][j].peek().toString()+"|");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        for(int l = 0;l<getPlayers().size();l++)
+        {
+            Player player = getPlayers().get(l);
+            if(player==null)
+            {
+                break;
+            }
+            System.out.println("Pos Fede: "+ player.getPosFaithMarker());
+            System.out.println("WAREHOUSE STD");
+            for(int i = 0;i<player.getWarehousesStandard().size();i++)
+            {
+                System.out.println("WRH "+i+") ==> "+player.getWarehousesStandard().get(i).toString());
+            }
+            System.out.println("WAREHOUSE ADD");
+            for(int i = 0;i<player.getWarehousesAdditional().size();i++)
+            {
+                System.out.println("WRH "+i+") ==> "+player.getWarehousesStandard().get(i).toString());
+            }
+            System.out.println("FORZIERE");
+            System.out.println(player.getStrongBox().toString());
+            System.out.println("SPAZI CARTE");
+            for(int a = 0;a<player.getDevelopmentCardSpaces().size();a++)
+            {
+                System.out.println(player.getDevelopmentCards().get(a).toString());
+            }
+            System.out.println("LEADER CARD");
+            for(int w = 0;w<getLeaderCards().size();w++)
+            {
+                System.out.println(getLeaderCards().get(w).toString());
+            }
+        }
+        return null;
+    }
+
+    public static void main (String [] args)
+    {
+        MatchMulti m = new MatchMulti(2);
+        m.toString();
+    }
 }

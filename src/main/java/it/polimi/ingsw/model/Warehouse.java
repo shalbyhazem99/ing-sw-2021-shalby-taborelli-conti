@@ -113,4 +113,9 @@ public class Warehouse implements Serializable {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Space: "+spaceAvailable+"/Type: "+resourceType.toString()+"/Res:"+resources.toString();
+    }
 }

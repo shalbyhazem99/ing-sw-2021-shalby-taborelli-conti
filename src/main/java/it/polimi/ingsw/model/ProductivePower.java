@@ -24,5 +24,19 @@ public class ProductivePower implements Serializable {
         return (ArrayList<Resource>) to.clone();
     }
 
-    //TODO: getter con clone
+
+    @Override
+    public String toString() {
+        String s = "";
+        for (ResourcesCount r: from)
+        {
+            s = s+r.toString()+"-";
+        }
+        s = s + "-->";
+        for (Resource a: to)
+        {
+            s = s+a.toString()+"-";
+        }
+        return s;//from.toString()+"-->"+to.toString();
+    }
 }

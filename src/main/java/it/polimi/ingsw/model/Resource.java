@@ -33,5 +33,8 @@ public class Resource implements Serializable {
         return getInstance(type);
     }
 
-    //TODO: Tostring serve?
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

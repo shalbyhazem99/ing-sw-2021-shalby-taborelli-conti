@@ -20,6 +20,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.model.market.Marble;
 import it.polimi.ingsw.model.market.MarketBoard;
 import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.observer.Observable;
@@ -464,5 +465,31 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     }
 
     public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
+    }
+
+    @Override
+    public String toString() {
+        System.out.println("MERCATO");
+        System.out.println(marketBoard.getAdditionalMarble().toString());
+        for(int i = 0;i<3;i++)
+        {
+            for(int j = 0;j<4;j++)
+            {
+                System.out.print(marketBoard.getRow(i).get(j).toString()+"|");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println("CARTE SVILUPPO");
+        for(int i = 0;i<3;i++)
+        {
+            for(int j = 0; j<4; j++)
+            {
+                System.out.print(developmentCards[i][j].peek().toString()+"|");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        return null;
     }
 }

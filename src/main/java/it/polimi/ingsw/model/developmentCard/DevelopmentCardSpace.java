@@ -61,4 +61,9 @@ public class DevelopmentCardSpace implements Serializable {
     {
         return developmentCards.peek();
     }
+
+    @Override
+    public String toString() {
+        return developmentCards.peek().toString();
+    }
 }

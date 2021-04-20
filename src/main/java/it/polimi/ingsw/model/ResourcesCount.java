@@ -37,4 +37,9 @@ public class ResourcesCount implements Serializable {
             }
         }};
     }
+
+    @Override
+    public String toString() {
+        return "#"+count+" "+type.toString();
+    }
 }
