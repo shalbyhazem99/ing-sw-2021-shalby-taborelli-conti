@@ -5,6 +5,7 @@ import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.market.MarketResponse;
 import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
+import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
 import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
@@ -70,7 +71,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             for (int i = 0; i < 4; i++)
                 player.addLeaderCard(leaderCards.pop());
         }
-        notify(SendModel.getInstance(this, players));
+        for (int i = 0; i < players.size(); i++) {
+            notify(SendModel.getInstance(this, players.get(i),i));
+        }
     }
 
 
@@ -80,7 +83,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @return {@link Player} clone
      */
     public ArrayList<Player> getPlayers() {
-        return (ArrayList<Player>) players.clone();
+        return players;
     }
 
     /**
@@ -453,4 +456,13 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     }
 
     public abstract void endRoundInteraction(Player player) throws EndRoundException;
+
+    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
+    }
+
+    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
+    }
+
+    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
+    }
 }

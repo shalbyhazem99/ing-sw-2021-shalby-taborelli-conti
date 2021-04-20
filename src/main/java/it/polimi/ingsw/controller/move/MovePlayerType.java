@@ -4,15 +4,17 @@ import it.polimi.ingsw.controller.move.LeaderCard.DiscardLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.LeaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
-import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
+import it.polimi.ingsw.controller.move.production.move.*;
 import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
-import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.model.market.MoveType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -43,7 +45,7 @@ public enum MovePlayerType {
                 developmentCardPlayerMove = BuyDevelopmentCardPlayerMove.getInstance(type, level, pos);
             } catch (Exception e) {
                 System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin,match);
+                elaborateMoveForCLI(stdin, match);
             }
             return developmentCardPlayerMove;
         }
@@ -64,7 +66,7 @@ public enum MovePlayerType {
                 enableLeaderCardPlayerMove = EnableLeaderCardPlayerMove.getInstance(stdin.nextInt());
             } catch (Exception e) {
                 System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin,match);
+                elaborateMoveForCLI(stdin, match);
             }
             return enableLeaderCardPlayerMove;
         }
@@ -79,7 +81,7 @@ public enum MovePlayerType {
                 discardLeaderCardPlayerMove = DiscardLeaderCardPlayerMove.getInstance(stdin.nextInt());
             } catch (Exception e) {
                 System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin,match);
+                elaborateMoveForCLI(stdin, match);
             }
             return discardLeaderCardPlayerMove;
         }
@@ -105,7 +107,7 @@ public enum MovePlayerType {
                 marketInteractionPlayerMove = MarketInteractionPlayerMove.getInstance(type, pos);
             } catch (Exception e) {
                 System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin,match);
+                elaborateMoveForCLI(stdin, match);
             }
             return marketInteractionPlayerMove;
         }
@@ -113,11 +115,63 @@ public enum MovePlayerType {
     ENABLE_PRODUCTION("Enable A Production") {
         @Override
         public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
-            //todo: da pensare
-            return null;
+            EnableProductionPlayerMove enableProductionPlayerMove = null;
+            try {
+                //pos
+                System.out.println("insert which type of power you want to active( 0-> base production, 1-> Leader Card, 2-> Development Card)");
+                int type = stdin.nextInt();
+                ArrayList<ResourcePick> resourceToUse;
+                int index;
+                switch (type) {
+                    case 0: //base production from two get one
+                        resourceToUse = getRequiredResourceFrom((ArrayList<ResourcesCount>) Arrays.asList(ResourcesCount.getInstance(2, ResourceType.ANY)), stdin);
+                        ResourceType[] resourceTypes = ResourceType.values();
+                        System.out.print("insert interaction type ( ");
+                        for (int i = 0; i < resourceTypes.length; i++) {
+                            System.out.print(i + "->" + resourceTypes[i] + " ");
+                        }
+                        index = stdin.nextInt();
+                        enableProductionPlayerMove = EnableProductionPlayerMoveBase.getInstance(resourceToUse, resourceTypes[index]);
+                        break;
+                    case 1: //Leader Card
+                        System.out.println("insert the index of the Leader Card power to activate (0,...)");
+                        index = stdin.nextInt();
+                        resourceToUse = getRequiredResourceFrom(match.getPlayers().get(0).getAddedPower().get(index).getFrom(), stdin);
+                        enableProductionPlayerMove = EnableProductionPlayerMoveLeaderCard.getInstance(resourceToUse, index);
+                        break;
+                    case 2: //Development Card
+                        System.out.println("insert the index of the Development Card power to activate (0,1,3)");
+                        index = stdin.nextInt();
+                        resourceToUse = getRequiredResourceFrom(match.getPlayers().get(0).getDevelopmentCardSpaces().get(index).pickTopCard().getCosts(), stdin);
+                        enableProductionPlayerMove = EnableProductionPlayerMoveDevelopmentCard.getInstance(resourceToUse, index);
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Error retry:");
+                elaborateMoveForCLI(stdin, match);
+            }
+            return enableProductionPlayerMove;
         }
-    },
 
+        private ArrayList<ResourcePick> getRequiredResourceFrom(ArrayList<ResourcesCount> resourcesCounts, Scanner stdin) {
+            //todo: to review
+            ArrayList<ResourcePick> resourcePicks = new ArrayList<>();
+            for (ResourcesCount res : resourcesCounts) {
+                System.out.println("From where you get " + res.getCount() + " " + res.getType() + "(0-> Warehouse, 1-> Strongbox)");
+                switch (stdin.nextInt()) {
+                    case 0:
+                        System.out.println("insert the position of the warehouse (0,...,4)");
+                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, stdin.nextInt(), res));
+                        break;
+                    case 1:
+                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, res));
+                        break;
+                }
+            }
+            return resourcePicks;
+        }
+
+    },
     SWAP_WAREHOUSE("Swap Warehouse") {
         @Override
         public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
@@ -130,12 +184,11 @@ public enum MovePlayerType {
                 swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, stdin.nextInt());
             } catch (Exception e) {
                 System.out.println("Error retry:");
-                elaborateMoveForCLI(stdin,match);
+                elaborateMoveForCLI(stdin, match);
             }
             return swapWarehousePlayerMove;
         }
     };
-
 
     private String description;
 

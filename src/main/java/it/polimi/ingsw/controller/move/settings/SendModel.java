@@ -6,18 +6,25 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class SendModel extends MoveResponse {
     Match match;
+    int playerPosition;
 
-    public SendModel(Match match, ArrayList<Player> players) {
-        super(players);
+    public SendModel(Match match, Player player, int playerPosition) {
+        super((ArrayList<Player>) Arrays.asList(player));
         this.match = match;
+        this.playerPosition = playerPosition;
     }
 
-    public static SendModel getInstance(Match match,ArrayList<Player> players) {
-        return new SendModel(match,players);
+    public int getPlayerPosition() {
+        return playerPosition;
+    }
+
+    public static SendModel getInstance(Match match, Player player, int playerPosition) {
+        return new SendModel(match,player,playerPosition);
     }
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {

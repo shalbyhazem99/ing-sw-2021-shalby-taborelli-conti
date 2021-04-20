@@ -50,6 +50,26 @@ public class Player implements Serializable {
         return new Player("unknown");
     }
 
+    public ArrayList<PopeFavorTiles> getPopeFavorTiles() {
+        return popeFavorTiles;
+    }
+
+    public ArrayList<LeaderCard> getLeaderCards() {
+        return leaderCards;
+    }
+
+    public ArrayList<DevelopmentCardSpace> getDevelopmentCardSpaces() {
+        return developmentCardSpaces;
+    }
+
+    public ArrayList<ResourceType> getConversionStrategies() {
+        return conversionStrategies;
+    }
+
+    public ArrayList<ProductivePower> getAddedPower() {
+        return addedPower;
+    }
+
     public static ArrayList<PopeFavorTiles> generatePopeFavorTiles() {
         ArrayList<PopeFavorTiles> temp = new ArrayList<>();
         temp.add(PopeFavorTiles.getInstance(2));

@@ -4,12 +4,14 @@ import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -18,7 +20,6 @@ public class ClientCLI {
     final private String ip;
     final private int port;
     private Match match;
-
     public ClientCLI(String ip, int port) {
         this.ip = ip;
         this.port = port;
@@ -44,7 +45,15 @@ public class ClientCLI {
                         //todo: something to print the match
                         Object inputObject = socketIn.readObject();
                         if (inputObject instanceof SendModel) {
-                            match = ((SendModel) inputObject).getMatch();
+                            SendModel sendModel = ((SendModel) inputObject);
+                            match = sendModel.getMatch();
+                            //rotate player Array so that my player is the first
+                            ArrayList<Player> players = match.getPlayers();
+                            for (int i = 0; i < sendModel.getPlayerPosition(); i++) {
+                                Player player= players.get(0);
+                                players.remove(0);
+                                players.add(player);
+                            }
                             System.out.println(match.toString());
                             //manageResponse((MoveResponse) inputObject, stdin, socketOut);
                         } else if (inputObject instanceof SendMessage) {

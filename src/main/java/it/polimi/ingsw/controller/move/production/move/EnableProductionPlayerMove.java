@@ -15,6 +15,10 @@ public abstract class EnableProductionPlayerMove extends PlayerMove {
         resourceToUse = new ArrayList<>();
     }
 
+    public EnableProductionPlayerMove(ArrayList<ResourcePick> resourceToUse) {
+        this.resourceToUse = resourceToUse;
+    }
+
     public void addResourceToUse(ResourcePick resourcePick){
         resourceToUse.add(resourcePick);
     }

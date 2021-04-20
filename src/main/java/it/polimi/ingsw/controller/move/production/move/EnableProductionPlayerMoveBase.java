@@ -3,20 +3,22 @@ package it.polimi.ingsw.controller.move.production.move;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ResourceType;
 
+import java.util.ArrayList;
+
 public class EnableProductionPlayerMoveBase extends EnableProductionPlayerMove {
     private ResourceType to;
 
-    public EnableProductionPlayerMoveBase(ResourceType to) {
-        super();
+    public EnableProductionPlayerMoveBase(ArrayList<ResourcePick> resourceToUse, ResourceType to) {
+        super(resourceToUse);
         this.to=to;
     }
 
-    public static EnableProductionPlayerMoveBase getInstance(ResourceType to) {
-        return new EnableProductionPlayerMoveBase(to);
+    public static EnableProductionPlayerMoveBase getInstance(ArrayList<ResourcePick> resourceToUse,ResourceType to) {
+        return new EnableProductionPlayerMoveBase(resourceToUse, to);
     }
 
     @Override
     public void execute(Match match) {
-        //match.enableProductionInteraction(productivePowers,devCardProductivePlayerSelected,getPlayer());
+        match.enableProductionBaseInteraction(resourceToUse,to,getPlayer());
     }
 }
