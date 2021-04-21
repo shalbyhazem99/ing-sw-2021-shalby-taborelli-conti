@@ -16,9 +16,8 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
      *                              waiting to be placed, the value contained in the position i indicates where to add the iTH Resource,
      *                              the value can be {0,1,2,3,4,null}, {0,1,2} refers to standard {@link it.polimi.ingsw.model.Warehouse} {3,4} to additional {@link it.polimi.ingsw.model.Warehouse}
      *                              null means that the Resource has to be discarded
-     * @param player the {@link Player} performing the {@link PlayerMove}
      */
-    public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources, Player player) throws Exception {
+    public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources) throws Exception {
         if(whereToPlaceResources==null||!check(whereToPlaceResources))
         {
             throw new Exception("Selected not existing warehouse!");
@@ -29,12 +28,11 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
     /**
      * Default method getInstance
      * @param whereToPlaceResources an {@link ArrayList} of {@link Integer}
-     * @param player the {@link Player} performing the {@link PlayerMove}
      * @return an instance of {@link PositioningResourcesPlayerMove}
      */
-    public PositioningResourcesPlayerMove getInstance(ArrayList<Integer> whereToPlaceResources, Player player) throws Exception
+    public static PositioningResourcesPlayerMove getInstance(ArrayList<Integer> whereToPlaceResources) throws Exception
     {
-        return new PositioningResourcesPlayerMove(whereToPlaceResources, player);
+        return new PositioningResourcesPlayerMove(whereToPlaceResources);
     }
 
     @Override

@@ -6,22 +6,24 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ResourceType;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MarketMarbleConversionMove extends PlayerMove {
     /**
      * Class which represent a {@link PlayerMove} which let the {@link Player} to convert white {@link it.polimi.ingsw.model.market.Marble}
      */
-    private ArrayList<ResourceType> conversionStrategyList;
-    /**
-     * Default constructor
-    * @param conversionStrategyList an {@link ArrayList} of {@link ResourceType} representing how to convert each white {@link it.polimi.ingsw.model.market.Marble}
-     */
-    public MarketMarbleConversionMove(ArrayList<ResourceType> conversionStrategyList)
-    {
-        this.conversionStrategyList = conversionStrategyList;
+    private int first, second;
+
+    public MarketMarbleConversionMove(int first, int second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public static MarketMarbleConversionMove getInstance(int first, int second) {
+        return new MarketMarbleConversionMove(first, second);
     }
     @Override
     public void execute(Match match) {
-        match.marketMarbleConvertInteraction(conversionStrategyList,getPlayer());
+        match.marketMarbleConvertInteraction(first,second,getPlayer());
     }
 }

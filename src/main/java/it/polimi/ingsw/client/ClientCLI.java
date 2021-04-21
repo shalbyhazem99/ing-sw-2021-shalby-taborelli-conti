@@ -5,6 +5,7 @@ import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -41,8 +42,6 @@ public class ClientCLI {
             public void run() {
                 try {
                     while (isActive()) {
-                        //System.err.println("message recived...");
-                        //todo: something to print the match
                         Object inputObject = socketIn.readObject();
                         if (inputObject instanceof SendModel) {
                             SendModel sendModel = ((SendModel) inputObject);
@@ -54,8 +53,7 @@ public class ClientCLI {
                                 players.remove(0);
                                 players.add(player);
                             }
-                            System.out.println(match.toString());
-                            //manageResponse((MoveResponse) inputObject, stdin, socketOut);
+                            match.toString();
                         } else if (inputObject instanceof SendMessage) {
                             System.out.println(inputObject.toString());
                         } else if (inputObject instanceof MoveResponse) {
@@ -67,6 +65,7 @@ public class ClientCLI {
                         }
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     setActive(false);
                 }
             }

@@ -72,8 +72,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             for (int i = 0; i < 4; i++)
                 player.addLeaderCard(leaderCards.pop());
         }
+        notifyModel();
+    }
+
+    public void notifyModel() {
         for (int i = 0; i < players.size(); i++) {
-            notify(SendModel.getInstance(this, players.get(i),i));
+            notify(SendModel.getInstance(this, players.get(i), i));
         }
     }
 
@@ -225,24 +229,29 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         if (!player.hasWhiteMurbleConvertionStrategy() || numOfWhiteMarbleToBeConverted == 0) {
             numOfWhiteMarbleToBeConverted = 0; //we don't need to convert anything (we have no white marbles or we don't have additional convertion strategies
         }
-        resourcesGained.stream().map(el -> pendingResources.add(el)); //add the Resources to the Box containing the resources waiting to be placed
-        if(numOfWhiteMarbleToBeConverted==0) //I've completely performed a "main" move which let me to end my round in next moves
+        player.moveAheadFaith((int) resourcesGained.stream().filter(el -> el.getType().equals(ResourceType.FAITH)).count());
+        pendingResources.addAll (resourcesGained.stream().filter(el -> el.getType()!=ResourceType.FAITH).collect(Collectors.toList()));
+        if (numOfWhiteMarbleToBeConverted == 0) //I've completely performed a "main" move which let me to end my round in next moves
         {
-            setCanChangeTurn(true,player);
+            setCanChangeTurn(true, player);
         }
+        notifyModel();
         notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
-
     }
 
     /**
      * Method used to perform the conversion of the white marbles, the {@link Resource} gained are placed into pendingResources {@link ArrayList}
-     *
-     * @param conversionStrategyList the {@link ArrayList} of {@link ResourceType} which represent in which type of {@link Resource} convert each white {@link it.polimi.ingsw.model.market.Marble}
      */
-    public void marketMarbleConvertInteraction(ArrayList<ResourceType> conversionStrategyList,Player player) {
-        ArrayList<Resource> resourcesGained = (ArrayList<Resource>) conversionStrategyList.stream().map(el -> Resource.getInstance(el)).collect(Collectors.toList());
-        resourcesGained.stream().map(el -> pendingResources.add(el)); //add the resources to the box conitaning the resources waiting to be placed
-        setCanChangeTurn(true,player);
+    public void marketMarbleConvertInteraction(int first, int second, Player player) {
+        ArrayList<Resource> resourcesGained = new ArrayList<>();
+        for (int i = 0; i < first; i++) {
+            pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(0)));
+        }
+        for (int i = 0; i < second; i++) {
+            pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(1)));
+        }
+        setCanChangeTurn(true, player);
+        notifyModel();
         notify(MarketResponse.getInstance(resourcesGained, 0, new ArrayList<>(Arrays.asList(player))));
     }
 
@@ -262,7 +271,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
             if (player.addDevelopmentCard(temp_card, posToAdd)) //no errors
             {
-                setCanChangeTurn(true,player);
+                setCanChangeTurn(true, player);
                 notify(BuyDevelopmentCardReponse.getInstance(temp_card, new ArrayList<>(Arrays.asList(player))));
             } else {
                 notify(IllegalMoveResponse.getInstance((new DevelopmentSpaceException()).getMessage(), new ArrayList<>(Arrays.asList(player))));
@@ -279,7 +288,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      *
      * @param productivePowers                {@link ArrayList} containing the default {@link ProductivePower} enabled
      * @param devCardProductivePlayerSelected {@link ArrayList} containing {@link Integer} representing which {@link DevelopmentCard} 's {@link ProductivePower} is enabled
-     * @param player                               {@link Player} performing the {@link it.polimi.ingsw.controller.move.PlayerMove}
+     * @param player                          {@link Player} performing the {@link it.polimi.ingsw.controller.move.PlayerMove}
      * @throws NotEnoughResourcesException {@link NotEnoughResourcesException} thrown if the Productions can't be enabled
      */
     public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected, Player player) throws NotEnoughResourcesException {
@@ -308,7 +317,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                     .collect(Collectors.toList());
             resGot.stream().map(el -> player.getStrongBox().add(el)); //add to strongbox
             notify(EnableProductionResponse.getInstance(resGot, new ArrayList<>(Arrays.asList(player))));
-            setCanChangeTurn(true,player);
+            setCanChangeTurn(true, player);
         } else {
             throw new NotEnoughResourcesException();
         }
@@ -369,9 +378,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 numberOfDiscardedResources++;
                 numberOfGainedResources--;
             } else if (whereToPlace.get(i) >= 0 && whereToPlace.get(i) < 3) {
-                player.getWarehousesStandard().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
+                //todo: the resource is added twice
+                //player.getWarehousesStandard().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
             } else {
-                player.getWarehousesAdditional().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
+                //player.getWarehousesAdditional().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
             }
         }
         //START 5)
@@ -384,46 +394,43 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 }
             }
         }
+        notifyModel();
         notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources, numberOfGainedResources, new ArrayList<>(Arrays.asList(player))));
     }
 
     /**
      * Method used by the {@link Player} to swap {@link Resource} between two {@link Warehouse}
-     * @param indexFirstWarehouse an int representing the first {@link Warehouse}
+     *
+     * @param indexFirstWarehouse  an int representing the first {@link Warehouse}
      * @param indexSecondWarehouse an int representing the second {@link Warehouse}
-     * @param player the {@link Player} that is performing the action
+     * @param player               the {@link Player} that is performing the action
      * @throws SwapWarehouseException the {@link SwapWarehouseException} which is thrown if any error occur (not existing {@link Warehouse}, not enough available space ...)
      */
-    public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException
-    {
+    public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
         /*
             CHECK:
             1) If we're trying to swap the same Warehouse return immediately, no action must be taken
             2) If the two indexes refer to additional warehouses we need to check if they exist
          */
-       //1)
-       if(indexFirstWarehouse==indexSecondWarehouse)
-       {
-           throw new SwapWarehouseException();
-       }
-       if(indexFirstWarehouse==3 || indexSecondWarehouse == 3) //check if the first additional warehouse exists
-       {
-           if(player.getWarehousesAdditional().size()==0)
-           {
-               throw new SwapWarehouseException();
-           }
-       }
-        if(indexFirstWarehouse==4 || indexSecondWarehouse == 4) //check if the second additional warehouse exists
+        //1)
+        if (indexFirstWarehouse == indexSecondWarehouse) {
+            throw new SwapWarehouseException();
+        }
+        if (indexFirstWarehouse == 3 || indexSecondWarehouse == 3) //check if the first additional warehouse exists
         {
-            if(player.getWarehousesAdditional().size()>2)
-            {
+            if (player.getWarehousesAdditional().size() == 0) {
+                throw new SwapWarehouseException();
+            }
+        }
+        if (indexFirstWarehouse == 4 || indexSecondWarehouse == 4) //check if the second additional warehouse exists
+        {
+            if (player.getWarehousesAdditional().size() > 2) {
                 throw new SwapWarehouseException();
             }
         }
         int numberOfMovedRes = player.swapWarehouses(indexFirstWarehouse, indexSecondWarehouse);
-        if(numberOfMovedRes!=-1)
-        {
-            notify(SwapWarehouseResponse.getInstance(new ArrayList<>(Arrays.asList(player)),numberOfMovedRes));
+        if (numberOfMovedRes != -1) {
+            notify(SwapWarehouseResponse.getInstance(new ArrayList<>(Arrays.asList(player)), numberOfMovedRes));
             return;
         }
         throw new SwapWarehouseException();
@@ -431,11 +438,11 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     /**
      * Method used to trigger an {@link IllegalMoveResponse}
+     *
      * @param message {@link String} representing which message has to be displayed
-     * @param player {@link Player} to be notified
+     * @param player  {@link Player} to be notified
      */
-    public void illegalPlayerMoveInteraction(String message,Player player)
-    {
+    public void illegalPlayerMoveInteraction(String message, Player player) {
         notify(IllegalMoveResponse.getInstance(message, new ArrayList<>(Arrays.asList(player))));
     }
 
@@ -451,8 +458,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     public abstract void setCanChangeTurn(boolean canChangeTurn, Player player);
 
-    public boolean getCanChangeTurn()
-    {
+    public boolean getCanChangeTurn() {
         return canChangeTurn;
     }
 
@@ -471,21 +477,17 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public String toString() {
         System.out.println("MERCATO");
         System.out.println(marketBoard.getAdditionalMarble().toString());
-        for(int i = 0;i<3;i++)
-        {
-            for(int j = 0;j<4;j++)
-            {
-                System.out.print(marketBoard.getRow(i).get(j).toString()+"|");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.print(marketBoard.getRow(i).get(j).toString() + "|");
             }
             System.out.println();
         }
         System.out.println();
         System.out.println("CARTE SVILUPPO");
-        for(int i = 0;i<3;i++)
-        {
-            for(int j = 0; j<4; j++)
-            {
-                System.out.print(developmentCards[i][j].peek().toString()+"|");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.print(developmentCards[i][j].peek().toString() + "|");
             }
             System.out.println();
         }

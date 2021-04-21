@@ -5,6 +5,7 @@ import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMove;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.exceptions.EndRoundException;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.model.market.MoveType;
 
 import java.io.Serializable;
@@ -87,6 +88,9 @@ public class MatchMulti extends Match implements Serializable {
     public void startMatch() {
         randomlyPickInkwellPlayer();
         turn = posInkwell;
+        //assign starting resources
+        //todo:choose resources
+        //start
         super.startMatch();
         askForMove();
     }
@@ -94,9 +98,6 @@ public class MatchMulti extends Match implements Serializable {
     private void askForMove() {
         //TODO: choose what move to add
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
-        possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
-        possibleMove.add(MovePlayerType.MARKET_INTERACTION);
-        possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
         possibleMove.add(MovePlayerType.MARKET_INTERACTION);
         notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove));
     }
@@ -105,8 +106,8 @@ public class MatchMulti extends Match implements Serializable {
     public void marketInteraction(MoveType moveType, int pos, Player player) {
         super.marketInteraction(moveType, pos, player);
         //todo: to be remove
-        updateTurn();
-        askForMove();
+        //updateTurn();
+        //askForMove();
     }
 
     @Override
@@ -145,57 +146,52 @@ public class MatchMulti extends Match implements Serializable {
 
     public String toString()
     {
-        System.out.println("MERCATO");
-        System.out.println(marketBoard.getAdditionalMarble().toString());
-        for(int i = 0;i<3;i++)
-        {
-            for(int j = 0;j<4;j++)
-            {
-                System.out.print(marketBoard.getRow(i).get(j).toString()+"|");
+        try {
+            System.out.println("MERCATO");
+            System.out.println(marketBoard.getAdditionalMarble().toString());
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    System.out.print(marketBoard.getRow(i).get(j).toString() + "|");
+                }
+                System.out.println();
             }
             System.out.println();
-        }
-        System.out.println();
-        System.out.println("CARTE SVILUPPO");
-        for(int i = 0;i<3;i++)
-        {
-            for(int j = 0; j<4; j++)
-            {
-                System.out.print(developmentCards[i][j].peek().toString()+"|");
+            System.out.println("CARTE SVILUPPO");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    System.out.print(developmentCards[i][j].peek().toString() + "|");
+                }
+                System.out.println();
             }
             System.out.println();
-        }
-        System.out.println();
-        for(int l = 0;l<getPlayers().size();l++)
-        {
-            Player player = getPlayers().get(l);
-            if(player==null)
-            {
-                break;
+            for (Player player : getPlayers()) {
+                System.out.println("Player: " + player.getName());
+                if (player == null) {
+                    break;
+                }
+                System.out.println("Pos Fede: " + player.getPosFaithMarker());
+                System.out.println("WAREHOUSE STD");
+                for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
+                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
+                }
+                System.out.println("WAREHOUSE ADD");
+                for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
+                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
+                }
+                System.out.println("FORZIERE");
+                System.out.println(player.getStrongBox().toString());
+                System.out.println("SPAZI CARTE");
+                for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
+                    System.out.println(player.getDevelopmentCards().get(a).toString());
+                }
+                System.out.println("LEADER CARD");
+                for (LeaderCard leaderCard:player.getLeaderCards()) {
+                    System.out.println(leaderCard.toString());
+                }
+                System.out.println("--------------------------------------------------------------------------------------------------------");
             }
-            System.out.println("Pos Fede: "+ player.getPosFaithMarker());
-            System.out.println("WAREHOUSE STD");
-            for(int i = 0;i<player.getWarehousesStandard().size();i++)
-            {
-                System.out.println("WRH "+i+") ==> "+player.getWarehousesStandard().get(i).toString());
-            }
-            System.out.println("WAREHOUSE ADD");
-            for(int i = 0;i<player.getWarehousesAdditional().size();i++)
-            {
-                System.out.println("WRH "+i+") ==> "+player.getWarehousesStandard().get(i).toString());
-            }
-            System.out.println("FORZIERE");
-            System.out.println(player.getStrongBox().toString());
-            System.out.println("SPAZI CARTE");
-            for(int a = 0;a<player.getDevelopmentCardSpaces().size();a++)
-            {
-                System.out.println(player.getDevelopmentCards().get(a).toString());
-            }
-            System.out.println("LEADER CARD");
-            for(int w = 0;w<getLeaderCards().size();w++)
-            {
-                System.out.println(getLeaderCards().get(w).toString());
-            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

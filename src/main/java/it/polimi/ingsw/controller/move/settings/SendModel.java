@@ -14,7 +14,7 @@ public class SendModel extends MoveResponse {
     int playerPosition;
 
     public SendModel(Match match, Player player, int playerPosition) {
-        super((ArrayList<Player>) Arrays.asList(player));
+        super(new ArrayList<>(Arrays.asList(player)));
         this.match = match;
         this.playerPosition = playerPosition;
     }

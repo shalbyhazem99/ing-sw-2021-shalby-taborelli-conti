@@ -58,10 +58,6 @@ public class Player implements Serializable {
         return leaderCards;
     }
 
-    public ArrayList<DevelopmentCardSpace> getDevelopmentCardSpaces() {
-        return developmentCardSpaces;
-    }
-
     public ArrayList<ResourceType> getConversionStrategies() {
         return conversionStrategies;
     }
