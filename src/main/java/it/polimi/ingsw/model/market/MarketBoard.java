@@ -28,7 +28,7 @@ public class MarketBoard implements Serializable {
      * @return the number of white Marbles is 4 - count of the returned ArrayList
      */
     public ArrayList<Resource> getResources(MoveType moveType, int pos) {
-        if(moveType.equals(MoveType.RIGA))
+        if(moveType.equals(MoveType.ROW))
         {
             if(pos<0||pos>2)
             {
@@ -43,7 +43,7 @@ public class MarketBoard implements Serializable {
             }
         }
         ArrayList<Marble> temp = new ArrayList<>();
-        if (moveType == MoveType.RIGA) {
+        if (moveType == MoveType.ROW) {
             temp = getRow(pos);
             slideRow(pos);
         } else {

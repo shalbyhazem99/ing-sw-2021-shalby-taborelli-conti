@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Warehouse implements Serializable {
+public class Warehouse implements Serializable, Cloneable {
     private int spaceAvailable;
     private ResourceType resourceType;
     private java.util.ArrayList<Resource> resources;
@@ -117,5 +117,10 @@ public class Warehouse implements Serializable {
     @Override
     public String toString() {
         return "Space: "+spaceAvailable+"/Type: "+resourceType.toString()+"/Res:"+resources.toString();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

@@ -37,11 +37,10 @@ public abstract class LeaderCard implements Serializable {
      * @param player the player to verify
      * @return true if tha power is activable, false otherwise
      */
-    protected boolean isActivable(Player player){
+    protected boolean isActionable(Player player){
         if(developmentCardNeeded !=null) {
             for (DevelopmentCardNeeded dev : developmentCardNeeded) {
-                //todo:maybe only the type must be verified
-                if (dev.getCount() < player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
+                if (dev.getCount() <= player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
                     return false;
             }
         }

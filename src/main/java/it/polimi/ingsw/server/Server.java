@@ -74,13 +74,13 @@ public class Server {
                 match.addObserver(playerView);
                 playerView.addObserver(gameManger);
                 //if match turn send something async
-                clientConnection.asyncSend(SendMessage.getInstance("Game starts!\n",null));
+                clientConnection.asyncSend(SendMessage.getInstance("Game starts!\n",new ArrayList<>()));
             }
             match.startMatch();
             waitingConnection.clear();
             numPlayer = -1;
         } else {
-            c.asyncSend(SendMessage.getInstance("Waiting for other to join!\n",null));
+            c.asyncSend(SendMessage.getInstance("Waiting for other to join!\n",new ArrayList<>()));
         }
     }
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.move.MovePlayerType;
+import com.google.gson.Gson;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.market.MarketResponse;
@@ -8,7 +8,6 @@ import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
 import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
-import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
@@ -20,7 +19,6 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
-import it.polimi.ingsw.model.market.Marble;
 import it.polimi.ingsw.model.market.MarketBoard;
 import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.observer.Observable;
@@ -30,7 +28,6 @@ import it.polimi.ingsw.utils.Utils;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,6 +44,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     protected Stack<DevelopmentCard>[][] developmentCards;
     protected MarketBoard marketBoard;
     protected ArrayList<Resource> pendingResources;
+    protected int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
     protected boolean canChangeTurn = false;
 
     //TODO: pensare a attributi aggiuntivi, esempio salvare su disco i record, memorizzare timestamp per sapere da quanto tempo si gioca ...
@@ -54,7 +52,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     /**
      * Constructor that intitialize the Match settings reading from a file all the information
      */
-    //TODO: leggere da file
     public Match(int numberOfPlayers) {
         players = new ArrayList<>(numberOfPlayers);
         for (int i = 0; i < numberOfPlayers; i++) //to understand watch the addPLayer method
@@ -72,7 +69,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             for (int i = 0; i < 4; i++)
                 player.addLeaderCard(leaderCards.pop());
         }
-        notifyModel();
     }
 
     public void notifyModel() {
@@ -81,6 +77,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
     }
 
+    /*-----------------------------------------------------------------------------------------------
+    GETTER
+    -------------------------------------------------------------------------------------------------*/
 
     /**
      * Method to get a shallow copy of the {@link Player}'s {@link ArrayList}
@@ -119,6 +118,24 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     }
 
     /**
+     * Method to get the top {@link DevelopmentCard} of a {@link Stack} (combination of {@link DevelopmentCardLevel} and {@link DevelopmentCardType})
+     *
+     * @param type  {@link DevelopmentCardType} can be GREEN, BLUE, YELLOW,PURPLE
+     * @param level {@link DevelopmentCardLevel} can be 1,2,3
+     * @return The top {@link DevelopmentCard} of the {@link Stack}
+     */
+    public DevelopmentCard getDevelopmentCardOnTop(DevelopmentCardType type, DevelopmentCardLevel level) {
+        return developmentCards[level.label][type.label].peek();
+    }
+
+    public boolean getCanChangeTurn() {
+        return canChangeTurn;
+    }
+    /*-----------------------------------------------------------------------------------------------
+    END GETTER
+    -------------------------------------------------------------------------------------------------*/
+
+    /**
      * Method used to add a player in the match, if the match is full the method will return false and also if a Player with that username is already present
      *
      * @param newPlayer the {@link Player} to be added to the {@link java.util.ArrayList}
@@ -147,42 +164,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return false;
     }
 
-    /**
-     * Method used to serialize the {@link Match} object
-     *
-     * @param location the path in which the {@link Match} has to be serialized
-     * @return true if the {@link Match} is correctly serialized to the file system, false otherwise
-     */
-    public boolean writeToFileSystem(String location) {
-        if (location == null) {
-            return false;
-        }
-        try {
-            FileOutputStream fileOut = new FileOutputStream(location);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this);
-            objectOut.close();
-        } catch (Exception ex) {
-            return false;
-        }
-        return true;
-    }
-
-    public void nextRound() {
-        //TODO: go ahead in the round
-        //TODO: serialize
-    }
-
-    /**
-     * Method to get the top {@link DevelopmentCard} of a {@link Stack} (combination of {@link DevelopmentCardLevel} and {@link DevelopmentCardType})
-     *
-     * @param type  {@link DevelopmentCardType} can be GREEN, BLUE, YELLOW,PURPLE
-     * @param level {@link DevelopmentCardLevel} can be 1,2,3
-     * @return The top {@link DevelopmentCard} of the {@link Stack}
-     */
-    public DevelopmentCard getDevelopmentCardOnTop(DevelopmentCardType type, DevelopmentCardLevel level) {
-        return developmentCards[level.label][type.label].peek();
-    }
 
     /**
      * Method to pick (get and remove) the top {@link DevelopmentCard} of a {@link Stack} (combination of {@link DevelopmentCardLevel} and {@link DevelopmentCardType})
@@ -195,13 +176,32 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return developmentCards[level.label][type.label].pop();
     }
 
-    public void discardLeaderCard(int leaderCardPosition) {
+    /**
+     * Method to discard a {@link LeaderCard}
+     *
+     * @param leaderCardPosition
+     * @param player
+     */
+    public void discardLeaderCardInteraction(int leaderCardPosition, Player player) {
+        if (player.discardLeaderCard(leaderCardPosition)) {
+            notify(SendMessage.getInstance("Leader Card discarded, moved 1 position the faith path", player));
+        } else {
+            notify(SendMessage.getInstance("Something wrong, Leader Card cannot be discarded, retry", player));
+        }
     }
 
-    public void enableLeaderCard(int leaderCardPosition) throws NotEnoughResourcesException {
-    }
-
-    public void enableProductionMove(ArrayList<ProductivePower> productivePowers) throws NotEnoughResourcesException {
+    /**
+     * Method to enable a {@link LeaderCard}
+     *
+     * @param leaderCardPosition
+     * @param player
+     */
+    public void enableLeaderCardInteraction(int leaderCardPosition, Player player) {
+        if (leaderCardPosition < player.getLeaderCards().size() && player.getLeaderCard(leaderCardPosition).active(player)) {
+            notify(SendMessage.getInstance("Leader Card enabled", player));
+        } else {
+            notify(SendMessage.getInstance("Something wrong, Leader Card cannot be enabled, retry", player));
+        }
     }
 
     /**
@@ -213,46 +213,130 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player   the {@link Player} performing the interaction
      */
     public void marketInteraction(MoveType moveType, int pos, Player player) {
-        ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
-        int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
-        if (moveType.equals(MoveType.COLONNA)) {
-            numOfWhiteMarbleToBeConverted = Utils.MARKET_COL_NUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
+        if ((moveType.equals(MoveType.ROW) && (pos < 0 || pos > 2)) || moveType.equals(MoveType.COLUMN) && (pos < 0 || pos > 3)) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
         } else {
-            numOfWhiteMarbleToBeConverted = Utils.MARKET_ROW_NUMBER - resourcesGained.size(); //how many white marbles are there in the selected ROW
-        }
+            ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
+            if (moveType.equals(MoveType.COLUMN)) {
+                numOfWhiteMarbleToBeConverted = Utils.MARKET_COL_NUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
+            } else {
+                numOfWhiteMarbleToBeConverted = Utils.MARKET_ROW_NUMBER - resourcesGained.size(); //how many white marbles are there in the selected ROW
+            }
         /*
                 If there are any white marbles selected and if the user which is requesting the marketInteraction
                 has an additional strategy to convert white marbles we need to know if he wants to enable it,
                 otherwise white marbles won't be converted
          */
-        //TODO: dovrei fare un .size
-        if (!player.hasWhiteMurbleConvertionStrategy() || numOfWhiteMarbleToBeConverted == 0) {
-            numOfWhiteMarbleToBeConverted = 0; //we don't need to convert anything (we have no white marbles or we don't have additional convertion strategies
+            switch (player.numOfWhiteMarbleConversionStrategy()) {
+                case 0:
+                    numOfWhiteMarbleToBeConverted = 0;
+                    break;
+                case 1:
+                    for (int i = 0; i < numOfWhiteMarbleToBeConverted; i++) {
+                        resourcesGained.add(Resource.getInstance(player.getConversionStrategies().get(0)));
+                    }
+                    numOfWhiteMarbleToBeConverted = 0;
+                    break;
+            }
+            //Faith resource conversion to faith position
+            player.moveAheadFaith((int) resourcesGained.stream().filter(el -> el.getType().equals(ResourceType.FAITH)).count());
+            pendingResources.addAll(resourcesGained.stream().filter(el -> el.getType() != ResourceType.FAITH).collect(Collectors.toList()));
+            notifyModel();
+            notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
         }
-        player.moveAheadFaith((int) resourcesGained.stream().filter(el -> el.getType().equals(ResourceType.FAITH)).count());
-        pendingResources.addAll (resourcesGained.stream().filter(el -> el.getType()!=ResourceType.FAITH).collect(Collectors.toList()));
-        if (numOfWhiteMarbleToBeConverted == 0) //I've completely performed a "main" move which let me to end my round in next moves
-        {
-            setCanChangeTurn(true, player);
-        }
-        notifyModel();
-        notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
     }
 
     /**
      * Method used to perform the conversion of the white marbles, the {@link Resource} gained are placed into pendingResources {@link ArrayList}
      */
     public void marketMarbleConvertInteraction(int first, int second, Player player) {
-        ArrayList<Resource> resourcesGained = new ArrayList<>();
-        for (int i = 0; i < first; i++) {
-            pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(0)));
+        if ((first + second) <= numOfWhiteMarbleToBeConverted) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+            notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
+        } else {
+            ArrayList<Resource> resourcesGained = (ArrayList<Resource>) pendingResources.clone();
+            for (int i = 0; i < first; i++) {
+                pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(0)));
+            }
+            for (int i = 0; i < second; i++) {
+                pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(1)));
+            }
+            notifyModel();
+            notify(MarketResponse.getInstance(resourcesGained, 0, new ArrayList<>(Arrays.asList(player))));
         }
-        for (int i = 0; i < second; i++) {
-            pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(1)));
+    }
+
+    /**
+     * Method used by the {@link Player} to place {@link Resource} inside of {@link Warehouse}
+     * If anything goes well the pendingResources {@link ArrayList} will be empty and the {@link Resource} which were inside of it will be stored inside {@link Warehouse}
+     *
+     * @param whereToPlace an {@link ArrayList} containing where to add (in which {@link Warehouse}) the iTH {@link Resource} of the pendingResources
+     * @param player       the {@link Player} performing the action
+     * @throws Exception an {@link Exception} to indicate if any error has happened
+     */
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) throws Exception {
+        /*
+            Check
+            1) if are there any resources to be placed
+            2) if the 2 arraylist sizes are equal
+            3) if the warehouses can correctly store everything (simulating all the transferring process using .clone())
+            If no errors ==>
+                            4) empty the pendingResources
+                            if some Resource got discarded ==> 5) move ahead other players on the Faith Path
+         */
+        //CHECK 1)
+        if (pendingResources.size() == 0) {
+            return;
+        }
+        //CHECK 2)
+        else if ((pendingResources.size() != whereToPlace.size())) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+            notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
+            return;
+        }
+        //CHECK 3)
+        Gson gson = new Gson();
+        String warehouseStandard = gson.toJson(player.getWarehousesStandard());
+        String warehouseAdditional = gson.toJson(player.getWarehousesAdditional());
+        ArrayList<Warehouse> standardTemp = player.getWarehousesStandard();
+        ArrayList<Warehouse> additionalTemp = player.getWarehousesAdditional();
+
+        int numberOfDiscardedResources = 0;
+        int numberOfGainedResources = whereToPlace.size();
+        for (int i = 0; i < whereToPlace.size(); i++) {
+            if (whereToPlace.get(i) == null) {
+                numberOfDiscardedResources++;
+                numberOfGainedResources--;
+            } else if (
+                    (whereToPlace.get(i) >= 0 && whereToPlace.get(i) < 3
+                            && (!standardTemp.get(whereToPlace.get(i)).addResource(pendingResources.get(i))))
+                            || (whereToPlace.get(i) >= 3 && whereToPlace.get(i) < 5 && additionalTemp.size() > whereToPlace.get(i) - 3
+                            && (!additionalTemp.get(whereToPlace.get(i)).addResource(pendingResources.get(i))))
+            ) {
+                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+                notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
+                ArrayList<Warehouse> temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
+                player.setWarehousesStandard(temp);
+                temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseAdditional, Warehouse[].class));
+                player.setWarehousesAdditional(temp);
+                return;
+            }
+        }
+        //START 4)
+        pendingResources = new ArrayList<>();
+        //START 5)
+        if (numberOfDiscardedResources != 0) {
+            for (Player p : players) {
+                if (!p.equals(player)) {
+                    p.moveAheadFaith(numberOfDiscardedResources);
+                }
+            }
         }
         setCanChangeTurn(true, player);
         notifyModel();
-        notify(MarketResponse.getInstance(resourcesGained, 0, new ArrayList<>(Arrays.asList(player))));
+        notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources, numberOfGainedResources, new ArrayList<>(Arrays.asList(player))));
     }
 
     /**
@@ -274,128 +358,100 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 setCanChangeTurn(true, player);
                 notify(BuyDevelopmentCardReponse.getInstance(temp_card, new ArrayList<>(Arrays.asList(player))));
             } else {
-                notify(IllegalMoveResponse.getInstance((new DevelopmentSpaceException()).getMessage(), new ArrayList<>(Arrays.asList(player))));
+                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
             }
         } else if (!player.canAfford(new ArrayList<DevelopmentCard>() {{
             add(getDevelopmentCardOnTop(type, level));
         }})) {
-            notify(IllegalMoveResponse.getInstance((new NotEnoughResourcesException()).getMessage(), new ArrayList<>(Arrays.asList(player))));
-        }
-    }
-
-    /**
-     * Method used to perform the enable of the interaction
-     *
-     * @param productivePowers                {@link ArrayList} containing the default {@link ProductivePower} enabled
-     * @param devCardProductivePlayerSelected {@link ArrayList} containing {@link Integer} representing which {@link DevelopmentCard} 's {@link ProductivePower} is enabled
-     * @param player                          {@link Player} performing the {@link it.polimi.ingsw.controller.move.PlayerMove}
-     * @throws NotEnoughResourcesException {@link NotEnoughResourcesException} thrown if the Productions can't be enabled
-     */
-    public void enableProductionInteraction(ArrayList<ProductivePower> productivePowers, ArrayList<Integer> devCardProductivePlayerSelected, Player player) throws NotEnoughResourcesException {
-        //Player p = getPlayers().get(getPlayers().indexOf(Player.getInstance(name_of_user))); //todo: possiamo anche rimuoverlo
-        if (devCardProductivePlayerSelected != null) {
-            //list containing the merging of the card productive powers and the "default" productive powers
-            productivePowers = (ArrayList<ProductivePower>)
-                    Stream.concat(
-                            devCardProductivePlayerSelected.stream()
-                                    .map(elem -> player.getDevelopmentCards().get(elem).getPowers()),
-                            productivePowers.stream())
-                            .collect(Collectors.toList());
-        }
-        //productivePowers contains all the ProductivePower that has to be enabled
-        if (player.canEnableProductivePowers(productivePowers)) {
-            //the Player has enough resources to enable all the ProductivePowers
-            //potere produttivo->resourcecount->resource
-            ArrayList<Resource> res = (ArrayList<Resource>) productivePowers.stream().
-                    flatMap(el -> el.getFrom().stream()).
-                    flatMap(el -> el.toArrayListResources().stream()).
-                    collect(Collectors.toList());
-            player.removeResources(res);
-            //add resources to strongbox
-            ArrayList<Resource> resGot = (ArrayList<Resource>) productivePowers.stream()
-                    .flatMap(el -> el.getTo().stream())
-                    .collect(Collectors.toList());
-            resGot.stream().map(el -> player.getStrongBox().add(el)); //add to strongbox
-            notify(EnableProductionResponse.getInstance(resGot, new ArrayList<>(Arrays.asList(player))));
-            setCanChangeTurn(true, player);
+            notify(SendMessage.getInstance("Something wrong, Not enough resources", player));
         } else {
-            throw new NotEnoughResourcesException();
+            notify(SendMessage.getInstance("Something wrong, Cannot be added (parameter error)", player));
         }
     }
 
     /**
-     * Method used by the {@link Player} to place {@link Resource} inside of {@link Warehouse}
-     * If anything goes well the pendingResources {@link ArrayList} will be empty and the {@link Resource} which were inside of it will be stored inside {@link Warehouse}
-     *
-     * @param whereToPlace an {@link ArrayList} containing where to add (in which {@link Warehouse}) the iTH {@link Resource} of the pendingResources
-     * @param player       the {@link Player} performing the action
-     * @throws Exception an {@link Exception} to indicate if any error has happened
+     * Verify if the {@link Player} could activate the power and remove the resources
+     * @param resourceToUse
+     * @param player
+     * @return
      */
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) throws Exception {
-        /*
-            Check
-            1) if are there any resources to be placed
-            2) if the 2 arraylist sizes are equal
-            3) if the warehouses can correctly store everything (simulating all the transferring process using .clone())
-            If no errors ==>
-                            4) add resources to warehouse
-                            5) empty the pendingResources
-                            if some Resource got discarded ==> 6) move ahead other players on the Faith Path
-         */
-        //CHECK 1)
-        if (pendingResources.size() == 0) {
-            throw new Exception("No Resources to be placed");
-        }
-        //CHECK 2)
-        else if ((pendingResources.size() != whereToPlace.size())) {
-            throw new Exception("Error with the positioning array");
-        }
-        //CHECK 3)
-        ArrayList<Warehouse> standardTemp = player.getWarehousesStandard(); //TODO: CONTROLLARE CHE NON INCASINI IL MODEL IMPATTANDO DIRETTAMENTE (CON CLONE NON DOVREBBE SUCCEDERE)
+    private boolean isEnableProductionPermitted(ArrayList<ResourcePick> resourceToUse, Player player){
+        //vai json
+        Gson gson = new Gson();
+        String warehouseStandard = gson.toJson(player.getWarehousesStandard());
+        String warehouseAdditional = gson.toJson(player.getWarehousesAdditional());
+        String strongBox = gson.toJson(player.getStrongBox());
+        ArrayList<Warehouse> standardTemp = player.getWarehousesStandard();
         ArrayList<Warehouse> additionalTemp = player.getWarehousesAdditional();
-        for (int i = 0; i < whereToPlace.size(); i++) {
-            if (whereToPlace.get(i) == null) {
-                //the resource will be discarded
-            } else if (whereToPlace.get(i) >= 0 && whereToPlace.get(i) < 3) {
-                if (!standardTemp.get(whereToPlace.get(i)).addResource((Resource) pendingResources.get(i).clone())) //if any error happens -> notify error
-                {
-                    throw new Exception("error in adding res #" + i + "to warehouse #" + whereToPlace.get(i));
-                }
-            } else {
-                if (!additionalTemp.get(whereToPlace.get(i)).addResource((Resource) pendingResources.get(i).clone())) //if any error happens -> notify error
-                {
-                    throw new Exception("error in adding res #" + i + "to warehouse #" + whereToPlace.get(i));
-                }
+        ArrayList<Resource> strongBoxTemp = player.getStrongBox();
+
+        //check if the player has the resource
+        for (ResourcePick resourcePick : resourceToUse) {
+            ResourcesCount resourcesCount = resourcePick.getResourcesCount();
+            ArrayList<Resource> resToBeRemoved = null;
+            switch (resourcePick.getResourceWarehouseType()) {
+                case WAREHOUSE:
+                    if (resourcePick.getWarehousePosition() >= 0 && resourcePick.getWarehousePosition() < 3) {
+                        resToBeRemoved = standardTemp.get(resourcePick.getWarehousePosition()).getResources();
+                    } else if (additionalTemp.size() > resourcePick.getWarehousePosition() - 3 && resourcePick.getWarehousePosition() >= 3 && resourcePick.getWarehousePosition() < 5) {
+                        resToBeRemoved = additionalTemp.get(resourcePick.getWarehousePosition() - 3).getResources();
+                    } else {
+                        notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+                    }
+                    break;
+                case STRONGBOX:
+                    resToBeRemoved = strongBoxTemp;
+                    break;
+            }
+            if (!resToBeRemoved.removeAll(resourcesCount.toArrayListResources())) {
+                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+                ArrayList<Warehouse> temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
+                player.setWarehousesStandard(temp);
+                temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseAdditional, Warehouse[].class));
+                player.setWarehousesAdditional(temp);
+                ArrayList<Resource> temp2 = new ArrayList<>();
+                Collections.addAll(temp2, gson.fromJson(strongBox,Resource[].class));
+                player.setStrongBox(temp2);
+                notify(SendMessage.getInstance("Something wrong, Insert valid parameters (not enough resources)", player));
+                return false;
             }
         }
-        //no errors --> we can correctly perform all the actions
-        //START 4)
-        int numberOfDiscardedResources = 0;
-        int numberOfGainedResources = whereToPlace.size();
-        for (int i = 0; i < whereToPlace.size(); i++) {
-            if (whereToPlace.get(i) == null) {
-                //the resource will be discarded
-                numberOfDiscardedResources++;
-                numberOfGainedResources--;
-            } else if (whereToPlace.get(i) >= 0 && whereToPlace.get(i) < 3) {
-                //todo: the resource is added twice
-                //player.getWarehousesStandard().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
-            } else {
-                //player.getWarehousesAdditional().get(whereToPlace.get(i)).addResource(pendingResources.get(i));
-            }
+        return true;
+    }
+
+    /**
+     * Method used to perform the enable of the base interaction
+     *
+     * @param resourceToUse
+     * @param to
+     * @param player
+     */
+    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
+        if(isEnableProductionPermitted(resourceToUse,player)) {
+            player.getStrongBox().add(Resource.getInstance(to));
         }
-        //START 5)
-        pendingResources = new ArrayList<>();
-        //START 6)
-        if (numberOfDiscardedResources != 0) {
-            for (Player p : players) {
-                if (!p.equals(player)) {
-                    p.moveAheadFaith(numberOfDiscardedResources);
-                }
-            }
-        }
-        notifyModel();
-        notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources, numberOfGainedResources, new ArrayList<>(Arrays.asList(player))));
+    }
+
+    /**
+     * Method used to perform the enable of the development interaction
+     *
+     * @param resourceToUse
+     * @param positionOfDevelopmentCard
+     * @param player
+     */
+    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
+    }
+
+    /**
+     * Method used to perform the enable of the production interaction
+     *
+     * @param resourceToUse
+     * @param positionOfProductivePower
+     * @param player
+     */
+    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
     }
 
     /**
@@ -424,7 +480,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         if (indexFirstWarehouse == 4 || indexSecondWarehouse == 4) //check if the second additional warehouse exists
         {
-            if (player.getWarehousesAdditional().size() > 2) {
+            if (player.getWarehousesAdditional().size() < 2) {
                 throw new SwapWarehouseException();
             }
         }
@@ -458,19 +514,28 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     public abstract void setCanChangeTurn(boolean canChangeTurn, Player player);
 
-    public boolean getCanChangeTurn() {
-        return canChangeTurn;
-    }
-
     public abstract void endRoundInteraction(Player player) throws EndRoundException;
 
-    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
-    }
 
-    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
-    }
-
-    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
+    /**
+     * Method used to serialize the {@link Match} object
+     *
+     * @param location the path in which the {@link Match} has to be serialized
+     * @return true if the {@link Match} is correctly serialized to the file system, false otherwise
+     */
+    public boolean writeToFileSystem(String location) {
+        if (location == null) {
+            return false;
+        }
+        try {
+            FileOutputStream fileOut = new FileOutputStream(location);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(this);
+            objectOut.close();
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
     }
 
     @Override

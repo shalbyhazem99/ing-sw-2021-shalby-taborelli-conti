@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 /**
  * Class that manage the connection and the interaction with the client
@@ -87,7 +88,7 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
             if(server.getNumPlayer()==-1){
                 send(AskForData.getInstance("You are the first. how many player do you want?",null));
                 numOfPlayer = Integer.parseInt(((MessageMove) in.readObject()).getMessage());
-                send(SendMessage.getInstance("match created!\n",null));
+                send(SendMessage.getInstance("match created!\n",new ArrayList<>()));
                 server.lobby(this, name,numOfPlayer);
             }else {
                 server.lobby(this, name);

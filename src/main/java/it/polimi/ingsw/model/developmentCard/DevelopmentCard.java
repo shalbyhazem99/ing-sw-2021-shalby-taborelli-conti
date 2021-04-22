@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.ResourcesCount;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-//TODO: final tutti gli attributi
 public class DevelopmentCard implements Serializable {
     private final DevelopmentCardLevel level;
     private final DevelopmentCardType type;

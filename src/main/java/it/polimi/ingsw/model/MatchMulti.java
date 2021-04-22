@@ -3,10 +3,12 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMove;
+import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.exceptions.EndRoundException;
+import it.polimi.ingsw.exceptions.NotEnoughResourcesException;
+import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
-import it.polimi.ingsw.model.market.MoveType;
 
 import java.io.Serializable;
 import java.util.*;
@@ -17,7 +19,7 @@ public class MatchMulti extends Match implements Serializable {
      */
     private int posInkwell;
     private int turn;
-    private boolean canChangeTurn;
+    //private boolean canChangeTurn;
 
     /**
      * Call method of superclass, posInkwell will be initially set to '-1' and then it will be correctly modified just before the match's starting
@@ -51,38 +53,76 @@ public class MatchMulti extends Match implements Serializable {
         this.posInkwell = rand.nextInt(getPlayers().size());
         return this.posInkwell;
     }
+
     /**
      * ATTENZIONE QUESTO METODO POI ANDRA' GESTITO DIVERSAMENTE DENTRO MATCHSOLO E MATCHMULTI, IO PER ORA LO METTO QUI E LO FACCIO PER MATCHMULTI
      * Method used by the {@link Player} to end his round
+     *
      * @param player the {@link Player} who wants to end his round
      */
-    public void endRoundInteraction(Player player) throws EndRoundException
-    {
-        if(!isMyTurn(player))
-        {
+    public void endRoundInteraction(Player player) throws EndRoundException {
+        if (!isMyTurn(player)) {
             throw new EndRoundException();
         }
-        if(pendingResources.size()!=0)
-        {
+        if (pendingResources.size() != 0) {
             throw new EndRoundException();
         }
-        if(!getCanChangeTurn())
-        {
+        if (!getCanChangeTurn()) {
             throw new EndRoundException();
         }
-        if(turn==getPlayers().size()-1)
-        {
+        if (turn == getPlayers().size() - 1) {
             turn = 0;
-        }
-        else
-        {
+        } else {
             turn++;
         }
         this.canChangeTurn = false;
         this.pendingResources = new ArrayList<>();
-        notify(EndRoundResponse.getInstance(getPlayers(),true));
+        notify(EndRoundResponse.getInstance(getPlayers(), true));
+        askForMove();
     }
 
+
+    @Override
+    public void discardLeaderCardInteraction(int leaderCardPosition,Player player) {
+        super.discardLeaderCardInteraction(leaderCardPosition,player);
+        askForMove();
+    }
+
+    @Override
+    public void enableLeaderCardInteraction(int leaderCardPosition, Player player) {
+        super.enableLeaderCardInteraction(leaderCardPosition, player);
+        askForMove();
+    }
+
+    @Override
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) throws Exception {
+        super.positioningResourcesInteraction(whereToPlace, player);
+        askForMove();
+    }
+
+    @Override
+    public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
+        super.swapWarehouseInteraction(indexFirstWarehouse, indexSecondWarehouse, player);
+        askForMove();
+    }
+
+    @Override
+    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
+        super.enableProductionBaseInteraction(resourceToUse, to, player);
+        askForMove();
+    }
+
+    @Override
+    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
+        super.enableProductionDevelopmentInteraction(resourceToUse, positionOfDevelopmentCard, player);
+        askForMove();
+    }
+
+    @Override
+    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
+        super.enableProductionLeaderInteraction(resourceToUse, positionOfProductivePower, player);
+        askForMove();
+    }
 
     @Override
     public void startMatch() {
@@ -96,25 +136,25 @@ public class MatchMulti extends Match implements Serializable {
     }
 
     private void askForMove() {
-        //TODO: choose what move to add
+        notifyModel();
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
-        possibleMove.add(MovePlayerType.MARKET_INTERACTION);
+        if (!canChangeTurn) {
+            possibleMove.add(MovePlayerType.MARKET_INTERACTION);
+            possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
+            possibleMove.add(MovePlayerType.ENABLE_PRODUCTION); //TODO: to separate because multiple production could be activated
+        }
+        possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
+        possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
+        possibleMove.add(MovePlayerType.SWAP_WAREHOUSE);
+        possibleMove.add(MovePlayerType.END_TURN);
         notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove));
-    }
-
-    @Override
-    public void marketInteraction(MoveType moveType, int pos, Player player) {
-        super.marketInteraction(moveType, pos, player);
-        //todo: to be remove
-        //updateTurn();
-        //askForMove();
     }
 
     @Override
     public void updateTurn() {
         if (canChangeTurn) {
             canChangeTurn = false;
-            if (turn < getPlayers().size()-1)
+            if (turn < getPlayers().size() - 1)
                 turn++;
             else
                 turn = 0;
@@ -123,18 +163,19 @@ public class MatchMulti extends Match implements Serializable {
 
     /**
      * Setter
-     *   It will be invoked passing a true parameter as soon as a "main" {@link it.polimi.ingsw.controller.move.PlayerMove} is executed
-     *   When is it invoked:
-     *  - When a {@link it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove} is executed and NO WHITE {@link it.polimi.ingsw.model.market.Marble} has to be converted
-     *  - When a {@link it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove} is executed
-     *  - When a {@link it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove} is executed
-     *  - When a {@link EnableProductionPlayerMove} is executed
+     * It will be invoked passing a true parameter as soon as a "main" {@link it.polimi.ingsw.controller.move.PlayerMove} is executed
+     * When is it invoked:
+     * - When a {@link it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove} is executed and NO WHITE {@link it.polimi.ingsw.model.market.Marble} has to be converted
+     * - When a {@link it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove} is executed
+     * - When a {@link it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove} is executed
+     * - When a {@link EnableProductionPlayerMove} is executed
+     *
      * @param canChangeTurn boolean value to be set
-     * @param player {@link Player} that perform the action
+     * @param player        {@link Player} that perform the action
      */
+    @Override
     public void setCanChangeTurn(boolean canChangeTurn, Player player) {
-        if(isMyTurn(player))
-        {
+        if (isMyTurn(player)) {
             this.canChangeTurn = canChangeTurn;
         }
     }
@@ -144,8 +185,7 @@ public class MatchMulti extends Match implements Serializable {
         return getPlayers().get(turn).equals(player);
     }
 
-    public String toString()
-    {
+    public String toString() {
         try {
             System.out.println("MERCATO");
             System.out.println(marketBoard.getAdditionalMarble().toString());
@@ -185,19 +225,19 @@ public class MatchMulti extends Match implements Serializable {
                     System.out.println(player.getDevelopmentCards().get(a).toString());
                 }
                 System.out.println("LEADER CARD");
-                for (LeaderCard leaderCard:player.getLeaderCards()) {
+                for (LeaderCard leaderCard : player.getLeaderCards()) {
                     System.out.println(leaderCard.toString());
                 }
-                System.out.println("--------------------------------------------------------------------------------------------------------");
             }
-        }catch (Exception e){
+            System.out.println("--------------------------------------------------------------------------------------------------------");
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void main (String [] args)
-    {
+    public static void main(String[] args) {
         MatchMulti m = new MatchMulti(2);
         m.toString();
     }

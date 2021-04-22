@@ -77,11 +77,10 @@ public class MarketResponse extends MoveResponse {
                 e.printStackTrace();
             }
         } else {
-            ArrayList<ResourceType> conversionStrategyList= new ArrayList<>();
             System.out.println("You have "+ numOfMarbleToBeCoverted+" white marble to be converted");
             System.out.println("How many using First conversion strategy");
             int first = stdin.nextInt();
-            System.out.println("How many using First conversion strategy");
+            System.out.println("How many using Second conversion strategy");
             int second = stdin.nextInt();
             return MarketMarbleConversionMove.getInstance(first,second);
         }

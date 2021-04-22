@@ -178,9 +178,9 @@ public enum MovePlayerType {
             SwapWarehousePlayerMove swapWarehousePlayerMove = null;
             try {
                 //position
-                System.out.print("insert the pos of the first warehouse to swap (0...)");
+                System.out.println("insert the pos of the first warehouse to swap (0...)");
                 int first = stdin.nextByte();
-                System.out.print("insert the pos of the second warehouse to swap (0...)");
+                System.out.println("insert the pos of the second warehouse to swap (0...)");
                 swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, stdin.nextInt());
             } catch (Exception e) {
                 System.out.println("Error retry:");

@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MarketBoardTest extends TestCase {
@@ -46,7 +45,7 @@ public class MarketBoardTest extends TestCase {
         final int selectedColumn = 0;
         MarketBoard marketBoard = new MarketBoard();
         MarketBoard temp = marketBoard;
-        ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLONNA,selectedColumn);
+        ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLUMN,selectedColumn);
         assertEquals(resources.size(), Utils.MARKET_ROW_NUMBER-Collections.frequency(temp.getColumn(selectedColumn),
                 Marble.getInstance(MarbleColor.WHITE)));
         //CHECK ALL THE FOUR MARBLES
@@ -75,7 +74,7 @@ public class MarketBoardTest extends TestCase {
         final int selectedRow = 0;
         MarketBoard marketBoard = new MarketBoard();
         MarketBoard temp = marketBoard;
-        ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLONNA,selectedRow);
+        ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLUMN,selectedRow);
         assertEquals(resources.size(), Utils.MARKET_COL_NUMBER-Collections.frequency(temp.getColumn(selectedRow),
                 Marble.getInstance(MarbleColor.WHITE)));
         //CHECK ALL THE FIVE MARBLES
@@ -100,7 +99,7 @@ public class MarketBoardTest extends TestCase {
     public void testGenerateResourcesFail()
     {
         MarketBoard marketBoard = new MarketBoard();
-        assertEquals(marketBoard.getResources(MoveType.COLONNA,5).size(),0);
+        assertEquals(marketBoard.getResources(MoveType.COLUMN,5).size(),0);
     }
 
     //TODO: THE INDICATIONS SAY THAT IT'S NOT SAFE TO CALL A TEST FROM ANOTHER TEST

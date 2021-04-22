@@ -16,7 +16,7 @@ public class DiscardLeaderCardPlayerMove extends PlayerMove {
 
     @Override
     public void execute(Match match) {
-        match.discardLeaderCard(leaderCardPosition);
+        match.discardLeaderCardInteraction(leaderCardPosition,getPlayer());
     }
 
 }

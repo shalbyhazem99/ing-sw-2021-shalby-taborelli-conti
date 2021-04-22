@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * @generated
  */
-public class Resource implements Serializable {
+public class Resource implements Serializable, Cloneable {
     private final ResourceType type;
     public Resource(ResourceType type) {
         this.type = type;
