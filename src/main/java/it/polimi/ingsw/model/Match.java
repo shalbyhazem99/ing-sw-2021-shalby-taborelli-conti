@@ -176,6 +176,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return developmentCards[level.label][type.label].pop();
     }
 
+    /*-----------------------------------------------------------------------------------------------
+    PLAYER INTERACTION
+    -------------------------------------------------------------------------------------------------*/
+
     /**
      * Method to discard a {@link LeaderCard}
      *
@@ -371,11 +375,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     /**
      * Verify if the {@link Player} could activate the power and remove the resources
+     *
      * @param resourceToUse
      * @param player
      * @return
      */
-    private boolean isEnableProductionPermitted(ArrayList<ResourcePick> resourceToUse, Player player){
+    private boolean isEnableProductionPermitted(ArrayList<ResourcePick> resourceToUse, Player player) {
         //vai json
         Gson gson = new Gson();
         String warehouseStandard = gson.toJson(player.getWarehousesStandard());
@@ -412,7 +417,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 Collections.addAll(temp, gson.fromJson(warehouseAdditional, Warehouse[].class));
                 player.setWarehousesAdditional(temp);
                 ArrayList<Resource> temp2 = new ArrayList<>();
-                Collections.addAll(temp2, gson.fromJson(strongBox,Resource[].class));
+                Collections.addAll(temp2, gson.fromJson(strongBox, Resource[].class));
                 player.setStrongBox(temp2);
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters (not enough resources)", player));
                 return false;
@@ -429,8 +434,21 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player
      */
     public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
-        if(isEnableProductionPermitted(resourceToUse,player)) {
+        if (isEnableProductionPermitted(resourceToUse, player)) {
             player.getStrongBox().add(Resource.getInstance(to));
+        }
+    }
+
+    private void activateProductivePower(ProductivePower power, ArrayList<ResourcePick> resourceToUse, Player player) {
+        //check if the resource to use are the same required for the leader card
+        ArrayList<Resource> powerRequiredResources = power.getFrom().stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new)); //arraylist di resources
+        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> elem.getResourcesCount()).collect(Collectors.toCollection(ArrayList::new));
+        //check if the resourto use are the required and if the player has this resources
+        if (Utils.compareResources(powerRequiredResources, resourcesCounts) && isEnableProductionPermitted(resourceToUse, player)) {
+            notify(EnableProductionResponse.getInstance(power.getTo(), new ArrayList<>(Arrays.asList(player))));
+            player.getStrongBox().addAll(power.getTo());
+        } else {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
         }
     }
 
@@ -442,6 +460,16 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player
      */
     public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
+        if (positionOfDevelopmentCard >= player.getDevelopmentCardSpaces().size()) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+            return;
+        }
+        DevelopmentCard developmentCard = player.getDevelopmentCardSpaces().get(positionOfDevelopmentCard).pickTopCard();
+        if (developmentCard == null) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+            return;
+        }
+        activateProductivePower(developmentCard.getPowers(), resourceToUse, player);
     }
 
     /**
@@ -452,6 +480,11 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player
      */
     public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
+        if (positionOfProductivePower >= player.getAddedPower().size()) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+            return;
+        }
+        activateProductivePower(player.getAddedPower().get(positionOfProductivePower), resourceToUse, player);
     }
 
     /**
@@ -492,15 +525,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         throw new SwapWarehouseException();
     }
 
-    /**
-     * Method used to trigger an {@link IllegalMoveResponse}
-     *
-     * @param message {@link String} representing which message has to be displayed
-     * @param player  {@link Player} to be notified
-     */
-    public void illegalPlayerMoveInteraction(String message, Player player) {
-        notify(IllegalMoveResponse.getInstance(message, new ArrayList<>(Arrays.asList(player))));
-    }
+    public abstract void endRoundInteraction(Player player) throws EndRoundException;
 
     public void updateTurn() {
         /*
@@ -513,9 +538,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public abstract boolean isMyTurn(Player player);
 
     public abstract void setCanChangeTurn(boolean canChangeTurn, Player player);
-
-    public abstract void endRoundInteraction(Player player) throws EndRoundException;
-
 
     /**
      * Method used to serialize the {@link Match} object
