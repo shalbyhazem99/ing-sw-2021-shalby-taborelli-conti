@@ -1,11 +1,16 @@
 package it.polimi.ingsw.model;
 
+import junit.framework.TestCase;
 import org.junit.Test;
 
+/**
+ * Class used to test {@link Resource}
+ */
 
-import static junit.framework.TestCase.*;
+public class ResourceTest extends TestCase {
+    public ResourceTest() {
+    }
 
-class ResourceTest {
 
     @Test
     public void testResource(){
@@ -15,12 +20,9 @@ class ResourceTest {
         assertEquals(resourceType, resource.getType());
     }
 
-
-
     @Test
     public void testEquals() {
         ResourceType type = ResourceType.COIN;
-
         assertTrue(type.equals(ResourceType.COIN));
     }
 }

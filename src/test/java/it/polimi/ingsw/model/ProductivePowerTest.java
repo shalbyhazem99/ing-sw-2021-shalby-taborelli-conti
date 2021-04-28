@@ -1,20 +1,22 @@
 package it.polimi.ingsw.model;
-
-
+import junit.framework.TestCase;
 import org.junit.Test;
-
 import java.util.ArrayList;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertSame;
+/**
+ * Classe used to test the {@link ProductivePower}
+ */
 
-class ProductivePowerTest {
+public class ProductivePowerTest extends TestCase {
+
+    public ProductivePowerTest() {
+    }
 
     /**
      * Test for constructor
      */
     @Test
-    public void ProductivePower(){
+    public void testProductivePower(){
         final int count = 1;
         ResourceType type = ResourceType.COIN;
         ResourcesCount resourcesCount = new ResourcesCount(count, type);
@@ -27,7 +29,7 @@ class ProductivePowerTest {
 
         ProductivePower productivePower = new ProductivePower(from, to);
 
-        assertSame(from, productivePower.getFrom());
-        assertSame(to, productivePower.getTo());
+        assertEquals(from, productivePower.getFrom());
+        assertEquals(to, productivePower.getTo());
     }
 }

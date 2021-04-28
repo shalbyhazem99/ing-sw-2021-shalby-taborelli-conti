@@ -1,12 +1,16 @@
 package it.polimi.ingsw.model;
 
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static junit.framework.TestCase.*;
+/**
+ * Class used to test {@link Warehouse}
+ */
 
-class WarehouseTest {
+public class WarehouseTest extends TestCase {
+
 
     @Test
     public void testWarehouse(){
@@ -36,7 +40,7 @@ class WarehouseTest {
         Warehouse warehouse1 = new Warehouse(spaceAvailable, null);
         resources.add(resource);
         assertTrue(warehouse1.addResource(resource));
-        assertSame(resources, warehouse1.getResources());
+        assertEquals(resources, warehouse1.getResources());
 
         //testing when you add a different resource
         Resource white = new Resource(ResourceType.ANY);
@@ -47,7 +51,7 @@ class WarehouseTest {
         //testing when you add another resource
         resources.add(resource);
         assertTrue(warehouse1.addResource(resource));
-        assertSame(resources, warehouse1.getResources());
+        assertEquals(resources, warehouse1.getResources());
 
     }
 
@@ -71,6 +75,6 @@ class WarehouseTest {
         Resource resource = new Resource(ResourceType.SHIELD);
         resources.add(resource);
         warehouse.changeResources(resources);
-        assertSame(resources, warehouse.getResources());
+        assertEquals(resources, warehouse.getResources());
     }
 }

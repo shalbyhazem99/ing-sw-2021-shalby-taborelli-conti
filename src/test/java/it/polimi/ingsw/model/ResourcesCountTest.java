@@ -1,11 +1,16 @@
 package it.polimi.ingsw.model;
 
+import junit.framework.TestCase;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertSame;
+/**
+ * Class used to test {@link ResourcesCount}
+ */
 
-class ResourcesCountTest {
+public class ResourcesCountTest extends TestCase {
+
+    public ResourcesCountTest() {
+    }
 
 
     @Test
@@ -18,7 +23,4 @@ class ResourcesCountTest {
         assertEquals(type, resourcesCount.getType());
     }
 
-    @Test
-    public void toArrayListResources() {
-    }
 }

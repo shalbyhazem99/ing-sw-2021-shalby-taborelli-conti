@@ -1,30 +1,29 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import junit.framework.TestCase;
 import org.junit.Test;
 
+/**
+ * Class used to test the {@link ActionToken}
+ */
+public class ActionTokenTest extends TestCase {
 
-import static junit.framework.TestCase.assertEquals;
-
-
-class ActionTokenTest {
-
-
-
-
+    public ActionTokenTest() {
+    }
 
     /**
      * Test for constructor
      */
     @Test
-    public void testDevelopmentCard(){
+    public void testActionToken() {
         MarkerType action = MarkerType.MOVE;
-        int count = 1;
-        DevelopmentCardType cardToReject = DevelopmentCardType.PURPLE;
-        ActionToken actionToken = new ActionToken(action,count, cardToReject);
-        assertEquals(MarkerType.MOVE, actionToken.getAction());
-        assertEquals(1, actionToken.getCount());
+        final int count = 1;
+        DevelopmentCardType cardToReject = DevelopmentCardType.GREEN;
+        ActionToken actionToken = new ActionToken(action, count, cardToReject);
+
+        assertEquals(action, actionToken.getAction());
+        assertEquals(count, actionToken.getCount());
         assertEquals(cardToReject, actionToken.getCardToReject());
     }
-
 }

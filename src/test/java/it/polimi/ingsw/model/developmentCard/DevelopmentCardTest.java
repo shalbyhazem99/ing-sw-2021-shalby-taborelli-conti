@@ -5,18 +5,18 @@ import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertSame;
+/**
+ * Class used to test {@link DevelopmentCard}
+ */
 
-class DevelopmentCardTest {
-
-    /**
-     * Class used to test the {@link DevelopmentCard}
-     */
+public class DevelopmentCardTest extends TestCase {
+    public DevelopmentCardTest() {
+    }
 
 
     /**
@@ -43,13 +43,10 @@ class DevelopmentCardTest {
 
         DevelopmentCard card = new DevelopmentCard(level, type, points, costs, power);
 
-        assertSame(DevelopmentCardLevel.THIRD, card.getLevel());
-        assertSame(DevelopmentCardType.GREEN,card.getType());
+        assertEquals(DevelopmentCardLevel.THIRD, card.getLevel());
+        assertEquals(DevelopmentCardType.GREEN,card.getType());
         assertEquals(4,card.getEquivalentPoint());
-        assertSame(costs,card.getCosts());
-        assertSame(power, card.getPowers());
-
-
-
+        assertEquals(costs,card.getCosts());
+        assertEquals(power, card.getPowers());
     }
 }

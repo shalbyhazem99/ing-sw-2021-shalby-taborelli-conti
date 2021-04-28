@@ -1,14 +1,20 @@
 package it.polimi.ingsw.model;
 
+import junit.framework.TestCase;
 import org.junit.Test;
 
+/**
+ * Class used to test the {@link PopeFavorTiles}
+ */
 
-import static junit.framework.TestCase.*;
+public class PopeFavorTilesTest extends TestCase {
 
-class PopeFavorTilesTest {
+    public PopeFavorTilesTest() {
+    }
+
 
     @Test
-    void active() {
+    public void testActive() {
         final int count = 1;
         PopeFavorTiles popeFavorTiles = new PopeFavorTiles(count);
 

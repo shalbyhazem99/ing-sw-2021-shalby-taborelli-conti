@@ -55,6 +55,6 @@ public class ActionToken implements Serializable {
      * @return the card that will be rejected
      */
     public DevelopmentCardType getCardToReject() {
-        return CardToReject;
+        return cardToReject;
     }
 }

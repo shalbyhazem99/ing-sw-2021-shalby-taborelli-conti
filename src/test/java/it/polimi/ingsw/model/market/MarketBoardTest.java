@@ -12,6 +12,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MarketBoardTest extends TestCase {
+    public MarketBoardTest() {
+    }
+
+    public MarketBoardTest(String name) {
+        super(name);
+    }
 
     /**
      * Class used to test the {@link MarketBoard}

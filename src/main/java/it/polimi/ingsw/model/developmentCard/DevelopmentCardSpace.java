@@ -7,6 +7,7 @@ import java.util.*;
  * class that create the {@link DevelopmentCardSpace}
  */
 public class DevelopmentCardSpace implements Serializable {
+
     private Stack<DevelopmentCard> developmentCards;
 
     /**
@@ -70,4 +71,5 @@ public class DevelopmentCardSpace implements Serializable {
     {
         return developmentCards.peek();
     }
+
 }
