@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
 import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class DevelopmentCardTest extends TestCase {
         final int points = 4;
 
         ResourcesCount resourcesCount = new ResourcesCount(1,ResourceType.COIN);
-        ArrayList<ResourcesCount> costs = new ArrayList<ResourcesCount>();
+        ArrayList<ResourcesCount> costs = new ArrayList<>();
         costs.add(resourcesCount);
 
         ArrayList<ResourcesCount> from = new ArrayList<>();

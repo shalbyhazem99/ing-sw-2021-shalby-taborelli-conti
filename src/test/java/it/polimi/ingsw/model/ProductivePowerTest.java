@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model;
 import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
 /**
- * Classe used to test the {@link ProductivePower}
+ * Class used to test the {@link ProductivePower}
  */
 
 public class ProductivePowerTest extends TestCase {

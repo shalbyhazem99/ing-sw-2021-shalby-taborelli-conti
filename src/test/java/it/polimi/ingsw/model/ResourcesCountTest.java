@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Class used to test {@link ResourcesCount}

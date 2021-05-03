@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.developmentCard;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -10,7 +11,7 @@ public class DevelopmentCardNeededTest extends TestCase {
     public DevelopmentCardNeededTest() {
     }
 
-    @org.junit.Test
+    @Test
     public void testDevelopmentCarNeeded(){
         final int count = 0;
         DevelopmentCardType type = DevelopmentCardType.GREEN;

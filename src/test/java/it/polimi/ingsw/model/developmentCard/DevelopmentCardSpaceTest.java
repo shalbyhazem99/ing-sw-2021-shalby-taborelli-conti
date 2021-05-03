@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.developmentCard;
 
 
 import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -82,6 +82,7 @@ public class DevelopmentCardSpaceTest extends TestCase {
      * 6) Checks cards with level 3 can be added again
      * 7) Checks cards with level < 3 can't be added
      */
+    @Test
     public void testCanBeAdded() {
         DevelopmentCardLevel level1 = DevelopmentCardLevel.FIRST;
         DevelopmentCardLevel level2 = DevelopmentCardLevel.SECOND;
