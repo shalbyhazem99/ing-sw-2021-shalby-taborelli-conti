@@ -9,6 +9,7 @@ public class ActionToken implements Serializable {
     private int count;
     private DevelopmentCardType cardToReject;
 
+
     /**
      * Default constructor
      * @param action {@link MarkerType} action
@@ -54,6 +55,6 @@ public class ActionToken implements Serializable {
      * @return the card that will be rejected
      */
     public DevelopmentCardType getCardToReject() {
-        return CardToReject;
+        return cardToReject;
     }
 }

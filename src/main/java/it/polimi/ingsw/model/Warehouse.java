@@ -8,6 +8,7 @@ public class Warehouse implements Serializable, Cloneable {
     private ResourceType resourceType;
     private java.util.ArrayList<Resource> resources;
 
+
     /**
      * This method set the values of the class warehouse
      * @param spaceAvailable it's the amount of resources that a player can store
@@ -52,15 +53,17 @@ public class Warehouse implements Serializable, Cloneable {
             return false;
         }
         if (resources.size() > 0){ //something is already stored in the box
-            if(!(resourceType==ResourceType.ANY)&&(resourceType!=resource.getType())) //no match about the type
+            if(resource.getType()==ResourceType.ANY || this.resourceType!=resource.getType()) //no match about the type
             {
                 return false;
             }
             resources.add(resource);
+            this.spaceAvailable= this.spaceAvailable -1;
         }
         else { //the element we're storing is the first of the box
             resourceType=resource.getType();
             resources.add(resource);
+            this.spaceAvailable= this.spaceAvailable -1;
         }
         return true;
     }
