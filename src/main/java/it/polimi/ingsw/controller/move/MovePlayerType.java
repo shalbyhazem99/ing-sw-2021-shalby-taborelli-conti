@@ -10,9 +10,11 @@ import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
+import it.polimi.ingsw.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,12 +39,12 @@ public enum MovePlayerType {
                 Arrays.stream(developmentCardLevels).forEach(elem -> System.out.print(elem.label + "->" + elem + " "));
                 System.out.println(" )");
                 DevelopmentCardLevel level = developmentCardLevels[stdin.nextInt()];
-
                 //pos
                 System.out.println("insert development card position( 0, 1, 2 )");
                 int pos = stdin.nextInt();
-
-                developmentCardPlayerMove = BuyDevelopmentCardPlayerMove.getInstance(type, level, pos);
+                //choose where ro get resources
+                ArrayList<ResourcePick> resourceToUse=Utils.getRequiredResourceFrom(match.getDevelopmentCardOnTop(type,level).getCosts(),stdin,match);
+                developmentCardPlayerMove = BuyDevelopmentCardPlayerMove.getInstance(type, level, pos, resourceToUse);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);
@@ -124,7 +126,7 @@ public enum MovePlayerType {
                 int index;
                 switch (type) {
                     case 0: //base production from two get one
-                        resourceToUse = getRequiredResourceFrom((ArrayList<ResourcesCount>) Arrays.asList(ResourcesCount.getInstance(2, ResourceType.ANY)), stdin);
+                        resourceToUse = Utils.getRequiredResourceFrom((ArrayList<ResourcesCount>) Arrays.asList(ResourcesCount.getInstance(2, ResourceType.ANY)), stdin,match);
                         ResourceType[] resourceTypes = ResourceType.values();
                         System.out.print("insert interaction type ( ");
                         for (int i = 0; i < resourceTypes.length; i++) {
@@ -136,13 +138,13 @@ public enum MovePlayerType {
                     case 1: //Leader Card
                         System.out.println("insert the index of the Leader Card power to activate (0,...)");
                         index = stdin.nextInt();
-                        resourceToUse = getRequiredResourceFrom(match.getPlayers().get(0).getAddedPower().get(index).getFrom(), stdin);
+                        resourceToUse = Utils.getRequiredResourceFrom(match.getPlayers().get(0).getAddedPower().get(index).getFrom(), stdin,match);
                         enableProductionPlayerMove = EnableProductionPlayerMoveLeaderCard.getInstance(resourceToUse, index);
                         break;
                     case 2: //Development Card
                         System.out.println("insert the index of the Development Card power to activate (0,1,3)");
                         index = stdin.nextInt();
-                        resourceToUse = getRequiredResourceFrom(match.getPlayers().get(0).getDevelopmentCardSpaces().get(index).pickTopCard().getCosts(), stdin);
+                        resourceToUse = Utils.getRequiredResourceFrom(match.getPlayers().get(0).getDevelopmentCardSpaces().get(index).pickTopCard().getCosts(), stdin,match);
                         enableProductionPlayerMove = EnableProductionPlayerMoveDevelopmentCard.getInstance(resourceToUse, index);
                         break;
                 }
@@ -152,25 +154,6 @@ public enum MovePlayerType {
             }
             return enableProductionPlayerMove;
         }
-
-        private ArrayList<ResourcePick> getRequiredResourceFrom(ArrayList<ResourcesCount> resourcesCounts, Scanner stdin) {
-            //todo: to review
-            ArrayList<ResourcePick> resourcePicks = new ArrayList<>();
-            for (ResourcesCount res : resourcesCounts) {
-                System.out.println("From where you get " + res.getCount() + " " + res.getType() + "(0-> Warehouse, 1-> Strongbox)");
-                switch (stdin.nextInt()) {
-                    case 0:
-                        System.out.println("insert the position of the warehouse (0,...,4)");
-                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, stdin.nextInt(), res));
-                        break;
-                    case 1:
-                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, res));
-                        break;
-                }
-            }
-            return resourcePicks;
-        }
-
     },
     SWAP_WAREHOUSE("Swap Warehouse") {
         @Override

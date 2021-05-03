@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesP
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
 
 import java.util.ArrayList;
 import java.util.Scanner;

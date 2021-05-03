@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMov
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.exceptions.EndRoundException;
-import it.polimi.ingsw.exceptions.NotEnoughResourcesException;
 import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 

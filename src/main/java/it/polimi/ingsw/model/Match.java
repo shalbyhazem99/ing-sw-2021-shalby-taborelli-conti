@@ -7,13 +7,10 @@ import it.polimi.ingsw.controller.move.market.MarketResponse;
 import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
-import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
-import it.polimi.ingsw.exceptions.DevelopmentSpaceException;
 import it.polimi.ingsw.exceptions.EndRoundException;
-import it.polimi.ingsw.exceptions.NotEnoughResourcesException;
 import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
@@ -33,7 +30,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Abstract class containing the attributes and the methods shared by MatchSolo and MatchMulti
@@ -351,11 +347,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player   the {@link Player} which call the Move
      * @param posToAdd the int that specify in which user's {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} the new {@link DevelopmentCard} has to be placed into
      */
-    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd) {
+    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse) {
         //if the player can afford the development card requested
-        if (player.canAfford(new ArrayList<DevelopmentCard>() {{
-            add(getDevelopmentCardOnTop(type, level));
-        }}) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)) {
+        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1,elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getPowers().getFrom().stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
+        //check if the resourto use are the required and if the player has this resources
+        if (Utils.compareResources(resources, resourcesCounts) && player.canAfford(resourceToUse) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)) {
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
             if (player.addDevelopmentCard(temp_card, posToAdd)) //no errors
             {
@@ -364,67 +361,13 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             } else {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
             }
-        } else if (!player.canAfford(new ArrayList<DevelopmentCard>() {{
-            add(getDevelopmentCardOnTop(type, level));
-        }})) {
+        } else if (!player.canAfford(resourceToUse)){
             notify(SendMessage.getInstance("Something wrong, Not enough resources", player));
         } else {
             notify(SendMessage.getInstance("Something wrong, Cannot be added (parameter error)", player));
         }
     }
 
-    /**
-     * Verify if the {@link Player} could activate the power and remove the resources
-     *
-     * @param resourceToUse
-     * @param player
-     * @return
-     */
-    private boolean isEnableProductionPermitted(ArrayList<ResourcePick> resourceToUse, Player player) {
-        //vai json
-        Gson gson = new Gson();
-        String warehouseStandard = gson.toJson(player.getWarehousesStandard());
-        String warehouseAdditional = gson.toJson(player.getWarehousesAdditional());
-        String strongBox = gson.toJson(player.getStrongBox());
-        ArrayList<Warehouse> standardTemp = player.getWarehousesStandard();
-        ArrayList<Warehouse> additionalTemp = player.getWarehousesAdditional();
-        ArrayList<Resource> strongBoxTemp = player.getStrongBox();
-
-        //check if the player has the resource
-        for (ResourcePick resourcePick : resourceToUse) {
-            ResourcesCount resourcesCount = resourcePick.getResourcesCount();
-            ArrayList<Resource> resToBeRemoved = null;
-            switch (resourcePick.getResourceWarehouseType()) {
-                case WAREHOUSE:
-                    if (resourcePick.getWarehousePosition() >= 0 && resourcePick.getWarehousePosition() < 3) {
-                        resToBeRemoved = standardTemp.get(resourcePick.getWarehousePosition()).getResources();
-                    } else if (additionalTemp.size() > resourcePick.getWarehousePosition() - 3 && resourcePick.getWarehousePosition() >= 3 && resourcePick.getWarehousePosition() < 5) {
-                        resToBeRemoved = additionalTemp.get(resourcePick.getWarehousePosition() - 3).getResources();
-                    } else {
-                        notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
-                    }
-                    break;
-                case STRONGBOX:
-                    resToBeRemoved = strongBoxTemp;
-                    break;
-            }
-            if (!resToBeRemoved.removeAll(resourcesCount.toArrayListResources())) {
-                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
-                ArrayList<Warehouse> temp = new ArrayList<>();
-                Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
-                player.setWarehousesStandard(temp);
-                temp = new ArrayList<>();
-                Collections.addAll(temp, gson.fromJson(warehouseAdditional, Warehouse[].class));
-                player.setWarehousesAdditional(temp);
-                ArrayList<Resource> temp2 = new ArrayList<>();
-                Collections.addAll(temp2, gson.fromJson(strongBox, Resource[].class));
-                player.setStrongBox(temp2);
-                notify(SendMessage.getInstance("Something wrong, Insert valid parameters (not enough resources)", player));
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Method used to perform the enable of the base interaction
@@ -434,7 +377,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player
      */
     public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
-        if (isEnableProductionPermitted(resourceToUse, player)) {
+        if (player.canAfford(resourceToUse)) {
             player.getStrongBox().add(Resource.getInstance(to));
         }
     }
@@ -442,9 +385,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     private void activateProductivePower(ProductivePower power, ArrayList<ResourcePick> resourceToUse, Player player) {
         //check if the resource to use are the same required for the leader card
         ArrayList<Resource> powerRequiredResources = power.getFrom().stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new)); //arraylist di resources
-        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> elem.getResourcesCount()).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1,elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
         //check if the resourto use are the required and if the player has this resources
-        if (Utils.compareResources(powerRequiredResources, resourcesCounts) && isEnableProductionPermitted(resourceToUse, player)) {
+        if (Utils.compareResources(powerRequiredResources, resourcesCounts) && player.canAfford(resourceToUse)) {
             notify(EnableProductionResponse.getInstance(power.getTo(), new ArrayList<>(Arrays.asList(player))));
             player.getStrongBox().addAll(power.getTo());
         } else {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.move.PlayerMove;
+import com.google.gson.Gson;
+import it.polimi.ingsw.controller.move.production.move.ResourcePick;
+import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
@@ -9,6 +11,7 @@ import it.polimi.ingsw.utils.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -111,18 +114,55 @@ public class Player implements Serializable {
     }
 
     /**
-     * @param developmentCards {@link ArrayList} of {@link DevelopmentCard} containing cards the player wants to buy
-     * @return true <==> the {@link Player} (considering the {@link ArrayList} of discounts) can afford all the cards inside developmentCards' {@link ArrayList}
+     * Verify if the {@link Player} could activate the power and remove the resources
+     *
+     * @param resourceToUse
+     * @return
      */
-    public boolean canAfford(ArrayList<DevelopmentCard> developmentCards) {
-        //get all the resourceCount needed by the developmentCards the player wants to buy
-        ArrayList<ResourcesCount> needed =
-                (ArrayList<ResourcesCount>) developmentCards
-                        .stream()
-                        .flatMap(elem -> elem.getCosts().stream())
-                        .collect(Collectors.toList());
-        return isActionable(needed);
+    public boolean canAfford(ArrayList<ResourcePick> resourceToUse) {
+        //vai json
+        Gson gson = new Gson();
+        String warehouseStandard = gson.toJson(getWarehousesStandard());
+        String warehouseAdditional = gson.toJson(getWarehousesAdditional());
+        String strongBox = gson.toJson(getStrongBox());
+        ArrayList<Warehouse> standardTemp = getWarehousesStandard();
+        ArrayList<Warehouse> additionalTemp = getWarehousesAdditional();
+        ArrayList<Resource> strongBoxTemp = getStrongBox();
+
+        //check if the player has the resource
+        for (ResourcePick resourcePick : resourceToUse) {
+            ResourceType resourceType = resourcePick.getResourceType();
+            ArrayList<Resource> resToBeRemoved = null;
+            switch (resourcePick.getResourceWarehouseType()) {
+                case WAREHOUSE:
+                    if (resourcePick.getWarehousePosition() >= 0 && resourcePick.getWarehousePosition() < 3) {
+                        resToBeRemoved = standardTemp.get(resourcePick.getWarehousePosition()).getResources();
+                    } else if (additionalTemp.size() > resourcePick.getWarehousePosition() - 3 && resourcePick.getWarehousePosition() >= 3 && resourcePick.getWarehousePosition() < 5) {
+                        resToBeRemoved = additionalTemp.get(resourcePick.getWarehousePosition() - 3).getResources();
+                    } else {
+                        return false;
+                    }
+                    break;
+                case STRONGBOX:
+                    resToBeRemoved = strongBoxTemp;
+                    break;
+            }
+            if (!resToBeRemoved.remove(Resource.getInstance(resourceType))) {
+                ArrayList<Warehouse> temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
+                setWarehousesStandard(temp);
+                temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseAdditional, Warehouse[].class));
+                setWarehousesAdditional(temp);
+                ArrayList<Resource> temp2 = new ArrayList<>();
+                Collections.addAll(temp2, gson.fromJson(strongBox, Resource[].class));
+                setStrongBox(temp2);
+                return false;
+            }
+        }
+        return true;
     }
+
 
     //getter
 
@@ -151,7 +191,7 @@ public class Player implements Serializable {
      * @return a shallow copy of the warehouseStandard {@link ArrayList} of {@link Warehouse} of the {@link Player}
      */
     public ArrayList<Warehouse> getWarehousesStandard() {
-       return warehousesStandard;
+        return warehousesStandard;
     }
 
     /**
@@ -165,7 +205,7 @@ public class Player implements Serializable {
      * @return a shallow copy of the {@link ArrayList} of additional {@link Warehouse} of the {@link Player}
      */
     public ArrayList<Warehouse> getWarehousesAdditional() {
-       return warehousesAdditional;
+        return warehousesAdditional;
     }
 
     /**

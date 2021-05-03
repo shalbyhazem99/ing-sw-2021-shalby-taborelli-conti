@@ -75,6 +75,12 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
+                <!--for sonar purpose-->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>1.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>

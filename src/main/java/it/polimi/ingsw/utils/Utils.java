@@ -1,10 +1,13 @@
 package it.polimi.ingsw.utils;
 
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.controller.move.production.move.ResourcePick;
+import it.polimi.ingsw.controller.move.production.move.ResourceWarehouseType;
+import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.ResourcesCount;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * describe a set of methods that are util for the whole project
@@ -61,5 +64,31 @@ public class Utils {
             );
         }
         return elaborated;
+    }
+
+    /**
+     * Method to ask client from where he wants to get the resources for some operation
+     * @param resourcesCounts
+     * @param stdin
+     * @param match
+     * @return
+     */
+    public static ArrayList<ResourcePick> getRequiredResourceFrom(ArrayList<ResourcesCount> resourcesCounts, Scanner stdin, Match match) {
+        ArrayList<ResourcePick> resourcePicks = new ArrayList<>();
+        for (ResourcesCount resourcesCount : resourcesCounts) {
+            for (int i = 0; i < resourcesCount.getCount(); i++) {
+                System.out.println("From where you get " + resourcesCount.getType()+ "(0-> Warehouse, 1-> Strongbox)");
+                switch (stdin.nextInt()) {
+                    case 0:
+                        System.out.println("insert the position of the warehouse (0,...,4)");
+                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, stdin.nextInt(), resourcesCount.getType()));
+                        break;
+                    case 1:
+                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, resourcesCount.getType()));
+                        break;
+                }
+            }
+        }
+        return resourcePicks;
     }
 }

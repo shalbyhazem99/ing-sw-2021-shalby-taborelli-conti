@@ -1,20 +1,21 @@
 package it.polimi.ingsw.controller.move.production.move;
 
-import it.polimi.ingsw.model.ResourcesCount;
+
+import it.polimi.ingsw.model.ResourceType;
 
 public class ResourcePick {
     private ResourceWarehouseType resourceWarehouseType; //warehouse or strongbox
     private int warehousePosition; //if a warehouse used
-    private ResourcesCount resourcesCount; // the resources to get
+    private ResourceType resourceType; // the resources to get
 
-    public ResourcePick(ResourceWarehouseType resourceWarehouseType, int warehousePosition, ResourcesCount resourcesCount) {
+    public ResourcePick(ResourceWarehouseType resourceWarehouseType, int warehousePosition, ResourceType resourceType) {
         this.resourceWarehouseType = resourceWarehouseType;
         this.warehousePosition = warehousePosition;
-        this.resourcesCount = resourcesCount;
+        this.resourceType = resourceType;
     }
 
-    public static ResourcePick getInstance(ResourceWarehouseType resourceWarehouseType, int warehousePosition, ResourcesCount resourcesCount) {
-        return new ResourcePick(resourceWarehouseType, warehousePosition, resourcesCount);
+    public static ResourcePick getInstance(ResourceWarehouseType resourceWarehouseType, int warehousePosition, ResourceType resourceType) {
+        return new ResourcePick(resourceWarehouseType, warehousePosition, resourceType);
     }
 
     public ResourceWarehouseType getResourceWarehouseType() {
@@ -25,7 +26,11 @@ public class ResourcePick {
         return warehousePosition;
     }
 
-    public ResourcesCount getResourcesCount() {
-        return resourcesCount;
+    public ResourceType getResourceType() {
+        return resourceType;
+    }
+
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 }
