@@ -9,12 +9,9 @@ import it.polimi.ingsw.model.leaderCard.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.io.IOException;
 
-// todo: add the link to image
-// todo: add the documentation of parms
 
 
 public class LeaderCard2JSON {
@@ -175,7 +172,9 @@ public class LeaderCard2JSON {
                 }
                 if (str.equals("Y")){
                     while (true) {
-                        DevelopmentCardNeeded item = new DevelopmentCardNeeded();
+                        int count=0;
+                        DevelopmentCardType type = null;
+                        DevelopmentCardLevel level = null;
 
                         System.out.println("How many DevelopmentCard of that type do you need? Insert a number");
                         try {
@@ -184,7 +183,7 @@ public class LeaderCard2JSON {
                             System.out.println("An error occurred: " + e);
                             System.exit(-1);
                         }
-                        item.setCount(Integer.valueOf(str));
+                        count = Integer.valueOf(str);
                         do {
                             System.out.println("Which color of DevelopmentCard do you need? g/b/y/p");
                             try {
@@ -195,13 +194,13 @@ public class LeaderCard2JSON {
                             }
 
                             if (str.equals("g")) {
-                                item.setType(DevelopmentCardType.GREEN);
+                                type=DevelopmentCardType.GREEN;
                             } else if (str.equals("b")) {
-                                item.setType(DevelopmentCardType.BLUE);
+                                type=DevelopmentCardType.BLUE;
                             } else if (str.equals("y")) {
-                                item.setType(DevelopmentCardType.YELLOW);
+                                type=DevelopmentCardType.YELLOW;
                             } else if (str.equals("p")) {
-                                item.setType(DevelopmentCardType.PURPLE);
+                                type=DevelopmentCardType.PURPLE;
                             }
                             else {
                                 str = "error";
@@ -218,21 +217,21 @@ public class LeaderCard2JSON {
                             }
 
                             if (str.equals("1")) {
-                                item.setLevel(DevelopmentCardLevel.FIRST);
+                                level=DevelopmentCardLevel.FIRST;
                             }
                             else if (str.equals("2")) {
-                                item.setLevel(DevelopmentCardLevel.SECOND);
+                                level=DevelopmentCardLevel.SECOND;
                             }
                             else if (str.equals("3")) {
-                                item.setLevel(DevelopmentCardLevel.THIRD);
+                                level=DevelopmentCardLevel.THIRD;
                             }
                             else if (str.equals("0")) {
-                                item.setLevel(null);
                             }
                             else{
                                 str = "error";
                             }
                         }while (str.equals("error"));
+                        DevelopmentCardNeeded item = new DevelopmentCardNeeded(count, type, level);
 
                         developmentCardNeeded.add(item);
 
@@ -256,7 +255,7 @@ public class LeaderCard2JSON {
                     System.out.println("Insert a correct option!");
                 }
             }
-            LeaderCardDiscount card = new LeaderCardDiscount(victoryPoints, resourceTypeRelated, resourcesNeeded, developmentCardNeeded, String.valueOf(base));
+            LeaderCardDiscount card = new LeaderCardDiscount(victoryPoints, resourceTypeRelated, resourcesNeeded, developmentCardNeeded);
             //list.add(card);
 
             // Catching the name of the file that will be created

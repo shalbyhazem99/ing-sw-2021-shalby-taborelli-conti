@@ -1,24 +1,19 @@
 package it.polimi.ingsw.utils.jsonCreator;
 
 import com.google.gson.Gson;
-import java.io.FileWriter;
 
 import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.*;
-import it.polimi.ingsw.model.leaderCard.LeaderCard;
-import it.polimi.ingsw.model.leaderCard.LeaderCardAddProductive;
+
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.io.FileWriter;
 import java.io.IOException;
-
-// todo: add the link to image
-// todo: add the documentation of parms
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 
 public class DevelopmentCard2JSON {
@@ -42,9 +37,9 @@ public class DevelopmentCard2JSON {
 
 
         for (int i = 1; i <= 48; i++) {
-            ArrayList<ResourcesCount> costs = new ArrayList<ResourcesCount>();
-            ArrayList<ResourcesCount> from = new ArrayList<ResourcesCount>();
-            ArrayList<Resource> to = new ArrayList<Resource>();
+            ArrayList<ResourcesCount> costs = new ArrayList<>();
+            ArrayList<ResourcesCount> from = new ArrayList<>();
+            ArrayList<Resource> to = new ArrayList<>();
             // Asking the level of the card
             do {
                 System.out.println("Which is the level of the card " + i +" ? 1/2/3");
@@ -274,8 +269,7 @@ public class DevelopmentCard2JSON {
 
             // insert the conversion i into string
             ProductivePower powers = ProductivePower.getInstance(from, to);
-            DevelopmentCard card = DevelopmentCard.getInstance(level, color, victoryPoints, costs, powers, String.valueOf(i));
-            //list.add(card);
+            DevelopmentCard card = DevelopmentCard.getInstance(level, color, victoryPoints, costs, powers);
 
             // Catching the name of the file that will be created
             try {
@@ -286,9 +280,6 @@ public class DevelopmentCard2JSON {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
             }
-
         }
-
-
     }
 }
