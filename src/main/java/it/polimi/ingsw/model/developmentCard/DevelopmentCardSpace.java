@@ -18,6 +18,7 @@ public class DevelopmentCardSpace implements Serializable {
 
     /**
      * create an istance of {@link DevelopmentCardSpace}
+     *
      * @return an istance of {@link DevelopmentCardSpace}
      */
     public static DevelopmentCardSpace getInstance() {
@@ -26,6 +27,7 @@ public class DevelopmentCardSpace implements Serializable {
 
     /**
      * add a {@link DevelopmentCard} to the {@link DevelopmentCardSpace}
+     *
      * @param developmentCard the {@link DevelopmentCard} to add
      * @return true is successful, false otherwise
      */
@@ -38,6 +40,7 @@ public class DevelopmentCardSpace implements Serializable {
 
     /**
      * Method to know if a {@link DevelopmentCard} can be added in this {@link DevelopmentCardSpace}
+     *
      * @param developmentCard the {@link DevelopmentCard} to check if it can be added
      * @return true <==> the {@link DevelopmentCard} can be added
      */
@@ -47,23 +50,27 @@ public class DevelopmentCardSpace implements Serializable {
 
     /**
      * transform the stack of {@link DevelopmentCard} to an {@link ArrayList}
+     *
      * @return an {@link ArrayList} of {@link DevelopmentCard}
      */
-    public ArrayList<DevelopmentCard> linearize(){
+    public ArrayList<DevelopmentCard> linearize() {
         return new ArrayList<>(developmentCards);
     }
 
     /**
      * Method used to get (not remove) the card placed on the top
+     *
      * @return the {@link DevelopmentCard} placed on the top of the {@link Stack} of the {@link DevelopmentCardSpace}
      */
-    public DevelopmentCard pickTopCard()
-    {
+    public DevelopmentCard pickTopCard() {
         return developmentCards.peek();
     }
 
     @Override
     public String toString() {
-        return developmentCards.peek().toString();
+        if (!developmentCards.isEmpty())
+            return developmentCards.peek().toString();
+        else
+            return "";
     }
 }

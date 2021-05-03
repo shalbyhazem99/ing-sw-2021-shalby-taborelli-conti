@@ -221,7 +221,7 @@ public class MatchMulti extends Match implements Serializable {
                 System.out.println(player.getStrongBox().toString());
                 System.out.println("SPAZI CARTE");
                 for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
-                    System.out.println(player.getDevelopmentCards().get(a).toString());
+                    System.out.println(player.getDevelopmentCardSpaces().get(a).toString());
                 }
                 System.out.println("LEADER CARD");
                 for (LeaderCard leaderCard : player.getLeaderCards()) {
