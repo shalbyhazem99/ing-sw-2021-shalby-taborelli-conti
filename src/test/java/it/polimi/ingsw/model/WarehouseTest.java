@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import junit.framework.TestCase;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class WarehouseTest extends TestCase {
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testWarehouse(){
         int spaceAvailable =1;
         ResourceType resourceType = ResourceType.COIN;
@@ -24,7 +24,7 @@ public class WarehouseTest extends TestCase {
         assertEquals(resources, warehouse.getResources());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testAddResource() {
 
         //testing the first condition
@@ -55,7 +55,7 @@ public class WarehouseTest extends TestCase {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void changeAvailability() {
         final int newAvailability = 1;
         final int spaceAvailable = 0;

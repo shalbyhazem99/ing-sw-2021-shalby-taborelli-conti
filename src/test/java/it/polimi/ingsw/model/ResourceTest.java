@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model;
 
 import junit.framework.TestCase;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
 
 /**
  * Class used to test {@link Resource}
@@ -12,7 +13,7 @@ public class ResourceTest extends TestCase {
     }
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testResource(){
         ResourceType resourceType = ResourceType.COIN;
         Resource resource = new Resource(resourceType);

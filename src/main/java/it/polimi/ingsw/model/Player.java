@@ -32,13 +32,20 @@ public class Player implements Serializable {
         this.name = name;
         popeFavorTiles = generatePopeFavorTiles();
         leaderCards = new ArrayList<>();
-        developmentCardSpaces = new ArrayList<>();
+        geneDevelopmentCardSpaces();
         warehousesStandard = generateWarehouse();
         strongBox = new ArrayList<>();
         warehousesAdditional = new ArrayList<>();
         discounts = new ArrayList<>();
         conversionStrategies = new ArrayList<>();
         addedPower = generatePower();
+    }
+
+    private void geneDevelopmentCardSpaces(){
+        developmentCardSpaces = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            developmentCardSpaces.add(DevelopmentCardSpace.getInstance());
+        }
     }
 
     public String getName() {

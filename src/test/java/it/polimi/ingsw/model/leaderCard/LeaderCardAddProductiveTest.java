@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import junit.framework.TestCase;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class LeaderCardAddProductiveTest extends TestCase {
 
         //Testing a null card can always be activated
         LeaderCardAddProductive card_null = new LeaderCardAddProductive(2, null, null, null);
-        assertTrue(card_null.isActivable(tester));
+        assertTrue(card_null.isActionable(tester));
 
         //Testing a card that need development cards can be activated
 
@@ -49,12 +49,12 @@ public class LeaderCardAddProductiveTest extends TestCase {
         ArrayList<DevelopmentCardNeeded> devCardList = new ArrayList<>();
         devCardList.add(developmentCardNeeded1);
         LeaderCardAddProductive cardAddProductive1 = new LeaderCardAddProductive(0, null, null, devCardList);
-        assertTrue(cardAddProductive1.isActivable(tester));
+        assertTrue(cardAddProductive1.isActionable(tester));
 
         //Testing more than one card needed
         devCardList.add(developmentCardNeeded2);
         LeaderCardAddProductive cardAddProductive2 = new LeaderCardAddProductive(0, null, null, devCardList);
-        assertTrue(cardAddProductive2.isActivable(tester));
+        assertTrue(cardAddProductive2.isActionable(tester));
 
         //Testing negative case
         DevelopmentCardNeeded developmentCardNeeded1Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
@@ -63,7 +63,7 @@ public class LeaderCardAddProductiveTest extends TestCase {
         LeaderCardAddProductive cardAddProductiveWrong1 = new LeaderCardAddProductive(1, null, null, devCardListWrong);
 
         // Non dovrebbe funzionare?
-        //assertFalse(cardAddProductiveWrong1.isActivable(tester));
+        assertFalse(cardAddProductiveWrong1.isActionable(tester));
 
         //Testing a Resource is needed
         ArrayList<ResourcesCount> resourcesNeeded = new ArrayList<>();
@@ -81,12 +81,12 @@ public class LeaderCardAddProductiveTest extends TestCase {
         tester.addResourceToStrongBox(faith);
 
         LeaderCardAddProductive cardAddProductive3 = new LeaderCardAddProductive(0, null, resourcesNeeded, null);
-        assertTrue(cardAddProductive3.isActivable(tester));
+        assertTrue(cardAddProductive3.isActionable(tester));
 
         //Testing more type Resources needed
         resourcesNeeded.add(resources2);
         LeaderCardAddProductive cardAddProductive4 = new LeaderCardAddProductive(0, null, resourcesNeeded, null);
-        assertTrue(cardAddProductive4.isActivable(tester));
+        assertTrue(cardAddProductive4.isActionable(tester));
 
     }
 }

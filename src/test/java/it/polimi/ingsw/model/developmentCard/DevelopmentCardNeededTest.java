@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.developmentCard;
 
 import junit.framework.TestCase;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 
 /**

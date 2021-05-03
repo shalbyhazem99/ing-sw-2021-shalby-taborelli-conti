@@ -35,12 +35,12 @@ public abstract class LeaderCard implements Serializable {
     /**
      * verify if the player has enough {@link Resource} and development card to active the power
      * @param player the player to verify
-     * @return true if tha power is activable, false otherwise
+     * @return true if tha power is actionable, false otherwise
      */
     protected boolean isActionable(Player player){
         if(developmentCardNeeded !=null) {
             for (DevelopmentCardNeeded dev : developmentCardNeeded) {
-                if (dev.getCount() <= player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
+                if (dev.getCount() > player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType()) && elem.getLevel().equals(dev.getLevel())).count())
                     return false;
             }
         }
