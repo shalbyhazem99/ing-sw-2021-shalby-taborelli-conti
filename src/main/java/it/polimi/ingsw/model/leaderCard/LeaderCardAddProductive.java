@@ -47,9 +47,9 @@ public class LeaderCardAddProductive extends LeaderCard implements Serializable 
         if(!active && isActionable(player)) { //if not active and it's not activable
             if (resourceTypeRelated!=null){
                 player.addPower(ProductivePower.getInstance(
-                        new ArrayList<>(Arrays.asList(ResourcesCount.getInstance(1, resourceTypeRelated))),//todo: to see
+                        new ArrayList<>(Arrays.asList(ResourcesCount.getInstance(1, resourceTypeRelated))),
                         new ArrayList<>(Arrays.asList(
-                                Resource.getInstance(ResourceType.ANY), //todo: to see
+                                Resource.getInstance(ResourceType.ANY),
                                 Resource.getInstance(ResourceType.FAITH))))
                 );
                 }

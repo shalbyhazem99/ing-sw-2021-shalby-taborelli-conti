@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * The abstract class that rappresent the {@link LeaderCard}
+ * The abstract class that represent the {@link LeaderCard}
  */
 public abstract class LeaderCard implements Serializable {
     protected boolean active;

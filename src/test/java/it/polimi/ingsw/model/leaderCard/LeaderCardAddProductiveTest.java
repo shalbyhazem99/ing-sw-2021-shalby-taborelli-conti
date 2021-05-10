@@ -21,7 +21,7 @@ public class LeaderCardAddProductiveTest extends TestCase {
 
 
     /**
-     * Class used to test the correct activation of the cards
+     * Class used to test the correct activation of the {@link LeaderCardAddProductive}
      */
     @Test
     public void testActive(){
@@ -45,10 +45,19 @@ public class LeaderCardAddProductiveTest extends TestCase {
 
         //testing that a card already activated is not reactivated
         assertFalse(leaderCardAddProductive.active(tester));
+
+        //Testing the if i can't activate a card that card won't be activate
+        DevelopmentCardNeeded developmentCardNeeded_Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.YELLOW, DevelopmentCardLevel.FIRST);
+        ArrayList<DevelopmentCardNeeded> devListNeeded_Wrong = new ArrayList<>();
+        devListNeeded_Wrong.add(developmentCardNeeded_Wrong);
+        LeaderCardAddProductive leaderCardAddProductive_Wrong = new LeaderCardAddProductive(5, ResourceType.COIN, null, devListNeeded_Wrong);
+        tester.addLeaderCard(leaderCardAddProductive_Wrong);
+        assertFalse(leaderCardAddProductive_Wrong.active(tester));
     }
 
+
     /**
-     * Class used to test the correct assignment of points
+     * Class used to test the correct getting points from a {@link LeaderCardAddProductive}
      */
     @Test
     public void testGetPoints(){
@@ -61,7 +70,7 @@ public class LeaderCardAddProductiveTest extends TestCase {
         //A card without any power can assign points
         assertEquals(2,leaderCardAddProductive_null.getPoints());
 
-        //Testing the activation of a classic Card
+        //Testing correct assignment of the card
         DevelopmentCard developmentCard = new DevelopmentCard(DevelopmentCardLevel.FIRST, DevelopmentCardType.PURPLE );
         tester.addDevelopmentCard(developmentCard, 0);
         ArrayList<DevelopmentCardNeeded> developmentCardNeeded = new ArrayList<>();
@@ -75,9 +84,7 @@ public class LeaderCardAddProductiveTest extends TestCase {
 
 
     /**
-     * Class used tg test is the Leader Card can be activated by the player.
-     * 1) Testing a card that has no cost can be activated
-     * 2) Testing miscellaneous cases of activation
+     * Class used to test if the {@link LeaderCardAddProductive} can be activated by the player
      */
     @Test
     public void testIsActionable(){
@@ -135,6 +142,5 @@ public class LeaderCardAddProductiveTest extends TestCase {
         resourcesNeeded.add(resources2);
         LeaderCardAddProductive cardAddProductive4 = new LeaderCardAddProductive(0, null, resourcesNeeded, null);
         assertTrue(cardAddProductive4.isActionable(tester));
-
     }
 }

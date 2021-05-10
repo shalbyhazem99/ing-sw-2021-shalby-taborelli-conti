@@ -44,8 +44,9 @@ public class LeaderCardAddWarehouse extends LeaderCard implements Serializable {
     @Override
     public boolean active(Player player) {
         if (!active && isActionable(player)) { //if not active and it's not activable
-            player.addAdditionalWarehouse(Warehouse.getInstance(2, resourceTypeRelated)); //todo: to see
-
+            if (resourceTypeRelated != null){
+                player.addAdditionalWarehouse(Warehouse.getInstance(2, resourceTypeRelated));
+            }
             this.active = true;
             return true;
         }

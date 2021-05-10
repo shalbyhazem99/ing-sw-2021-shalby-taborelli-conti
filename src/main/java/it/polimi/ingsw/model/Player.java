@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
-import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
@@ -107,8 +106,6 @@ public class Player implements Serializable {
     public void addLeaderCard(LeaderCard leaderCard) {
         leaderCards.add(leaderCard);
     }
-
-    //TODO: production
 
     /**
      * move the Faith Marker Ahead
@@ -394,7 +391,6 @@ public class Player implements Serializable {
      * @param resources the {@link ArrayList} containing the {@link Resource} to be removed
      * @return true <==> no error occurs in the removing
      */
-    //TODO: da rimuovere commento, ho testato col main e funziona
     public boolean removeResources(ArrayList<Resource> resources) {
         if (resources == null) {
             return true;
@@ -414,10 +410,6 @@ public class Player implements Serializable {
         return true;
     }
 
-    //TODO : remove
-    public boolean addToWar(Resource r, int n) {
-        return warehousesStandard.get(n).addResource(r);
-    }
 
     /**
      * Va fatto dentro player necessariamente perchè non possiamo esporre l'oggetto warehouse, i controlli sui parametri chiamati devono già essere stati fatti
@@ -505,28 +497,5 @@ public class Player implements Serializable {
             }
         }
     }
-
-    public static void main(String[] args) {
-        //[0]-->3
-        //[1]-->2
-        //[2]-->1
-        Player p = new Player("user");
-        p.addToWar(new Resource(ResourceType.COIN), 0);
-        p.addToWar(new Resource(ResourceType.COIN), 0);
-        p.addToWar(new Resource(ResourceType.COIN), 0);
-        p.addToWar(new Resource(ResourceType.SHIELD), 1);
-        p.addToWar(new Resource(ResourceType.SHIELD), 1);
-        p.addToWar(new Resource(ResourceType.COIN), 2);
-        ArrayList<Resource> v = new ArrayList<>();
-        v.add(new Resource(ResourceType.COIN));
-        v.add(new Resource(ResourceType.COIN));
-        v.add(new Resource(ResourceType.SHIELD));
-        v.add(new Resource(ResourceType.SHIELD));
-        v.add(new Resource(ResourceType.SHIELD));
-        boolean a = p.removeResources(null);
-        System.out.println("asa");
-
-    }
-
 
 }
