@@ -10,28 +10,77 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+
 /**
  * Class used to test the class {@link LeaderCardAddProductive}
  */
 
 public class LeaderCardAddProductiveTest extends TestCase {
 
+    public LeaderCardAddProductiveTest(){}
 
+
+    /**
+     * Class used to test the correct activation of the cards
+     */
+    @Test
+    public void testActive(){
+        //Testing that a LeaderCard that has no power is activated
+        Player tester = new Player("tester");
+        LeaderCardAddProductive leaderCardAddProductive_null = new LeaderCardAddProductive(2, null, null, null);
+        tester.addLeaderCard(leaderCardAddProductive_null);
+        assertTrue(leaderCardAddProductive_null.active(tester));
+
+        //Testing that a card is activated
+        DevelopmentCard developmentCard1 = new DevelopmentCard(DevelopmentCardLevel.FIRST, DevelopmentCardType.PURPLE, 0, null, null);
+        DevelopmentCard developmentCard2 = new DevelopmentCard(DevelopmentCardLevel.SECOND, DevelopmentCardType.PURPLE, 0, null, null);
+        tester.addDevelopmentCard(developmentCard1,0);
+        tester.addDevelopmentCard(developmentCard2,0);
+        ArrayList<DevelopmentCardNeeded> developmentCardNeededs = new ArrayList<>();
+        DevelopmentCardNeeded devNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.SECOND );
+        developmentCardNeededs.add(devNeeded);
+        LeaderCardAddProductive leaderCardAddProductive = new LeaderCardAddProductive(5, ResourceType.STONE, null, developmentCardNeededs);
+        tester.addLeaderCard(leaderCardAddProductive);
+        assertTrue(leaderCardAddProductive.active(tester));
+
+        //testing that a card already activated is not reactivated
+        assertFalse(leaderCardAddProductive.active(tester));
+    }
+
+    /**
+     * Class used to test the correct assignment of points
+     */
     @Test
     public void testGetPoints(){
         Player tester = new Player("tester");
-        LeaderCardAddProductive leaderCardAddProductive = new LeaderCardAddProductive(2, null, null, null);
+        LeaderCardAddProductive leaderCardAddProductive_null = new LeaderCardAddProductive(2, null, null, null);
         //Testing I can't get points from a disable Card
-        assertEquals(0, leaderCardAddProductive.getPoints());
-        tester.addLeaderCard(leaderCardAddProductive);
+        assertEquals(0, leaderCardAddProductive_null.getPoints());
+        tester.addLeaderCard(leaderCardAddProductive_null);
+        leaderCardAddProductive_null.active(tester);
+        //A card without any power can assign points
+        assertEquals(2,leaderCardAddProductive_null.getPoints());
+
+        //Testing the activation of a classic Card
+        DevelopmentCard developmentCard = new DevelopmentCard(DevelopmentCardLevel.FIRST, DevelopmentCardType.PURPLE );
+        tester.addDevelopmentCard(developmentCard, 0);
+        ArrayList<DevelopmentCardNeeded> developmentCardNeeded = new ArrayList<>();
+        DevelopmentCardNeeded cardNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
+        developmentCardNeeded.add(cardNeeded);
+        LeaderCardAddProductive leaderCardAddProductive = new LeaderCardAddProductive(2, ResourceType.STONE, null, developmentCardNeeded);
         leaderCardAddProductive.active(tester);
-        //assertEquals(2,leaderCardAddProductive.getPoints());
+        assertEquals(2, leaderCardAddProductive.getPoints());
 
     }
 
 
+    /**
+     * Class used tg test is the Leader Card can be activated by the player.
+     * 1) Testing a card that has no cost can be activated
+     * 2) Testing miscellaneous cases of activation
+     */
     @Test
-    public void testIsActivable(){
+    public void testIsActionable(){
         Player tester = new Player("Tester");
 
         //Testing a null card can always be activated
@@ -62,7 +111,6 @@ public class LeaderCardAddProductiveTest extends TestCase {
         devCardListWrong.add(developmentCardNeeded1Wrong);
         LeaderCardAddProductive cardAddProductiveWrong1 = new LeaderCardAddProductive(1, null, null, devCardListWrong);
 
-        // Non dovrebbe funzionare?
         assertFalse(cardAddProductiveWrong1.isActionable(tester));
 
         //Testing a Resource is needed

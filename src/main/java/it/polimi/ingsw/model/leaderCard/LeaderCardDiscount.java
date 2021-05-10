@@ -45,6 +45,7 @@ public class LeaderCardDiscount extends LeaderCard implements Serializable {
     public boolean active(Player player) {
         if (!active && isActionable(player)) { //if not active and it's not activable
             player.addDiscount(ResourcesCount.getInstance(1,resourceTypeRelated)); //todo: to see
+            this.active = active;
             return true;
         }
         return false;

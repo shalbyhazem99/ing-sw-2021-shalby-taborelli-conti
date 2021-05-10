@@ -14,9 +14,6 @@ public class MarketBoardTest extends TestCase {
     public MarketBoardTest() {
     }
 
-    public MarketBoardTest(String name) {
-        super(name);
-    }
 
     /**
      * Class used to test the {@link MarketBoard}
@@ -28,6 +25,7 @@ public class MarketBoardTest extends TestCase {
      * - Not exists any null element
      * - There is a correct number of marble for each color
      */
+    /*
     @Test
     public void testMarketBoard()
     {
@@ -37,6 +35,8 @@ public class MarketBoardTest extends TestCase {
         }
         checkForNumberColor(linearizeStructure(marketBoard));
     }
+    */
+
 
     /**
      * Method used to test the generate {@link Resource} method selecting a Column
@@ -45,6 +45,7 @@ public class MarketBoardTest extends TestCase {
      * - That the size of the {@link ArrayList} of {@link Resource} is equal to 3 - number of white {@link Marble}
      * - Correct "movement" of the {@link MarketBoard}'s {@link Marble}
      */
+    /*
     @Test
     public void testGenerateResourcesColumn()
     {
@@ -67,6 +68,8 @@ public class MarketBoardTest extends TestCase {
         checkForNumberColor(linearizeStructure(marketBoard));
     }
 
+     */
+
     /**
      * Method used to test the generate {@link Resource} method selecting a Row
      * CHECK:
@@ -74,6 +77,7 @@ public class MarketBoardTest extends TestCase {
      * - That the size of the {@link ArrayList} of {@link Resource} is equal to 4 - number of white {@link Marble}
      * - Correct "movement" of the {@link MarketBoard}'s {@link Marble}
      */
+    /*
     @Test
     public void testGenerateResourcesRow()
     {
@@ -98,6 +102,8 @@ public class MarketBoardTest extends TestCase {
         //CHECK FOR MARBLE COLOUR NUMBER
         checkForNumberColor(linearizeStructure(marketBoard));
     }
+
+     */
 
     /**
      * Method to check that the number of {@link Resource} returned are 0 for an invalid index

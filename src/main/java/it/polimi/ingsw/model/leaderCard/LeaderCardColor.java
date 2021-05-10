@@ -45,6 +45,8 @@ public class LeaderCardColor extends LeaderCard implements Serializable {
     public boolean active(Player player) {
         if (!active && isActionable(player)) { //if not active and it's not activable
             player.addConversionStrategies(resourceTypeRelated);
+
+            this.active = true;
             return true;
         }
         return false;
