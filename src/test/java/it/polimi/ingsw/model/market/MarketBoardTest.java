@@ -46,7 +46,7 @@ public class MarketBoardTest extends TestCase {
         final int selectedColumn = 0;
         MarketBoard marketBoard = new MarketBoard();
         MarketBoard temp = marketBoard.clone();
-        ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLONNA,selectedColumn);
+        ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLUMN,selectedColumn);
         int t = resources.size();
         int l = Collections.frequency(temp.getColumn(selectedColumn),Marble.getInstance(MarbleColor.WHITE));
         ArrayList<Marble> m = temp.getColumn(selectedColumn);
@@ -78,7 +78,7 @@ public class MarketBoardTest extends TestCase {
         final int selectedRow = 0;
         MarketBoard marketBoard = new MarketBoard();
         MarketBoard temp = marketBoard.clone();
-        ArrayList<Resource> resources = marketBoard.getResources(MoveType.RIGA,selectedRow);
+        ArrayList<Resource> resources = marketBoard.getResources(MoveType.ROW,selectedRow);
         int t = resources.size();
         int l = Collections.frequency(temp.getRow(selectedRow),Marble.getInstance(MarbleColor.WHITE));
         int d = 4-l;
@@ -105,7 +105,7 @@ public class MarketBoardTest extends TestCase {
     public void testGenerateResourcesFail()
     {
         MarketBoard marketBoard = new MarketBoard();
-        assertEquals(marketBoard.getResources(MoveType.COLONNA,5).size(),0);
+        assertEquals(marketBoard.getResources(MoveType.COLUMN,5).size(),0);
     }
 
     //TODO: THE INDICATIONS SAY THAT IT'S NOT SAFE TO CALL A TEST FROM ANOTHER TEST
