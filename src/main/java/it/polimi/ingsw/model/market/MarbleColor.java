@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.ResourceType;
 
 import java.io.Serializable;
 
-public enum MarbleColor implements Serializable {
+public enum MarbleColor implements Serializable,Cloneable {
     WHITE(null),
     BLUE(ResourceType.SHIELD),
     GREY(ResourceType.STONE),
