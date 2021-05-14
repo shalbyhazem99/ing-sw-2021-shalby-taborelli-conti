@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.market;
 
 import java.io.Serializable;
 
-public class Marble implements Serializable {
+public class Marble implements Serializable,Cloneable {
     private final MarbleColor color;
 
     public Marble(MarbleColor color) {
@@ -29,5 +29,10 @@ public class Marble implements Serializable {
         }
         Marble c = (Marble) obj;
         return this.getColor().equals(c.getColor());
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return getInstance(getColor());
     }
 }

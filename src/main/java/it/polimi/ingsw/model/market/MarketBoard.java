@@ -9,13 +9,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class MarketBoard implements Serializable {
+public class MarketBoard implements Serializable,Cloneable {
     private Marble[][] marketMatrix; //[row][column]
     private Marble additionalMarble;
 
     public MarketBoard() {
         marketMatrix = new Marble[Utils.MARKET_ROW_NUMBER][Utils.MARKET_COL_NUMBER];
         generateMarblesMatrix();
+    }
+    public MarketBoard(Marble[][] matrix, Marble additional) {
+        marketMatrix = matrix;
+        additionalMarble = additional;
     }
 
     public static MarketBoard getInstance() {
@@ -109,6 +113,20 @@ public class MarketBoard implements Serializable {
         additionalMarble = lista.get(count);
     }
 
+    public Marble getMarbleAt(int row,int col)
+    {
+        if((row<0||row>=Utils.MARKET_ROW_NUMBER)||(col<0||col>=Utils.MARKET_COL_NUMBER))
+        {
+            return null;
+        }
+        try{
+            return (Marble) marketMatrix[row][col].clone();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private void slideRow(int row) {
         Marble oldAdditionalMurble = additionalMarble;
         additionalMarble = marketMatrix[row][0]; //the murble in the left position of the row will be the next additionalmurble
@@ -127,8 +145,25 @@ public class MarketBoard implements Serializable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    protected MarketBoard clone()  {
+        MarketBoard m = new MarketBoard();
+        Marble[][] matrix = new Marble[Utils.MARKET_ROW_NUMBER][Utils.MARKET_COL_NUMBER];
+        for(int i = 0;i<Utils.MARKET_ROW_NUMBER;i++)
+        {
+            for(int j = 0;j<Utils.MARKET_COL_NUMBER;j++)
+            {
+                matrix[i][j] = getMarbleAt(i,j);
+            }
+        }
+        Marble additional;
+        try {
+            additional = (Marble) getAdditionalMarble().clone();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return new MarketBoard(matrix,additional);
+
     }
 
     @Override

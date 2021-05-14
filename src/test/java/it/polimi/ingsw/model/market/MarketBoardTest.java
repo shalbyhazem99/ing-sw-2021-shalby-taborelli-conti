@@ -45,21 +45,25 @@ public class MarketBoardTest extends TestCase {
     {
         final int selectedColumn = 0;
         MarketBoard marketBoard = new MarketBoard();
-        MarketBoard temp = marketBoard;
+        MarketBoard temp = marketBoard.clone();
         ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLONNA,selectedColumn);
-        assertEquals(resources.size(), Utils.MARKET_ROW_NUMBER-Collections.frequency(temp.getColumn(selectedColumn),
-                Marble.getInstance(MarbleColor.WHITE)));
-        //CHECK ALL THE FOUR MARBLES
-        assertEquals(temp.getColumn(selectedColumn).get(0),
-                marketBoard.getColumn(selectedColumn).get(1));
-        assertEquals(temp.getColumn(selectedColumn).get(1),
-                marketBoard.getColumn(selectedColumn).get(2));
-        assertEquals(temp.getColumn(selectedColumn).get(2),
+        int t = resources.size();
+        int l = Collections.frequency(temp.getColumn(selectedColumn),Marble.getInstance(MarbleColor.WHITE));
+        ArrayList<Marble> m = temp.getColumn(selectedColumn);
+        assertEquals(t, Utils.MARKET_ROW_NUMBER-l);
+        //CHECK ALL THE FIVE MARBLES
+        assertEquals(temp.getColumn(selectedColumn).get(Utils.MARKET_ROW_NUMBER-1),
+                marketBoard.getColumn(selectedColumn).get(Utils.MARKET_ROW_NUMBER-2));
+        assertEquals(temp.getColumn(selectedColumn).get(Utils.MARKET_ROW_NUMBER-2),
+                marketBoard.getColumn(selectedColumn).get(Utils.MARKET_ROW_NUMBER-3));
+        assertEquals(temp.getColumn(selectedColumn).get(Utils.MARKET_ROW_NUMBER-3),
                 marketBoard.getAdditionalMarble());
         assertEquals(temp.getAdditionalMarble(),
-                marketBoard.getColumn(selectedColumn).get(0));
+                marketBoard.getColumn(selectedColumn).get(Utils.MARKET_ROW_NUMBER-1));
+
         //CHECK FOR MARBLE COLOUR NUMBER
         checkForNumberColor(linearizeStructure(marketBoard));
+
     }
 
     /**
@@ -74,21 +78,23 @@ public class MarketBoardTest extends TestCase {
     {
         final int selectedRow = 0;
         MarketBoard marketBoard = new MarketBoard();
-        MarketBoard temp = marketBoard;
-        ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLONNA,selectedRow);
-        assertEquals(resources.size(), Utils.MARKET_COL_NUMBER-Collections.frequency(temp.getColumn(selectedRow),
-                Marble.getInstance(MarbleColor.WHITE)));
+        MarketBoard temp = marketBoard.clone();
+        ArrayList<Resource> resources = marketBoard.getResources(MoveType.RIGA,selectedRow);
+        int t = resources.size();
+        int l = Collections.frequency(temp.getRow(selectedRow),Marble.getInstance(MarbleColor.WHITE));
+        int d = 4-l;
+        assertEquals(t, Utils.MARKET_COL_NUMBER-l);
         //CHECK ALL THE FIVE MARBLES
-        assertEquals(temp.getRow(selectedRow).get(0),
-                marketBoard.getColumn(selectedRow).get(1));
-        assertEquals(temp.getRow(selectedRow).get(1),
-                marketBoard.getColumn(selectedRow).get(2));
-        assertEquals(temp.getRow(selectedRow).get(2),
-                marketBoard.getColumn(selectedRow).get(3));
-        assertEquals(temp.getRow(selectedRow).get(3),
+        assertEquals(temp.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-1),
+                marketBoard.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-2));
+        assertEquals(temp.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-2),
+                marketBoard.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-3));
+        assertEquals(temp.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-3),
+                marketBoard.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-4));
+        assertEquals(temp.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-4),
                 marketBoard.getAdditionalMarble());
         assertEquals(temp.getAdditionalMarble(),
-                marketBoard.getColumn(selectedRow).get(0));
+                marketBoard.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-1));
 
         //CHECK FOR MARBLE COLOUR NUMBER
         checkForNumberColor(linearizeStructure(marketBoard));
@@ -125,9 +131,16 @@ public class MarketBoardTest extends TestCase {
      */
     private ArrayList<Marble> linearizeStructure(MarketBoard marketBoard)
     {
-        return (ArrayList<Marble>)Stream.concat(
+        /**ArrayList<Marble> a = Stream.concat(
                 Arrays.stream(marketBoard.getMarketMatrix()),
-                Arrays.asList(marketBoard.getAdditionalMarble()).stream()
-        );
+                Arrays.asList(marketBoard.getAdditionalMarble()).stream().collect(Collectors.toList())
+        );*/
+        ArrayList<Marble> temp = new ArrayList<>();
+        for(int i = 0;i<Utils.MARKET_ROW_NUMBER;i++)
+        {
+            temp.addAll(marketBoard.getRow(i));
+        }
+        temp.add(marketBoard.getAdditionalMarble());
+        return temp;
     }
 }
