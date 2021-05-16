@@ -7,7 +7,8 @@ import java.io.IOException;
 public class ClientApp
 {
     public static void main(String[] args){
-        ClientCLI client = new ClientCLI("127.0.0.1",  63878);
+        //todo: ask the connection port, ask connectiontype(cli, grafica), locale o cosa
+        ClientCLI client = new ClientCLI("127.0.0.1",  53251);
         try{
             client.run();
         }catch (IOException e){

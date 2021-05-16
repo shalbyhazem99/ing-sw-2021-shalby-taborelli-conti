@@ -94,7 +94,7 @@ public class MatchMulti extends Match implements Serializable {
     }
 
     @Override
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) throws Exception {
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player){
         super.positioningResourcesInteraction(whereToPlace, player);
         askForMove();
     }
@@ -131,7 +131,17 @@ public class MatchMulti extends Match implements Serializable {
         //todo:choose resources
         //start
         super.startMatch();
-        askForMove();
+    }
+
+    @Override
+    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
+        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player);
+        if(numPlayerWhoDiscard== players.size()){
+            askForMove();
+        }
+        else {
+            notifyModel();
+        }
     }
 
     private void askForMove() {
@@ -181,7 +191,8 @@ public class MatchMulti extends Match implements Serializable {
 
     @Override
     public boolean isMyTurn(Player player) {
-        return getPlayers().get(turn).equals(player);
+        //the second condition is for the first discard of the leader card at the beginning
+        return getPlayers().get(turn).equals(player) || numPlayerWhoDiscard < players.size()-1;
     }
 
     public String toString() {

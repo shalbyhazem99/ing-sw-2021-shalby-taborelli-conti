@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.controller.move.LeaderCard.DiscardTwoLeaderCardsResponse;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.market.MarketResponse;
@@ -42,6 +43,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     protected ArrayList<Resource> pendingResources;
     protected int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
     protected boolean canChangeTurn = false;
+    protected int numPlayerWhoDiscard = 0;
 
     //TODO: pensare a attributi aggiuntivi, esempio salvare su disco i record, memorizzare timestamp per sapere da quanto tempo si gioca ...
 
@@ -65,6 +67,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             for (int i = 0; i < 4; i++)
                 player.addLeaderCard(leaderCards.pop());
         }
+        notifyModel();
+        askForDiscardLeaderCard();
+    }
+
+    public void askForDiscardLeaderCard(){
+            notify(DiscardTwoLeaderCardsResponse.getInstance(players));
     }
 
     public void notifyModel() {
@@ -176,6 +184,21 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     PLAYER INTERACTION
     -------------------------------------------------------------------------------------------------*/
 
+    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
+        if (posFirst!=posSecond && posFirst >= 0 && posSecond >= 0 && posFirst < player.getLeaderCards().size() - 1 && posSecond < player.getLeaderCards().size() - 1) {
+            LeaderCard first = player.getLeaderCard(posFirst);
+            LeaderCard second = player.getLeaderCard(posSecond);
+            player.getLeaderCards().remove(first);
+            player.getLeaderCards().remove(second);
+            numPlayerWhoDiscard++;
+        }
+        else {
+            notify(SendMessage.getInstance("Something wrong, Leader Cards cannot be discarded, retry", player));
+            notify(DiscardTwoLeaderCardsResponse.getInstance(new ArrayList<>(Arrays.asList(player))));
+        }
+    }
+
+
     /**
      * Method to discard a {@link LeaderCard}
      *
@@ -272,9 +295,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      *
      * @param whereToPlace an {@link ArrayList} containing where to add (in which {@link Warehouse}) the iTH {@link Resource} of the pendingResources
      * @param player       the {@link Player} performing the action
-     * @throws Exception an {@link Exception} to indicate if any error has happened
      */
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) throws Exception {
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) {
         /*
             Check
             1) if are there any resources to be placed
@@ -349,7 +371,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      */
     public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse) {
         //if the player can afford the development card requested
-        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1,elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
         ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getPowers().getFrom().stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
         //check if the resourto use are the required and if the player has this resources
         if (Utils.compareResources(resources, resourcesCounts) && player.canAfford(resourceToUse) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)) {
@@ -361,7 +383,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             } else {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
             }
-        } else if (!player.canAfford(resourceToUse)){
+        } else if (!player.canAfford(resourceToUse)) {
             notify(SendMessage.getInstance("Something wrong, Not enough resources", player));
         } else {
             notify(SendMessage.getInstance("Something wrong, Cannot be added (parameter error)", player));
@@ -385,7 +407,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     private void activateProductivePower(ProductivePower power, ArrayList<ResourcePick> resourceToUse, Player player) {
         //check if the resource to use are the same required for the leader card
         ArrayList<Resource> powerRequiredResources = power.getFrom().stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new)); //arraylist di resources
-        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1,elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
         //check if the resourto use are the required and if the player has this resources
         if (Utils.compareResources(powerRequiredResources, resourcesCounts) && player.canAfford(resourceToUse)) {
             notify(EnableProductionResponse.getInstance(power.getTo(), new ArrayList<>(Arrays.asList(player))));

@@ -35,12 +35,7 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
 
     @Override
     public void execute(Match match) {
-        try {
             match.positioningResourcesInteraction(whereToPlaceResources, getPlayer());
-        }catch (Exception e) {
-            e.printStackTrace();
-            //todo:ask to make another move
-        }
     }
 
     /**
