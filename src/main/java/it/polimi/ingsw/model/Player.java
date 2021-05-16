@@ -124,7 +124,6 @@ public class Player implements Serializable {
      * @return
      */
     public boolean canAfford(ArrayList<ResourcePick> resourceToUse) {
-        //vai json
         Gson gson = new Gson();
         String warehouseStandard = gson.toJson(getWarehousesStandard());
         String warehouseAdditional = gson.toJson(getWarehousesAdditional());
@@ -414,7 +413,7 @@ public class Player implements Serializable {
     /**
      * @param indexFirstWarehouse
      * @param indexSecondWarehouse
-     * @return
+     * @return -1 in case or error or the sum of the size of the two warehouses
      */
     public int swapWarehouses(int indexFirstWarehouse, int indexSecondWarehouse) {
         /*

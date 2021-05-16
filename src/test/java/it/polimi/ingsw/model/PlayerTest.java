@@ -14,7 +14,6 @@ public class PlayerTest extends TestCase {
 
     /**
      * Testing the correct operation of the method
-     * <p>
      * 1) Testing the moving ahead when the {@link Player} stays under the 20 points
      * 2) Testing the moving ahead when the {@link Player} goes over the 20 points
      */
@@ -30,10 +29,53 @@ public class PlayerTest extends TestCase {
         assertEquals(Utils.FAITH_LENGTH, tester.getPosFaithMarker());
     }
 
+    /*
+    public boolean canAfford(ArrayList<ResourcePick> resourceToUse) {
+        Gson gson = new Gson();
+        String warehouseStandard = gson.toJson(getWarehousesStandard());
+        String warehouseAdditional = gson.toJson(getWarehousesAdditional());
+        String strongBox = gson.toJson(getStrongBox());
+        ArrayList<Warehouse> standardTemp = getWarehousesStandard();
+        ArrayList<Warehouse> additionalTemp = getWarehousesAdditional();
+        ArrayList<Resource> strongBoxTemp = getStrongBox();
+
+        //check if the player has the resource
+        for (ResourcePick resourcePick : resourceToUse) {
+            ResourceType resourceType = resourcePick.getResourceType();
+            ArrayList<Resource> resToBeRemoved = null;
+            switch (resourcePick.getResourceWarehouseType()) {
+                case WAREHOUSE:
+                    if (resourcePick.getWarehousePosition() >= 0 && resourcePick.getWarehousePosition() < 3) {
+                        resToBeRemoved = standardTemp.get(resourcePick.getWarehousePosition()).getResources();
+                    } else if (additionalTemp.size() > resourcePick.getWarehousePosition() - 3 && resourcePick.getWarehousePosition() >= 3 && resourcePick.getWarehousePosition() < 5) {
+                        resToBeRemoved = additionalTemp.get(resourcePick.getWarehousePosition() - 3).getResources();
+                    } else {
+                        return false;
+                    }
+                    break;
+                case STRONGBOX:
+                    resToBeRemoved = strongBoxTemp;
+                    break;
+            }
+            if (!resToBeRemoved.remove(Resource.getInstance(resourceType))) {
+                ArrayList<Warehouse> temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
+                setWarehousesStandard(temp);
+                temp = new ArrayList<>();
+                Collections.addAll(temp, gson.fromJson(warehouseAdditional, Warehouse[].class));
+                setWarehousesAdditional(temp);
+                ArrayList<Resource> temp2 = new ArrayList<>();
+                Collections.addAll(temp2, gson.fromJson(strongBox, Resource[].class));
+                setStrongBox(temp2);
+                return false;
+            }
+        }
+        return true;
+    }
+     */
     @Test
     public void testCanAfford() {
 
-        //todo: still finishing
     }
 
     /**
@@ -90,6 +132,7 @@ public class PlayerTest extends TestCase {
         //4) Testing the case when the player has resources in the strongbox
         resourcesCountArrayList.add(ResourcesCount.getInstance(1, ResourceType.COIN));
         tester.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        //todo: vedere con la correzione di shalby
         //assertTrue(tester.isActionable(resourcesCountArrayList));
 
         //5) testing the case when the player can not afford the price of a card
@@ -290,7 +333,26 @@ public class PlayerTest extends TestCase {
 
     @Test
     public void testSwapWareHouse(){
-        //todo:devo finire questo
+        Player tester = new Player("tester");
+
+        //Testing the swapping between Standard Warehouses empty
+        assertEquals(0, tester.swapWarehouses(0, 1));
+        assertEquals(0, tester.swapWarehouses(2, 1));
+        assertEquals(0, tester.swapWarehouses(0, 2));
+
+        //Testing the swapping between Standard Warehouses not empty
+        tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),0);
+        tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD),1);
+        tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT),2);
+        assertEquals(2,tester.swapWarehouses(0,1));
+        // 0) SHIELD 1) COIN 2)SERVANT
+        assertTrue(tester.getWarehousesStandard().get(0).getResource(Resource.getInstance(ResourceType.SHIELD)));
+        assertTrue(tester.getWarehousesStandard().get(1).getResource(Resource.getInstance(ResourceType.COIN)));
+        assertEquals(2,tester.swapWarehouses(0,2));
+        // 0) SERVANT 1) COIN 2)SHIELD
+        assertTrue(tester.getWarehousesStandard().get(0).getResource(Resource.getInstance(ResourceType.SERVANT)));
+        assertTrue(tester.getWarehousesStandard().get(2).getResource(Resource.getInstance(ResourceType.SHIELD)));
+
     }
 }
 
