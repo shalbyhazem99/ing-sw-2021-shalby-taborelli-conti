@@ -19,7 +19,7 @@ public class Player implements Serializable {
     private int posFaithMarker;
     private ArrayList<PopeFavorTiles> popeFavorTiles;
     private ArrayList<LeaderCard> leaderCards;
-    private ArrayList<DevelopmentCardSpace> developmentCardSpaces; //percè non pila?
+    private ArrayList<DevelopmentCardSpace> developmentCardSpaces;
     private ArrayList<Warehouse> warehousesStandard;
     private ArrayList<Resource> strongBox;
     private ArrayList<Warehouse> warehousesAdditional;
@@ -40,7 +40,7 @@ public class Player implements Serializable {
         addedPower = generatePower();
     }
 
-    private void geneDevelopmentCardSpaces(){
+    public void geneDevelopmentCardSpaces(){
         developmentCardSpaces = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             developmentCardSpaces.add(DevelopmentCardSpace.getInstance());
@@ -168,8 +168,6 @@ public class Player implements Serializable {
     }
 
 
-    //getter
-
     /**
      * get the faith position
      *
@@ -251,6 +249,7 @@ public class Player implements Serializable {
         return getDiscounts().size() > 0;
     }
 
+
     public boolean isActionable(ArrayList<ResourcesCount> resourcesNeeded) {
         ArrayList<ResourcesCount> resNeeded = resourcesNeeded;
         if (hasDiscount()) {
@@ -292,6 +291,7 @@ public class Player implements Serializable {
         return false;
     }
 
+    //todo: do we still use this method?
     /**
      * Method used to know if the {@link Player} has enough {@link Resource} to enable the {@link ArrayList} of {@link ProductivePower}
      *
@@ -312,7 +312,6 @@ public class Player implements Serializable {
             return false;
             }
          */
-        //TODO: testare assolutamente e eventualmente rimuovere commenti sopra
         return productivePowers.parallelStream().anyMatch(elem -> Utils.compareResources(getResources(), elem.getFrom()));
     }
 
@@ -327,10 +326,14 @@ public class Player implements Serializable {
         strongBox.add(resource);
     }
 
+    //todo: do we still use this method?
     public void addResourceToStrongBox(ArrayList<Resource> resources) {
         strongBox.addAll(resources);
     }
 
+    /**
+     * Class used only during the testing phase
+     */
     public boolean addResourceToWarehouseAdditional(Resource resource, int index) {
         if (index > warehousesAdditional.size())
             return false;
@@ -340,18 +343,14 @@ public class Player implements Serializable {
         return true;
     }
 
+    /**
+     * It's a dump class just used during the testing in order to make easier the phase
+     */
     public boolean addResourceToWarehouseStandard(Resource resource, int index) {
+
         if (index > warehousesStandard.size())
             return false;
-        if (!resource.getType().equals(warehousesStandard.get(index).getResourceType()) || warehousesAdditional.get(index).getSpaceAvailable() < warehousesAdditional.get(index).getResources().size() + 1)
-            return false;
-        //if there are other warehouses with the same type of card
-        if (0 < warehousesStandard.stream()
-                .filter(elem -> !elem.equals(warehousesStandard.get(index)) &&
-                        elem.getResourceType().equals(warehousesStandard.get(index).getResourceType()))
-                .count())
-            return false;
-        warehousesAdditional.get(index).addResource(resource);
+        warehousesStandard.get(index).addResource(resource);
         return true;
     }
 
@@ -384,6 +383,7 @@ public class Player implements Serializable {
         return this.name.equals(((Player) obj).getName());
     }
 
+    //todo: do we still use this method?
     /**
      * Method used to remove the {@link Resource} specified in the parameter from the {@link Warehouse} of the {@link Player} if they exists
      * PAY ATTENTION -> if
@@ -412,8 +412,6 @@ public class Player implements Serializable {
 
 
     /**
-     * Va fatto dentro player necessariamente perchè non possiamo esporre l'oggetto warehouse, i controlli sui parametri chiamati devono già essere stati fatti
-     *
      * @param indexFirstWarehouse
      * @param indexSecondWarehouse
      * @return
@@ -459,7 +457,7 @@ public class Player implements Serializable {
                     1) SWAP 3) ==> ERROR
 
              */
-            if (w1.getResources().size() <= w2.getSpaceAvailable() && w1.getResources().size() <= w2.getSpaceAvailable()) //check for space
+            if (w1.getResources().size() <= w2.getSpaceAvailable() && w1.getResources().size() <= w2.getSpaceAvailable())
             {
                 //simply change the arraylist of resources
                 ArrayList<Resource> temp = w1.getResources();
