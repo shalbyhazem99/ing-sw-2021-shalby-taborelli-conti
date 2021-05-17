@@ -9,6 +9,7 @@ import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 import java.io.Serializable;
 import java.util.*;
@@ -77,10 +78,7 @@ public class MatchSolo extends Match implements Serializable {
      * @return the position of the blackCross, position € {0,1,2,...,20}
      */
     public int moveAheadBlackCross(int numberOfPasses) {
-        if (numberOfPasses != 0 || numberOfPasses != 1) {
-            return posBlackCross;
-        }
-        posBlackCross += posBlackCross;
+        posBlackCross = posBlackCross + numberOfPasses;
         if (posBlackCross > 20) {
             posBlackCross = 20;
         }
@@ -162,6 +160,7 @@ public class MatchSolo extends Match implements Serializable {
         notify(EndRoundResponse.getInstance(getPlayers(),true));
         //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
         ActionToken action = pickActionToken();
+        System.out.println("lunghezza " + Arrays.stream(developmentCards).count());
         switch (action.getAction())
         {
             case MOVE:
@@ -174,6 +173,7 @@ public class MatchSolo extends Match implements Serializable {
                 {
                     moveAheadBlackCross(2);
                 }
+                System.out.println("FEDE =  "+ posBlackCross);
                 break;
             case DISCARD:
                 int lvl = 0;
@@ -263,6 +263,63 @@ public class MatchSolo extends Match implements Serializable {
         askForMove();
     }
 
+    public String toString() {
+        try {
+            System.out.println("MERCATO");
+            System.out.println(marketBoard.getAdditionalMarble().toString());
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    System.out.print(marketBoard.getRow(i).get(j).toString() + "|");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            System.out.println("CARTE SVILUPPO");
+            System.out.println("\t VERDE \t BLU \t GIALLO \t VIOLA");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if(j==0)
+                    {
+                        System.out.print("LVL 3\t");
+                    }
+                    System.out.print(developmentCards[i][j].peek().toString() + "\t");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            for (Player player : getPlayers()) {
+                System.out.println("Player: " + player.getName());
+                if (player == null) {
+                    break;
+                }
+                System.out.println("Pos Fede: " + player.getPosFaithMarker());
+                System.out.println("WAREHOUSE STD");
+                for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
+                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
+                }
+                System.out.println("WAREHOUSE ADD");
+                for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
+                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
+                }
+                System.out.println("FORZIERE");
+                System.out.println(player.getStrongBox().toString());
+                System.out.println("SPAZI CARTE");
+                for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
+                    System.out.println(player.getDevelopmentCardSpaces().get(a).toString());
+                }
+                System.out.println("LEADER CARD");
+                for (LeaderCard leaderCard : player.getLeaderCards()) {
+                    System.out.println(leaderCard.toString());
+                }
+                System.out.println("LORENZO IL MAGNIFICO");
+                System.out.println("Faith pos: "+posBlackCross);
+            }
+            System.out.println("--------------------------------------------------------------------------------------------------------");
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

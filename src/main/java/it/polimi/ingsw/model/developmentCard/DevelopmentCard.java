@@ -96,6 +96,7 @@ public class DevelopmentCard implements Serializable {
 
     @Override
     public String toString() {
-        return level.toString()+"/"+type.toString()+"/eq_point:"+equivalentPoint+"/Pot_prod:"+powers.toString()+"/Cost:"+costs.toString()+"|||||";
+        return "/eq_point:"+equivalentPoint+"/Cost:"+costs.toString();
+        //return level.toString()+"/"+type.toString()+"/eq_point:"+equivalentPoint+"/Pot_prod:"+powers.toString()+"/Cost:"+costs.toString()+"|||||";
     }
 }
