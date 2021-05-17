@@ -91,9 +91,10 @@ public class Player implements Serializable {
 
     public static ArrayList<Warehouse> generateWarehouse() {
         ArrayList<Warehouse> temp = new ArrayList<>();
-        temp.add(Warehouse.getInstance(3, ResourceType.ANY));
-        temp.add(Warehouse.getInstance(2, ResourceType.ANY));
+
         temp.add(Warehouse.getInstance(1, ResourceType.ANY));
+        temp.add(Warehouse.getInstance(2, ResourceType.ANY));
+        temp.add(Warehouse.getInstance(3, ResourceType.ANY));
         return temp;
     }
 

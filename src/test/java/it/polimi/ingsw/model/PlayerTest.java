@@ -340,17 +340,31 @@ public class PlayerTest extends TestCase {
         assertEquals(0, tester.swapWarehouses(0, 2));
 
         //Testing the swapping between Standard Warehouses not empty
+
+        // Adding the resources
         tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),0);
         tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD),1);
         tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT),2);
+        //SITUATION: 0) COIN 1) SHIELD 2)SERVANT
+
+        //Swapping 0<->1
         assertEquals(2,tester.swapWarehouses(0,1));
-        // 0) SHIELD 1) COIN 2)SERVANT
+        //SITUATION: 0) SHIELD 1) COIN 2)SERVANT
         assertTrue(tester.getWarehousesStandard().get(0).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
         assertTrue(tester.getWarehousesStandard().get(1).getResources().contains(Resource.getInstance(ResourceType.COIN)));
+
+        //Swapping 0<->2
         assertEquals(2,tester.swapWarehouses(0,2));
-        // 0) SERVANT 1) COIN 2)SHIELD
-        assertTrue(tester.getWarehousesStandard().get(0).getResource(Resource.getInstance(ResourceType.SERVANT)));
-        assertTrue(tester.getWarehousesStandard().get(2).getResource(Resource.getInstance(ResourceType.SHIELD)));
+        // SITUATION: 0) SERVANT 1) COIN 2)SHIELD
+        assertTrue(tester.getWarehousesStandard().get(0).getResources().contains(Resource.getInstance(ResourceType.SERVANT)));
+        assertTrue(tester.getWarehousesStandard().get(2).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
+
+        //Swapping 1<->2
+        assertEquals(2,tester.swapWarehouses(1,2));
+        // SITUATION: 0) SERVANT 1) SHIELD 2) COIN
+        assertTrue(tester.getWarehousesStandard().get(2).getResources().contains(Resource.getInstance(ResourceType.COIN)));
+        assertTrue(tester.getWarehousesStandard().get(1).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
+
 
     }
 }
