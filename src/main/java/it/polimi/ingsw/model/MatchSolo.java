@@ -161,4 +161,9 @@ public class MatchSolo extends Match implements Serializable {
         notify(EndRoundResponse.getInstance(getPlayers(),true));
         //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
     }
+
+    @Override
+    public Player getCurrentPlayer() {
+        return players.get(0);
+    }
 }

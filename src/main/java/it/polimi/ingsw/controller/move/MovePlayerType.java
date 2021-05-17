@@ -7,7 +7,9 @@ import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
 import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
+import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
@@ -31,20 +33,49 @@ public enum MovePlayerType {
             try {
                 //type
                 DevelopmentCardType[] developmentCardTypes = DevelopmentCardType.values();
-                System.out.print("insert development card type ( ");
-                Arrays.stream(developmentCardTypes).forEach(elem -> System.out.print(elem.label + "->" + elem + " "));
-                System.out.println(" )");
-                DevelopmentCardType type = developmentCardTypes[stdin.nextInt()];
-
+                int row;
+                boolean parameters_valid;
+                do {
+                    System.out.print("insert development card type ( ");
+                    Arrays.stream(developmentCardTypes).forEach(elem -> System.out.print(elem.label + "->" + elem + " "));
+                    System.out.println(" )");
+                    parameters_valid = true;
+                    row = stdin.nextInt();
+                    if(row<0||row>3)
+                    {
+                        parameters_valid = false;
+                        System.err.println("Error insert valid parameters!");
+                    }
+                } while (!parameters_valid);
+                DevelopmentCardType type = developmentCardTypes[row];
                 //level
                 DevelopmentCardLevel[] developmentCardLevels = DevelopmentCardLevel.values();
-                System.out.print("insert development card level ( ");
-                Arrays.stream(developmentCardLevels).forEach(elem -> System.out.print(elem.label + "->" + elem + " "));
-                System.out.println(" )");
-                DevelopmentCardLevel level = developmentCardLevels[stdin.nextInt()];
+                int column;
+                do {
+                    System.out.print("insert development card level ( ");
+                    Arrays.stream(developmentCardLevels).forEach(elem -> System.out.print(elem.label + "->" + elem + " "));
+                    System.out.println(" )");
+                    parameters_valid = true;
+                    column = stdin.nextInt();
+                    if(column<0||column>2)
+                    {
+                        parameters_valid = false;
+                        System.err.println("Error insert valid parameters!");
+                    }
+                } while (!parameters_valid);
+                DevelopmentCardLevel level = developmentCardLevels[column];
                 //pos
-                System.out.println("insert development card position( 0, 1, 2 )");
-                int pos = stdin.nextInt();
+                int pos;
+                do {
+                    System.out.println("insert development card position( 0, 1, 2 )");
+                    parameters_valid = true;
+                    pos = stdin.nextInt();
+                    if(pos<0||pos>2)
+                    {
+                        parameters_valid = false;
+                        System.err.println("Error insert valid parameters!");
+                    }
+                } while (!parameters_valid);
                 //choose where ro get resources
                 ArrayList<ResourcePick> resourceToUse=Utils.getRequiredResourceFrom(match.getDevelopmentCardOnTop(type,level).getCosts(),stdin,match);
                 developmentCardPlayerMove = BuyDevelopmentCardPlayerMove.getInstance(type, level, pos, resourceToUse);
@@ -67,8 +98,39 @@ public enum MovePlayerType {
             EnableLeaderCardPlayerMove enableLeaderCardPlayerMove = null;
             try {
                 //position
-                System.out.print("insert the pos of the leader card to enable (0,1)");
-                enableLeaderCardPlayerMove = EnableLeaderCardPlayerMove.getInstance(stdin.nextInt());
+                Player player = match.getCurrentPlayer();
+                int position = 0;
+                boolean parameters_valid = true;
+                do {
+                    int num_of_leader_card_can_be_enabled = (int)player.getLeaderCards().stream().filter(p->!p.isActive()).count();
+                    if(num_of_leader_card_can_be_enabled==0)
+                    {
+                        System.err.println("No leader cards that can be enabled left!");
+                        //the request will be sent to the server and it will return error
+                    }
+                    else if(num_of_leader_card_can_be_enabled==1)
+                    {
+                        System.out.print("Automatically selected the leader card which was not active yet");
+                        for(int i = 0;i<player.getLeaderCards().size();i++)
+                        {
+                            if(!player.getLeaderCards().get(i).isActive())
+                            {
+                                position = i;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.out.print("Insert the pos of the leader card to enable (0,1)");
+                        position = stdin.nextInt();
+                        if(position<0 || position>1)
+                        {
+                            parameters_valid = false;
+                        }
+                    }
+                }while(!parameters_valid);
+
+                enableLeaderCardPlayerMove = EnableLeaderCardPlayerMove.getInstance(position);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);
@@ -82,8 +144,38 @@ public enum MovePlayerType {
             DiscardLeaderCardPlayerMove discardLeaderCardPlayerMove = null;
             try {
                 //position
-                System.out.print("insert the pos of the leader card to discard (0,1)");
-                discardLeaderCardPlayerMove = DiscardLeaderCardPlayerMove.getInstance(stdin.nextInt());
+                Player player = match.getCurrentPlayer();
+                int position = 0;
+                boolean parameters_valid = true;
+                do {
+                    int num_of_leader_card_enabled = (int)player.getLeaderCards().stream().filter(p->p.isActive()).count();
+                    if(num_of_leader_card_enabled==0)
+                    {
+                        System.err.println("All your leader cards are enabled, you can't discard them!");
+                        //the request will be sent to the server and it will return error
+                    }
+                    else if(num_of_leader_card_enabled==1)
+                    {
+                        System.out.print("Automatically selected the leader card which was not active yet");
+                        for(int i = 0;i<player.getLeaderCards().size();i++)
+                        {
+                            if(!player.getLeaderCards().get(i).isActive())
+                            {
+                                position = i;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.out.print("Insert the pos of the leader card to discard (0,1)");
+                        position = stdin.nextInt();
+                        if(position<0 || position>1)
+                        {
+                            parameters_valid = false;
+                        }
+                    }
+                }while(!parameters_valid);
+                discardLeaderCardPlayerMove = DiscardLeaderCardPlayerMove.getInstance(position);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);
@@ -98,17 +190,47 @@ public enum MovePlayerType {
             try {
                 //type
                 MoveType[] moveTypes = MoveType.values();
+                int move;
+                boolean parameters_valid;
+                do{
+                parameters_valid = true;
                 System.out.print("insert interaction type ( ");
                 for (int i = 0; i < moveTypes.length; i++) {
                     System.out.print(i + "->" + moveTypes[i] + " ");
                 }
                 System.out.println(" )");
-                MoveType type = moveTypes[stdin.nextInt()];
-
+                move = stdin.nextInt();
+                if(move!=0 && move!=1)
+                {
+                    System.err.println("Error, insert a valid parameter!");
+                    parameters_valid = false;
+                }
+                }while(!parameters_valid);
+                MoveType type = moveTypes[move];
+                int pos = 0;
                 //pos
-                System.out.println("insert column/row position( 0,...)");
-                int pos = stdin.nextInt();
-
+                do {
+                    parameters_valid = true;
+                    if (move == 0) //ROW
+                    {
+                        System.out.println("insert ROW position(0,1,2)");
+                        pos = stdin.nextInt();
+                        if(pos<0||pos>2)
+                        {
+                            System.err.println("Error, insert a valid parameter!");
+                            parameters_valid = false;
+                        }
+                    } else //COLUMN
+                    {
+                        System.out.println("insert COLUMN position(0,1,2,3)");
+                        pos = stdin.nextInt();
+                        if(pos<0||pos>3)
+                        {
+                            System.err.println("Error, insert a valid parameter!");
+                            parameters_valid = false;
+                        }
+                    }
+                }while (!parameters_valid);
                 marketInteractionPlayerMove = MarketInteractionPlayerMove.getInstance(type, pos);
             } catch (Exception e) {
                 System.out.println("Error retry:");
@@ -123,6 +245,9 @@ public enum MovePlayerType {
             EnableProductionPlayerMove enableProductionPlayerMove = null;
             try {
                 //pos
+                boolean parameters_valid;
+                do
+                {parameters_valid=true;
                 System.out.println("insert which type of power you want to active( 0-> base production, 1-> Leader Card, 2-> Development Card)");
                 int type = stdin.nextInt();
                 ArrayList<ResourcePick> resourceToUse;
@@ -150,7 +275,12 @@ public enum MovePlayerType {
                         resourceToUse = Utils.getRequiredResourceFrom(match.getPlayers().get(0).getDevelopmentCardSpaces().get(index).pickTopCard().getCosts(), stdin,match);
                         enableProductionPlayerMove = EnableProductionPlayerMoveDevelopmentCard.getInstance(resourceToUse, index);
                         break;
+                    default:
+                        System.err.println("Error, insert correct parameter!");
+                        parameters_valid = false;
+                        break;
                 }
+                }while (!parameters_valid);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);
@@ -164,10 +294,55 @@ public enum MovePlayerType {
             SwapWarehousePlayerMove swapWarehousePlayerMove = null;
             try {
                 //position
+                Player player = match.getCurrentPlayer();
+                int first;
+                int second;
+                boolean parameters_valid = true;
+                do {
                 System.out.println("insert the pos of the first warehouse to swap (0...)");
-                int first = stdin.nextByte();
+                first = stdin.nextByte();
                 System.out.println("insert the pos of the second warehouse to swap (0...)");
-                swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, stdin.nextInt());
+                second = stdin.nextInt();
+                //Controlling parameters
+                /*
+                CHECK:
+                1) Parameters € [0,4]
+                2) If we're trying to swap the same Warehouse return immediately, no action must be taken
+                3) If the two indexes refer to additional warehouses we need to check if they exist
+         */
+                //1)
+                if(first<0||first>4||second<0||second>4)
+                {
+                    System.err.println("Error, indexes must be one of these values: 0,1,2,3,4 !");
+                    System.out.println("Re-insert the parameters");
+                    parameters_valid = false;
+                }
+                //2)
+                if (first == second) {
+                    System.err.println("Error, warehouses' indexes must be different!");
+                    System.out.println("Re-insert the parameters");
+                    parameters_valid = false;
+                }
+                //3)
+                if (first == 3 || second == 3) //check if the first additional warehouse exists
+                {
+                    if (player.getWarehousesAdditional().size() == 0) {
+                        System.err.println("Error, you haven't any additional warehouse!");
+                        System.out.println("Re-insert the parameters");
+                        parameters_valid = false;
+                    }
+                }
+                if (first == 4 || second == 4) //check if the second additional warehouse exists
+                {
+                    if (player.getWarehousesAdditional().size() < 2) {
+                        System.err.println("Error, you haven't two additional warehouses!");
+                        System.out.println("Re-insert the parameters");
+                        parameters_valid = false;
+                    }
+                }
+                }while (!parameters_valid);
+                //End controlling parameters
+                swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, second);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);

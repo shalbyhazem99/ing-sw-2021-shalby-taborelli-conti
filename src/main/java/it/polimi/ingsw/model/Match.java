@@ -524,4 +524,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         System.out.println();
         return null;
     }
+    /**
+     * Method used to retrieve the {@link Player} which is playing
+     * @return the {@link Player} which is playing
+     */
+    public abstract Player getCurrentPlayer();
 }

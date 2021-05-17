@@ -80,11 +80,26 @@ public class Utils {
                 System.out.println("From where you get " + resourcesCount.getType()+ "(0-> Warehouse, 1-> Strongbox)");
                 switch (stdin.nextInt()) {
                     case 0:
-                        System.out.println("insert the position of the warehouse (0,...,4)");
-                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, stdin.nextInt(), resourcesCount.getType()));
+                        int position;
+                        boolean valid_parameter;
+                        do {
+                            System.out.println("insert the position of the warehouse (0,...,4)");
+                            valid_parameter = true;
+                            position = stdin.nextInt();
+                            if(position<0||position>4)
+                            {
+                                valid_parameter = false;
+                                System.err.println("Error, index not valid!");
+                            }
+                        } while (!valid_parameter);
+                        resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, position, resourcesCount.getType()));
                         break;
                     case 1:
                         resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, resourcesCount.getType()));
+                        break;
+                    default:
+                        System.err.println("Error, index not valid!");
+                        i--;
                         break;
                 }
             }
