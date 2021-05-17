@@ -106,7 +106,7 @@ public enum MovePlayerType {
                     if(num_of_leader_card_can_be_enabled==0)
                     {
                         System.err.println("No leader cards that can be enabled left!");
-                        //the request will be sent to the server and it will return error
+                        return null; //another move will be asked
                     }
                     else if(num_of_leader_card_can_be_enabled==1)
                     {
@@ -152,7 +152,7 @@ public enum MovePlayerType {
                     if(num_of_leader_card_enabled==0)
                     {
                         System.err.println("All your leader cards are enabled, you can't discard them!");
-                        //the request will be sent to the server and it will return error
+                        return null; //another move will be asked
                     }
                     else if(num_of_leader_card_enabled==1)
                     {
