@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class PopeFavorTiles implements Serializable {
-    private final int points;
+    private int points;
     private boolean active;
 
     public PopeFavorTiles(int points) {
@@ -19,6 +19,11 @@ public class PopeFavorTiles implements Serializable {
     public void active(){
         if(!active)
             active =true;
+    }
+
+    public void disable(){
+        active();
+        points=0;
     }
 
     public int getPoints(){

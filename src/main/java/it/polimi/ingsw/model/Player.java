@@ -40,7 +40,7 @@ public class Player implements Serializable {
         addedPower = generatePower();
     }
 
-    public void geneDevelopmentCardSpaces(){
+    public void geneDevelopmentCardSpaces() {
         developmentCardSpaces = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             developmentCardSpaces.add(DevelopmentCardSpace.getInstance());
@@ -115,7 +115,10 @@ public class Player implements Serializable {
     public void moveAheadFaith(int pos) {
         posFaithMarker += pos;
         posFaithMarker = Math.min(Utils.FAITH_LENGTH, posFaithMarker);
+        //tODO: CONTROL IF THE PLAYER ACTIVATE ANY CARD, MUST GET THE PLAYER LIST
     }
+
+    //todo:testing
 
     /**
      * Verify if the {@link Player} could activate the power and remove the resources
@@ -291,6 +294,7 @@ public class Player implements Serializable {
     }
 
     //todo: do we still use this method?
+
     /**
      * Method used to know if the {@link Player} has enough {@link Resource} to enable the {@link ArrayList} of {@link ProductivePower}
      *
@@ -383,6 +387,7 @@ public class Player implements Serializable {
     }
 
     //todo: do we still use this method?
+
     /**
      * Method used to remove the {@link Resource} specified in the parameter from the {@link Warehouse} of the {@link Player} if they exists
      * PAY ATTENTION -> if
@@ -440,59 +445,17 @@ public class Player implements Serializable {
         {
             w2 = getWarehousesStandard().get(indexSecondWarehouse);
         }
-        if (firstIsStandard && secondIsStandard) //1)
-        {
-            /*
-                      WAR.SPACE      #RES CONTAINED
-
-                    1) spaceMax = 1, 1 resource
-                    3) spacemax = 3, 1 resource
-                    ---------------------------
-                    1) SWAP 3) ==> OKAY
-
-                    1) spaceMax = 1, 1 resource
-                    3) spacemax = 3, 2 resource
-                    ---------------------------
-                    1) SWAP 3) ==> ERROR
-
-             */
-            if (w1.getResources().size() <= w2.getSpaceAvailable() && w1.getResources().size() <= w2.getSpaceAvailable())
-            {
-                //simply change the arraylist of resources
-                ArrayList<Resource> temp = w1.getResources();
-                w1.changeResources(w2.getResources());
-                w2.changeResources(temp);
-                return w1.getResources().size() + w2.getResources().size();
-            } else {
-                return -1;
-            }
-        } else if (!firstIsStandard && !secondIsStandard) //2) A <==> A, we need to check the resType correctness, no space check, both of them can store max 2 resources
-        {
-            if (w1.getResourceType() != w2.getResourceType()) {
-                return -1;
-            }
-            //simply change the arraylist of resources
-            ArrayList<Resource> temp = w1.getResources();
-            w1.changeResources(w2.getResources());
-            w2.changeResources(temp);
-            return w1.getResources().size() + w2.getResources().size();
-
-        } else  //3) A <==> S 0R 4) S <==> A
-        {
-            if (w1.getResourceType() != w2.getResourceType()) {
-                return -1;
-            }
-            if (w1.getResources().size() <= w2.getSpaceAvailable() && w1.getResources().size() <= w2.getSpaceAvailable()) //check for space
-            {
-                //simply change the arraylist of resources
-                ArrayList<Resource> temp = w1.getResources();
-                w1.changeResources(w2.getResources());
-                w2.changeResources(temp);
-                return w1.getResources().size() + w2.getResources().size();
-            } else {
-                return -1;
-            }
-        }
+        //control if the dim are correct
+        if (!(w1.getResources().size() <= (w2.getResources().size() + w2.getSpaceAvailable()) && w2.getResources().size() <= (w1.getResources().size() + w1.getSpaceAvailable())))
+            return -1;
+        //control when additional if they have the same type
+        if (!(firstIsStandard && secondIsStandard) && w1.getResourceType() != w2.getResourceType()) //1)
+            return -1;
+        //if everything goes well change teh resources
+        ArrayList<Resource> temp = w1.getResources();
+        w1.changeResources(w2.getResources());
+        w2.changeResources(temp);
+        return w1.getResources().size() + w2.getResources().size();
     }
 
 }

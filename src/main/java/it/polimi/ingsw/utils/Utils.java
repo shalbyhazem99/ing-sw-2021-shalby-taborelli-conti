@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.ResourcesCount;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * describe a set of methods that are util for the whole project
@@ -32,18 +33,7 @@ public class Utils {
      * @return true if a include b, false otherwise
      */
     public static boolean compareResources(ArrayList<Resource> a, ArrayList<ResourcesCount> b) {
-        ArrayList<Resource> resourcesAvailable = (ArrayList<Resource>) a.clone();
-        for (ResourcesCount res : b) {
-            if (res.getCount() > resourcesAvailable.stream().filter(elem -> elem.getType().equals(res.getType())).count())
-                return false;
-            else {
-                //remove the resources used by res //todo: to review
-                int tempSize = resourcesAvailable.size();
-                resourcesAvailable.removeIf(elem -> elem.getType().equals(res.getType()) &&
-                        resourcesAvailable.size() > tempSize - res.getCount());
-            }
-        }
-        return true;
+        return a.containsAll (b.stream().flatMap(elem->elem.toArrayListResources().stream()).collect(Collectors.toList()));
     }
 
     /**

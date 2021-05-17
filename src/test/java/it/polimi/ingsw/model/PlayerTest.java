@@ -132,8 +132,7 @@ public class PlayerTest extends TestCase {
         //4) Testing the case when the player has resources in the strongbox
         resourcesCountArrayList.add(ResourcesCount.getInstance(1, ResourceType.COIN));
         tester.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
-        //todo: vedere con la correzione di shalby
-        //assertTrue(tester.isActionable(resourcesCountArrayList));
+        assertTrue(tester.isActionable(resourcesCountArrayList));
 
         //5) testing the case when the player can not afford the price of a card
         resourcesCountArrayList.add(ResourcesCount.getInstance(3, ResourceType.FAITH));
@@ -346,8 +345,8 @@ public class PlayerTest extends TestCase {
         tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT),2);
         assertEquals(2,tester.swapWarehouses(0,1));
         // 0) SHIELD 1) COIN 2)SERVANT
-        assertTrue(tester.getWarehousesStandard().get(0).getResource(Resource.getInstance(ResourceType.SHIELD)));
-        assertTrue(tester.getWarehousesStandard().get(1).getResource(Resource.getInstance(ResourceType.COIN)));
+        assertTrue(tester.getWarehousesStandard().get(0).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
+        assertTrue(tester.getWarehousesStandard().get(1).getResources().contains(Resource.getInstance(ResourceType.COIN)));
         assertEquals(2,tester.swapWarehouses(0,2));
         // 0) SERVANT 1) COIN 2)SHIELD
         assertTrue(tester.getWarehousesStandard().get(0).getResource(Resource.getInstance(ResourceType.SERVANT)));
