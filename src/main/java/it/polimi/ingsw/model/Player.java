@@ -415,21 +415,73 @@ public class Player implements Serializable {
         return true;
     }
 
-
     /**
-     * @param indexFirstWarehouse
-     * @param indexSecondWarehouse
-     * @return -1 in case or error or the sum of the size of the two warehouses
+     * {@link Player} choose how many {@link Resource} to move from the selected Warehouse and where to put them
+     * @param indexFirstWarehouse index of the source Warehouse
+     * @param indexSecondWarehouse index of the destination Warehouse
+     * @param resourcesFromFirstWarehouse number of the Resources to move
+     * @return result of the operation
      */
+    public boolean moveResources(int indexFirstWarehouse, int indexSecondWarehouse, int resourcesFromFirstWarehouse){
+        Warehouse w1, w2;
+        boolean firstIsStandard = true, secondIsStandard = true;
+        //getting the warehouses from the player
+        if (indexFirstWarehouse == 3 || indexFirstWarehouse == 4) {
+            w1 = getWarehousesAdditional().get(indexFirstWarehouse - 3);
+            firstIsStandard = false;
+        }
+        else {
+            w1 = getWarehousesStandard().get(indexFirstWarehouse);
+        }
+        if (indexSecondWarehouse == 3 || indexSecondWarehouse == 4) {
+            w2 = getWarehousesAdditional().get(indexSecondWarehouse - 3);
+            secondIsStandard = false;
+        }
+        else{
+            w2 = getWarehousesStandard().get(indexSecondWarehouse);
+        }
+
+        // Differemt Cases
+        if (w1.getResources().size()<resourcesFromFirstWarehouse){
+            return false;
+        }
+
+        //S<->S
+        if (firstIsStandard && secondIsStandard){
+            ArrayList<Resource> temp = w1.getResources();
+            ResourceType resourceType_w1 = w1.getResourceType();
+            ResourceType resourceType_w2 = w2.getResourceType();
+            w1.changeResources(w2.getResources());
+            w1.changeResourceType(resourceType_w2);
+            if (w1.getResources().size()==0){
+                w1.changeResourceType(ResourceType.ANY);
+                w1.changeAvailability(indexFirstWarehouse+1);
+            }
+            w2.changeResources(temp);
+            w2.changeResourceType(resourceType_w1);
+            if (w2.getResources().size()==0){
+                w2.changeResourceType(ResourceType.ANY);
+                w2.changeAvailability(indexSecondWarehouse+1);
+            }
+            return true;
+        }
+        // S->A || A->S the Resources are moved only if the two warehouses has the same ResourceType
+        else if( (firstIsStandard && !secondIsStandard) || (!firstIsStandard && secondIsStandard) && (w1.getResourceType()==w2.getResourceType()) && (resourcesFromFirstWarehouse<=w2.getSpaceAvailable())){
+            for (int i = 0; i < resourcesFromFirstWarehouse; i++) {
+                w1.getResources().remove(0);
+                w1.changeAvailability(w1.getSpaceAvailable()+1);
+                w2.getResources().add(Resource.getInstance(w2.getResourceType()));
+            }
+            if(w1.getResources().size()==0 && firstIsStandard){
+                w1.changeResourceType(ResourceType.ANY);
+            }
+        }
+        return false;
+    }
+
+    /*
     public int swapWarehouses(int indexFirstWarehouse, int indexSecondWarehouse) {
-        /*
-            CASES THAT MAY HAPPEN (S=STD,A=ADDITIONAL)
-               w1    w2
-            1) S <--> S
-            2) A <--> A
-            3) A <--> S
-            4) S <--> A
-         */
+
         Warehouse w1, w2;
         boolean firstIsStandard = true, secondIsStandard = true;
         if (indexFirstWarehouse == 3 || indexFirstWarehouse == 4) {
@@ -450,13 +502,32 @@ public class Player implements Serializable {
         if (!(w1.getResources().size() <= (w2.getResources().size() + w2.getSpaceAvailable()) && w2.getResources().size() <= (w1.getResources().size() + w1.getSpaceAvailable())))
             return -1;
         //control when additional if they have the same type
-        if (!(firstIsStandard && secondIsStandard) && w1.getResourceType() != w2.getResourceType()) //1)
+        if (!(firstIsStandard && secondIsStandard) && (w1.getResourceType() != w2.getResourceType()))
             return -1;
-        //if everything goes well change teh resources
+        //if everything goes well change the resources
         ArrayList<Resource> temp = w1.getResources();
+        ResourceType resourceType_w1 = w1.getResourceType();
+        ResourceType resourceType_w2 = w2.getResourceType();
         w1.changeResources(w2.getResources());
+        w1.changeResourceType(resourceType_w2);
+        if (w1.getResources().size()==0 && firstIsStandard){
+            w1.changeResourceType(ResourceType.ANY);
+            w1.changeAvailability(indexFirstWarehouse+1);
+        }
+        else if (!firstIsStandard && w1.getResources().size() != 0){
+            w1.changeAvailability(2-w1.getResources().size());
+        }
         w2.changeResources(temp);
+        w2.changeResourceType(resourceType_w1);
+        if (w2.getResources().size()==0 && secondIsStandard){
+            w2.changeResourceType(ResourceType.ANY);
+            w2.changeAvailability(indexSecondWarehouse+1);
+        }
+        else if (!secondIsStandard && w2.getResources().size() != 0){
+            w2.changeAvailability(2-w2.getResources().size());
+        }
         return w1.getResources().size() + w2.getResources().size();
     }
+    */
 
 }

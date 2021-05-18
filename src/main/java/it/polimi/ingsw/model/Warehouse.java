@@ -107,6 +107,10 @@ public class Warehouse implements Serializable, Cloneable {
         this.resources = temp;
     }
 
+    public void changeResourceType(ResourceType resourceType){
+        this.resourceType= resourceType;
+    }
+
     public boolean getResource(Resource resource)
     {
         if(resources.remove(resource))
