@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
+import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
@@ -41,15 +42,19 @@ public class ClientCLI {
                 try {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
-                        if(match!=null)
-                            match.toString();
                         if (inputObject instanceof SendModel) {
+                            System.err.println("Model RICEVUTO");
+                            System.err.flush();
                             SendModel sendModel = ((SendModel) inputObject);
                             match = sendModel.getMatch();
                             playerPos = sendModel.getPlayerPosition();
+                            match.toString();
+                            System.out.flush();
                         } else if (inputObject instanceof SendMessage) {
                             System.out.println(inputObject.toString());
                         } else if (inputObject instanceof MoveResponse) {
+                            System.err.println(inputObject.toString());
+                            System.err.flush();
                             MoveResponse moveResponse = (MoveResponse) inputObject;
                             moveResponse.updateLocalMatch(match);
                             if(moveResponse.getExecutePlayerPos() == playerPos)
@@ -71,8 +76,15 @@ public class ClientCLI {
     }
 
     public void manageResponse(MoveResponse moveResponse, final Scanner stdin, final ObjectOutputStream socketOut) {
+        if(match!=null) {
+            match.toString();
+            System.out.flush();
+        }
         try {
-            socketOut.writeObject(moveResponse.elaborateCliInput(stdin,match));
+            PlayerMove playerMove = moveResponse.elaborateCliInput(stdin,match);
+            if(playerMove != null) {
+                socketOut.writeObject(playerMove);
+            }
             socketOut.flush();
         } catch (Exception e) {
             setActive(false);

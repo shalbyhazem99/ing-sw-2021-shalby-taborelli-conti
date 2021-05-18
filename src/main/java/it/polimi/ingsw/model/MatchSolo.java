@@ -36,6 +36,11 @@ public class MatchSolo extends Match implements Serializable {
         actionTokens = generateActionTokens();
     }
 
+    @Override
+    public void askForMove() {
+
+    }
+
     /**
      * The method generate the {@link ArrayDeque} of {@link ActionToken} required for a solo match
      *

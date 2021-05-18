@@ -77,24 +77,6 @@ public class MatchMulti extends Match implements Serializable {
     }
 
 
-    @Override
-    public void discardLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
-        super.discardLeaderCardInteraction(leaderCardPosition, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void enableLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
-        super.enableLeaderCardInteraction(leaderCardPosition, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player, boolean noControl) {
-        super.positioningResourcesInteraction(whereToPlace, player, noControl);
-        askForMove();
-    }
-
     /*
 
     @Override
@@ -103,23 +85,7 @@ public class MatchMulti extends Match implements Serializable {
         askForMove();
     }
 
-    @Override
-    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
-        super.enableProductionBaseInteraction(resourceToUse, to, player);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
-        super.enableProductionDevelopmentInteraction(resourceToUse, positionOfDevelopmentCard, player);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
-        super.enableProductionLeaderInteraction(resourceToUse, positionOfProductivePower, player);
-        askForMove();
-    }*/
+  */
 
     @Override
     public void startMatch() {
@@ -141,7 +107,7 @@ public class MatchMulti extends Match implements Serializable {
         }
     }
 
-    private void askForMove() {
+    public void askForMove() {
         //notifyModel();
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
         if (!canChangeTurn) {
@@ -189,7 +155,7 @@ public class MatchMulti extends Match implements Serializable {
     @Override
     public boolean isMyTurn(Player player) {
         //the second condition is for the first discard of the leader card at the beginning
-        return getPlayers().get(turn).equals(player) || numPlayerWhoDiscard < players.size()-1;
+        return getPlayers().get(turn).equals(player) || numPlayerWhoDiscard < players.size();
     }
 
     public String toString() {
