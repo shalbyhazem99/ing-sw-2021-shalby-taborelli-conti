@@ -5,12 +5,9 @@ import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.utils.Utils;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;

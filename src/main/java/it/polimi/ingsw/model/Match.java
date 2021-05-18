@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.controller.move.LeaderCard.DiscardTwoLeaderCardsResponse;
+import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsResponse;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.market.MarketResponse;
@@ -11,6 +11,8 @@ import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesR
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
+import it.polimi.ingsw.controller.response.LeaderCard.DiscardLeaderCardResponse;
+import it.polimi.ingsw.controller.response.LeaderCard.EnableLeaderCardResponse;
 import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
@@ -45,6 +47,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     protected boolean canChangeTurn = false;
     protected int numPlayerWhoDiscard = 0;
 
+    //when something wrong: resent the entire model
     //TODO: pensare a attributi aggiuntivi, esempio salvare su disco i record, memorizzare timestamp per sapere da quanto tempo si gioca ...
 
     /**
@@ -72,7 +75,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     }
 
     public void askForDiscardLeaderCard(){
-            notify(DiscardTwoLeaderCardsResponse.getInstance(players));
+        for (int i = 0; i < players.size(); i++) {
+            notify(DiscardTwoLeaderCardsResponse.getInstance(players.get(i), i));
+        }
     }
 
     public void notifyModel() {
@@ -84,6 +89,15 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     /*-----------------------------------------------------------------------------------------------
     GETTER
     -------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Return the {@link Player} int the given position
+     * @param pos the position of the {@link Player} to return
+     * @return the {@link Player} in the given position
+     */
+    public Player getPlayerFromPosition(int pos){
+        return players.get(pos);
+    }
 
     /**
      * Method to get a shallow copy of the {@link Player}'s {@link ArrayList}
@@ -193,8 +207,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             numPlayerWhoDiscard++;
         }
         else {
-            notify(SendMessage.getInstance("Something wrong, Leader Cards cannot be discarded, retry", player));
-            notify(DiscardTwoLeaderCardsResponse.getInstance(new ArrayList<>(Arrays.asList(player))));
+            notify(SendMessage.getInstance("Something wrong, Leader Cards cannot be discarded, retry", player,players.indexOf(player)));
+            notify(DiscardTwoLeaderCardsResponse.getInstance(player,players.indexOf(player)));
         }
     }
 
@@ -205,11 +219,15 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param leaderCardPosition
      * @param player
      */
-    public void discardLeaderCardInteraction(int leaderCardPosition, Player player) {
+    public void discardLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
+        if(noControl){
+            player.discardLeaderCard(leaderCardPosition);
+            return;
+        }
         if (player.discardLeaderCard(leaderCardPosition)) {
-            notify(SendMessage.getInstance("Leader Card discarded, moved 1 position the faith path", player));
+            notify(DiscardLeaderCardResponse.getInstance(players,players.indexOf(player),leaderCardPosition));
         } else {
-            notify(SendMessage.getInstance("Something wrong, Leader Card cannot be discarded, retry", player));
+            notify(SendMessage.getInstance("Something wrong, Leader Card cannot be discarded, retry", player,players.indexOf(player)));
         }
     }
 
@@ -219,11 +237,15 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param leaderCardPosition
      * @param player
      */
-    public void enableLeaderCardInteraction(int leaderCardPosition, Player player) {
+    public void enableLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
+        if(noControl){
+            player.getLeaderCard(leaderCardPosition).active(player);
+            return;
+        }
         if (leaderCardPosition < player.getLeaderCards().size() && player.getLeaderCard(leaderCardPosition).active(player)) {
-            notify(SendMessage.getInstance("Leader Card enabled", player));
+            notify(EnableLeaderCardResponse.getInstance(players,players.indexOf(player),leaderCardPosition));
         } else {
-            notify(SendMessage.getInstance("Something wrong, Leader Card cannot be enabled, retry", player));
+            notify(SendMessage.getInstance("Something wrong, Leader Card cannot be enabled, retry", player,players.indexOf(player)));
         }
     }
 
@@ -235,9 +257,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param pos      which ROW/COLUMN to select
      * @param player   the {@link Player} performing the interaction
      */
-    public void marketInteraction(MoveType moveType, int pos, Player player) {
-        if ((moveType.equals(MoveType.ROW) && (pos < 0 || pos > 2)) || moveType.equals(MoveType.COLUMN) && (pos < 0 || pos > 3)) {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+    public void marketInteraction(MoveType moveType, int pos, Player player, boolean noControl) {
+        if (!noControl && ((moveType.equals(MoveType.ROW) && (pos < 0 || pos > 2)) || moveType.equals(MoveType.COLUMN) && (pos < 0 || pos > 3))) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
         } else {
             ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
             if (moveType.equals(MoveType.COLUMN)) {
@@ -264,18 +286,18 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             //Faith resource conversion to faith position
             player.moveAheadFaith((int) resourcesGained.stream().filter(el -> el.getType().equals(ResourceType.FAITH)).count());
             pendingResources.addAll(resourcesGained.stream().filter(el -> el.getType() != ResourceType.FAITH).collect(Collectors.toList()));
-            notifyModel();
-            notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
+            //notifyModel();
+            notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, players,players.indexOf(player),moveType,pos));
         }
     }
 
     /**
      * Method used to perform the conversion of the white marbles, the {@link Resource} gained are placed into pendingResources {@link ArrayList}
      */
-    public void marketMarbleConvertInteraction(int first, int second, Player player) {
-        if ((first + second) <= numOfWhiteMarbleToBeConverted) {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
-            notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
+    public void marketMarbleConvertInteraction(int first, int second, Player player, boolean noControl) {
+        if (!noControl && ((first + second) <= numOfWhiteMarbleToBeConverted)) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
+            notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)),players.indexOf(player),0,0));
         } else {
             ArrayList<Resource> resourcesGained = (ArrayList<Resource>) pendingResources.clone();
             for (int i = 0; i < first; i++) {
@@ -284,8 +306,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             for (int i = 0; i < second; i++) {
                 pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(1)));
             }
-            notifyModel();
-            notify(MarketResponse.getInstance(resourcesGained, 0, new ArrayList<>(Arrays.asList(player))));
+            //notifyModel();
+            notify(MarketResponse.getInstance(resourcesGained, 0, players,players.indexOf(player),first,second));
         }
     }
 
@@ -296,7 +318,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param whereToPlace an {@link ArrayList} containing where to add (in which {@link Warehouse}) the iTH {@link Resource} of the pendingResources
      * @param player       the {@link Player} performing the action
      */
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) {
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player,boolean noControl) {
         /*
             Check
             1) if are there any resources to be placed
@@ -306,15 +328,17 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                             4) empty the pendingResources
                             if some Resource got discarded ==> 5) move ahead other players on the Faith Path
          */
-        //CHECK 1)
-        if (pendingResources.size() == 0) {
-            return;
-        }
-        //CHECK 2)
-        else if ((pendingResources.size() != whereToPlace.size())) {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
-            notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
-            return;
+        if(!noControl) {
+            //CHECK 1)
+            if (pendingResources.size() == 0) {
+                return;
+            }
+            //CHECK 2)
+            else if ((pendingResources.size() != whereToPlace.size())) {
+                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
+                notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)),players.indexOf(player),0,0));
+                return;
+            }
         }
         //CHECK 3)
         Gson gson = new Gson();
@@ -335,8 +359,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                             || (whereToPlace.get(i) >= 3 && whereToPlace.get(i) < 5 && additionalTemp.size() > whereToPlace.get(i) - 3
                             && (!additionalTemp.get(whereToPlace.get(i)).addResource(pendingResources.get(i))))
             ) {
-                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
-                notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
+                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
+                notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)),players.indexOf(player),0,0));
                 ArrayList<Warehouse> temp = new ArrayList<>();
                 Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
                 player.setWarehousesStandard(temp);
@@ -357,8 +381,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             }
         }
         setCanChangeTurn(true, player);
-        notifyModel();
-        notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources, numberOfGainedResources, new ArrayList<>(Arrays.asList(player))));
+        //notifyModel();
+        notify(PositioningResourcesResponse.getInstance(numberOfDiscardedResources, numberOfGainedResources, players,players.indexOf(player),whereToPlace));
     }
 
     /**
@@ -369,7 +393,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player   the {@link Player} which call the Move
      * @param posToAdd the int that specify in which user's {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} the new {@link DevelopmentCard} has to be placed into
      */
-    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse) {
+    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
         //if the player can afford the development card requested
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
         ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getPowers().getFrom().stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
@@ -379,30 +403,17 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             if (player.addDevelopmentCard(temp_card, posToAdd)) //no errors
             {
                 setCanChangeTurn(true, player);
-                notify(BuyDevelopmentCardReponse.getInstance(temp_card, new ArrayList<>(Arrays.asList(player))));
+                notify(BuyDevelopmentCardReponse.getInstance(players,players.indexOf(player),type,level,posToAdd,resourceToUse));
             } else {
-                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+                notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
             }
         } else if (!player.canAfford(resourceToUse)) {
-            notify(SendMessage.getInstance("Something wrong, Not enough resources", player));
+            notify(SendMessage.getInstance("Something wrong, Not enough resources", player,players.indexOf(player)));
         } else {
-            notify(SendMessage.getInstance("Something wrong, Cannot be added (parameter error)", player));
+            notify(SendMessage.getInstance("Something wrong, Cannot be added (parameter error)", player,players.indexOf(player)));
         }
     }
 
-
-    /**
-     * Method used to perform the enable of the base interaction
-     *
-     * @param resourceToUse
-     * @param to
-     * @param player
-     */
-    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
-        if (player.canAfford(resourceToUse)) {
-            player.getStrongBox().add(Resource.getInstance(to));
-        }
-    }
 
     private void activateProductivePower(ProductivePower power, ArrayList<ResourcePick> resourceToUse, Player player) {
         //check if the resource to use are the same required for the leader card
@@ -410,11 +421,29 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
         //check if the resourto use are the required and if the player has this resources
         if (Utils.compareResources(powerRequiredResources, resourcesCounts) && player.canAfford(resourceToUse)) {
-            notify(EnableProductionResponse.getInstance(power.getTo(), new ArrayList<>(Arrays.asList(player))));
+            notify(EnableProductionResponse.getInstance(power, resourceToUse,players,players.indexOf(player)));
             player.getStrongBox().addAll(power.getTo());
         } else {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
         }
+    }
+
+    /**
+     * Method used to perform the enable of the base interaction
+     *
+     * @param resourceToUse
+     * @param toType
+     * @param player
+     */
+    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType toType, Player player) {
+        ArrayList<ResourcesCount> from = new ArrayList<>();
+        from.add(ResourcesCount.getInstance(1,resourceToUse.get(0).getResourceType()));
+        from.add(ResourcesCount.getInstance(1,resourceToUse.get(1).getResourceType()));
+        ArrayList<Resource> to = new ArrayList<>();
+        to.add(Resource.getInstance(toType));
+        //ACTIVATE THE POWER
+        activateProductivePower(ProductivePower.getInstance(from,to),resourceToUse,player);
+
     }
 
     /**
@@ -424,14 +453,14 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param positionOfDevelopmentCard
      * @param player
      */
-    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
-        if (positionOfDevelopmentCard >= player.getDevelopmentCardSpaces().size()) {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player,boolean noControl) {
+        if (!noControl && positionOfDevelopmentCard >= player.getDevelopmentCardSpaces().size()) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
             return;
         }
         DevelopmentCard developmentCard = player.getDevelopmentCardSpaces().get(positionOfDevelopmentCard).pickTopCard();
-        if (developmentCard == null) {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+        if (!noControl &&developmentCard == null) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
             return;
         }
         activateProductivePower(developmentCard.getPowers(), resourceToUse, player);
@@ -444,9 +473,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param positionOfProductivePower
      * @param player
      */
-    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
-        if (positionOfProductivePower >= player.getAddedPower().size()) {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
+    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player,boolean noControl) {
+        if (!noControl && positionOfProductivePower >= player.getAddedPower().size()) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player,players.indexOf(player)));
             return;
         }
         activateProductivePower(player.getAddedPower().get(positionOfProductivePower), resourceToUse, player);
@@ -484,7 +513,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         int numberOfMovedRes = player.swapWarehouses(indexFirstWarehouse, indexSecondWarehouse);
         if (numberOfMovedRes != -1) {
-            notify(SwapWarehouseResponse.getInstance(new ArrayList<>(Arrays.asList(player)), numberOfMovedRes));
+            notify(SwapWarehouseResponse.getInstance(players, numberOfMovedRes,players.indexOf(player)));
             return;
         }
         throw new SwapWarehouseException();

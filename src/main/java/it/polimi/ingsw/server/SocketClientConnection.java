@@ -82,13 +82,13 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
         try{
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            send(AskForData.getInstance("Welcome!\nWhat is your name?",null));
+            send(AskForData.getInstance("Welcome!\nWhat is your name?",null,0));
             String name = ((MessageMove) in.readObject()).getMessage();
             //todo: generates error if two client run together
             if(server.getNumPlayer()==-1){
-                send(AskForData.getInstance("You are the first. how many player do you want?",null));
+                send(AskForData.getInstance("You are the first. how many player do you want?",null,0));
                 numOfPlayer = Integer.parseInt(((MessageMove) in.readObject()).getMessage());
-                send(SendMessage.getInstance("match created!\n",new ArrayList<>()));
+                send(SendMessage.getInstance("match created!\n",new ArrayList<>(),0));
                 server.lobby(this, name,numOfPlayer);
             }else {
                 server.lobby(this, name);
@@ -99,7 +99,7 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
                 if(readied instanceof PlayerMove){
                     notify((PlayerMove)readied);
                 }else {
-                    asyncSend(IllegalMoveResponse.getInstance("risposta scorretta",null));
+                    asyncSend(IllegalMoveResponse.getInstance("risposta scorretta",null,0));
                 }
             }
         } catch (Exception e) {

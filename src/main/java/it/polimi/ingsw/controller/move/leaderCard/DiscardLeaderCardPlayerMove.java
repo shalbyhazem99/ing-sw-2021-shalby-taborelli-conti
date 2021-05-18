@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.move.LeaderCard;
+package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
@@ -16,7 +16,7 @@ public class DiscardLeaderCardPlayerMove extends PlayerMove {
 
     @Override
     public void execute(Match match) {
-        match.discardLeaderCardInteraction(leaderCardPosition,getPlayer());
+        match.discardLeaderCardInteraction(leaderCardPosition,getPlayer(),false);
     }
 
 }

@@ -18,6 +18,6 @@ public class EnableProductionPlayerMoveLeaderCard extends EnableProductionPlayer
 
     @Override
     public void execute(Match match) {
-        match.enableProductionLeaderInteraction(resourceToUse,positionOfProductivePower,getPlayer());
+        match.enableProductionLeaderInteraction(resourceToUse,positionOfProductivePower,getPlayer(),false);
     }
 }

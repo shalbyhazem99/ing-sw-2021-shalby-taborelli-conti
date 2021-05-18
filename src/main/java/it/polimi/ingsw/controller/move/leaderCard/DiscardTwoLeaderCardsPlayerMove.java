@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.move.LeaderCard;
+package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;

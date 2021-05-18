@@ -10,23 +10,19 @@ import java.util.Scanner;
 
 public abstract class MoveResponse implements Serializable {
     private ArrayList<Player> players;
+    private int executePlayerPos;
 
-    public MoveResponse(ArrayList<Player> players) {
+    public MoveResponse(ArrayList<Player> players, int executePlayerPos) {
         this.players = players;
-    }
-
-    public void concatPlayers(ArrayList<Player> players){
-        this.players = players;
+        this.executePlayerPos = executePlayerPos;
     }
 
     public ArrayList<Player> getPlayers() {
         return players;
     }
 
-    //todo: method that indicate something that the user must do in response to a GameManagerResponse
     public abstract PlayerMove elaborateCliInput(final Scanner stdin, Match match);
 
-    public void updateLocalMatch(MatchProxy matchProxy){
-        //todo: to update the local view.
-    }
+    //todo:to uncomment
+    //public abstract void updateLocalMatch(Match match);
 }

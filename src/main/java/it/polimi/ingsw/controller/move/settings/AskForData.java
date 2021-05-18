@@ -11,13 +11,13 @@ import java.util.Scanner;
 public class AskForData extends MoveResponse {
     private String message;
 
-    public AskForData(String message, ArrayList<Player> players) {
-        super(players);
+    public AskForData(String message, ArrayList<Player> players,int executePlayerPos) {
+        super(players,executePlayerPos);
         this.message = message;
     }
 
-    public static AskForData getInstance(String message,ArrayList<Player> players) {
-        return new AskForData(message,players);
+    public static AskForData getInstance(String message,ArrayList<Player> players,int executePlayerPos) {
+        return new AskForData(message,players,executePlayerPos);
     }
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {

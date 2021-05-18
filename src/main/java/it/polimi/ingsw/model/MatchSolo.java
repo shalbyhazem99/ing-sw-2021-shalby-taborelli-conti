@@ -158,7 +158,7 @@ public class MatchSolo extends Match implements Serializable {
     {
         setCanChangeTurn(false,player);
         pendingResources = new ArrayList<>();
-        notify(EndRoundResponse.getInstance(getPlayers(),true));
+        notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true));
         //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
     }
 }

@@ -1,28 +1,29 @@
-package it.polimi.ingsw.controller.move.LeaderCard;
+package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
-import it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove;
-import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class DiscardTwoLeaderCardsResponse extends MoveResponse {
     /**
      * Default constructor
      */
-    public DiscardTwoLeaderCardsResponse(ArrayList<Player> players) {
-        super(players);
+    public DiscardTwoLeaderCardsResponse(ArrayList<Player> players,int executePlayerPos) {
+        super(players,executePlayerPos);
     }
 
-    public static DiscardTwoLeaderCardsResponse getInstance(ArrayList<Player> players) {
-        return new DiscardTwoLeaderCardsResponse(players);
+    public static DiscardTwoLeaderCardsResponse getInstance(ArrayList<Player> players,int executePlayerPos) {
+        return new DiscardTwoLeaderCardsResponse(players,executePlayerPos);
+    }
+
+
+    public static DiscardTwoLeaderCardsResponse getInstance(Player player,int executePlayerPos) {
+        return new DiscardTwoLeaderCardsResponse(new ArrayList<>(Arrays.asList(player)),executePlayerPos);
     }
 
 

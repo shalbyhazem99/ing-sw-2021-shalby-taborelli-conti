@@ -1,7 +1,6 @@
-package it.polimi.ingsw.controller.move.LeaderCard;
+package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.exceptions.NotEnoughResourcesException;
 import it.polimi.ingsw.model.Match;
 
 public class EnableLeaderCardPlayerMove extends PlayerMove {
@@ -17,7 +16,7 @@ public class EnableLeaderCardPlayerMove extends PlayerMove {
 
     @Override
     public void execute(Match match) {
-        match.enableLeaderCardInteraction(leaderCardPosition, getPlayer());
+        match.enableLeaderCardInteraction(leaderCardPosition, getPlayer(),false);
     }
 
 }

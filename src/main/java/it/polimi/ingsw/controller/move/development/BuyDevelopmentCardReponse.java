@@ -2,9 +2,12 @@ package it.polimi.ingsw.controller.move.development;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,24 +16,21 @@ public class BuyDevelopmentCardReponse extends MoveResponse {
     /**
      * Class used to represent the response of the system when the {@link it.polimi.ingsw.model.Player} asks to buy a specific {@link DevelopmentCard}
      */
-    private DevelopmentCard developmentCard;
+    private DevelopmentCardType type;
+    private DevelopmentCardLevel level;
+    private int posToAdd;
+    private ArrayList<ResourcePick> resourceToUse;
 
-    /**
-     * Default constructor
-     * @param developmentCard the {@link DevelopmentCard} that has to be retrieved to the {@link it.polimi.ingsw.model.Player}
-     */
-    public BuyDevelopmentCardReponse(DevelopmentCard developmentCard, ArrayList<Player> players) {
-        super(players);
-        this.developmentCard = developmentCard;
+    public BuyDevelopmentCardReponse(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse) {
+        super(players, executePlayerPos);
+        this.type = type;
+        this.level = level;
+        this.posToAdd = posToAdd;
+        this.resourceToUse = resourceToUse;
     }
 
-    /**
-     * Default get instance method
-     * @param developmentCard the {@link DevelopmentCard} that has to be retrieved to the {@link it.polimi.ingsw.model.Player}
-     * @return an instance of {@link BuyDevelopmentCardReponse}
-     */
-    public static BuyDevelopmentCardReponse getInstance(DevelopmentCard developmentCard, ArrayList<Player> players) {
-        return new BuyDevelopmentCardReponse(developmentCard,players);
+    public static BuyDevelopmentCardReponse getInstance(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse) {
+        return new BuyDevelopmentCardReponse(players, executePlayerPos, type, level, posToAdd, resourceToUse);
     }
 
     @Override

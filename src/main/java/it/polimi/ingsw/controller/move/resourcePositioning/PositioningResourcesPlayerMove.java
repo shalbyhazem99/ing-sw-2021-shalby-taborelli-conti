@@ -35,7 +35,7 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
 
     @Override
     public void execute(Match match) {
-            match.positioningResourcesInteraction(whereToPlaceResources, getPlayer());
+            match.positioningResourcesInteraction(whereToPlaceResources, getPlayer(),false);
     }
 
     /**

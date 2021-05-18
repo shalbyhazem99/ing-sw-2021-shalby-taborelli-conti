@@ -16,8 +16,8 @@ public class SwapWarehouseResponse extends MoveResponse {
      */
     private int numberOfResourcesMoved;
 
-    public SwapWarehouseResponse(ArrayList<Player> players, int numberOfResourcesMoved) {
-        super(players);
+    public SwapWarehouseResponse(ArrayList<Player> players, int numberOfResourcesMoved,int executePlayerPos) {
+        super(players,executePlayerPos);
         this.numberOfResourcesMoved = numberOfResourcesMoved;
     }
 
@@ -27,8 +27,8 @@ public class SwapWarehouseResponse extends MoveResponse {
      * @param numberOfResourcesMoved
      * @return
      */
-    public static SwapWarehouseResponse getInstance(ArrayList<Player> players, int numberOfResourcesMoved) {
-        return new SwapWarehouseResponse(players,numberOfResourcesMoved);
+    public static SwapWarehouseResponse getInstance(ArrayList<Player> players, int numberOfResourcesMoved,int executePlayerPos) {
+        return new SwapWarehouseResponse(players,numberOfResourcesMoved,executePlayerPos);
     }
 
     @Override

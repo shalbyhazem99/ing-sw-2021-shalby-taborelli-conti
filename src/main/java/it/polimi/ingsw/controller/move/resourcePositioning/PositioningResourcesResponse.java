@@ -14,6 +14,7 @@ public class PositioningResourcesResponse extends MoveResponse {
      */
     private int numberOfDiscardedResources;
     private int numberOfGainedResources;
+    ArrayList<Integer> whereToPlace;
 
 
     /**
@@ -21,10 +22,11 @@ public class PositioningResourcesResponse extends MoveResponse {
      * @param numberOfDiscardedResources how many {@link it.polimi.ingsw.model.Resource} got discarded
      * @param numberOfGainedResources how many {@link it.polimi.ingsw.model.Resource} got gained
      */
-    public PositioningResourcesResponse(int numberOfDiscardedResources, int numberOfGainedResources, ArrayList<Player> players) {
-        super(players);
+    public PositioningResourcesResponse(int numberOfDiscardedResources, int numberOfGainedResources, ArrayList<Player> players,int executePlayerPos,ArrayList<Integer> whereToPlace) {
+        super(players,executePlayerPos);
         this.numberOfDiscardedResources = numberOfDiscardedResources;
         this.numberOfGainedResources = numberOfGainedResources;
+        this.whereToPlace=whereToPlace;
     }
 
     /**
@@ -33,8 +35,8 @@ public class PositioningResourcesResponse extends MoveResponse {
      * @param numberOfGainedResources how many {@link it.polimi.ingsw.model.Resource} got gained
      * @return an instance of {@link PositioningResourcesResponse}
      */
-    public static PositioningResourcesResponse getInstance(int numberOfDiscardedResources, int numberOfGainedResources, ArrayList<Player> players) {
-        return new PositioningResourcesResponse(numberOfDiscardedResources,numberOfGainedResources,players);
+    public static PositioningResourcesResponse getInstance(int numberOfDiscardedResources, int numberOfGainedResources, ArrayList<Player> players,int executePlayerPos,ArrayList<Integer> whereToPlace) {
+        return new PositioningResourcesResponse(numberOfDiscardedResources,numberOfGainedResources,players,executePlayerPos,whereToPlace);
     }
 
     @Override

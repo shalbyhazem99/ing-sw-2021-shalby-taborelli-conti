@@ -16,14 +16,14 @@ public class EndRoundResponse extends MoveResponse {
      */
     private boolean correctlyEnded;
 
-    public EndRoundResponse(ArrayList<Player> players, boolean correctlyEnded) {
-        super(players);
+    public EndRoundResponse(ArrayList<Player> players,int executePlayerPos, boolean correctlyEnded) {
+        super(players,executePlayerPos);
         this.correctlyEnded = correctlyEnded;
     }
 
 
-    public static EndRoundResponse getInstance(ArrayList<Player> players, boolean correctlyEnded) {
-        return new EndRoundResponse(players,correctlyEnded);
+    public static EndRoundResponse getInstance(ArrayList<Player> players,int executePlayerPos, boolean correctlyEnded) {
+        return new EndRoundResponse(players, executePlayerPos, correctlyEnded);
     }
 
     @Override

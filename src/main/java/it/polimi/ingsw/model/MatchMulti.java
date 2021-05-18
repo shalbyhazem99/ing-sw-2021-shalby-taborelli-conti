@@ -60,14 +60,10 @@ public class MatchMulti extends Match implements Serializable {
      * @param player the {@link Player} who wants to end his round
      */
     public void endRoundInteraction(Player player) throws EndRoundException {
-        if (!isMyTurn(player)) {
-            throw new EndRoundException();
-        }
-        if (pendingResources.size() != 0) {
-            throw new EndRoundException();
-        }
-        if (!getCanChangeTurn()) {
-            throw new EndRoundException();
+        if (!isMyTurn(player) || pendingResources.size() != 0 || !getCanChangeTurn()) {
+            notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), false));
+            askForMove();
+            return;
         }
         if (turn == getPlayers().size() - 1) {
             turn = 0;
@@ -76,11 +72,11 @@ public class MatchMulti extends Match implements Serializable {
         }
         this.canChangeTurn = false;
         this.pendingResources = new ArrayList<>();
-        notify(EndRoundResponse.getInstance(getPlayers(), true));
+        notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true));
         askForMove();
     }
 
-
+/*
     @Override
     public void discardLeaderCardInteraction(int leaderCardPosition,Player player) {
         super.discardLeaderCardInteraction(leaderCardPosition,player);
@@ -121,7 +117,7 @@ public class MatchMulti extends Match implements Serializable {
     public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
         super.enableProductionLeaderInteraction(resourceToUse, positionOfProductivePower, player);
         askForMove();
-    }
+    }*/
 
     @Override
     public void startMatch() {
@@ -156,7 +152,7 @@ public class MatchMulti extends Match implements Serializable {
         possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
         possibleMove.add(MovePlayerType.SWAP_WAREHOUSE);
         possibleMove.add(MovePlayerType.END_TURN);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove));
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove,turn));
     }
 
     @Override
@@ -198,10 +194,10 @@ public class MatchMulti extends Match implements Serializable {
     public String toString() {
         try {
             System.out.println("MERCATO");
-            System.out.println(marketBoard.getAdditionalMarble().toString());
+            System.out.println(marketBoard.getAdditionalMarble().toString()+"\n");
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
-                    System.out.print(marketBoard.getRow(i).get(j).toString() + "|");
+                    System.out.print(marketBoard.getRow(i).get(j).toString() + "\t|");
                 }
                 System.out.println();
             }

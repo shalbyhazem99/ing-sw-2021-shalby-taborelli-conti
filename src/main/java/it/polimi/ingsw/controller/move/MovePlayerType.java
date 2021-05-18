@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.move;
 
-import it.polimi.ingsw.controller.move.LeaderCard.DiscardLeaderCardPlayerMove;
-import it.polimi.ingsw.controller.move.LeaderCard.EnableLeaderCardPlayerMove;
+import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
+import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
@@ -10,7 +10,6 @@ import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
-import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;

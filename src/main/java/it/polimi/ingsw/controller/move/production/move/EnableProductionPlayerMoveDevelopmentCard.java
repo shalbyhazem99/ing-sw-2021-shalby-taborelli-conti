@@ -18,6 +18,6 @@ public class EnableProductionPlayerMoveDevelopmentCard extends EnableProductionP
 
     @Override
     public void execute(Match match) {
-        match.enableProductionDevelopmentInteraction(resourceToUse,positionOfDevelopmentCard,getPlayer());
+        match.enableProductionDevelopmentInteraction(resourceToUse,positionOfDevelopmentCard,getPlayer(),false);
     }
 }

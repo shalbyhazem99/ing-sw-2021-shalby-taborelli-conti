@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.market.MoveType;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -25,6 +26,10 @@ public class MarketResponse extends MoveResponse {
      */
     private ArrayList<Resource> resources;
     int numOfMarbleToBeCoverted;
+    private MoveType moveType;
+    private int pos;
+    private int first;
+    private int second;
 
     /**
      * Default constructor
@@ -33,10 +38,21 @@ public class MarketResponse extends MoveResponse {
      * @param numOfMarbleToBeCoverted the int which specifies how many Conversion Strategy the {@link it.polimi.ingsw.model.Player} has to communicate
      *                                to the system
      */
-    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players) {
-        super(players);
+    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos, MoveType moveType, int pos) {
+        super(players,executePlayerPos);
         this.resources = resources;
         this.numOfMarbleToBeCoverted = numOfMarbleToBeCoverted;
+        this.moveType = moveType;
+        this.pos = pos;
+    }
+
+    //when only convertion is done
+    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos,int first, int second) {
+        super(players,executePlayerPos);
+        this.resources = resources;
+        this.numOfMarbleToBeCoverted = numOfMarbleToBeCoverted;
+        this.first = first;
+        this.second = second;
     }
 
     /**
@@ -47,8 +63,20 @@ public class MarketResponse extends MoveResponse {
      *                                to the system
      * @return an instance of {@link MarketResponse}
      */
-    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players) {
-        return new MarketResponse(resources, numOfMarbleToBeCoverted, players);
+    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos, MoveType moveType, int pos) {
+        return new MarketResponse(resources,numOfMarbleToBeCoverted,players,executePlayerPos,moveType,pos);
+    }
+
+    /**
+     * Default get instance method
+     *
+     * @param resources               the {@link ArrayList} containing the {@link Resource} got by the conversion
+     * @param numOfMarbleToBeCoverted the int which specifies how many Conversion Strategy the {@link it.polimi.ingsw.model.Player} has to communicate
+     *                                to the system
+     * @return an instance of {@link MarketResponse}
+     */
+    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos,int first, int second) {
+        return new MarketResponse(resources,numOfMarbleToBeCoverted,players,executePlayerPos,first,second);
     }
 
     @Override
