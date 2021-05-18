@@ -21,16 +21,16 @@ public class BuyDevelopmentCardReponse extends MoveResponse {
     private int posToAdd;
     private ArrayList<ResourcePick> resourceToUse;
 
-    public BuyDevelopmentCardReponse(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse) {
-        super(players, executePlayerPos);
+    public BuyDevelopmentCardReponse(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse,int hashToVerify) {
+        super(players, executePlayerPos,hashToVerify);
         this.type = type;
         this.level = level;
         this.posToAdd = posToAdd;
         this.resourceToUse = resourceToUse;
     }
 
-    public static BuyDevelopmentCardReponse getInstance(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse) {
-        return new BuyDevelopmentCardReponse(players, executePlayerPos, type, level, posToAdd, resourceToUse);
+    public static BuyDevelopmentCardReponse getInstance(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse,int hashToVerify) {
+        return new BuyDevelopmentCardReponse(players, executePlayerPos, type, level, posToAdd, resourceToUse,hashToVerify);
     }
 
 

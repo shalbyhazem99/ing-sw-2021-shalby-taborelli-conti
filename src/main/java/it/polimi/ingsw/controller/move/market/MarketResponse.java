@@ -38,8 +38,8 @@ public class MarketResponse extends MoveResponse {
      * @param numOfMarbleToBeCoverted the int which specifies how many Conversion Strategy the {@link it.polimi.ingsw.model.Player} has to communicate
      *                                to the system
      */
-    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos, MoveType moveType, int pos) {
-        super(players,executePlayerPos);
+    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos, MoveType moveType, int pos,int hashToVerify) {
+        super(players,executePlayerPos,hashToVerify);
         this.resources = resources;
         this.numOfMarbleToBeCoverted = numOfMarbleToBeCoverted;
         this.moveType = moveType;
@@ -47,8 +47,8 @@ public class MarketResponse extends MoveResponse {
     }
 
     //when only convertion is done
-    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos,int first, int second) {
-        super(players,executePlayerPos);
+    public MarketResponse(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos,int first, int second,int hashToVerify) {
+        super(players,executePlayerPos,hashToVerify);
         this.resources = resources;
         this.numOfMarbleToBeCoverted = numOfMarbleToBeCoverted;
         this.moveType=null;
@@ -65,8 +65,8 @@ public class MarketResponse extends MoveResponse {
      *                                to the system
      * @return an instance of {@link MarketResponse}
      */
-    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos, MoveType moveType, int pos) {
-        return new MarketResponse(resources,numOfMarbleToBeCoverted,players,executePlayerPos,moveType,pos);
+    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos, MoveType moveType, int pos,int hashToVerify) {
+        return new MarketResponse(resources,numOfMarbleToBeCoverted,players,executePlayerPos,moveType,pos,hashToVerify);
     }
 
     /**
@@ -77,8 +77,8 @@ public class MarketResponse extends MoveResponse {
      *                                to the system
      * @return an instance of {@link MarketResponse}
      */
-    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos,int first, int second) {
-        return new MarketResponse(resources,numOfMarbleToBeCoverted,players,executePlayerPos,first,second);
+    public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos,int first, int second,int hashToVerify) {
+        return new MarketResponse(resources,numOfMarbleToBeCoverted,players,executePlayerPos,first,second,hashToVerify);
     }
 
     @Override

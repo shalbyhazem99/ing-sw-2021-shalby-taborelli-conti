@@ -11,13 +11,13 @@ import java.util.Scanner;
 public class IllegalMoveResponse extends MoveResponse {
     String message; //todo:or type;
 
-    public IllegalMoveResponse(String message, ArrayList<Player> players,int executePlayerPos) {
-        super(players,executePlayerPos);
+    public IllegalMoveResponse(String message, ArrayList<Player> players,int executePlayerPos,int hashToVerify) {
+        super(players,executePlayerPos,hashToVerify);
         this.message = message;
     }
 
-    public static IllegalMoveResponse getInstance(String message,ArrayList<Player> players,int executePlayerPos) {
-        return new IllegalMoveResponse(message,players,executePlayerPos);
+    public static IllegalMoveResponse getInstance(String message,ArrayList<Player> players,int executePlayerPos,int hashToVerify) {
+        return new IllegalMoveResponse(message,players,executePlayerPos,hashToVerify);
     }
 
     @Override

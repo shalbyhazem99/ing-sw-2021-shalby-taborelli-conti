@@ -61,7 +61,7 @@ public class MatchMulti extends Match implements Serializable {
      */
     public void endRoundInteraction(Player player) {
         if (!isMyTurn(player) || pendingResources.size() != 0 || !getCanChangeTurn()) {
-            notify(EndRoundResponse.getInstance(new ArrayList<>(Arrays.asList(player)),getPlayers().indexOf(player), false));
+            notify(EndRoundResponse.getInstance(new ArrayList<>(Arrays.asList(player)),getPlayers().indexOf(player), false,this.hashCode()));
             askForMove();
             return;
         }
@@ -72,7 +72,7 @@ public class MatchMulti extends Match implements Serializable {
         }
         this.canChangeTurn = false;
         this.pendingResources = new ArrayList<>();
-        notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true));
+        notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true,this.hashCode()));
         askForMove();
     }
 
@@ -119,7 +119,7 @@ public class MatchMulti extends Match implements Serializable {
         possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
         possibleMove.add(MovePlayerType.SWAP_WAREHOUSE);
         possibleMove.add(MovePlayerType.END_TURN);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove,turn));
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove,turn,this.hashCode()));
     }
 
     @Override

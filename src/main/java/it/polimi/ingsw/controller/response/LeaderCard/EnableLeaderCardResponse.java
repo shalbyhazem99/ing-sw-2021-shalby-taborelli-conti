@@ -14,14 +14,14 @@ public class EnableLeaderCardResponse extends MoveResponse {
     /**
      * Default constructor
      */
-    public EnableLeaderCardResponse(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition) {
-        super(players, executePlayerPos);
+    public EnableLeaderCardResponse(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition,int hashToVerify) {
+        super(players, executePlayerPos,hashToVerify);
         this.leaderCardPosition = leaderCardPosition;
     }
 
 
-    public static EnableLeaderCardResponse getInstance(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition) {
-        return new EnableLeaderCardResponse(players,executePlayerPos,leaderCardPosition);
+    public static EnableLeaderCardResponse getInstance(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition,int hashToVerify) {
+        return new EnableLeaderCardResponse(players,executePlayerPos,leaderCardPosition,hashToVerify);
     }
 
     @Override

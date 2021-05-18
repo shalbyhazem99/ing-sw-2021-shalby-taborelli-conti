@@ -13,8 +13,8 @@ public class SendModel extends MoveResponse {
     Match match;
     int playerPosition;
 
-    public SendModel(Match match, Player player, int playerPosition) {
-        super(new ArrayList<>(Arrays.asList(player)),playerPosition);
+    public SendModel(Match match, Player player, int playerPosition,int hashToVerify) {
+        super(new ArrayList<>(Arrays.asList(player)),playerPosition,hashToVerify);
         this.match = match;
         this.playerPosition = playerPosition;
     }
@@ -23,8 +23,8 @@ public class SendModel extends MoveResponse {
         return playerPosition;
     }
 
-    public static SendModel getInstance(Match match, Player player, int playerPosition) {
-        return new SendModel(match,player,playerPosition);
+    public static SendModel getInstance(Match match, Player player, int playerPosition,int hashToVerify) {
+        return new SendModel(match,player,playerPosition,hashToVerify);
     }
 
     public void setMatch(Match match) {

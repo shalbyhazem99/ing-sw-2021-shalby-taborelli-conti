@@ -13,13 +13,13 @@ public class AskForMove extends MoveResponse {
 
     ArrayList<MovePlayerType> possibleMove;
 
-    public AskForMove(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove,int executePlayerPos) {
-        super(players,executePlayerPos);
+    public AskForMove(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove,int executePlayerPos,int hashToVerify) {
+        super(players,executePlayerPos,hashToVerify);
         this.possibleMove = possibleMove;
     }
 
-    public static AskForMove getInstance(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove,int executePlayerPos) {
-        return new AskForMove(players, possibleMove,executePlayerPos);
+    public static AskForMove getInstance(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove,int executePlayerPos,int hashToVerify) {
+        return new AskForMove(players, possibleMove,executePlayerPos,hashToVerify);
     }
 
     @Override

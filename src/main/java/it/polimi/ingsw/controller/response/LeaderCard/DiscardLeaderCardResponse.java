@@ -14,14 +14,14 @@ public class DiscardLeaderCardResponse extends MoveResponse {
     /**
      * Default constructor
      */
-    public DiscardLeaderCardResponse(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition) {
-        super(players, executePlayerPos);
+    public DiscardLeaderCardResponse(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition,int hashToVerify) {
+        super(players, executePlayerPos,hashToVerify);
         this.leaderCardPosition = leaderCardPosition;
     }
 
 
-    public static DiscardLeaderCardResponse getInstance(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition) {
-        return new DiscardLeaderCardResponse(players,executePlayerPos,leaderCardPosition);
+    public static DiscardLeaderCardResponse getInstance(ArrayList<Player> players, int executePlayerPos, int leaderCardPosition,int hashToVerify) {
+        return new DiscardLeaderCardResponse(players,executePlayerPos,leaderCardPosition,hashToVerify);
     }
 
     @Override

@@ -13,17 +13,17 @@ public class DiscardTwoLeaderCardsResponse extends MoveResponse {
     /**
      * Default constructor
      */
-    public DiscardTwoLeaderCardsResponse(ArrayList<Player> players,int executePlayerPos) {
-        super(players,executePlayerPos);
+    public DiscardTwoLeaderCardsResponse(ArrayList<Player> players,int executePlayerPos,int hashToVerify) {
+        super(players,executePlayerPos,hashToVerify);
     }
 
-    public static DiscardTwoLeaderCardsResponse getInstance(ArrayList<Player> players,int executePlayerPos) {
-        return new DiscardTwoLeaderCardsResponse(players,executePlayerPos);
+    public static DiscardTwoLeaderCardsResponse getInstance(ArrayList<Player> players,int executePlayerPos,int hashToVerify) {
+        return new DiscardTwoLeaderCardsResponse(players,executePlayerPos,hashToVerify);
     }
 
 
-    public static DiscardTwoLeaderCardsResponse getInstance(Player player,int executePlayerPos) {
-        return new DiscardTwoLeaderCardsResponse(new ArrayList<>(Arrays.asList(player)),executePlayerPos);
+    public static DiscardTwoLeaderCardsResponse getInstance(Player player,int executePlayerPos,int hashToVerify) {
+        return new DiscardTwoLeaderCardsResponse(new ArrayList<>(Arrays.asList(player)),executePlayerPos,hashToVerify);
     }
 
     @Override

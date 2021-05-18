@@ -11,10 +11,12 @@ import java.util.Scanner;
 public abstract class MoveResponse implements Serializable {
     private ArrayList<Player> players;
     private int executePlayerPos;
+    private long hashToVerify;
 
-    public MoveResponse(ArrayList<Player> players, int executePlayerPos) {
+    public MoveResponse(ArrayList<Player> players, int executePlayerPos,int hashToVerify) {
         this.players = players;
         this.executePlayerPos = executePlayerPos;
+        this.hashToVerify = hashToVerify;
     }
 
     public ArrayList<Player> getPlayers() {
@@ -23,6 +25,10 @@ public abstract class MoveResponse implements Serializable {
 
     public int getExecutePlayerPos() {
         return executePlayerPos;
+    }
+
+    public long getHashToVerify() {
+        return hashToVerify;
     }
 
     public abstract PlayerMove elaborateCliInput(final Scanner stdin, Match match);

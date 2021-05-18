@@ -12,16 +12,16 @@ import java.util.Scanner;
 public class SendMessage extends MoveResponse {
     private String message;
 
-    public SendMessage(String message, ArrayList<Player> players,int executePlayerPos) {
-        super(players,executePlayerPos);
+    public SendMessage(String message, ArrayList<Player> players,int executePlayerPos,int hashToVerify) {
+        super(players,executePlayerPos,hashToVerify);
         this.message = message;
     }
 
-    public static SendMessage getInstance(String message, ArrayList<Player> players,int executePlayerPos) {
-        return new SendMessage(message,players,executePlayerPos);
+    public static SendMessage getInstance(String message, ArrayList<Player> players,int executePlayerPos,int hashToVerify) {
+        return new SendMessage(message,players,executePlayerPos,hashToVerify);
     }
-    public static SendMessage getInstance(String message, Player player,int executePlayerPos) {
-        return new SendMessage(message, new ArrayList<>(Arrays.asList(player)),executePlayerPos);
+    public static SendMessage getInstance(String message, Player player,int executePlayerPos,int hashToVerify) {
+        return new SendMessage(message, new ArrayList<>(Arrays.asList(player)),executePlayerPos,hashToVerify);
     }
 
     @Override

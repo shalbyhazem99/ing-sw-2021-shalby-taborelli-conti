@@ -18,8 +18,8 @@ public class EnableProductionResponse extends MoveResponse {
     private ProductivePower power;
     private ArrayList<ResourcePick> resourceToUse;
 
-    public EnableProductionResponse(ProductivePower power, ArrayList<ResourcePick> resourceToUse,ArrayList<Player> players, int executePlayerPos) {
-        super(players, executePlayerPos);
+    public EnableProductionResponse(ProductivePower power, ArrayList<ResourcePick> resourceToUse,ArrayList<Player> players, int executePlayerPos,int hashToVerify) {
+        super(players, executePlayerPos,hashToVerify);
         this.power = power;
         this.resourceToUse = resourceToUse;
     }
@@ -28,8 +28,8 @@ public class EnableProductionResponse extends MoveResponse {
      * Default getInstance
      * @return an istance of {@link EnableProductionResponse}
      */
-    public static EnableProductionResponse getInstance(ProductivePower power, ArrayList<ResourcePick> resourceToUse,ArrayList<Player> players, int executePlayerPos) {
-        return new EnableProductionResponse(power, resourceToUse, players, executePlayerPos);
+    public static EnableProductionResponse getInstance(ProductivePower power, ArrayList<ResourcePick> resourceToUse,ArrayList<Player> players, int executePlayerPos,int hashToVerify) {
+        return new EnableProductionResponse(power, resourceToUse, players, executePlayerPos,hashToVerify);
     }
 
     @Override
