@@ -23,6 +23,12 @@ public class SendMessage extends MoveResponse {
     public static SendMessage getInstance(String message, Player player,int executePlayerPos) {
         return new SendMessage(message, new ArrayList<>(Arrays.asList(player)),executePlayerPos);
     }
+
+    @Override
+    public void updateLocalMatch(Match match) {
+
+    }
+
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         return null;

@@ -23,6 +23,11 @@ public class AskForMove extends MoveResponse {
     }
 
     @Override
+    public void updateLocalMatch(Match match) {
+
+    }
+
+    @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         PlayerMove playerMove = null;
         do {

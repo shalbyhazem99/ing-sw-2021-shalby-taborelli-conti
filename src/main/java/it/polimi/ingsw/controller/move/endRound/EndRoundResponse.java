@@ -27,6 +27,11 @@ public class EndRoundResponse extends MoveResponse {
     }
 
     @Override
+    public void updateLocalMatch(Match match) {
+        match.endRoundInteraction(match.getPlayerFromPosition(getExecutePlayerPos()));
+    }
+
+    @Override
     public PlayerMove elaborateCliInput( Scanner stdin, Match match) {
         return null;
     }

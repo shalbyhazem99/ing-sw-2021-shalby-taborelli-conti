@@ -24,10 +24,10 @@ public class DiscardLeaderCardResponse extends MoveResponse {
         return new DiscardLeaderCardResponse(players,executePlayerPos,leaderCardPosition);
     }
 
-    /*@Override
+    @Override
     public void updateLocalMatch(Match match) {
-        match.discardLeaderCardInteraction(leaderCardPosition,match.getPlayerFromPosition(leaderCardPosition),true);
-    }*/
+        match.discardLeaderCardInteraction(leaderCardPosition,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+    }
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {

@@ -26,6 +26,10 @@ public class DiscardTwoLeaderCardsResponse extends MoveResponse {
         return new DiscardTwoLeaderCardsResponse(new ArrayList<>(Arrays.asList(player)),executePlayerPos);
     }
 
+    @Override
+    public void updateLocalMatch(Match match) {
+
+    }
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {

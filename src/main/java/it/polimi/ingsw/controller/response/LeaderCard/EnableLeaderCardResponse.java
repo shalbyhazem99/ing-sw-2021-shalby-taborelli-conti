@@ -24,14 +24,13 @@ public class EnableLeaderCardResponse extends MoveResponse {
         return new EnableLeaderCardResponse(players,executePlayerPos,leaderCardPosition);
     }
 
-    /*@Override
+    @Override
     public void updateLocalMatch(Match match) {
-        match.enableLeaderCardInteraction(leaderCardPosition,match.getPlayerFromPosition(leaderCardPosition),true);
-    }*/
+        match.enableLeaderCardInteraction(leaderCardPosition,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+    }
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
-        //updateLocalMatch(match);
        System.out.println("Leader Card enabled");
        return null;
     }

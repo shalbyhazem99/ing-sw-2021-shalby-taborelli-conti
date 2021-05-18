@@ -26,6 +26,20 @@ public class SendModel extends MoveResponse {
     public static SendModel getInstance(Match match, Player player, int playerPosition) {
         return new SendModel(match,player,playerPosition);
     }
+
+    public void setMatch(Match match) {
+        this.match = match;
+    }
+
+    public void setPlayerPosition(int playerPosition) {
+        this.playerPosition = playerPosition;
+    }
+
+    @Override
+    public void updateLocalMatch(Match match) {
+
+    }
+
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         //TODO: require which to discard

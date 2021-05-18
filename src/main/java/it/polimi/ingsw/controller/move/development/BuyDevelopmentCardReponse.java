@@ -33,6 +33,12 @@ public class BuyDevelopmentCardReponse extends MoveResponse {
         return new BuyDevelopmentCardReponse(players, executePlayerPos, type, level, posToAdd, resourceToUse);
     }
 
+
+    @Override
+    public void updateLocalMatch(Match match) {
+        match.buyDevelopmentCardInteraction(type,level,match.getPlayerFromPosition(getExecutePlayerPos()),posToAdd,resourceToUse,true);
+    }
+
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         return null;

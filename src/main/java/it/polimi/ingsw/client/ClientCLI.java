@@ -18,6 +18,7 @@ public class ClientCLI {
     final private String ip;
     final private int port;
     private Match match;
+    private int playerPos;
     public ClientCLI(String ip, int port) {
         this.ip = ip;
         this.port = port;
@@ -40,21 +41,19 @@ public class ClientCLI {
                 try {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
+                        if(match!=null)
+                            match.toString();
                         if (inputObject instanceof SendModel) {
                             SendModel sendModel = ((SendModel) inputObject);
                             match = sendModel.getMatch();
-                            //rotate player Array so that my player is the first
-                            ArrayList<Player> players = match.getPlayers();
-                            for (int i = 0; i < sendModel.getPlayerPosition(); i++) {
-                                Player player= players.get(0);
-                                players.remove(0);
-                                players.add(player);
-                            }
-                            match.toString();
+                            playerPos = sendModel.getPlayerPosition();
                         } else if (inputObject instanceof SendMessage) {
                             System.out.println(inputObject.toString());
                         } else if (inputObject instanceof MoveResponse) {
-                            manageResponse((MoveResponse) inputObject, stdin, socketOut);
+                            MoveResponse moveResponse = (MoveResponse) inputObject;
+                            moveResponse.updateLocalMatch(match);
+                            if(moveResponse.getExecutePlayerPos() == playerPos)
+                                manageResponse(moveResponse, stdin, socketOut);
                         } else if (inputObject instanceof String) {
                             System.out.println(inputObject.toString());
                         } else {

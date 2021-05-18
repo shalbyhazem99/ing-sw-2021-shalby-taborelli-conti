@@ -40,6 +40,11 @@ public class PositioningResourcesResponse extends MoveResponse {
     }
 
     @Override
+    public void updateLocalMatch(Match match) {
+        match.positioningResourcesInteraction(whereToPlace,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+    }
+
+    @Override
     public PlayerMove elaborateCliInput( Scanner stdin, Match match) {
         return null;
     }

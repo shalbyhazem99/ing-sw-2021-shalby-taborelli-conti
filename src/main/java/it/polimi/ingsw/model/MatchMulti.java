@@ -59,9 +59,9 @@ public class MatchMulti extends Match implements Serializable {
      *
      * @param player the {@link Player} who wants to end his round
      */
-    public void endRoundInteraction(Player player) throws EndRoundException {
+    public void endRoundInteraction(Player player) {
         if (!isMyTurn(player) || pendingResources.size() != 0 || !getCanChangeTurn()) {
-            notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), false));
+            notify(EndRoundResponse.getInstance(new ArrayList<>(Arrays.asList(player)),getPlayers().indexOf(player), false));
             askForMove();
             return;
         }
@@ -76,24 +76,26 @@ public class MatchMulti extends Match implements Serializable {
         askForMove();
     }
 
-/*
+
     @Override
-    public void discardLeaderCardInteraction(int leaderCardPosition,Player player) {
-        super.discardLeaderCardInteraction(leaderCardPosition,player);
+    public void discardLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
+        super.discardLeaderCardInteraction(leaderCardPosition, player, noControl);
         askForMove();
     }
 
     @Override
-    public void enableLeaderCardInteraction(int leaderCardPosition, Player player) {
-        super.enableLeaderCardInteraction(leaderCardPosition, player);
+    public void enableLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
+        super.enableLeaderCardInteraction(leaderCardPosition, player, noControl);
         askForMove();
     }
 
     @Override
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player){
-        super.positioningResourcesInteraction(whereToPlace, player);
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player, boolean noControl) {
+        super.positioningResourcesInteraction(whereToPlace, player, noControl);
         askForMove();
     }
+
+    /*
 
     @Override
     public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
@@ -132,16 +134,15 @@ public class MatchMulti extends Match implements Serializable {
     @Override
     public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
         super.discardTwoLeaderCardInteraction(posFirst, posSecond, player);
+        notifyModel();
         if(numPlayerWhoDiscard== players.size()){
+            //notifyModel();
             askForMove();
-        }
-        else {
-            notifyModel();
         }
     }
 
     private void askForMove() {
-        notifyModel();
+        //notifyModel();
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
         if (!canChangeTurn) {
             possibleMove.add(MovePlayerType.MARKET_INTERACTION);

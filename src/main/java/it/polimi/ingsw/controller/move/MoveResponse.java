@@ -21,8 +21,12 @@ public abstract class MoveResponse implements Serializable {
         return players;
     }
 
+    public int getExecutePlayerPos() {
+        return executePlayerPos;
+    }
+
     public abstract PlayerMove elaborateCliInput(final Scanner stdin, Match match);
 
     //todo:to uncomment
-    //public abstract void updateLocalMatch(Match match);
+    public abstract void updateLocalMatch(Match match);
 }

@@ -51,6 +51,8 @@ public class MarketResponse extends MoveResponse {
         super(players,executePlayerPos);
         this.resources = resources;
         this.numOfMarbleToBeCoverted = numOfMarbleToBeCoverted;
+        this.moveType=null;
+        pos=-1;
         this.first = first;
         this.second = second;
     }
@@ -77,6 +79,17 @@ public class MarketResponse extends MoveResponse {
      */
     public static MarketResponse getInstance(ArrayList<Resource> resources, int numOfMarbleToBeCoverted, ArrayList<Player> players, int executePlayerPos,int first, int second) {
         return new MarketResponse(resources,numOfMarbleToBeCoverted,players,executePlayerPos,first,second);
+    }
+
+    @Override
+    public void updateLocalMatch(Match match) {
+        //if pos == -1 it's a convert interaction; if pos==-1 and first == -1 do nothing
+        if(pos>=0){
+            match.marketInteraction(moveType,pos,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+        }
+        else if(first>=0){
+            match.marketMarbleConvertInteraction(first,second,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+        }
     }
 
     @Override

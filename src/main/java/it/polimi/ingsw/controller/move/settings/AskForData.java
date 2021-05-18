@@ -19,6 +19,12 @@ public class AskForData extends MoveResponse {
     public static AskForData getInstance(String message,ArrayList<Player> players,int executePlayerPos) {
         return new AskForData(message,players,executePlayerPos);
     }
+
+    @Override
+    public void updateLocalMatch(Match match) {
+
+    }
+
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         System.out.println(message);

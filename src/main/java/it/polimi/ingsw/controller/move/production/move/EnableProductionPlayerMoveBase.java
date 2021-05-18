@@ -19,6 +19,6 @@ public class EnableProductionPlayerMoveBase extends EnableProductionPlayerMove {
 
     @Override
     public void execute(Match match) {
-        match.enableProductionBaseInteraction(resourceToUse,to,getPlayer());
+        match.enableProductionBaseInteraction(resourceToUse,to,getPlayer(),false);
     }
 }
