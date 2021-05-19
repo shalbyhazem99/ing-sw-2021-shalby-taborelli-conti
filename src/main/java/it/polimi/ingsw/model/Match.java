@@ -589,4 +589,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         System.out.println();
         return null;
     }
+
+    @Override
+    public int hashCode() {
+        //System.err.println((new Gson()).toJson(this));
+        return (new Gson()).toJson(this).hashCode();
+    }
 }

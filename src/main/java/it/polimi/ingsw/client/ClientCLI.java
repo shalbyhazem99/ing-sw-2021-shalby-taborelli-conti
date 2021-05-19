@@ -43,8 +43,6 @@ public class ClientCLI {
                     while (isActive()) {
                         Object inputObject = socketIn.readObject();
                         if (inputObject instanceof SendModel) {
-                            System.err.println("Model RICEVUTO");
-                            System.err.flush();
                             SendModel sendModel = ((SendModel) inputObject);
                             match = sendModel.getMatch();
                             playerPos = sendModel.getPlayerPosition();
@@ -53,12 +51,16 @@ public class ClientCLI {
                         } else if (inputObject instanceof SendMessage) {
                             System.out.println(inputObject.toString());
                         } else if (inputObject instanceof MoveResponse) {
-                            System.err.println(inputObject.toString());
-                            System.err.flush();
                             MoveResponse moveResponse = (MoveResponse) inputObject;
+                            //update local match
                             moveResponse.updateLocalMatch(match);
-                            if(moveResponse.getExecutePlayerPos() == playerPos)
-                                manageResponse(moveResponse, stdin, socketOut);
+                            //verify the model correctness
+                            if(match!= null && match.hashCode()!= moveResponse.getHashToVerify()){
+                                //todo to complete (response and move)
+                                System.err.println("Different model received");
+                            }if (moveResponse.getExecutePlayerPos() == playerPos){
+                                    manageResponse(moveResponse, stdin, socketOut);
+                            }
                         } else if (inputObject instanceof String) {
                             System.out.println(inputObject.toString());
                         } else {
