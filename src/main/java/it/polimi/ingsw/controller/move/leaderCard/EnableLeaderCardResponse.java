@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.response.LeaderCard;
+package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;

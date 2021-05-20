@@ -11,9 +11,8 @@ import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesR
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
-import it.polimi.ingsw.controller.response.LeaderCard.DiscardLeaderCardResponse;
-import it.polimi.ingsw.controller.response.LeaderCard.EnableLeaderCardResponse;
-import it.polimi.ingsw.exceptions.EndRoundException;
+import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardResponse;
+import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardResponse;
 import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
