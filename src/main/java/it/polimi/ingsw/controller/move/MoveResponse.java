@@ -33,6 +33,5 @@ public abstract class MoveResponse implements Serializable {
 
     public abstract PlayerMove elaborateCliInput(final Scanner stdin, Match match);
 
-    //todo:to uncomment
     public abstract void updateLocalMatch(Match match);
 }

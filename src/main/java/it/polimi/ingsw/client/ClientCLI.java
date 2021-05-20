@@ -6,6 +6,7 @@ import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,6 +21,7 @@ public class ClientCLI {
     final private int port;
     private Match match;
     private int playerPos;
+
     public ClientCLI(String ip, int port) {
         this.ip = ip;
         this.port = port;
@@ -55,11 +57,16 @@ public class ClientCLI {
                             //update local match
                             moveResponse.updateLocalMatch(match);
                             //verify the model correctness
-                            if(match!= null && match.hashCode()!= moveResponse.getHashToVerify()){
-                                //todo to complete (response and move)
-                                System.err.println("Different model received");
-                            }if (moveResponse.getExecutePlayerPos() == playerPos){
-                                    manageResponse(moveResponse, stdin, socketOut);
+                            if (match != null) {
+                                match.toString();
+                                System.out.flush();
+                                if (match.hashCode() != moveResponse.getHashToVerify()) {
+                                    //todo to complete (response and move)
+                                    System.err.println("Different model received");
+                                }
+                            }
+                            if (moveResponse.getExecutePlayerPos() == playerPos) {
+                                manageResponse(moveResponse, stdin, socketOut);
                             }
                         } else if (inputObject instanceof String) {
                             System.out.println(inputObject.toString());
@@ -78,13 +85,9 @@ public class ClientCLI {
     }
 
     public void manageResponse(MoveResponse moveResponse, final Scanner stdin, final ObjectOutputStream socketOut) {
-        if(match!=null) {
-            match.toString();
-            System.out.flush();
-        }
         try {
-            PlayerMove playerMove = moveResponse.elaborateCliInput(stdin,match);
-            if(playerMove != null) {
+            PlayerMove playerMove = moveResponse.elaborateCliInput(stdin, match);
+            if (playerMove != null) {
                 socketOut.writeObject(playerMove);
             }
             socketOut.flush();

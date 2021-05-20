@@ -40,11 +40,6 @@ public class MatchSolo extends Match implements Serializable {
         actionTokens = generateActionTokens();
     }
 
-    @Override
-    public void askForMove() {
-
-    }
-
     /**
      * The method generate the {@link ArrayDeque} of {@link ActionToken} required for a solo match
      *
@@ -211,7 +206,9 @@ public class MatchSolo extends Match implements Serializable {
         super.startMatch();
         askForMove();
     }
-    private void askForMove(){
+
+    @Override
+    public void askForMove(){
         notifyModel();
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
         if (!canChangeTurn) {
@@ -223,55 +220,61 @@ public class MatchSolo extends Match implements Serializable {
         possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
         possibleMove.add(MovePlayerType.SWAP_WAREHOUSE);
         possibleMove.add(MovePlayerType.END_TURN);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(0))), possibleMove));
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(0))), possibleMove,0,this.hashCode()));
     }
 
     @Override
     public void notifyModel() {
         for (int i = 0; i < players.size(); i++) {
-            notify(SendModel.getInstance(this, players.get(i), i));
+            notify(SendModel.getInstance(this, players.get(i), i,this.hashCode()));
         }
     }
 
     @Override
-    public void discardLeaderCardInteraction(int leaderCardPosition,Player player) {
-        super.discardLeaderCardInteraction(leaderCardPosition,player);
+    public void discardLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
+        super.discardLeaderCardInteraction(leaderCardPosition, player, noControl);
         askForMove();
     }
 
     @Override
-    public void enableLeaderCardInteraction(int leaderCardPosition, Player player) {
-        super.enableLeaderCardInteraction(leaderCardPosition, player);
+    public void enableLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
+        super.enableLeaderCardInteraction(leaderCardPosition, player, noControl);
         askForMove();
     }
 
     @Override
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player) throws Exception {
-        super.positioningResourcesInteraction(whereToPlace, player);
+    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player, boolean noControl) {
+        super.positioningResourcesInteraction(whereToPlace, player, noControl);
+        askForMove();
+    }
+
+    @Override
+    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
+        super.buyDevelopmentCardInteraction(type, level, player, posToAdd, resourceToUse, noControl);
+        askForMove();
+    }
+
+    @Override
+    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType toType, Player player, boolean noControl) {
+        super.enableProductionBaseInteraction(resourceToUse, toType, player, noControl);
+        askForMove();
+    }
+
+    @Override
+    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player, boolean noControl) {
+        super.enableProductionDevelopmentInteraction(resourceToUse, positionOfDevelopmentCard, player, noControl);
+        askForMove();
+    }
+
+    @Override
+    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player, boolean noControl) {
+        super.enableProductionLeaderInteraction(resourceToUse, positionOfProductivePower, player, noControl);
         askForMove();
     }
 
     @Override
     public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
         super.swapWarehouseInteraction(indexFirstWarehouse, indexSecondWarehouse, player);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType to, Player player) {
-        super.enableProductionBaseInteraction(resourceToUse, to, player);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player) {
-        super.enableProductionDevelopmentInteraction(resourceToUse, positionOfDevelopmentCard, player);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player) {
-        super.enableProductionLeaderInteraction(resourceToUse, positionOfProductivePower, player);
         askForMove();
     }
 
