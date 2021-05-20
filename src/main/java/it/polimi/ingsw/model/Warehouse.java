@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utils.Utils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -119,7 +121,56 @@ public class Warehouse implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "Space: "+spaceAvailable+"/Type: "+resourceType.toString()+"/Res:"+resources.toString();
+        String str = "[";
+        ArrayList<ResourcesCount> arr = Utils.fromResourcesToResourceCount(resources);
+        for(int i = 0;i<arr.size();i++)
+        {
+            switch (arr.get(i).getType())
+            {
+                case COIN:
+                    str = str + " " + arr.get(i).getCount()+ "⚫";
+                    break;
+                case FAITH:
+                    str = str + " " + arr.get(i).getCount()+ "✝";
+                    break;
+                case SERVANT:
+                    str = str + " " + arr.get(i).getCount()+ "⚔";
+                    break;
+                case ANY:
+                    str = str + " " + arr.get(i).getCount()+ "A";
+                    break;
+                case SHIELD:
+                    str = str + " " + arr.get(i).getCount()+ "\uD83D\uDEE1️";
+                    break;
+                case STONE:
+                    str = str + " " + arr.get(i).getCount()+ "\uD83D\uDC8E";
+                    break;
+            }
+            str = str + "]";
+        }
+        String p = "";
+        switch (resourceType)
+        {
+            case ANY:
+                p = "A";
+                break;
+            case COIN:
+                p = "⚫";
+                break;
+            case FAITH:
+                p = "✝";
+                break;
+            case SERVANT:
+                p = "⚔";
+                break;
+            case SHIELD:
+                p = "\uD83D\uDEE1";
+                break;
+            case STONE:
+                p = "\uD83D\uDC8E";
+                break;
+        }
+        return spaceAvailable+" |  "+p+"  | "+resources.toString();
     }
 
     @Override

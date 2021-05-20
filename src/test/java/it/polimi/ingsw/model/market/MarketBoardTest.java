@@ -81,7 +81,7 @@ public class MarketBoardTest extends TestCase {
         ArrayList<Resource> resources = marketBoard.getResources(MoveType.ROW,selectedRow);
         int t = resources.size();
         int l = Collections.frequency(temp.getRow(selectedRow),Marble.getInstance(MarbleColor.WHITE));
-        int d = 4-l;
+        int d = 4-l;;
         assertEquals(t, Utils.MARKET_COL_NUMBER-l);
         //CHECK ALL THE FIVE MARBLES
         assertEquals(temp.getRow(selectedRow).get(Utils.MARKET_COL_NUMBER-1),

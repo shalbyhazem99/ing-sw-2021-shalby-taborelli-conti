@@ -260,10 +260,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param pos      which ROW/COLUMN to select
      * @param player   the {@link Player} performing the interaction
      */
-    public void marketInteraction(MoveType moveType, int pos, Player player, boolean noControl) {
-        if (!noControl && ((moveType.equals(MoveType.ROW) && (pos < 0 || pos > 2)) || moveType.equals(MoveType.COLUMN) && (pos < 0 || pos > 3))) {
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters 1", player, players.indexOf(player),this.hashCode()));
-            askForMove();
+    public void marketInteraction(MoveType moveType, int pos, Player player) {
+        if ((moveType.equals(MoveType.ROW) && (pos < 0 || pos > 2)) || moveType.equals(MoveType.COLUMN) && (pos < 0 || pos > 3)) {
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player));
         } else {
             ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
             if (moveType.equals(MoveType.COLUMN)) {
@@ -594,4 +593,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         //System.err.println((new Gson()).toJson(this));
         return (new Gson()).toJson(this).hashCode();
     }
+    /**
+     * Method used to retrieve the {@link Player} which is playing
+     * @return the {@link Player} which is playing
+     */
+    public abstract Player getCurrentPlayer();
 }

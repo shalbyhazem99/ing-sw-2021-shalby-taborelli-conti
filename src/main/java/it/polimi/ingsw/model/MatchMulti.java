@@ -210,6 +210,11 @@ public class MatchMulti extends Match implements Serializable {
         return null;
     }
 
+    @Override
+    public Player getCurrentPlayer() {
+        return getPlayers().get(posInkwell);
+    }
+
     public static void main(String[] args) {
         MatchMulti m = new MatchMulti(2);
         m.toString();
