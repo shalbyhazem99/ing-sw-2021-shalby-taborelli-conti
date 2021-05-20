@@ -2,7 +2,6 @@ package it.polimi.ingsw.controller.move;
 
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.view.MatchProxy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
