@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,6 +78,16 @@ public abstract class LeaderCard implements Serializable {
 
     @Override
     public String toString() {
-        return "Act: "+active+"/Point: "+points+"/Type: "+resourceTypeRelated+"/ResNeed: "+resourcesNeeded.toString();
+        String s = "";
+        if(active)
+        {
+            s+="  ✔  |";
+        }
+        else
+        {
+            s+="  ❌  |";
+        }
+        s+="  "+points+"  |  "+ Utils.resourceTypeToString(resourceTypeRelated)+" | "+ Utils.formatResourcesCount(resourcesNeeded);
+        return s;
     }
 }

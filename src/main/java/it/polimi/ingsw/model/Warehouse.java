@@ -177,7 +177,7 @@ public class Warehouse implements Serializable, Cloneable {
                 p = "\uD83D\uDC8E";
                 break;
         }
-        return spaceAvailable+" |  "+p+"  | "+resources.toString();
+        return spaceAvailable+" |  "+p+"  | "+Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(resources));
     }
 
     @Override

@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Resource;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.market.MoveType;
+import it.polimi.ingsw.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -102,7 +103,7 @@ public class MarketResponse extends MoveResponse {
             for (int i = 0; i < resources.size(); i++) {
                 Resource resource = resources.get(i);
                 if (!resource.getType().equals(ResourceType.FAITH)) {
-                    System.out.println("Where do you want to add the " + resource.getType() + " resource (0,1,2,3,4 or 6 to discard)");
+                    System.out.println("Where do you want to add the " + Utils.resourceTypeToString(resource.getType()) + " resource (0,1,2,3,4 or 6 to discard)");
                     int chosen = stdin.nextInt();
                     if(chosen>=6) {
                         whereToPlaceResources.add(null); // will be discard in match

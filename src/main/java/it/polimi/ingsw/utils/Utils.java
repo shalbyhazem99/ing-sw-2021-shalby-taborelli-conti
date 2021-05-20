@@ -71,7 +71,7 @@ public class Utils {
         ArrayList<ResourcePick> resourcePicks = new ArrayList<>();
         for (ResourcesCount resourcesCount : resourcesCounts) {
             for (int i = 0; i < resourcesCount.getCount(); i++) {
-                System.out.println("From where you get " + resourcesCount.getType()+ "(0-> Warehouse, 1-> Strongbox)");
+                System.out.println("From where you get " + Utils.resourceTypeToString(resourcesCount.getType())+ "(0-> Warehouse, 1-> Strongbox)");
                 switch (stdin.nextInt()) {
                     case 0:
                         int position;
@@ -180,6 +180,25 @@ public class Utils {
             }
         }
         return temp;
+    }
+
+    public static String resourceTypeToString(ResourceType r)
+    {
+        switch (r) {
+            case COIN:
+                return "⚫";
+            case FAITH:
+                return "✝";
+            case SERVANT:
+                return "⚔";
+            case ANY:
+                return "A";
+            case SHIELD:
+                return "\uD83D\uDEE1️";
+            case STONE:
+                return "\uD83D\uDC8E";
+        }
+        return null;
     }
 
     public static String formatResourcesCount (ArrayList<ResourcesCount> costs)

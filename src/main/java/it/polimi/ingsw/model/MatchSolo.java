@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
+import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
@@ -160,9 +161,11 @@ public class MatchSolo extends Match implements Serializable {
         notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true,this.hashCode()));
         //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
         ActionToken action = pickActionToken();
+        String u = "";
         switch (action.getAction())
         {
             case MOVE:
+                u = "Lorenzo move ahead of "+action.getCount()+" passes\n";
                 if(action.getCount()==1)
                 {
                     moveAheadBlackCross(1);
@@ -172,11 +175,11 @@ public class MatchSolo extends Match implements Serializable {
                 {
                     moveAheadBlackCross(2);
                 }
-                System.out.println("FEDE =  "+ posBlackCross);
                 break;
             case DISCARD:
                 int lvl = 0;
                 int to_discard = action.getCount();
+                u = "Lorenzo discarded " + to_discard + " "+action.getCardToReject().toString() + "cards\n";
                 while (to_discard!=0&&lvl!=3) //I have to discard x cards
                 {
                     if(!developmentCards[lvl][action.getCardToReject().label].isEmpty()) //If the stack is not empty
@@ -191,6 +194,9 @@ public class MatchSolo extends Match implements Serializable {
                 }
                 break;
         }
+        //todo: to remove
+        System.out.println(u);
+        //notify(SendMessage.getInstance(u, player, 0, this.hashCode())); //todo: gives me problems
         askForMove();
     }
 
@@ -235,105 +241,9 @@ public class MatchSolo extends Match implements Serializable {
     }
 
     public String toString() {
-        try {
-            for(int i = 0;i<30;i++) //Hint From Ing. Conti
-            {
-                System.out.println();
-            }
-            System.out.println("-------------------------------------------------------------------------------------------------------");
-            System.out.println("|MERCATO |");
-            System.out.println("---------");
-            System.out.println("       _");
-            System.out.println("      |"+marketBoard.getAdditionalMarble().toString().toCharArray()[0]+"|");
-            System.out.println(" _ _ _ _");
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-
-                    if(j!=3)
-                    {
-                        System.out.print("|"+marketBoard.getRow(i).get(j).toString().toCharArray()[0]);
-                    }
-                    else
-                    {
-                        String code = "";
-                        switch (i)
-                        {
-                            case 0:
-                                code = "W ▶ ?        B ▶ \uD83D\uDEE1️";
-                                break;
-                            case 1:
-                                code = "Y ▶ ⚫        G ▶ \uD83D\uDC8E";
-                                break;
-                            case 2:
-                                code = "P ▶ ⚔        R ▶ ✝";
-                                break;
-                        }
-                        System.out.println("|"+marketBoard.getRow(i).get(j).toString().toCharArray()[0]+"|  ◀             "+code);
-                        System.out.println(" _ _ _ _");
-                    }
-                }
-            }
-            System.out.println(" ▲ ▲ ▲ ▲");
-            System.out.println();
-            System.out.println("-------------------------------------------------------------------------------------------------------");
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            System.out.println("|CARTE SVILUPPO|            (P=Point, C=Costs, PP = Productive Powers)");
-            System.out.println("---------------");
-            System.out.println("\t\t\t\t\t\t  VERDE \t\t\t\t\t\t  BLU \t\t\t\t\t\t GIALLO \t\t\t\t\t\t VIOLA");
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.GREEN));
-            int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.BLUE));;
-            int yellow_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.YELLOW));;
-            int purple_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.PURPLE));
-            int max = 30;
-            for (int i = 0; i < 3; i++) {
-                    System.out.println("        | P:| "+developmentCards[i][0].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString().length())+"|"+developmentCards[i][1].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][1].peek().getEquivalentPoint()).toString().length())+"|"+developmentCards[i][2].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][2].peek().getEquivalentPoint()).toString().length())+"|"+developmentCards[i][3].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][3].peek().getEquivalentPoint()).toString().length())+"|");
-                    System.out.println("LVL = "+(i+1)+" | C:| "+developmentCards[i][0].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][0].peek().getCostsFormatted().length())+"|"+developmentCards[i][1].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][1].peek().getCostsFormatted().length())+"|"+developmentCards[i][2].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][2].peek().getCostsFormatted().length())+"|"+developmentCards[i][3].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][3].peek().getCostsFormatted().length())+"|");
-                    System.out.println("        |PP:| "+developmentCards[i][0].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][0].peek().getPowersFormatted().length())+"|"+developmentCards[i][1].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][1].peek().getPowersFormatted().length())+"|"+developmentCards[i][2].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][2].peek().getPowersFormatted().length())+"|"+developmentCards[i][3].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][3].peek().getPowersFormatted().length())+"|");
-                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            }
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-
-            System.out.println();
-            for (Player player : getPlayers()) {
-                System.out.println("Player: " + player.getName());
-                if (player == null) {
-                    break;
-                }
-                System.out.println("Pos Fede: " + player.getPosFaithMarker() + " ✝");
-                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("WAREHOUSE STD");
-                System.out.println("   #   |Space|Type|      Resources");
-                System.out.println("----------------------------------------------------------------------------------");
-                for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
-                    System.out.println("  (" + i + ")   | " + player.getWarehousesStandard().get(i).toString());
-                }
-                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("WAREHOUSE ADD");
-                for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
-                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
-                }
-                System.out.println("FORZIERE");
-                System.out.println(player.getStrongBox().toString());
-                System.out.println("SPAZI CARTE");
-                for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
-                    System.out.println(player.getDevelopmentCardSpaces().get(a).toString());
-                }
-                System.out.println("LEADER CARD");
-                for (LeaderCard leaderCard : player.getLeaderCards()) {
-                    System.out.println(leaderCard.toString());
-                }
-                System.out.println("LORENZO IL MAGNIFICO");
-                System.out.println("Faith pos: "+posBlackCross);
-            }
-            System.out.println("--------------------------------------------------------------------------------------------------------");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+       String p = super.toString()+("LORENZO IL MAGNIFICO ==> Faith pos: "+posBlackCross+"\n")+("--------------------------------------------------------------------------------------------------------");
+       System.out.println(p);
+       return p;
     }
 
 }

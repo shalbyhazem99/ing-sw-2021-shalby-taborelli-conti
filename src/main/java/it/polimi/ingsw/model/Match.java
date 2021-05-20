@@ -569,26 +569,117 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     public abstract ArrayList<Winner> whoIsWinner();
 
-    @Override
     public String toString() {
-        System.out.println("MERCATO");
-        System.out.println(marketBoard.getAdditionalMarble().toString());
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.print(marketBoard.getRow(i).get(j).toString() + "|");
+        String temp = "";
+        try {
+            for (int i = 0; i < 30; i++) //Hint From Ing. Conti
+            {
+                temp += "\n";
             }
-            System.out.println();
-        }
-        System.out.println();
-        System.out.println("CARTE SVILUPPO");
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.print(developmentCards[i][j].peek().toString() + "|");
+            temp += ("-------------------------------------------------------------------------------------------------------\n");
+            temp += ("|MERCATO |\n");
+            temp += ("---------\n");
+            temp += ("       _\n");
+            temp += ("      |" + marketBoard.getAdditionalMarble().toString().toCharArray()[0] + "|\n");
+            temp += (" _ _ _ _\n");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+
+                    if (j != 3) {
+                        temp += ("|" + marketBoard.getRow(i).get(j).toString().toCharArray()[0]);
+                    } else {
+                        String code = "";
+                        switch (i) {
+                            case 0:
+                                code = "W ▶ ?        B ▶ \uD83D\uDEE1️";
+                                break;
+                            case 1:
+                                code = "Y ▶ ⚫        G ▶ \uD83D\uDC8E";
+                                break;
+                            case 2:
+                                code = "P ▶ ⚔        R ▶ ✝";
+                                break;
+                        }
+                        temp += ("|" + marketBoard.getRow(i).get(j).toString().toCharArray()[0] + "|  ◀  ("+i+")           " + code + "\n");
+                        temp += (" _ _ _ _\n");
+                    }
+                }
             }
-            System.out.println();
+            temp += (" ▲ ▲ ▲ ▲\n");
+            temp += (" 0 1 2 \n");
+            temp += "\n";
+            temp += ("-------------------------------------------------------------------------------------------------------\n");
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            temp += ("|CARTE SVILUPPO|            (P=Point, C=Costs, PP = Productive Powers)\n");
+            temp += ("---------------\n");
+            temp += ("\t\t\t\t\t\t  VERDE \t\t\t\t\t\t  BLU \t\t\t\t\t\t GIALLO \t\t\t\t\t\t VIOLA\n");
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.GREEN));
+            int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.BLUE));
+            ;
+            int yellow_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.YELLOW));
+            ;
+            int purple_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.PURPLE));
+            int max = 30;
+            System.out.println(Utils.fillSpaces(30, 1).length());
+            for (int i = 0; i < 3; i++) {
+                temp += ("        | P:| " + Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][1].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][1].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][2].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][2].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][3].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][3].peek().getEquivalentPoint()).toString().length()) + "|\n");
+                temp += ("LVL = " + (i + 1) + " | C:| " + developmentCards[i][0].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][0].peek().getCostsFormatted().length()) + "|" + developmentCards[i][1].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][1].peek().getCostsFormatted().length()) + "|" + developmentCards[i][2].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][2].peek().getCostsFormatted().length()) + "|" + developmentCards[i][3].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][3].peek().getCostsFormatted().length()) + "|\n");
+                temp += ("        |PP:| " + developmentCards[i][0].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][0].peek().getPowersFormatted().length()) + "|" + developmentCards[i][1].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][1].peek().getPowersFormatted().length()) + "|" + developmentCards[i][2].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][2].peek().getPowersFormatted().length()) + "|" + developmentCards[i][3].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][3].peek().getPowersFormatted().length()) + "|\n");
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            }
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+
+            temp += "\n";
+            for (Player player : getPlayers()) {
+                temp += ("Player: " + player.getName() + "\n");
+                if (player == null) {
+                    break;
+                }
+                temp += ("Pos Fede: " + player.getPosFaithMarker() + " ✝\n");
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                temp += ("|WAREHOUSE STD|\n");
+                temp += ("---------------\n");
+                temp += ("   #   |Space|Type|      Resources\n");
+                temp += ("----------------------------------------------------------------------------------\n");
+                for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
+                    temp += ("  (" + i + ")   | " + player.getWarehousesStandard().get(i).toString() + "\n");
+                }
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                temp += ("|WAREHOUSE ADDITIONAL|\n");
+                temp += ("----------------------\n");
+                temp += ("   #   |Space|Type|      Resources\n");
+                for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
+                    temp += ("  (" + i + ")   | " + player.getWarehousesAdditional().get(i).toString());
+                }
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                temp += ("|STRONGBOX|\n");
+                temp += ("-----------\n");
+                temp += (player.getStrongBox().toString() + "\n");
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                temp += ("|CARD SPACES|\n");
+                temp += ("-------------\n");
+
+                for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
+                    temp += (player.getDevelopmentCardSpaces().get(a).toString() + "\n");
+                }
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                temp += ("|LEADER CARD|\n");
+                temp += ("-------------\n");
+                temp += ("Active|Point|Type|   Resources needed\n");
+                for (LeaderCard leaderCard : player.getLeaderCards()) {
+                    temp += (leaderCard.toString() + "\n");
+                }
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println();
-        return null;
+        //TODO: toremove
+        System.out.println(temp);
+        return temp;
     }
 
     @Override
