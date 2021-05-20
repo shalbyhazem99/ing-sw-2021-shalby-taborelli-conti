@@ -21,12 +21,14 @@ public class ClientCLI {
     final private String ip;
     final private int port;
     private Match match;
+    private boolean active = true;
+
     public ClientCLI(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
 
-    private boolean active = true;
+
 
     public synchronized boolean isActive() {
         return active;

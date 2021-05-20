@@ -9,9 +9,9 @@ import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
-import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
+import it.polimi.ingsw.controller.move.swapWarehouse.MoveResourcesResponse;
 import it.polimi.ingsw.exceptions.EndRoundException;
-import it.polimi.ingsw.exceptions.SwapWarehouseException;
+import it.polimi.ingsw.exceptions.MoveResourcesException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -431,41 +431,35 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     }
 
     /**
-     * Method used by the {@link Player} to swap {@link Resource} between two {@link Warehouse}
+     * Method used by the {@link Player} to move {@link Resource} between two {@link Warehouse}
      *
      * @param indexFirstWarehouse  an int representing the first {@link Warehouse}
      * @param indexSecondWarehouse an int representing the second {@link Warehouse}
      * @param player               the {@link Player} that is performing the action
-     * @throws SwapWarehouseException the {@link SwapWarehouseException} which is thrown if any error occur (not existing {@link Warehouse}, not enough available space ...)
+     * @throws MoveResourcesException the {@link MoveResourcesException} which is thrown if any error occur (not existing {@link Warehouse}, not enough available space ...)
      */
-    public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
-        /*
-            CHECK:
-            1) If we're trying to swap the same Warehouse return immediately, no action must be taken
-            2) If the two indexes refer to additional warehouses we need to check if they exist
-         */
-        //1)
+    public void MoveResourcesInteraction (int indexFirstWarehouse, int indexSecondWarehouse, int numberOfResources,  Player player) {
+
         if (indexFirstWarehouse == indexSecondWarehouse) {
-            throw new SwapWarehouseException();
+            throw new MoveResourcesException();
         }
         if (indexFirstWarehouse == 3 || indexSecondWarehouse == 3) //check if the first additional warehouse exists
         {
             if (player.getWarehousesAdditional().size() == 0) {
-                throw new SwapWarehouseException();
+                throw new MoveResourcesException();
             }
         }
         if (indexFirstWarehouse == 4 || indexSecondWarehouse == 4) //check if the second additional warehouse exists
         {
             if (player.getWarehousesAdditional().size() < 2) {
-                throw new SwapWarehouseException();
+                throw new MoveResourcesException();
             }
         }
-        int numberOfMovedRes = player.swapWarehouses(indexFirstWarehouse, indexSecondWarehouse);
-        if (numberOfMovedRes != -1) {
-            notify(SwapWarehouseResponse.getInstance(new ArrayList<>(Arrays.asList(player)), numberOfMovedRes));
+        if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, numberOfResources)) {
+            notify(MoveResourcesResponse.getInstance(new ArrayList<>(Arrays.asList(player))));
             return;
         }
-        throw new SwapWarehouseException();
+        throw new MoveResourcesException();
     }
 
     public abstract void endRoundInteraction(Player player) throws EndRoundException;

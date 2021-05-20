@@ -27,7 +27,12 @@ public class PopeFavorTiles implements Serializable {
     }
 
     public int getPoints(){
-        return this.points;
+        if(active){
+            return this.points;
+        }
+        else{
+            return 0;
+        }
     }
     public boolean getActive(){
         return this.active;

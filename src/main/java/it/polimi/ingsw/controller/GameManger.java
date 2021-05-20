@@ -16,7 +16,7 @@ public class GameManger implements Observer<PlayerMove> {
         return new GameManger(match);
     }
 
-    private synchronized void excuteMove(PlayerMove playerMove){
+    private synchronized void executeMove(PlayerMove playerMove){
         if(match.isMyTurn(playerMove.getPlayer())) {
             playerMove.execute(match);
             //match.updateTurn();
@@ -26,6 +26,6 @@ public class GameManger implements Observer<PlayerMove> {
 
     @Override
     public void update(PlayerMove playerMove) {
-        excuteMove(playerMove);
+        executeMove(playerMove);
     }
 }

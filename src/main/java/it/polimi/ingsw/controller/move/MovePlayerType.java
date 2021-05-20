@@ -6,11 +6,10 @@ import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
-import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
+import it.polimi.ingsw.controller.move.swapWarehouse.MoveResourcesPlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
-import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
@@ -158,21 +157,24 @@ public enum MovePlayerType {
             return enableProductionPlayerMove;
         }
     },
-    SWAP_WAREHOUSE("Swap Warehouse") {
+    MOVE_RESOURCES("MoveResources") {
         @Override
         public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
-            SwapWarehousePlayerMove swapWarehousePlayerMove = null;
+            MoveResourcesPlayerMove moveResourcesPlayerMove = null;
             try {
                 //position
                 System.out.println("insert the pos of the first warehouse to swap (0...)");
-                int first = stdin.nextByte();
+                int first = stdin.nextInt();
                 System.out.println("insert the pos of the second warehouse to swap (0...)");
-                swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, stdin.nextInt());
+                int second = stdin.nextInt();
+                System.out.println("insert the number of resources to move from the first warehouse");
+                int change = stdin.nextInt();
+                moveResourcesPlayerMove = MoveResourcesPlayerMove.getInstance(first, second, change);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);
             }
-            return swapWarehousePlayerMove;
+            return moveResourcesPlayerMove;
         }
     };
 
