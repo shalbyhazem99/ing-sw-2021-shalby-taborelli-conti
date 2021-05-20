@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMov
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.exceptions.EndRoundException;
-import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 import java.io.Serializable;
@@ -16,6 +15,7 @@ public class MatchMulti extends Match implements Serializable {
     /**
      * Class concerning a Match of many players
      */
+    private boolean finalTurn = false;
     private int posInkwell;
     private int turn;
     //private boolean canChangeTurn;
@@ -73,19 +73,13 @@ public class MatchMulti extends Match implements Serializable {
         this.canChangeTurn = false;
         this.pendingResources = new ArrayList<>();
         notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true,this.hashCode()));
-        askForMove();
+        askForMove(); //todo: call haswon()
     }
 
 
     /*
 
-    @Override
-    public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
-        super.swapWarehouseInteraction(indexFirstWarehouse, indexSecondWarehouse, player);
-        askForMove();
-    }
 
-  */
 
     @Override
     public void startMatch() {
@@ -95,6 +89,7 @@ public class MatchMulti extends Match implements Serializable {
         //todo:choose resources
         //start
         super.startMatch();
+        askForMove();
     }
 
     @Override
@@ -218,5 +213,98 @@ public class MatchMulti extends Match implements Serializable {
     public static void main(String[] args) {
         MatchMulti m = new MatchMulti(2);
         m.toString();
+    }
+
+    public void enableFinalTurn() {
+        this.finalTurn = true;
+    }
+
+    public boolean hasWon() {
+        if (this.finalTurn) {
+            if (turn == posInkwell) {
+                ArrayList<Winner> winners = whoIsWinner();
+                for (Player player : players) {
+                    //se è winner
+                    //notify(Message)
+                    //se non è winner
+                    //notify(messagio)
+                }
+            }
+            return true;
+        }
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getDevelopmentCards().size() >= 7 || players.get(i).getPosFaithMarker() >= 24) {
+                this.enableFinalTurn();
+                return true;
+            }
+        }
+        askForMove();
+        return false;
+    }
+
+    public ArrayList<Winner> whoIsWinner() {
+        ArrayList<Winner> winners = new ArrayList<>();
+
+        //Adding the points from the Faith Track
+        for (int i = 0; i < players.size(); i++) {
+            int totalPoints = 0;
+
+            if (players.get(i).getPosFaithMarker() < 3) {
+                totalPoints += 0;
+            } else if (players.get(i).getPosFaithMarker() < 6) {
+                totalPoints += 1;
+            } else if (players.get(i).getPosFaithMarker() < 9) {
+                totalPoints += 2;
+            } else if (players.get(i).getPosFaithMarker() < 12) {
+                totalPoints += 4;
+            } else if (players.get(i).getPosFaithMarker() < 15) {
+                totalPoints += 6;
+            } else if (players.get(i).getPosFaithMarker() < 18) {
+                totalPoints += 9;
+            } else if (players.get(i).getPosFaithMarker() < 21) {
+                totalPoints += 12;
+            } else if (players.get(i).getPosFaithMarker() < 24) {
+                totalPoints += 16;
+            } else {
+                totalPoints += 20;
+            }
+
+            //Getting the point from the Pope's Tales
+            for (int j = 0; j < 3; j++) {
+                totalPoints += players.get(i).getPopeFavorTiles().get(j).getPoints();
+            }
+
+            //Getting the points from the LeaderCards that are activated
+            for (int j = 0; j < players.get(i).getLeaderCards().size(); j++) {
+                totalPoints += players.get(i).getLeaderCard(j).getPoints();
+            }
+
+            //Counting all the Resources stored
+            int totalResources = 0;
+            for (int j = 0; j < 3; j++) {
+                totalResources += players.get(i).getWarehousesStandard().get(j).getResources().size();
+            }
+            for (int j = 0; j < players.get(i).getWarehousesStandard().size(); j++) {
+                totalResources += players.get(i).getWarehousesAdditional().get(j).getResources().size();
+            }
+            totalResources += players.get(i).getStrongBox().size();
+            totalPoints = (int) totalResources / 5;
+
+            //creating the ArrayList of Winners
+            if (i == 0) {
+                winners.add(Winner.getInstance(players.get(i).getName(), totalPoints, totalResources, turn));
+            } else if (totalPoints == winners.get(0).getPoints()) {
+                if (totalResources == winners.get(0).getTotalResources()) {
+                    winners.add(Winner.getInstance(players.get(i).getName(), totalPoints, totalResources, turn));
+                } else if (totalResources > winners.get(0).getTotalResources()) {
+                    winners.remove(0);
+                    winners.add(Winner.getInstance(players.get(i).getName(), totalPoints, totalResources, turn));
+                }
+            } else if (totalPoints > winners.get(0).getPoints()) {
+                winners.remove(0);
+                winners.add(Winner.getInstance(players.get(i).getName(), totalPoints, totalResources, turn));
+            }
+        }
+        return winners;
     }
 }

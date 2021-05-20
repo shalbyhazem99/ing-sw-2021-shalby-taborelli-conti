@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
@@ -287,7 +288,8 @@ public enum MovePlayerType {
             return enableProductionPlayerMove;
         }
     },
-    SWAP_WAREHOUSE("Swap Warehouse") {
+    //todo:refactor to move warehouse
+    SWAP_WAREHOUSE("MoveResources") {
         @Override
         public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
             SwapWarehousePlayerMove swapWarehousePlayerMove = null;

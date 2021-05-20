@@ -22,10 +22,9 @@ public class SwapWarehouseResponse extends MoveResponse {
     }
 
     /**
-     * Default get instace Method
+     * Default get instance Method
      * @param players
-     * @param numberOfResourcesMoved
-     * @return
+     * @return an instance of the class
      */
     public static SwapWarehouseResponse getInstance(ArrayList<Player> players, int numberOfResourcesMoved,int executePlayerPos,int hashToVerify) {
         return new SwapWarehouseResponse(players,numberOfResourcesMoved,executePlayerPos,hashToVerify);

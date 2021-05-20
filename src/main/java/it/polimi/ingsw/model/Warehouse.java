@@ -109,11 +109,18 @@ public class Warehouse implements Serializable, Cloneable {
         this.resources = temp;
     }
 
+    public void changeResourceType(ResourceType resourceType){
+        this.resourceType= resourceType;
+    }
+
     public boolean getResource(Resource resource)
     {
-        //Dovrebbe funzionare correttamente avendo ridefinito equals di resource
         if(resources.remove(resource))
         {
+            spaceAvailable++;
+            if(resources.size()==0){
+                resourceType=ResourceType.ANY;
+            }
             return true;
         }
         return false;

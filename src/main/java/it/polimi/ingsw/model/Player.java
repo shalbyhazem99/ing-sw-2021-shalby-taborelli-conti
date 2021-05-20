@@ -19,7 +19,7 @@ public class Player implements Serializable {
     private int posFaithMarker;
     private ArrayList<PopeFavorTiles> popeFavorTiles;
     private ArrayList<LeaderCard> leaderCards;
-    private ArrayList<DevelopmentCardSpace> developmentCardSpaces; //percè non pila?
+    private ArrayList<DevelopmentCardSpace> developmentCardSpaces;
     private ArrayList<Warehouse> warehousesStandard;
     private ArrayList<Resource> strongBox;
     private ArrayList<Warehouse> warehousesAdditional;
@@ -40,7 +40,7 @@ public class Player implements Serializable {
         addedPower = generatePower();
     }
 
-    private void geneDevelopmentCardSpaces(){
+    public void geneDevelopmentCardSpaces() {
         developmentCardSpaces = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             developmentCardSpaces.add(DevelopmentCardSpace.getInstance());
@@ -91,9 +91,10 @@ public class Player implements Serializable {
 
     public static ArrayList<Warehouse> generateWarehouse() {
         ArrayList<Warehouse> temp = new ArrayList<>();
-        temp.add(Warehouse.getInstance(3, ResourceType.ANY));
-        temp.add(Warehouse.getInstance(2, ResourceType.ANY));
+
         temp.add(Warehouse.getInstance(1, ResourceType.ANY));
+        temp.add(Warehouse.getInstance(2, ResourceType.ANY));
+        temp.add(Warehouse.getInstance(3, ResourceType.ANY));
         return temp;
     }
 
@@ -115,7 +116,10 @@ public class Player implements Serializable {
     public void moveAheadFaith(int pos) {
         posFaithMarker += pos;
         posFaithMarker = Math.min(Utils.FAITH_LENGTH, posFaithMarker);
+        //tODO: CONTROL IF THE PLAYER ACTIVATE ANY CARD, MUST GET THE PLAYER LIST
     }
+
+    //todo:testing
 
     /**
      * Verify if the {@link Player} could activate the power and remove the resources
@@ -124,7 +128,6 @@ public class Player implements Serializable {
      * @return
      */
     public boolean canAfford(ArrayList<ResourcePick> resourceToUse) {
-        //vai json
         Gson gson = new Gson();
         String warehouseStandard = gson.toJson(getWarehousesStandard());
         String warehouseAdditional = gson.toJson(getWarehousesAdditional());
@@ -167,8 +170,6 @@ public class Player implements Serializable {
         return true;
     }
 
-
-    //getter
 
     /**
      * get the faith position
@@ -251,6 +252,7 @@ public class Player implements Serializable {
         return getDiscounts().size() > 0;
     }
 
+
     public boolean isActionable(ArrayList<ResourcesCount> resourcesNeeded) {
         ArrayList<ResourcesCount> resNeeded = resourcesNeeded;
         if (hasDiscount()) {
@@ -292,6 +294,8 @@ public class Player implements Serializable {
         return false;
     }
 
+    //todo: do we still use this method?
+
     /**
      * Method used to know if the {@link Player} has enough {@link Resource} to enable the {@link ArrayList} of {@link ProductivePower}
      *
@@ -300,7 +304,7 @@ public class Player implements Serializable {
      */
     public boolean canEnableProductivePowers(ArrayList<ProductivePower> productivePowers) {
         //Each productivePower contains an ArrayList of ResourceCount "from" which represents the resources needed to perform the production
-        //Utils.comapre(a,b) return true <==> a include b
+        //Utils.compare(a,b) return true <==> a include b
         //setOfE.parallelStream().anyMatch(e->eval(e));
         /*
         boolean anyTrue() {
@@ -312,7 +316,6 @@ public class Player implements Serializable {
             return false;
             }
          */
-        //TODO: testare assolutamente e eventualmente rimuovere commenti sopra
         return productivePowers.parallelStream().anyMatch(elem -> Utils.compareResources(getResources(), elem.getFrom()));
     }
 
@@ -327,31 +330,32 @@ public class Player implements Serializable {
         strongBox.add(resource);
     }
 
+    //todo: do we still use this method?
     public void addResourceToStrongBox(ArrayList<Resource> resources) {
         strongBox.addAll(resources);
     }
 
+    /**
+     * Class used only during the testing phase
+     */
     public boolean addResourceToWarehouseAdditional(Resource resource, int index) {
         if (index > warehousesAdditional.size())
             return false;
-        if (!resource.getType().equals(warehousesAdditional.get(index).getResourceType()) || warehousesAdditional.get(index).getSpaceAvailable() < warehousesAdditional.get(index).getResources().size() + 1)
-            return false;
-        warehousesAdditional.get(index).addResource(resource);
-        return true;
+        if(warehousesAdditional.get(index).getResourceType()==resource.getType()){
+            warehousesAdditional.get(index).addResource(resource);
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * It's a dump class just used during the testing in order to make easier the phase
+     */
     public boolean addResourceToWarehouseStandard(Resource resource, int index) {
+
         if (index > warehousesStandard.size())
             return false;
-        if (!resource.getType().equals(warehousesStandard.get(index).getResourceType()) || warehousesAdditional.get(index).getSpaceAvailable() < warehousesAdditional.get(index).getResources().size() + 1)
-            return false;
-        //if there are other warehouses with the same type of card
-        if (0 < warehousesStandard.stream()
-                .filter(elem -> !elem.equals(warehousesStandard.get(index)) &&
-                        elem.getResourceType().equals(warehousesStandard.get(index).getResourceType()))
-                .count())
-            return false;
-        warehousesAdditional.get(index).addResource(resource);
+        warehousesStandard.get(index).addResource(resource);
         return true;
     }
 
@@ -384,6 +388,8 @@ public class Player implements Serializable {
         return this.name.equals(((Player) obj).getName());
     }
 
+    //todo: do we still use this method?
+
     /**
      * Method used to remove the {@link Resource} specified in the parameter from the {@link Warehouse} of the {@link Player} if they exists
      * PAY ATTENTION -> if
@@ -410,92 +416,79 @@ public class Player implements Serializable {
         return true;
     }
 
-
     /**
-     * Va fatto dentro player necessariamente perchè non possiamo esporre l'oggetto warehouse, i controlli sui parametri chiamati devono già essere stati fatti
-     *
-     * @param indexFirstWarehouse
-     * @param indexSecondWarehouse
-     * @return
+     * {@link Player} choose how many {@link Resource} to move from the selected Warehouse and where to put them
+     * @param indexFirstWarehouse index of the source Warehouse
+     * @param indexSecondWarehouse index of the destination Warehouse
+     * @param resourcesFromFirstWarehouse number of the Resources to move
+     * @return result of the operation
      */
-    public int swapWarehouses(int indexFirstWarehouse, int indexSecondWarehouse) {
-        /*
-            CASES THAT MAY HAPPEN (S=STD,A=ADDITIONAL)
-               w1    w2
-            1) S <--> S
-            2) A <--> A
-            3) A <--> S
-            4) S <--> A
-         */
+    public boolean moveResources(int indexFirstWarehouse, int indexSecondWarehouse, int resourcesFromFirstWarehouse){
         Warehouse w1, w2;
         boolean firstIsStandard = true, secondIsStandard = true;
+        //getting the warehouses from the player
         if (indexFirstWarehouse == 3 || indexFirstWarehouse == 4) {
             w1 = getWarehousesAdditional().get(indexFirstWarehouse - 3);
             firstIsStandard = false;
-        } else //0,1,2
-        {
+        }
+        else {
             w1 = getWarehousesStandard().get(indexFirstWarehouse);
         }
         if (indexSecondWarehouse == 3 || indexSecondWarehouse == 4) {
             w2 = getWarehousesAdditional().get(indexSecondWarehouse - 3);
             secondIsStandard = false;
-        } else //0,1,2
-        {
+        }
+        else{
             w2 = getWarehousesStandard().get(indexSecondWarehouse);
         }
-        if (firstIsStandard && secondIsStandard) //1)
-        {
-            /*
-                      WAR.SPACE      #RES CONTAINED
 
-                    1) spaceMax = 1, 1 resource
-                    3) spacemax = 3, 1 resource
-                    ---------------------------
-                    1) SWAP 3) ==> OKAY
-
-                    1) spaceMax = 1, 1 resource
-                    3) spacemax = 3, 2 resource
-                    ---------------------------
-                    1) SWAP 3) ==> ERROR
-
-             */
-            if (w1.getResources().size() <= w2.getSpaceAvailable() && w1.getResources().size() <= w2.getSpaceAvailable()) //check for space
-            {
-                //simply change the arraylist of resources
-                ArrayList<Resource> temp = w1.getResources();
-                w1.changeResources(w2.getResources());
-                w2.changeResources(temp);
-                return w1.getResources().size() + w2.getResources().size();
-            } else {
-                return -1;
-            }
-        } else if (!firstIsStandard && !secondIsStandard) //2) A <==> A, we need to check the resType correctness, no space check, both of them can store max 2 resources
-        {
-            if (w1.getResourceType() != w2.getResourceType()) {
-                return -1;
-            }
-            //simply change the arraylist of resources
-            ArrayList<Resource> temp = w1.getResources();
-            w1.changeResources(w2.getResources());
-            w2.changeResources(temp);
-            return w1.getResources().size() + w2.getResources().size();
-
-        } else  //3) A <==> S 0R 4) S <==> A
-        {
-            if (w1.getResourceType() != w2.getResourceType()) {
-                return -1;
-            }
-            if (w1.getResources().size() <= w2.getSpaceAvailable() && w1.getResources().size() <= w2.getSpaceAvailable()) //check for space
-            {
-                //simply change the arraylist of resources
-                ArrayList<Resource> temp = w1.getResources();
-                w1.changeResources(w2.getResources());
-                w2.changeResources(temp);
-                return w1.getResources().size() + w2.getResources().size();
-            } else {
-                return -1;
-            }
+        // Different Cases
+        if (w1.getResources().size()<resourcesFromFirstWarehouse){
+            return false;
         }
+        //S<->S
+        if (firstIsStandard && secondIsStandard && resourcesFromFirstWarehouse<w2.getSpaceAvailable()+w2.getResources().size() ){
+            if (w2.getResourceType()==ResourceType.ANY && resourcesFromFirstWarehouse!= w1.getResources().size()){
+                return false;
+            }
+            ArrayList<Resource> temp = w1.getResources();
+            ResourceType resourceType_w1 = w1.getResourceType();
+            ResourceType resourceType_w2 = w2.getResourceType();
+
+            w1.changeResources(w2.getResources());
+            w1.changeResourceType(resourceType_w2);
+            if (w1.getResources().size()==0){
+                w1.changeResourceType(ResourceType.ANY);
+                w1.changeAvailability(indexFirstWarehouse+1);
+            }
+            w1.changeAvailability(indexFirstWarehouse+1-w1.getResources().size());
+            w2.changeResources(temp);
+            w2.changeResourceType(resourceType_w1);
+            if (w2.getResources().size()==0){
+                w2.changeResourceType(ResourceType.ANY);
+                w2.changeAvailability(indexSecondWarehouse+1);
+            }
+            w2.changeAvailability(indexSecondWarehouse+1-w2.getResources().size());
+            return true;
+        }
+        // S->A || A->S the Resources are moved only if the two warehouses has the same ResourceType
+        else if((w1.getResourceType()==w2.getResourceType() || w2.getResourceType()== ResourceType.ANY) && (resourcesFromFirstWarehouse<=w2.getSpaceAvailable())){
+            if (w2.getResourceType()== ResourceType.ANY){
+                w2.changeResourceType(w1.getResourceType());
+            }
+            for (int i = 0; i < resourcesFromFirstWarehouse; i++) {
+                w1.getResources().remove(0);
+                w1.changeAvailability(w1.getSpaceAvailable()+1);
+                w2.getResources().add(Resource.getInstance(w2.getResourceType()));
+                w2.changeAvailability(w2.getSpaceAvailable()-1);
+            }
+            if(w1.getResources().size()==0 && firstIsStandard){
+                w1.changeResourceType(ResourceType.ANY);
+            }
+            return true;
+        }
+        return false;
     }
+
 
 }

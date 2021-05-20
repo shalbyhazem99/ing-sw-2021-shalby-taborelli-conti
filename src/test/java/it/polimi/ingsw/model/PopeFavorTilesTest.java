@@ -21,4 +21,17 @@ public class PopeFavorTilesTest extends TestCase {
         assertEquals(1,popeFavorTiles.getPoints());
         assertFalse(popeFavorTiles.getActive());
     }
+
+    /**
+     * Testing that when is not active it does not assign VictoryPoints
+     */
+    @Test
+    public void testGetPoints(){
+        Player tester = new Player("tester");
+        for (int i = 0; i < 3; i++) {
+            assertEquals(0, tester.getPopeFavorTiles().get(i).getPoints());
+            tester.getPopeFavorTiles().get(i).active();
+            assertEquals(2+i, tester.getPopeFavorTiles().get(i).getPoints());
+        }
+    }
 }

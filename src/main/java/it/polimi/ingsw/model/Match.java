@@ -14,6 +14,8 @@ import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardResponse;
 import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardResponse;
 import it.polimi.ingsw.exceptions.SwapWarehouseException;
+import it.polimi.ingsw.exceptions.EndRoundException;
+import it.polimi.ingsw.exceptions.MoveResourcesException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -290,9 +292,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             //Faith resource conversion to faith position
             player.moveAheadFaith((int) resourcesGained.stream().filter(el -> el.getType().equals(ResourceType.FAITH)).count());
             pendingResources.addAll(resourcesGained.stream().filter(el -> el.getType() != ResourceType.FAITH).collect(Collectors.toList()));
-            //notifyModel();
-            if (!noControl)
-                notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, players, players.indexOf(player), moveType, pos,this.hashCode()));
+            notifyModel();
+            notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player))));
         }
     }
 
@@ -500,36 +501,30 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param indexFirstWarehouse  an int representing the first {@link Warehouse}
      * @param indexSecondWarehouse an int representing the second {@link Warehouse}
      * @param player               the {@link Player} that is performing the action
-     * @throws SwapWarehouseException the {@link SwapWarehouseException} which is thrown if any error occur (not existing {@link Warehouse}, not enough available space ...)
+     * @throws MoveResourcesException the {@link MoveResourcesException} which is thrown if any error occur (not existing {@link Warehouse}, not enough available space ...)
      */
-    public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
-        /*
-            CHECK:
-            1) If we're trying to swap the same Warehouse return immediately, no action must be taken
-            2) If the two indexes refer to additional warehouses we need to check if they exist
-         */
-        //1)
+    public void MoveResourcesInteraction (int indexFirstWarehouse, int indexSecondWarehouse, int numberOfResources,  Player player) {
+
         if (indexFirstWarehouse == indexSecondWarehouse) {
-            throw new SwapWarehouseException();
+            throw new MoveResourcesException();
         }
         if (indexFirstWarehouse == 3 || indexSecondWarehouse == 3) //check if the first additional warehouse exists
         {
             if (player.getWarehousesAdditional().size() == 0) {
-                throw new SwapWarehouseException();
+                throw new MoveResourcesException();
             }
         }
         if (indexFirstWarehouse == 4 || indexSecondWarehouse == 4) //check if the second additional warehouse exists
         {
             if (player.getWarehousesAdditional().size() < 2) {
-                throw new SwapWarehouseException();
+                throw new MoveResourcesException();
             }
         }
-        int numberOfMovedRes = player.swapWarehouses(indexFirstWarehouse, indexSecondWarehouse);
-        if (numberOfMovedRes != -1) {
-            notify(SwapWarehouseResponse.getInstance(players, numberOfMovedRes, players.indexOf(player),this.hashCode()));
+        if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, numberOfResources)) {
+            notify(SwapWarehouseResponse.getInstance(new ArrayList<>(Arrays.asList(player))));
             return;
         }
-        throw new SwapWarehouseException();
+        throw new MoveResourcesException();
     }
 
     public abstract void endRoundInteraction(Player player);

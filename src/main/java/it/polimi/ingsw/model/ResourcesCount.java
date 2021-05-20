@@ -31,7 +31,7 @@ public class ResourcesCount implements Serializable {
     public ArrayList<Resource> toArrayListResources()
     {
         return new ArrayList<Resource>() {{
-            for(int i = count;i!=0;i++)
+            for(int i =0;i<count;i++)
             {
                 add(Resource.getInstance(type));
             }
