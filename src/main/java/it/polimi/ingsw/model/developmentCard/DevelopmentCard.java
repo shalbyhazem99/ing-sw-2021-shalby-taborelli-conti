@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.developmentCard;
 
 import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -98,5 +99,66 @@ public class DevelopmentCard implements Serializable {
     public String toString() {
         return "/eq_point:"+equivalentPoint+"/Cost:"+costs.toString();
         //return level.toString()+"/"+type.toString()+"/eq_point:"+equivalentPoint+"/Pot_prod:"+powers.toString()+"/Cost:"+costs.toString()+"|||||";
+    }
+
+    public String getCostsFormatted()
+    {
+        String str = "[";
+        for(int i = 0;i<costs.size();i++)
+        {
+            switch (costs.get(i).getType())
+            {
+                case COIN:
+                    str = str + " " + costs.get(i).getCount()+ "⚫";
+                    break;
+                case FAITH:
+                    str = str + " " + costs.get(i).getCount()+ "✝";
+                    break;
+                case SERVANT:
+                    str = str + " " + costs.get(i).getCount()+ "⚔";
+                    break;
+                case ANY:
+                    str = str + " " + costs.get(i).getCount()+ "A";
+                    break;
+                case SHIELD:
+                    str = str + " " + costs.get(i).getCount()+ "\uD83D\uDEE1️";
+                    break;
+                case STONE:
+                    str = str + " " + costs.get(i).getCount()+ "\uD83D\uDC8E";
+                    break;
+            }
+        }
+        return str+"]";
+    }
+
+    public String getPowersFormatted()
+    {
+        ArrayList<ResourcesCount> costs = powers.getFrom();
+        String str = "[";
+        for(int i = 0;i<costs.size();i++) {
+            switch (costs.get(i).getType()) {
+                case COIN:
+                    str = str + " " + costs.get(i).getCount() + "⚫";
+                    break;
+                case FAITH:
+                    str = str + " " + costs.get(i).getCount() + "✝";
+                    break;
+                case SERVANT:
+                    str = str + " " + costs.get(i).getCount() + "⚔";
+                    break;
+                case ANY:
+                    str = str + " " + costs.get(i).getCount() + "A";
+                    break;
+                case SHIELD:
+                    str = str + " " + costs.get(i).getCount() + "\uD83D\uDEE1️";
+                    break;
+                case STONE:
+                    str = str + " " + costs.get(i).getCount() + "\uD83D\uDC8E";
+                    break;
+            }
+        }
+        str = str + "] ▶ ";
+        str = str + Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(powers.getTo()));
+        return str;
     }
 }

@@ -38,6 +38,11 @@ public class ResourcesCount implements Serializable {
         }};
     }
 
+    public void addCount()
+    {
+        this.count ++;
+    }
+
     @Override
     public String toString() {
         return "#"+count+" "+type.toString();

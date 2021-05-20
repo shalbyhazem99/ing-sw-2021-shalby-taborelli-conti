@@ -4,12 +4,14 @@ import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
+import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -160,7 +162,6 @@ public class MatchSolo extends Match implements Serializable {
         notify(EndRoundResponse.getInstance(getPlayers(),true));
         //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
         ActionToken action = pickActionToken();
-        System.out.println("lunghezza " + Arrays.stream(developmentCards).count());
         switch (action.getAction())
         {
             case MOVE:
@@ -220,6 +221,12 @@ public class MatchSolo extends Match implements Serializable {
         notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(0))), possibleMove));
     }
 
+    @Override
+    public void notifyModel() {
+        for (int i = 0; i < players.size(); i++) {
+            notify(SendModel.getInstance(this, players.get(i), i));
+        }
+    }
 
     @Override
     public void discardLeaderCardInteraction(int leaderCardPosition,Player player) {
@@ -265,38 +272,81 @@ public class MatchSolo extends Match implements Serializable {
 
     public String toString() {
         try {
-            System.out.println("MERCATO");
-            System.out.println(marketBoard.getAdditionalMarble().toString());
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-                    System.out.print(marketBoard.getRow(i).get(j).toString() + "|");
-                }
+            for(int i = 0;i<30;i++) //Hint From Ing. Conti
+            {
                 System.out.println();
             }
-            System.out.println();
-            System.out.println("CARTE SVILUPPO");
-            System.out.println("\t VERDE \t BLU \t GIALLO \t VIOLA");
+            System.out.println("-------------------------------------------------------------------------------------------------------");
+            System.out.println("|MERCATO |");
+            System.out.println("---------");
+            System.out.println("       _");
+            System.out.println("      |"+marketBoard.getAdditionalMarble().toString().toCharArray()[0]+"|");
+            System.out.println(" _ _ _ _");
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
-                    if(j==0)
+
+                    if(j!=3)
                     {
-                        System.out.print("LVL 3\t");
+                        System.out.print("|"+marketBoard.getRow(i).get(j).toString().toCharArray()[0]);
                     }
-                    System.out.print(developmentCards[i][j].peek().toString() + "\t");
+                    else
+                    {
+                        String code = "";
+                        switch (i)
+                        {
+                            case 0:
+                                code = "W ▶ ?        B ▶ \uD83D\uDEE1️";
+                                break;
+                            case 1:
+                                code = "Y ▶ ⚫        G ▶ \uD83D\uDC8E";
+                                break;
+                            case 2:
+                                code = "P ▶ ⚔        R ▶ ✝";
+                                break;
+                        }
+                        System.out.println("|"+marketBoard.getRow(i).get(j).toString().toCharArray()[0]+"|  ◀             "+code);
+                        System.out.println(" _ _ _ _");
+                    }
                 }
-                System.out.println();
             }
+            System.out.println(" ▲ ▲ ▲ ▲");
+            System.out.println();
+            System.out.println("-------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("|CARTE SVILUPPO|            (P=Point, C=Costs, PP = Productive Powers)");
+            System.out.println("---------------");
+            System.out.println("\t\t\t\t\t\t  VERDE \t\t\t\t\t\t  BLU \t\t\t\t\t\t GIALLO \t\t\t\t\t\t VIOLA");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.GREEN));
+            int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.BLUE));;
+            int yellow_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.YELLOW));;
+            int purple_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards,DevelopmentCardType.PURPLE));
+            int max = 30;
+            for (int i = 0; i < 3; i++) {
+                    System.out.println("        | P:| "+developmentCards[i][0].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString().length())+"|"+developmentCards[i][1].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][1].peek().getEquivalentPoint()).toString().length())+"|"+developmentCards[i][2].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][2].peek().getEquivalentPoint()).toString().length())+"|"+developmentCards[i][3].peek().getEquivalentPoint()+Utils.fillSpaces(max,Integer.valueOf(developmentCards[i][3].peek().getEquivalentPoint()).toString().length())+"|");
+                    System.out.println("LVL = "+(i+1)+" | C:| "+developmentCards[i][0].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][0].peek().getCostsFormatted().length())+"|"+developmentCards[i][1].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][1].peek().getCostsFormatted().length())+"|"+developmentCards[i][2].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][2].peek().getCostsFormatted().length())+"|"+developmentCards[i][3].peek().getCostsFormatted()+Utils.fillSpaces(max,developmentCards[i][3].peek().getCostsFormatted().length())+"|");
+                    System.out.println("        |PP:| "+developmentCards[i][0].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][0].peek().getPowersFormatted().length())+"|"+developmentCards[i][1].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][1].peek().getPowersFormatted().length())+"|"+developmentCards[i][2].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][2].peek().getPowersFormatted().length())+"|"+developmentCards[i][3].peek().getPowersFormatted()+Utils.fillSpaces(max,developmentCards[i][3].peek().getPowersFormatted().length())+"|");
+                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            }
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
             System.out.println();
             for (Player player : getPlayers()) {
                 System.out.println("Player: " + player.getName());
                 if (player == null) {
                     break;
                 }
-                System.out.println("Pos Fede: " + player.getPosFaithMarker());
+                System.out.println("Pos Fede: " + player.getPosFaithMarker() + " ✝");
+                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                 System.out.println("WAREHOUSE STD");
+                System.out.println("   #   |Space|Type|      Resources");
+                System.out.println("----------------------------------------------------------------------------------");
                 for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
-                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
+                    System.out.println("  (" + i + ")   | " + player.getWarehousesStandard().get(i).toString());
                 }
+                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                 System.out.println("WAREHOUSE ADD");
                 for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
                     System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
