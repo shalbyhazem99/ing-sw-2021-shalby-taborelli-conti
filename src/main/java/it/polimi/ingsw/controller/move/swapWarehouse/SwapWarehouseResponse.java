@@ -9,12 +9,12 @@ import it.polimi.ingsw.model.Resource;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MoveResourcesResponse extends MoveResponse {
+public class SwapWarehouseResponse extends MoveResponse {
     /**
      * Class used to represent the response of the system when the {@link Player} wants to move {@link Resource} two {@link it.polimi.ingsw.model.Warehouse}
      */
 
-    public MoveResourcesResponse(ArrayList<Player> players) {
+    public SwapWarehouseResponse(ArrayList<Player> players) {
         super(players);
     }
 
@@ -23,8 +23,8 @@ public class MoveResourcesResponse extends MoveResponse {
      * @param players
      * @return an instance of the class
      */
-    public static MoveResourcesResponse getInstance(ArrayList<Player> players) {
-        return new MoveResourcesResponse(players);
+    public static SwapWarehouseResponse getInstance(ArrayList<Player> players) {
+        return new SwapWarehouseResponse(players);
     }
 
     @Override

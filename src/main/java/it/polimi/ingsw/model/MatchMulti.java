@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMov
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.exceptions.EndRoundException;
-import it.polimi.ingsw.exceptions.MoveResourcesException;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 import java.io.Serializable;
@@ -145,7 +144,7 @@ public class MatchMulti extends Match implements Serializable {
         }
         possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
         possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
-        possibleMove.add(MovePlayerType.MOVE_RESOURCES);
+        possibleMove.add(MovePlayerType.SWAP_WAREHOUSE);
         possibleMove.add(MovePlayerType.END_TURN);
         notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove));
     }

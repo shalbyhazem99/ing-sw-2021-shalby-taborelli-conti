@@ -9,7 +9,7 @@ import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
-import it.polimi.ingsw.controller.move.swapWarehouse.MoveResourcesResponse;
+import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehouseResponse;
 import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.exceptions.MoveResourcesException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
@@ -456,7 +456,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             }
         }
         if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, numberOfResources)) {
-            notify(MoveResourcesResponse.getInstance(new ArrayList<>(Arrays.asList(player))));
+            notify(SwapWarehouseResponse.getInstance(new ArrayList<>(Arrays.asList(player))));
             return;
         }
         throw new MoveResourcesException();

@@ -6,7 +6,7 @@ import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
-import it.polimi.ingsw.controller.move.swapWarehouse.MoveResourcesPlayerMove;
+import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
@@ -157,10 +157,10 @@ public enum MovePlayerType {
             return enableProductionPlayerMove;
         }
     },
-    MOVE_RESOURCES("MoveResources") {
+    SWAP_WAREHOUSE("MoveResources") {
         @Override
         public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
-            MoveResourcesPlayerMove moveResourcesPlayerMove = null;
+            SwapWarehousePlayerMove swapWarehousePlayerMove = null;
             try {
                 //position
                 System.out.println("insert the pos of the first warehouse to swap (0...)");
@@ -169,12 +169,12 @@ public enum MovePlayerType {
                 int second = stdin.nextInt();
                 System.out.println("insert the number of resources to move from the first warehouse");
                 int change = stdin.nextInt();
-                moveResourcesPlayerMove = MoveResourcesPlayerMove.getInstance(first, second, change);
+                swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, second, change);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);
             }
-            return moveResourcesPlayerMove;
+            return swapWarehousePlayerMove;
         }
     };
 
