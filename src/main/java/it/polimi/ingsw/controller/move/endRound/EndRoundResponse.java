@@ -28,7 +28,7 @@ public class EndRoundResponse extends MoveResponse {
 
     @Override
     public void updateLocalMatch(Match match) {
-        match.endRoundInteraction(match.getPlayerFromPosition(getExecutePlayerPos()));
+        match.endRoundInteraction(match.getPlayerFromPosition(getExecutePlayerPos()),true);
     }
 
     @Override

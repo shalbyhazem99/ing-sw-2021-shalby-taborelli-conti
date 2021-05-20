@@ -6,13 +6,11 @@ import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
-import it.polimi.ingsw.controller.move.swapWarehouse.SwapWarehousePlayerMove;
-import it.polimi.ingsw.exceptions.SwapWarehouseException;
+import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
-import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
@@ -288,22 +286,24 @@ public enum MovePlayerType {
             return enableProductionPlayerMove;
         }
     },
-    //todo:refactor to move warehouse
-    SWAP_WAREHOUSE("MoveResources") {
+    MOVE_RESOURCES("Move Resources") {
         @Override
         public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
-            SwapWarehousePlayerMove swapWarehousePlayerMove = null;
+            MoveResourcesPlayerMove moveResourcesPlayerMove = null;
             try {
                 //position
                 Player player = match.getCurrentPlayer();
                 int first;
                 int second;
+                int countToMove;
                 boolean parameters_valid = true;
                 do {
                 System.out.println("insert the pos of the first warehouse to swap (0...)");
-                first = stdin.nextByte();
+                first = stdin.nextInt();
                 System.out.println("insert the pos of the second warehouse to swap (0...)");
                 second = stdin.nextInt();
+                System.out.println("insert the number of resources to move from the first warehouse");
+                countToMove = stdin.nextInt();
                 //Controlling parameters
                 /*
                 CHECK:
@@ -341,14 +341,17 @@ public enum MovePlayerType {
                         parameters_valid = false;
                     }
                 }
+                if(countToMove<3){
+                    parameters_valid = false;
+                }
                 }while (!parameters_valid);
                 //End controlling parameters
-                swapWarehousePlayerMove = SwapWarehousePlayerMove.getInstance(first, second);
+                moveResourcesPlayerMove = MoveResourcesPlayerMove.getInstance(first, second,countToMove);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);
             }
-            return swapWarehousePlayerMove;
+            return moveResourcesPlayerMove;
         }
     };
 

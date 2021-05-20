@@ -32,4 +32,9 @@ public class Winner {
     public static Winner getInstance (String name, int points, int totalResources, int position){
         return new Winner(name,points,totalResources,position);
     }
+
+    @Override
+    public String toString() {
+        return name +"("+points+" points)";
+    }
 }

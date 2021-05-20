@@ -17,7 +17,7 @@ public class EndRoundPlayerMove extends PlayerMove {
     @Override
     public void execute(Match match) {
         try {
-            match.endRoundInteraction(getPlayer());
+            match.endRoundInteraction(getPlayer(),false);
         } catch (Exception e) {
             e.printStackTrace();
         }

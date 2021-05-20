@@ -2,11 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
-import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.exceptions.EndRoundException;
-import it.polimi.ingsw.exceptions.SwapWarehouseException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -155,7 +153,7 @@ public class MatchSolo extends Match implements Serializable {
      * @param player {@link Player} who wants to end the round
      * @throws EndRoundException {@link EndRoundException} thrown when an error occurs
      */
-    public void endRoundInteraction(Player player)
+    public void endRoundInteraction(Player player, boolean noControl)
     {
         setCanChangeTurn(false,player);
         pendingResources = new ArrayList<>();
@@ -218,7 +216,7 @@ public class MatchSolo extends Match implements Serializable {
         }
         possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
         possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
-        possibleMove.add(MovePlayerType.SWAP_WAREHOUSE);
+        possibleMove.add(MovePlayerType.MOVE_RESOURCES);
         possibleMove.add(MovePlayerType.END_TURN);
         notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(0))), possibleMove,0,this.hashCode()));
     }
@@ -231,51 +229,9 @@ public class MatchSolo extends Match implements Serializable {
     }
 
     @Override
-    public void discardLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
-        super.discardLeaderCardInteraction(leaderCardPosition, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void enableLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
-        super.enableLeaderCardInteraction(leaderCardPosition, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player, boolean noControl) {
-        super.positioningResourcesInteraction(whereToPlace, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
-        super.buyDevelopmentCardInteraction(type, level, player, posToAdd, resourceToUse, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionBaseInteraction(ArrayList<ResourcePick> resourceToUse, ResourceType toType, Player player, boolean noControl) {
-        super.enableProductionBaseInteraction(resourceToUse, toType, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionDevelopmentInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfDevelopmentCard, Player player, boolean noControl) {
-        super.enableProductionDevelopmentInteraction(resourceToUse, positionOfDevelopmentCard, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player, boolean noControl) {
-        super.enableProductionLeaderInteraction(resourceToUse, positionOfProductivePower, player, noControl);
-        askForMove();
-    }
-
-    @Override
-    public void swapWarehouseInteraction(int indexFirstWarehouse, int indexSecondWarehouse, Player player) throws SwapWarehouseException {
-        super.swapWarehouseInteraction(indexFirstWarehouse, indexSecondWarehouse, player);
-        askForMove();
+    public ArrayList<Winner> whoIsWinner() {
+        //todo: ci pensa conti
+        return null;
     }
 
     public String toString() {

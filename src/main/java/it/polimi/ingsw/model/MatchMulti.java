@@ -3,9 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMove;
-import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
-import it.polimi.ingsw.exceptions.EndRoundException;
+import it.polimi.ingsw.controller.move.settings.EndMatch;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 import java.io.Serializable;
@@ -59,26 +58,21 @@ public class MatchMulti extends Match implements Serializable {
      *
      * @param player the {@link Player} who wants to end his round
      */
-    public void endRoundInteraction(Player player) {
-        if (!isMyTurn(player) || pendingResources.size() != 0 || !getCanChangeTurn()) {
-            notify(EndRoundResponse.getInstance(new ArrayList<>(Arrays.asList(player)),getPlayers().indexOf(player), false,this.hashCode()));
+    public void endRoundInteraction(Player player, boolean noControl) {
+        if (!noControl && (!isMyTurn(player) || pendingResources.size() != 0 || !getCanChangeTurn())) {
+            notify(EndRoundResponse.getInstance(new ArrayList<>(Arrays.asList(player)), getPlayers().indexOf(player), false, this.hashCode()));
             askForMove();
             return;
         }
-        if (turn == getPlayers().size() - 1) {
-            turn = 0;
-        } else {
-            turn++;
-        }
-        this.canChangeTurn = false;
+        updateTurn();
         this.pendingResources = new ArrayList<>();
-        notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true,this.hashCode()));
-        askForMove(); //todo: call haswon()
+        notify(EndRoundResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode()));
+        if (!hasWon(noControl)) {
+            askForMove();
+        } else {
+            // todo: close connection
+        }
     }
-
-
-    /*
-
 
 
     @Override
@@ -96,7 +90,7 @@ public class MatchMulti extends Match implements Serializable {
     public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
         super.discardTwoLeaderCardInteraction(posFirst, posSecond, player);
         notifyModel();
-        if(numPlayerWhoDiscard== players.size()){
+        if (numPlayerWhoDiscard == players.size()) {
             //notifyModel();
             askForMove();
         }
@@ -112,20 +106,18 @@ public class MatchMulti extends Match implements Serializable {
         }
         possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
         possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
-        possibleMove.add(MovePlayerType.SWAP_WAREHOUSE);
+        possibleMove.add(MovePlayerType.MOVE_RESOURCES);
         possibleMove.add(MovePlayerType.END_TURN);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove,turn,this.hashCode()));
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove, turn, this.hashCode()));
     }
 
     @Override
     public void updateTurn() {
-        if (canChangeTurn) {
-            canChangeTurn = false;
-            if (turn < getPlayers().size() - 1)
-                turn++;
-            else
-                turn = 0;
-        }
+        canChangeTurn = false;
+        if (turn < getPlayers().size() - 1)
+            turn++;
+        else
+            turn = 0;
     }
 
     /**
@@ -153,81 +145,22 @@ public class MatchMulti extends Match implements Serializable {
         return getPlayers().get(turn).equals(player) || numPlayerWhoDiscard < players.size();
     }
 
-    public String toString() {
-        try {
-            System.out.println("MERCATO");
-            System.out.println(marketBoard.getAdditionalMarble().toString()+"\n");
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-                    System.out.print(marketBoard.getRow(i).get(j).toString() + "\t|");
-                }
-                System.out.println();
-            }
-            System.out.println();
-            System.out.println("CARTE SVILUPPO");
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 4; j++) {
-                    System.out.print(developmentCards[i][j].peek().toString() + "|");
-                }
-                System.out.println();
-            }
-            System.out.println();
-            for (Player player : getPlayers()) {
-                System.out.println("Player: " + player.getName());
-                if (player == null) {
-                    break;
-                }
-                System.out.println("Pos Fede: " + player.getPosFaithMarker());
-                System.out.println("WAREHOUSE STD");
-                for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
-                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
-                }
-                System.out.println("WAREHOUSE ADD");
-                for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
-                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
-                }
-                System.out.println("FORZIERE");
-                System.out.println(player.getStrongBox().toString());
-                System.out.println("SPAZI CARTE");
-                for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
-                    System.out.println(player.getDevelopmentCardSpaces().get(a).toString());
-                }
-                System.out.println("LEADER CARD");
-                for (LeaderCard leaderCard : player.getLeaderCards()) {
-                    System.out.println(leaderCard.toString());
-                }
-            }
-            System.out.println("--------------------------------------------------------------------------------------------------------");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     @Override
     public Player getCurrentPlayer() {
         return getPlayers().get(posInkwell);
-    }
-
-    public static void main(String[] args) {
-        MatchMulti m = new MatchMulti(2);
-        m.toString();
     }
 
     public void enableFinalTurn() {
         this.finalTurn = true;
     }
 
-    public boolean hasWon() {
+    public boolean hasWon(boolean noControl) {
         if (this.finalTurn) {
             if (turn == posInkwell) {
-                ArrayList<Winner> winners = whoIsWinner();
-                for (Player player : players) {
-                    //se è winner
-                    //notify(Message)
-                    //se non è winner
-                    //notify(messagio)
+                if (!noControl) {
+                    for (int i = 0; i < players.size(); i++) {
+                        notify(EndMatch.getInstance(players.get(i), i, this.hashCode()));
+                    }
                 }
             }
             return true;
@@ -235,10 +168,8 @@ public class MatchMulti extends Match implements Serializable {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getDevelopmentCards().size() >= 7 || players.get(i).getPosFaithMarker() >= 24) {
                 this.enableFinalTurn();
-                return true;
             }
         }
-        askForMove();
         return false;
     }
 
@@ -307,4 +238,58 @@ public class MatchMulti extends Match implements Serializable {
         }
         return winners;
     }
+
+
+    public String toString() {
+        try {
+            System.out.println("MERCATO");
+            System.out.println(marketBoard.getAdditionalMarble().toString() + "\n");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    System.out.print(marketBoard.getRow(i).get(j).toString() + "\t|");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            System.out.println("CARTE SVILUPPO");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    System.out.print(developmentCards[i][j].peek().toString() + "|");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            for (Player player : getPlayers()) {
+                System.out.println("Player: " + player.getName());
+                if (player == null) {
+                    break;
+                }
+                System.out.println("Pos Fede: " + player.getPosFaithMarker());
+                System.out.println("WAREHOUSE STD");
+                for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
+                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
+                }
+                System.out.println("WAREHOUSE ADD");
+                for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
+                    System.out.println("WRH " + i + ") ==> " + player.getWarehousesStandard().get(i).toString());
+                }
+                System.out.println("FORZIERE");
+                System.out.println(player.getStrongBox().toString());
+                System.out.println("SPAZI CARTE");
+                for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
+                    System.out.println(player.getDevelopmentCardSpaces().get(a).toString());
+                }
+                System.out.println("LEADER CARD");
+                for (LeaderCard leaderCard : player.getLeaderCards()) {
+                    System.out.println(leaderCard.toString());
+                }
+            }
+            System.out.println("--------------------------------------------------------------------------------------------------------");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
