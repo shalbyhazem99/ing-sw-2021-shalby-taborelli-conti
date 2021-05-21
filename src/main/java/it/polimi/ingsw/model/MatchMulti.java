@@ -28,6 +28,8 @@ public class MatchMulti extends Match implements Serializable {
         posInkwell = -1;
     }
 
+
+
     /**
      * Get the index of the first player in the playing order
      *
@@ -83,7 +85,8 @@ public class MatchMulti extends Match implements Serializable {
         //todo:choose resources
         //start
         super.startMatch();
-        askForMove();
+        //askForDiscardLeaderCard();
+        //askForMove();
     }
 
     @Override

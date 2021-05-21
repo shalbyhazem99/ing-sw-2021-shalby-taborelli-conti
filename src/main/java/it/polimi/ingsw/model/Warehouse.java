@@ -80,6 +80,11 @@ public class Warehouse implements Serializable, Cloneable {
         return true;
     }
 
+    public boolean incrementAvailability (){
+        spaceAvailable++;
+        return true;
+    }
+
     /**
      *
      * @param resourcesCount object of the items I wanted to remove

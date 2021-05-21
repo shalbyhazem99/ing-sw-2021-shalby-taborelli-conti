@@ -99,9 +99,7 @@ public class Player implements Serializable {
     }
 
     public static ArrayList<ProductivePower> generatePower() {
-        return new ArrayList<>(Arrays.asList(ProductivePower.getInstance(
-                new ArrayList<>(Arrays.asList(ResourcesCount.getInstance(2, ResourceType.ANY))),//todo: to see
-                new ArrayList<>(Arrays.asList(Resource.getInstance(ResourceType.ANY))))));
+        return new ArrayList<>();
     }
 
     public void addLeaderCard(LeaderCard leaderCard) {
@@ -144,8 +142,16 @@ public class Player implements Serializable {
                 case WAREHOUSE:
                     if (resourcePick.getWarehousePosition() >= 0 && resourcePick.getWarehousePosition() < 3) {
                         resToBeRemoved = standardTemp.get(resourcePick.getWarehousePosition()).getResources();
+                        standardTemp.get(resourcePick.getWarehousePosition()).incrementAvailability();
+                        if( standardTemp.get(resourcePick.getWarehousePosition()).getResources().size() ==1){
+                            standardTemp.get(resourcePick.getWarehousePosition()).changeResourceType(ResourceType.ANY);
+                        }
                     } else if (additionalTemp.size() > resourcePick.getWarehousePosition() - 3 && resourcePick.getWarehousePosition() >= 3 && resourcePick.getWarehousePosition() < 5) {
                         resToBeRemoved = additionalTemp.get(resourcePick.getWarehousePosition() - 3).getResources();
+                        additionalTemp.get(resourcePick.getWarehousePosition()).incrementAvailability();
+                        if( additionalTemp.get(resourcePick.getWarehousePosition()).getResources().size() ==1){
+                            additionalTemp.get(resourcePick.getWarehousePosition()).changeResourceType(ResourceType.ANY);
+                        }
                     } else {
                         return false;
                     }
@@ -203,7 +209,7 @@ public class Player implements Serializable {
      * @return a shallow copy of the strongbox {@link ArrayList} of {@link Resource} of the {@link Player}
      */
     public ArrayList<Resource> getStrongBox() {
-        return (ArrayList<Resource>) strongBox.clone();
+        return strongBox;
     }
 
     /**

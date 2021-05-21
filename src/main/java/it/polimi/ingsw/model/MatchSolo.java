@@ -105,12 +105,12 @@ public class MatchSolo extends Match implements Serializable {
     /**
      * This method will discard from the {@link DevelopmentCard} matrix the requested amount of cards of a certain {@link DevelopmentCardType}
      * the method will try to discard LVL 1 cards, otherwise LVL 2 cards otherwise LVL 3 cards
+     *
      * @param numberOfCardsToDiscard how many card we have to discard
-     * @param cardType which {@link DevelopmentCardType} we have to focus on
+     * @param cardType               which {@link DevelopmentCardType} we have to focus on
      * @return the {@link ArrayList} of {@link DevelopmentCard} that got discarded (it can be empty if no compatible cards are found
      */
-    public ArrayList<DevelopmentCard> discardDevelopmentCards(int numberOfCardsToDiscard, DevelopmentCardType cardType)
-    {
+    public ArrayList<DevelopmentCard> discardDevelopmentCards(int numberOfCardsToDiscard, DevelopmentCardType cardType) {
         /*
             COLUMNS:        GREEN / BLUE / YELLOW / PURPLE
             ROWS: LVL 3->
@@ -119,23 +119,29 @@ public class MatchSolo extends Match implements Serializable {
          */
         ArrayList<DevelopmentCard> temp = new ArrayList<>();
         DevelopmentCardLevel cardLevel = DevelopmentCardLevel.FIRST;
-        do
-        {
-            if(developmentCards[cardLevel.label][cardType.label].size()!=0) //if the stack is empty try the next level otherwise discard
+        do {
+            if (developmentCards[cardLevel.label][cardType.label].size() != 0) //if the stack is empty try the next level otherwise discard
             {
                 temp.add(developmentCards[cardLevel.label][cardType.label].pop());
                 numberOfCardsToDiscard--;
-            }
-            else //if the stack we're operating on is empty we try to move a stack of an higher level
+            } else //if the stack we're operating on is empty we try to move a stack of an higher level
             {
-                switch(cardLevel.label)
-                {
-                    case 0 : { cardLevel = null; break;} //it means we are int highest row on the third level, we cannot discard anything else
-                    case 1 : { cardLevel = DevelopmentCardLevel.THIRD; break;} //LVL 2 --> LVL 3
-                    case 2 : { cardLevel = DevelopmentCardLevel.SECOND; break;} //LVL 1 --> LVL 2
+                switch (cardLevel.label) {
+                    case 0: {
+                        cardLevel = null;
+                        break;
+                    } //it means we are int highest row on the third level, we cannot discard anything else
+                    case 1: {
+                        cardLevel = DevelopmentCardLevel.THIRD;
+                        break;
+                    } //LVL 2 --> LVL 3
+                    case 2: {
+                        cardLevel = DevelopmentCardLevel.SECOND;
+                        break;
+                    } //LVL 1 --> LVL 2
                 }
             }
-        } while(numberOfCardsToDiscard!=0 && cardLevel!=null); //stop if the correct amount of cards is discarded or if there are no more cards of that color left
+        } while (numberOfCardsToDiscard != 0 && cardLevel != null); //stop if the correct amount of cards is discarded or if there are no more cards of that color left
         return temp;
     }
 
@@ -151,27 +157,24 @@ public class MatchSolo extends Match implements Serializable {
 
     /**
      * Method used by the {@link Player} to end a {@link MatchSolo} round
+     *
      * @param player {@link Player} who wants to end the round
      * @throws EndRoundException {@link EndRoundException} thrown when an error occurs
      */
-    public void endRoundInteraction(Player player, boolean noControl)
-    {
-        setCanChangeTurn(false,player);
+    public void endRoundInteraction(Player player, boolean noControl) {
+        setCanChangeTurn(false, player);
         pendingResources = new ArrayList<>();
-        notify(EndRoundResponse.getInstance(getPlayers(),getPlayers().indexOf(player), true,this.hashCode()));
+        notify(EndRoundResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode()));
         //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
         ActionToken action = pickActionToken();
         String u = "";
-        switch (action.getAction())
-        {
+        switch (action.getAction()) {
             case MOVE:
-                u = "Lorenzo move ahead of "+action.getCount()+" passes\n";
-                if(action.getCount()==1)
-                {
+                u = "Lorenzo move ahead of " + action.getCount() + " passes\n";
+                if (action.getCount() == 1) {
                     moveAheadBlackCross(1);
                     shuffleActionTokens();
-                }
-                else //count=2
+                } else //count=2
                 {
                     moveAheadBlackCross(2);
                 }
@@ -179,24 +182,21 @@ public class MatchSolo extends Match implements Serializable {
             case DISCARD:
                 int lvl = 0;
                 int to_discard = action.getCount();
-                u = "Lorenzo discarded " + to_discard + " "+action.getCardToReject().toString() + "cards\n";
-                while (to_discard!=0&&lvl!=3) //I have to discard x cards
+                u = "Lorenzo discarded " + to_discard + " " + action.getCardToReject().toString() + " cards\n";
+                while (to_discard != 0 && lvl != 3) //I have to discard x cards
                 {
-                    if(!developmentCards[lvl][action.getCardToReject().label].isEmpty()) //If the stack is not empty
+                    if (!developmentCards[lvl][action.getCardToReject().label].isEmpty()) //If the stack is not empty
                     {
                         developmentCards[lvl][action.getCardToReject().label].pop(); //discard the card
                         to_discard--;
-                    }
-                    else //if the stack is empty change the level
+                    } else //if the stack is empty change the level
                     {
                         lvl++;
                     }
                 }
                 break;
         }
-        //todo: to remove
-        System.out.println(u);
-        //notify(SendMessage.getInstance(u, player, 0, this.hashCode())); //todo: gives me problems
+        notify(SendMessage.getInstance(u, player, players.indexOf(player), this.hashCode())); //todo: gives me problems
         askForMove();
     }
 
@@ -208,11 +208,21 @@ public class MatchSolo extends Match implements Serializable {
     @Override
     public void startMatch() {
         super.startMatch();
-        askForMove();
+        //askForMove();
     }
 
     @Override
-    public void askForMove(){
+    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
+        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player);
+        notifyModel();
+        if (numPlayerWhoDiscard == players.size()) {
+            //notifyModel();
+            askForMove();
+        }
+    }
+
+    @Override
+    public void askForMove() {
         notifyModel();
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
         if (!canChangeTurn) {
@@ -224,13 +234,13 @@ public class MatchSolo extends Match implements Serializable {
         possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
         possibleMove.add(MovePlayerType.MOVE_RESOURCES);
         possibleMove.add(MovePlayerType.END_TURN);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(0))), possibleMove,0,this.hashCode()));
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(0))), possibleMove, 0, this.hashCode()));
     }
 
     @Override
     public void notifyModel() {
         for (int i = 0; i < players.size(); i++) {
-            notify(SendModel.getInstance(this, players.get(i), i,this.hashCode()));
+            notify(SendModel.getInstance(this, players.get(i), i, this.hashCode()));
         }
     }
 
@@ -241,9 +251,9 @@ public class MatchSolo extends Match implements Serializable {
     }
 
     public String toString() {
-       String p = super.toString()+("LORENZO IL MAGNIFICO ==> Faith pos: "+posBlackCross+"\n")+("--------------------------------------------------------------------------------------------------------");
-       System.out.println(p);
-       return p;
+        return super.toString() +
+                ("LORENZO IL MAGNIFICO ==> Faith pos: " + posBlackCross + "\n") +
+                ("--------------------------------------------------------------------------------------------------------");
     }
 
 }

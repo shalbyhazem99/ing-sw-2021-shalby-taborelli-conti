@@ -146,7 +146,7 @@ public enum MovePlayerType {
                 int position = 0;
                 boolean parameters_valid = true;
                 do {
-                    int num_of_leader_card_enabled = (int)player.getLeaderCards().stream().filter(p->p.isActive()).count();
+                    int num_of_leader_card_enabled = (int)player.getLeaderCards().stream().filter(p-> !p.isActive()).count();
                     if(num_of_leader_card_enabled==0)
                     {
                         System.err.println("All your leader cards are enabled, you can't discard them!");
@@ -252,12 +252,13 @@ public enum MovePlayerType {
                 int index;
                 switch (type) {
                     case 0: //base production from two get one
-                        resourceToUse = Utils.getRequiredResourceFrom((ArrayList<ResourcesCount>) Arrays.asList(ResourcesCount.getInstance(2, ResourceType.ANY)), stdin,match);
-                        ResourceType[] resourceTypes = ResourceType.values();
+                        resourceToUse = Utils.getRequiredResourceFrom(new ArrayList<>(Arrays.asList(ResourcesCount.getInstance(2, ResourceType.ANY))), stdin,match);
+                        ResourceType[] resourceTypes = Utils.getUsableResourcesType();
                         System.out.print("insert interaction type ( ");
                         for (int i = 0; i < resourceTypes.length; i++) {
-                            System.out.print(i + "->" + resourceTypes[i] + " ");
+                            System.out.print(i + "->" +  Utils.resourceTypeToString(resourceTypes[i]) + " ");
                         }
+                        System.out.println(" )");
                         index = stdin.nextInt();
                         enableProductionPlayerMove = EnableProductionPlayerMoveBase.getInstance(resourceToUse, resourceTypes[index]);
                         break;
@@ -268,9 +269,9 @@ public enum MovePlayerType {
                         enableProductionPlayerMove = EnableProductionPlayerMoveLeaderCard.getInstance(resourceToUse, index);
                         break;
                     case 2: //Development Card
-                        System.out.println("insert the index of the Development Card power to activate (0,1,3)");
+                        System.out.println("insert the index of the Development Card power to activate (0,1,2)");
                         index = stdin.nextInt();
-                        resourceToUse = Utils.getRequiredResourceFrom(match.getPlayers().get(0).getDevelopmentCardSpaces().get(index).pickTopCard().getCosts(), stdin,match);
+                        resourceToUse = Utils.getRequiredResourceFrom(match.getPlayers().get(0).getDevelopmentCardSpaces().get(index).pickTopCard().getPowers().getFrom(), stdin,match);
                         enableProductionPlayerMove = EnableProductionPlayerMoveDevelopmentCard.getInstance(resourceToUse, index);
                         break;
                     default:

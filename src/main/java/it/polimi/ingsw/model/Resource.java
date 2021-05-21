@@ -20,6 +20,8 @@ public class Resource implements Serializable, Cloneable {
         return type;
     }
 
+
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Resource)) {

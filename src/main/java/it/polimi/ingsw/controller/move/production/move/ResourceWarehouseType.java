@@ -1,6 +1,8 @@
 package it.polimi.ingsw.controller.move.production.move;
 
-public enum ResourceWarehouseType {
+import java.io.Serializable;
+
+public enum ResourceWarehouseType implements Serializable {
     WAREHOUSE,
     STRONGBOX
 }
