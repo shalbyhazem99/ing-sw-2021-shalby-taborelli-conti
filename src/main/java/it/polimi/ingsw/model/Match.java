@@ -71,14 +71,14 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         notifyModel();
         //todo: to remove
-        for (Player player: players){
-            ArrayList<ResourcesCount> aa= new ArrayList<>();
-            aa.add(ResourcesCount.getInstance(10,ResourceType.COIN));
-            aa.add(ResourcesCount.getInstance(10,ResourceType.SERVANT));
-            aa.add(ResourcesCount.getInstance(10,ResourceType.SHIELD));
-            aa.add(ResourcesCount.getInstance(10,ResourceType.STONE));
+        for (Player player : players) {
+            ArrayList<ResourcesCount> aa = new ArrayList<>();
+            aa.add(ResourcesCount.getInstance(10, ResourceType.COIN));
+            aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
+            aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));
+            aa.add(ResourcesCount.getInstance(10, ResourceType.STONE));
 
-            player.addResourceToStrongBox( (ArrayList<Resource>) aa.stream().flatMap(elem->elem.toArrayListResources().stream()).collect(Collectors.toList()));
+            player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
         }
         askForDiscardLeaderCard();
     }
@@ -446,7 +446,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 notify(EnableProductionResponse.getInstance(power, resourceToUse, players, players.indexOf(player), this.hashCode()));
                 askForMove();
             }
-            player.moveAheadFaith((int)power.getTo().stream().filter(elem -> elem.getType().equals(ResourceType.FAITH)).count());
+            player.moveAheadFaith((int) power.getTo().stream().filter(elem -> elem.getType().equals(ResourceType.FAITH)).count());
             player.getStrongBox().addAll(power.getTo().stream().filter(elem -> !elem.getType().equals(ResourceType.FAITH)).collect(Collectors.toList()));
         } else if (!noControl) {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
@@ -500,13 +500,19 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param positionOfProductivePower
      * @param player
      */
-    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, Player player, boolean noControl) {
-        if (!noControl && positionOfProductivePower >= player.getAddedPower().size() && positionOfProductivePower>0) {
+    public void enableProductionLeaderInteraction(ArrayList<ResourcePick> resourceToUse, int positionOfProductivePower, ResourceType resourceType, Player player, boolean noControl) {
+        if (!noControl && positionOfProductivePower >= player.getAddedPower().size() && positionOfProductivePower > 0) {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             askForMove();
             return;
         }
-        activateProductivePower(player.getAddedPower().get(positionOfProductivePower), resourceToUse, player, noControl);
+        ProductivePower power = ProductivePower.getInstance(
+                player.getAddedPower().get(positionOfProductivePower).getFrom(),
+                new ArrayList<>(Arrays.asList(
+                        Resource.getInstance(resourceType),
+                        Resource.getInstance(ResourceType.FAITH)))
+        );
+        activateProductivePower(power, resourceToUse, player, noControl);
     }
 
     /**
@@ -540,8 +546,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             if (!noControl)
                 notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), numberOfResources, indexFirstWarehouse, indexSecondWarehouse));
             return;
-        }
-        else {
+        } else {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             askForMove();
         }
@@ -615,19 +620,19 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                                 code = "P ▶ ⚔        R ▶ ✝";
                                 break;
                         }
-                        temp += ("|" + marketBoard.getRow(i).get(j).toString().toCharArray()[0] + "|  ◀  ("+i+")           " + code + "\n");
+                        temp += ("|" + marketBoard.getRow(i).get(j).toString().toCharArray()[0] + "|  ◀  (" + i + ")           " + code + "\n");
                         temp += (" _ _ _ _\n");
                     }
                 }
             }
             temp += (" ▲ ▲ ▲ ▲\n");
-            temp += (" 0 1 2 \n");
+            temp += (" 0 1 2 3\n");
             temp += "\n";
             temp += ("-------------------------------------------------------------------------------------------------------\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             temp += ("|DEVELOPMENT CARDS|            (P=Point, C=Costs, PP = Productive Powers)\n");
             temp += ("---------------\n");
-            temp += ("\t\t\t\t\t\t  VERDE \t\t\t\t\t\t  BLU \t\t\t\t\t\t GIALLO \t\t\t\t\t\t VIOLA\n");
+            temp += ("\t\t\t\t\t\t  "+DevelopmentCardType.GREEN+" \t\t\t\t\t\t  "+DevelopmentCardType.BLUE+" \t\t\t\t\t\t "+DevelopmentCardType.YELLOW+" \t\t\t\t\t\t "+DevelopmentCardType.PURPLE+"\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.GREEN));
             int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.BLUE));
@@ -682,10 +687,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|LEADER CARDS|\n");
                 temp += ("-------------\n");
-                temp += ("Ind |Active|Point|Type|   Res needed |  Power\n");
-                int uo=0;
+                temp += ("Ind |Active|Point|Type|   Res needed |  DevCardNeeded           |    Powers\n");
+                int uo = 0;
                 for (LeaderCard leaderCard : player.getLeaderCards()) {
-                    temp += ("("+uo+") |"+leaderCard.toString() + "\n");
+                    temp += ("(" + uo + ") |" + leaderCard.toString() + "\n");
                     uo++;
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");

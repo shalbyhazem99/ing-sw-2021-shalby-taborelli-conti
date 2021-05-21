@@ -24,4 +24,14 @@ public class DevelopmentCardNeeded implements Serializable {
     public DevelopmentCardLevel getLevel() {
         return level;
     }
+
+    @Override
+    public String toString() {
+        String l = "";
+        if(level!=null)
+        {
+            l = level.toString();
+        }
+        return count+" "+l+" "+type.toString();
+    }
 }
