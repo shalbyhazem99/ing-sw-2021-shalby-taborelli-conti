@@ -48,7 +48,7 @@ public class ClientCLI {
                             SendModel sendModel = ((SendModel) inputObject);
                             match = sendModel.getMatch();
                             playerPos = sendModel.getPlayerPosition();
-                            match.toString();
+                            System.out.println(match.toString());
                             System.out.flush();
                         } else if (inputObject instanceof SendMessage) {
                             System.out.println(inputObject.toString());
@@ -58,7 +58,7 @@ public class ClientCLI {
                             moveResponse.updateLocalMatch(match);
                             //verify the model correctness
                             if (match != null) {
-                                match.toString();
+                                System.out.println(match.toString());
                                 System.out.flush();
                                 if (match.hashCode() != moveResponse.getHashToVerify()) {
                                     //todo to complete (response and move)

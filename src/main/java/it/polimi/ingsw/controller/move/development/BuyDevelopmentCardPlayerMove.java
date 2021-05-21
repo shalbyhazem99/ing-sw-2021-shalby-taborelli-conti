@@ -27,7 +27,7 @@ public class BuyDevelopmentCardPlayerMove extends PlayerMove {
 
     @Override
     public void execute(Match match) {
-        if(match.getCanChangeTurn()) {
+        if(!match.getCanChangeTurn()) {
             match.buyDevelopmentCardInteraction(type, level, player, posToAdd,resourceToUse,false);
         }
     }

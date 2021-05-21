@@ -3,7 +3,9 @@ package it.polimi.ingsw.controller.move.production.move;
 
 import it.polimi.ingsw.model.ResourceType;
 
-public class ResourcePick {
+import java.io.Serializable;
+
+public class ResourcePick implements Serializable {
     private ResourceWarehouseType resourceWarehouseType; //warehouse or strongbox
     private int warehousePosition; //if a warehouse used
     private ResourceType resourceType; // the resources to get

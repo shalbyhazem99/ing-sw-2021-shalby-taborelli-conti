@@ -24,6 +24,10 @@ public class ResourcesCount implements Serializable {
         return type;
     }
 
+    public void setType(ResourceType type) {
+        this.type = type;
+    }
+
     /**
      * Method to convert the {@link ResourcesCount} class to an {@link ArrayList} of {@link Resource}
      * @return a {@link ArrayList} of {@link Resource} equivalent to the object
