@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -52,6 +53,12 @@ public class LeaderCardAddWarehouse extends LeaderCard implements Serializable {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "| NEW WRH ADD : Type "+ Utils.resourceTypeToString(resourceTypeRelated);
+    }
+
     /**
      * @param obj
      * @return

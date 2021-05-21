@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,6 +52,11 @@ public class LeaderCardDiscount extends LeaderCard implements Serializable {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+" | NEW DISCOUNT : -1 "+ Utils.resourceTypeToString(resourceTypeRelated);
     }
 
     /**

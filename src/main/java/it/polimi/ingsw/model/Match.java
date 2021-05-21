@@ -610,7 +610,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             temp += "\n";
             temp += ("-------------------------------------------------------------------------------------------------------\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-            temp += ("|CARTE SVILUPPO|            (P=Point, C=Costs, PP = Productive Powers)\n");
+            temp += ("|DEVELOPMENT CARDS|            (P=Point, C=Costs, PP = Productive Powers)\n");
             temp += ("---------------\n");
             temp += ("\t\t\t\t\t\t  VERDE \t\t\t\t\t\t  BLU \t\t\t\t\t\t GIALLO \t\t\t\t\t\t VIOLA\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
@@ -666,11 +666,13 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                     temp += (player.getDevelopmentCardSpaces().get(a).toString() + "\n");
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                temp += ("|LEADER CARD|\n");
+                temp += ("|LEADER CARDS|\n");
                 temp += ("-------------\n");
-                temp += ("Active|Point|Type|   Resources needed\n");
+                temp += ("Ind |Active|Point|Type|   Res needed |  Power\n");
+                int uo=0;
                 for (LeaderCard leaderCard : player.getLeaderCards()) {
-                    temp += (leaderCard.toString() + "\n");
+                    temp += ("("+uo+") |"+leaderCard.toString() + "\n");
+                    uo++;
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }

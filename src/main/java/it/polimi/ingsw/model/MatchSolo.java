@@ -241,7 +241,7 @@ public class MatchSolo extends Match implements Serializable {
     }
 
     public String toString() {
-       String p = super.toString()+("LORENZO IL MAGNIFICO ==> Faith pos: "+posBlackCross+"\n")+("--------------------------------------------------------------------------------------------------------");
+       String p = super.toString()+("LORENZO IL MAGNIFICO ==> Faith pos: "+posBlackCross+" |\n")+("--------------------------------------------------------------------------------------------------------");
        System.out.println(p);
        return p;
     }

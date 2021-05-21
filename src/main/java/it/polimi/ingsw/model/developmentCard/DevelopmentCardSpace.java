@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.developmentCard;
 
+import it.polimi.ingsw.utils.Utils;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -68,9 +70,14 @@ public class DevelopmentCardSpace implements Serializable {
 
     @Override
     public String toString() {
-        if (!developmentCards.isEmpty())
-            return developmentCards.peek().toString();
-        else
-            return "";
+        String temp = "";
+        int max = 30;
+        if (!developmentCards.isEmpty()) {
+            temp += ("        | P:| " + Integer.valueOf(developmentCards.peek().getEquivalentPoint()).toString() + Utils.fillSpaces(max, Integer.valueOf(developmentCards.peek().getEquivalentPoint()).toString().length()));
+            temp += ("LVL = " + 1 + " | C:| " + developmentCards.peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards.peek().getCostsFormatted().length()));
+            temp += ("        |PP:| " + developmentCards.peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards.peek().getPowersFormatted().length()));
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        }
+        return temp;
     }
 }

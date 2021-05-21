@@ -87,7 +87,7 @@ public abstract class LeaderCard implements Serializable {
         {
             s+="  ❌  |";
         }
-        s+="  "+points+"  |  "+ Utils.resourceTypeToString(resourceTypeRelated)+" | "+ Utils.formatResourcesCount(resourcesNeeded);
+        s+="  "+points+"  |  "+ Utils.resourceTypeToString(resourceTypeRelated)+" | "+ Utils.formatResourcesCount(resourcesNeeded) + Utils.fillSpaces(13,Utils.formatResourcesCount(resourcesNeeded).length());
         return s;
     }
 }

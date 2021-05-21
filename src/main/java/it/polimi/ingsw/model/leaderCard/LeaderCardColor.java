@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ResourceType;
 import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -61,6 +62,11 @@ public class LeaderCardColor extends LeaderCard implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+" | NEW CONVERSION : W ▶ "+ Utils.resourceTypeToString(resourceTypeRelated);
     }
 
     /**
