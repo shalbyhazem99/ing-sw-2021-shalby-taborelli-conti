@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.move.MovePlayerType;
+import it.polimi.ingsw.controller.move.endMatch.EndMatchSoloResponse;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.endRound.EndRoundSoloResponse;
-import it.polimi.ingsw.controller.move.settings.AskForMove;
-import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
@@ -169,10 +167,18 @@ public class MatchSolo extends Match implements Serializable {
         super.endRoundInteraction(player, noControl);
         //execute lorenzo action
         if (!noControl) {
-            ActionToken actionToken = pickActionToken();
-            String messageToSend = executeAction(actionToken, player, false);
-            notify(EndRoundSoloResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode(), messageToSend, actionToken));
-            askForMove();
+            if (hasWon()) {
+                notify(EndMatchSoloResponse.getInstance(players, 0, this.hashCode(), false));
+            } else {
+                ActionToken actionToken = pickActionToken();
+                String messageToSend = executeAction(actionToken, player, false);
+                if (hasLose()) {
+                    notify(EndMatchSoloResponse.getInstance(players, 0, this.hashCode(), true));
+                }else {
+                    notify(EndRoundSoloResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode(), messageToSend, actionToken));
+                    askForMove();
+                }
+            }
         }
     }
 
@@ -192,31 +198,31 @@ public class MatchSolo extends Match implements Serializable {
                     moveAheadBlackCross(2);
                 }
                 //control tailes
-                    if (posBlackCross == 24) {
-                            if (getCurrentPlayer().getPosFaithMarker() >= 19) {
-                                if (getCurrentPlayer().getPopeFavorTiles().get(2) != null) {
-                                    getCurrentPlayer().getPopeFavorTiles().get(2).active();
-                                }
-                            } else {
-                                getCurrentPlayer().getPopeFavorTiles().set(2, null);
-                            }
-                    } else if (posBlackCross >= 16) {
-                        if (getCurrentPlayer().getPosFaithMarker() >=12) {
-                            if (getCurrentPlayer().getPopeFavorTiles().get(1) != null) {
-                                getCurrentPlayer().getPopeFavorTiles().get(1).active();
-                            }
-                        } else {
-                            getCurrentPlayer().getPopeFavorTiles().set(1, null);
+                if (posBlackCross == 24) {
+                    if (getCurrentPlayer().getPosFaithMarker() >= 19) {
+                        if (getCurrentPlayer().getPopeFavorTiles().get(2) != null) {
+                            getCurrentPlayer().getPopeFavorTiles().get(2).active();
                         }
-                    } else if (posBlackCross >= 8) {
-                        if (getCurrentPlayer().getPosFaithMarker() >= 5) {
-                            if (getCurrentPlayer().getPopeFavorTiles().get(0) != null) {
-                                getCurrentPlayer().getPopeFavorTiles().get(0).active();
-                            }
-                        } else {
-                            getCurrentPlayer().getPopeFavorTiles().set(0, null);
-                        }
+                    } else {
+                        getCurrentPlayer().getPopeFavorTiles().set(2, null);
                     }
+                } else if (posBlackCross >= 16) {
+                    if (getCurrentPlayer().getPosFaithMarker() >= 12) {
+                        if (getCurrentPlayer().getPopeFavorTiles().get(1) != null) {
+                            getCurrentPlayer().getPopeFavorTiles().get(1).active();
+                        }
+                    } else {
+                        getCurrentPlayer().getPopeFavorTiles().set(1, null);
+                    }
+                } else if (posBlackCross >= 8) {
+                    if (getCurrentPlayer().getPosFaithMarker() >= 5) {
+                        if (getCurrentPlayer().getPopeFavorTiles().get(0) != null) {
+                            getCurrentPlayer().getPopeFavorTiles().get(0).active();
+                        }
+                    } else {
+                        getCurrentPlayer().getPopeFavorTiles().set(0, null);
+                    }
+                }
                 break;
             case DISCARD:
                 int lvl = 0;
@@ -266,10 +272,18 @@ public class MatchSolo extends Match implements Serializable {
         }
     }
 
-    @Override
-    public ArrayList<Winner> whoIsWinner() {
-        //todo: ci pensa conti
-        return null;
+    public boolean hasLose() {
+        //control the development card (if the development card of a certain typology has end)
+        if (Arrays.stream(DevelopmentCardType.values()).anyMatch(developmentCardType ->
+                Arrays.stream(developmentCards).mapToInt(row -> row[developmentCardType.label].size()).sum() == 0
+        )) return true;
+        //if lorenzo finish the faith path before you
+        if (posBlackCross >= 24) return true;
+        return false;
+    }
+
+    public boolean hasWon() {
+        return (players.get(0).getDevelopmentCards().size() >= 7 || players.get(0).getPosFaithMarker() >= 24);
     }
 
     public String toString() {

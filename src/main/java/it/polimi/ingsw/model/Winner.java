@@ -4,13 +4,11 @@ public class Winner {
     private String name;
     private int points;
     private int totalResources;
-    private int position;
 
-    public Winner(String name, int points, int totalResources, int position) {
+    public Winner(String name, int points, int totalResources) {
         this.name = name;
         this.points = points;
         this.totalResources = totalResources;
-        this.position = position;
     }
 
     public String getName() {
@@ -25,12 +23,8 @@ public class Winner {
         return totalResources;
     }
 
-    public int getPosition() {
-        return position;
-    }
-
-    public static Winner getInstance (String name, int points, int totalResources, int position){
-        return new Winner(name,points,totalResources,position);
+    public static Winner getInstance (String name, int points, int totalResources){
+        return new Winner(name,points,totalResources);
     }
 
     @Override

@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.controller.move.endMatch.EndMatchResponse;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
@@ -51,8 +52,10 @@ public class ClientCLI {
                             match.setWhoAmI(playerPos);
                             System.out.println(match.toString());
                             System.out.flush();
-                        } else if (inputObject instanceof SendMessage) {
-                            System.out.println(inputObject.toString());
+                        } else if (inputObject instanceof EndMatchResponse) {
+                            System.out.println("match End!");
+                            manageResponse((MoveResponse)inputObject,stdin,socketOut);
+                            setActive(false);
                         } else if (inputObject instanceof MoveResponse) {
                             MoveResponse moveResponse = (MoveResponse) inputObject;
                             //update local match

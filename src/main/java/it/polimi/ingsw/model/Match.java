@@ -661,8 +661,62 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
     }
 
+    public ArrayList<Winner> whoIsWinner() {
+        ArrayList<Winner> winners = new ArrayList<>();
+        for (Player player : players) {
+            int totalPoints = 0;
+            //Adding the points from the development card
+            totalPoints += player.getDevelopmentCards().stream().mapToInt(elem -> elem.getEquivalentPoint()).sum();
+            //Adding the points from the Faith Track
+            if (player.getPosFaithMarker() < 3) {
+                totalPoints += 0;
+            } else if (player.getPosFaithMarker() < 6) {
+                totalPoints += 1;
+            } else if (player.getPosFaithMarker() < 9) {
+                totalPoints += 2;
+            } else if (player.getPosFaithMarker() < 12) {
+                totalPoints += 4;
+            } else if (player.getPosFaithMarker() < 15) {
+                totalPoints += 6;
+            } else if (player.getPosFaithMarker() < 18) {
+                totalPoints += 9;
+            } else if (player.getPosFaithMarker() < 21) {
+                totalPoints += 12;
+            } else if (player.getPosFaithMarker() < 24) {
+                totalPoints += 16;
+            } else {
+                totalPoints += 20;
+            }
+            //adding the point from the active Pope's Tales
+            for (int j = 0; j < 3; j++) {
+                if (player.getPopeFavorTiles().get(j) != null && player.getPopeFavorTiles().get(j).isActive())
+                    totalPoints += player.getPopeFavorTiles().get(j).getPoints();
+            }
+            //adding the points from the LeaderCards that are activated
+            totalPoints += player.getLeaderCards().stream().filter(elem -> elem.isActive()).mapToInt(elem -> elem.getPoints()).sum();
+            //Counting all the Resources stored
+            int countRes = player.getResources().size();
+            totalPoints += Math.floorDiv(countRes, 5); // countRes/5;
 
-    public abstract ArrayList<Winner> whoIsWinner();
+            //creating the ArrayList of Winners
+            if (winners.isEmpty()) {
+                winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
+            } else {
+                if(winners.get(0).getPoints()< totalPoints){ //th winner is the considered player
+                    winners.clear();
+                    winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
+                }else if(winners.get(0).getPoints()== totalPoints){
+                    if(countRes == winners.get(0).getTotalResources()){ // draw
+                        winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
+                    }else if(countRes > winners.get(0).getTotalResources()) {//th winner is the considered player
+                        winners.clear();
+                        winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
+                    }
+                }
+            }
+        }
+        return winners;
+    }
 
     public String toString() {
         String temp = "";

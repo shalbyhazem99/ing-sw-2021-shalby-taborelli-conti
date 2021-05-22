@@ -31,6 +31,7 @@ public class SendMessage extends MoveResponse {
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
+        System.out.println(message);
         return null;
     }
 

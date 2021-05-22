@@ -34,7 +34,7 @@ public class PopeFavorTiles implements Serializable {
             return 0;
         }
     }
-    public boolean getActive(){
+    public boolean isActive(){
         return this.active;
     }
 

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.move.settings;
+package it.polimi.ingsw.controller.move.endMatch;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class EndMatch extends MoveResponse {
+public class EndMatchResponse extends MoveResponse {
 
-    public EndMatch(ArrayList<Player> players, int executePlayerPos, int hashToVerify) {
+    public EndMatchResponse(ArrayList<Player> players, int executePlayerPos, int hashToVerify) {
         super(players, executePlayerPos, hashToVerify);
     }
 
-    public static EndMatch getInstance(Player player, int executePlayerPos, int hashToVerify) {
-        return new EndMatch(new ArrayList<>(Arrays.asList(player)),executePlayerPos,hashToVerify);
+    public static EndMatchResponse getInstance(Player player, int executePlayerPos, int hashToVerify) {
+        return new EndMatchResponse(new ArrayList<>(Arrays.asList(player)),executePlayerPos,hashToVerify);
     }
 
 
