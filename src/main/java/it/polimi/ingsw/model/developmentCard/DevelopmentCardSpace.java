@@ -65,7 +65,10 @@ public class DevelopmentCardSpace implements Serializable {
      * @return the {@link DevelopmentCard} placed on the top of the {@link Stack} of the {@link DevelopmentCardSpace}
      */
     public DevelopmentCard pickTopCard() {
-        return developmentCards.peek();
+        if(!developmentCards.isEmpty()) {
+            return developmentCards.peek();
+        }
+        return null;
     }
 
     @Override

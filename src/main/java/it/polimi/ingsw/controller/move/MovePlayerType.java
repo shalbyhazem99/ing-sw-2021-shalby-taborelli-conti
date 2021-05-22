@@ -36,13 +36,17 @@ public enum MovePlayerType {
                 do {
                     System.out.print("insert development card type ( ");
                     Arrays.stream(developmentCardTypes).forEach(elem -> System.out.print(elem.label + "->" + elem + " "));
-                    System.out.println(" )");
+                    System.out.println(" )"+Utils.DISABLE_MOVE);
                     parameters_valid = true;
                     row = stdin.nextInt();
                     if(row<0||row>3)
                     {
                         parameters_valid = false;
                         System.err.println("Error insert valid parameters!");
+                    }
+                    if(row==-1)
+                    {
+                        return null;
                     }
                 } while (!parameters_valid);
                 DevelopmentCardType type = developmentCardTypes[row];
@@ -52,7 +56,7 @@ public enum MovePlayerType {
                 do {
                     System.out.print("insert development card level ( ");
                     Arrays.stream(developmentCardLevels).forEach(elem -> System.out.print(elem.label + "->" + elem + " "));
-                    System.out.println(" )");
+                    System.out.println(" )"+Utils.DISABLE_MOVE);
                     parameters_valid = true;
                     column = stdin.nextInt();
                     if(column<0||column>2)
@@ -60,18 +64,26 @@ public enum MovePlayerType {
                         parameters_valid = false;
                         System.err.println("Error insert valid parameters!");
                     }
+                    else if(row==-1)
+                    {
+                        return null;
+                    }
                 } while (!parameters_valid);
                 DevelopmentCardLevel level = developmentCardLevels[column];
                 //pos
                 int pos;
                 do {
-                    System.out.println("insert development card position( 0, 1, 2 )");
+                    System.out.println("insert development card position( 0, 1, 2 )"+Utils.DISABLE_MOVE);
                     parameters_valid = true;
                     pos = stdin.nextInt();
                     if(pos<0||pos>2)
                     {
                         parameters_valid = false;
                         System.err.println("Error insert valid parameters!");
+                    }
+                    if(pos==-1)
+                    {
+                        return null;
                     }
                 } while (!parameters_valid);
                 //choose where ro get resources
@@ -119,11 +131,15 @@ public enum MovePlayerType {
                     }
                     else
                     {
-                        System.out.print("Insert the pos of the leader card to enable (0,1)");
+                        System.out.println("Insert the pos of the leader card to enable (0,1)"+Utils.DISABLE_MOVE);
                         position = stdin.nextInt();
                         if(position<0 || position>1)
                         {
                             parameters_valid = false;
+                        }
+                        if(position==-1)
+                        {
+                            return null;
                         }
                     }
                 }while(!parameters_valid);
@@ -165,11 +181,15 @@ public enum MovePlayerType {
                     }
                     else
                     {
-                        System.out.print("Insert the pos of the leader card to discard (0,1)");
+                        System.out.print("Insert the pos of the leader card to discard (0,1)"+Utils.DISABLE_MOVE);
                         position = stdin.nextInt();
                         if(position<0 || position>1)
                         {
                             parameters_valid = false;
+                        }
+                        if(position==-1)
+                        {
+                            return null;
                         }
                     }
                 }while(!parameters_valid);
@@ -196,12 +216,16 @@ public enum MovePlayerType {
                 for (int i = 0; i < moveTypes.length; i++) {
                     System.out.print(i + "->" + moveTypes[i] + " ");
                 }
-                System.out.println(" )");
+                System.out.println(" )"+Utils.DISABLE_MOVE);
                 move = stdin.nextInt();
                 if(move!=0 && move!=1)
                 {
                     System.err.println("Error, insert a valid parameter!");
                     parameters_valid = false;
+                }
+                if(move==-1)
+                {
+                    return null;
                 }
                 }while(!parameters_valid);
                 MoveType type = moveTypes[move];
@@ -211,21 +235,29 @@ public enum MovePlayerType {
                     parameters_valid = true;
                     if (move == 0) //ROW
                     {
-                        System.out.println("insert ROW position(0,1,2)");
+                        System.out.println("insert ROW position(0,1,2)"+Utils.DISABLE_MOVE);
                         pos = stdin.nextInt();
                         if(pos<0||pos>2)
                         {
                             System.err.println("Error, insert a valid parameter!");
                             parameters_valid = false;
                         }
+                        if(pos==-1)
+                        {
+                            return null;
+                        }
                     } else //COLUMN
                     {
-                        System.out.println("insert COLUMN position(0,1,2,3)");
+                        System.out.println("insert COLUMN position(0,1,2,3)"+Utils.DISABLE_MOVE);
                         pos = stdin.nextInt();
                         if(pos<0||pos>3)
                         {
                             System.err.println("Error, insert a valid parameter!");
                             parameters_valid = false;
+                        }
+                        if(pos==-1)
+                        {
+                            return null;
                         }
                     }
                 }while (!parameters_valid);
@@ -246,7 +278,7 @@ public enum MovePlayerType {
                 boolean parameters_valid;
                 do
                 {parameters_valid=true;
-                System.out.println("insert which type of power you want to active( 0-> base production, 1-> Leader Card, 2-> Development Card)");
+                System.out.println("insert which type of power you want to active( 0-> base production [ 2 A ▶ 1A ], 1-> Leader Card, 2-> Development Card)"+Utils.DISABLE_MOVE);
                 int type = stdin.nextInt();
                 ArrayList<ResourcePick> resourceToUse;
                 int index;
@@ -286,6 +318,8 @@ public enum MovePlayerType {
                         resourceToUse = Utils.getRequiredResourceFrom(match.getCurrentPlayer().getDevelopmentCardSpaces().get(index).pickTopCard().getPowers().getFrom(), stdin,match);
                         enableProductionPlayerMove = EnableProductionPlayerMoveDevelopmentCard.getInstance(resourceToUse, index);
                         break;
+                    case -1:
+                        return null;
                     default:
                         System.err.println("Error, insert correct parameter!");
                         parameters_valid = false;

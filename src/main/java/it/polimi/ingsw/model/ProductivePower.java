@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utils.Utils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -27,16 +29,9 @@ public class ProductivePower implements Serializable {
 
     @Override
     public String toString() {
-        String s = "";
-        for (ResourcesCount r: from)
-        {
-            s = s+r.toString()+"-";
-        }
-        s = s + "-->";
-        for (Resource a: to)
-        {
-            s = s+a.toString()+"-";
-        }
+        String s = Utils.formatResourcesCount(from);
+        s += " ▶ ";
+        s += Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(to));
         return s;//from.toString()+"-->"+to.toString();
     }
 }
