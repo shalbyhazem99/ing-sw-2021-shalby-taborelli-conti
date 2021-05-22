@@ -64,7 +64,7 @@ public enum MovePlayerType {
                         parameters_valid = false;
                         System.err.println("Error insert valid parameters!");
                     }
-                    else if(row==-1)
+                    if(column==-1)
                     {
                         return null;
                     }

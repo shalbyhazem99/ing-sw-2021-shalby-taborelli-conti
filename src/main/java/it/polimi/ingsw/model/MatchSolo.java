@@ -191,6 +191,32 @@ public class MatchSolo extends Match implements Serializable {
                 {
                     moveAheadBlackCross(2);
                 }
+                //control tailes
+                    if (posBlackCross == 24) {
+                            if (getCurrentPlayer().getPosFaithMarker() >= 19) {
+                                if (getCurrentPlayer().getPopeFavorTiles().get(2) != null) {
+                                    getCurrentPlayer().getPopeFavorTiles().get(2).active();
+                                }
+                            } else {
+                                getCurrentPlayer().getPopeFavorTiles().set(2, null);
+                            }
+                    } else if (posBlackCross >= 16) {
+                        if (getCurrentPlayer().getPosFaithMarker() >=12) {
+                            if (getCurrentPlayer().getPopeFavorTiles().get(1) != null) {
+                                getCurrentPlayer().getPopeFavorTiles().get(1).active();
+                            }
+                        } else {
+                            getCurrentPlayer().getPopeFavorTiles().set(1, null);
+                        }
+                    } else if (posBlackCross >= 8) {
+                        if (getCurrentPlayer().getPosFaithMarker() >= 5) {
+                            if (getCurrentPlayer().getPopeFavorTiles().get(0) != null) {
+                                getCurrentPlayer().getPopeFavorTiles().get(0).active();
+                            }
+                        } else {
+                            getCurrentPlayer().getPopeFavorTiles().set(0, null);
+                        }
+                    }
                 break;
             case DISCARD:
                 int lvl = 0;
