@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsResponse;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
 import it.polimi.ingsw.controller.move.MoveResponse;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.controller.move.market.MarketResponse;
 import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse;
+import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.controller.move.moveResources.MoveResourcesResponse;
@@ -41,10 +43,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     protected Stack<LeaderCard> leaderCards;
     protected Stack<DevelopmentCard>[][] developmentCards;
     protected MarketBoard marketBoard;
-    protected ArrayList<Resource> pendingResources;
+    protected ArrayList<Resource> pendingMarketResources;
+    protected ArrayList<Resource> pendingProductionResources;
     protected int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
     protected boolean canChangeTurn = false;
     protected int numPlayerWhoDiscard = 0;
+    private transient int whoAmI;
 
     //when something wrong: resent the entire model
     //TODO: pensare a attributi aggiuntivi, esempio salvare su disco i record, memorizzare timestamp per sapere da quanto tempo si gioca ...
@@ -61,7 +65,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         leaderCards = FileReader.readLeaderCard();
         developmentCards = FileReader.readDevelopmentCards();
         marketBoard = MarketBoard.getInstance();
-        pendingResources = new ArrayList<>();
+        pendingMarketResources = new ArrayList<>();
+        pendingProductionResources = new ArrayList<>();
+        pendingProductionResources = new ArrayList<>();
     }
 
     public void startMatch() {
@@ -186,6 +192,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return players.set(getPlayers().indexOf(null), newPlayer) != null;
     }
 
+    public void setWhoAmI(int whoAmI) {
+        this.whoAmI = whoAmI;
+    }
+
     //TODO pensare a come ridefinire l'equals, possiamo mettere un nickname che deve essere univoco, quindi dovrei fare un ulteriore controllo in addplayer
     //TODO noi scegliamo di fare la persistenza, se sì l'utente va eliminato dopo x turni che non accede?
     public boolean removeDisconnectedPlayer(Player toRemove) {
@@ -235,10 +245,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         if (player.discardLeaderCard(leaderCardPosition)) {
             notify(DiscardLeaderCardResponse.getInstance(players, players.indexOf(player), leaderCardPosition, this.hashCode()));
-            askForMove();
         } else {
             notify(SendMessage.getInstance("Something wrong, Leader Card cannot be discarded, retry", player, players.indexOf(player), this.hashCode()));
         }
+        askForMove();
     }
 
     /**
@@ -254,13 +264,28 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         if (leaderCardPosition < player.getLeaderCards().size() && player.getLeaderCard(leaderCardPosition).active(player)) {
             notify(EnableLeaderCardResponse.getInstance(players, players.indexOf(player), leaderCardPosition, this.hashCode()));
-            askForMove();
         } else {
             notify(SendMessage.getInstance("Something wrong, Leader Card cannot be enabled, retry", player, players.indexOf(player), this.hashCode()));
         }
+        askForMove();
     }
 
-    public abstract void askForMove();
+    public void askForMove() {
+        ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
+        if (!canChangeTurn) {
+            possibleMove.add(MovePlayerType.MARKET_INTERACTION);
+            possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
+        }
+        //the player didn't do anything before or he plays another production before
+        if (!canChangeTurn || !pendingProductionResources.isEmpty()) {
+            possibleMove.add(MovePlayerType.ENABLE_PRODUCTION);
+        }
+        possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
+        possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
+        possibleMove.add(MovePlayerType.MOVE_RESOURCES);
+        possibleMove.add(MovePlayerType.END_TURN);
+        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(getCurrentPlayer())), possibleMove, players.indexOf(getCurrentPlayer()), this.hashCode()));
+    }
 
     /**
      * Method used to perform a {@link it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove} to let the {@link Player} to gain {@link Resource} from the {@link MarketBoard}
@@ -299,7 +324,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             }
             //Faith resource conversion to faith position
             player.moveAheadFaith((int) resourcesGained.stream().filter(el -> el.getType().equals(ResourceType.FAITH)).count());
-            pendingResources.addAll(resourcesGained.stream().filter(el -> el.getType() != ResourceType.FAITH).collect(Collectors.toList()));
+            controlPopePath();
+            pendingMarketResources.addAll(resourcesGained.stream().filter(el -> el.getType() != ResourceType.FAITH).collect(Collectors.toList()));
             //notifyModel();
             if (!noControl)
                 notify(MarketResponse.getInstance(resourcesGained, numOfWhiteMarbleToBeConverted, players, players.indexOf(player), moveType, pos, this.hashCode()));
@@ -312,14 +338,14 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void marketMarbleConvertInteraction(int first, int second, Player player, boolean noControl) {
         if (!noControl && ((first + second) > numOfWhiteMarbleToBeConverted)) {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters 2", player, players.indexOf(player), this.hashCode()));
-            notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
+            notify(MarketResponse.getInstance(pendingMarketResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
         } else {
-            ArrayList<Resource> resourcesGained = (ArrayList<Resource>) pendingResources.clone();
+            ArrayList<Resource> resourcesGained = (ArrayList<Resource>) pendingMarketResources.clone();
             for (int i = 0; i < first; i++) {
-                pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(0)));
+                pendingMarketResources.add(Resource.getInstance(player.getConversionStrategies().get(0)));
             }
             for (int i = 0; i < second; i++) {
-                pendingResources.add(Resource.getInstance(player.getConversionStrategies().get(1)));
+                pendingMarketResources.add(Resource.getInstance(player.getConversionStrategies().get(1)));
             }
             //notifyModel();
             if (!noControl)
@@ -346,13 +372,13 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
          */
         if (!noControl) {
             //CHECK 1)
-            if (pendingResources.size() == 0) {
+            if (pendingMarketResources.size() == 0) {
                 return;
             }
             //CHECK 2)
-            else if ((pendingResources.size() != whereToPlace.size())) {
+            else if ((pendingMarketResources.size() != whereToPlace.size())) {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters 3", player, players.indexOf(player), this.hashCode()));
-                notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
+                notify(MarketResponse.getInstance(pendingMarketResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
                 return;
             }
         }
@@ -371,12 +397,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 numberOfGainedResources--;
             } else if (
                     (whereToPlace.get(i) >= 0 && whereToPlace.get(i) < 3
-                            && (!standardTemp.get(whereToPlace.get(i)).addResource(pendingResources.get(i))))
+                            && (!standardTemp.get(whereToPlace.get(i)).addResource(pendingMarketResources.get(i))))
                             || (whereToPlace.get(i) >= 3 && whereToPlace.get(i) < 5 && additionalTemp.size() > whereToPlace.get(i) - 3
-                            && (!additionalTemp.get(whereToPlace.get(i)).addResource(pendingResources.get(i))))
+                            && (!additionalTemp.get(whereToPlace.get(i)).addResource(pendingMarketResources.get(i))))
             ) {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters 4", player, players.indexOf(player), this.hashCode()));
-                notify(MarketResponse.getInstance(pendingResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
+                notify(MarketResponse.getInstance(pendingMarketResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters 41", player, players.indexOf(player), this.hashCode()));
                 ArrayList<Warehouse> temp = new ArrayList<>();
                 Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
@@ -388,7 +414,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             }
         }
         //START 4)
-        pendingResources = new ArrayList<>();
+        pendingMarketResources = new ArrayList<>();
         //START 5)
         if (numberOfDiscardedResources != 0) {
             for (Player p : players) {
@@ -396,6 +422,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                     p.moveAheadFaith(numberOfDiscardedResources);
                 }
             }
+            controlPopePath();
         }
         setCanChangeTurn(true, player);
         //notifyModel();
@@ -442,12 +469,14 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
         //check if the resourto use are the required and if the player has this resources
         if (Utils.compareResources(powerRequiredResources, resourcesCounts) && player.canAfford(resourceToUse)) {
+            player.moveAheadFaith((int) power.getTo().stream().filter(elem -> elem.getType().equals(ResourceType.FAITH)).count());
+            controlPopePath();
+            pendingProductionResources.addAll(power.getTo().stream().filter(elem -> !elem.getType().equals(ResourceType.FAITH)).collect(Collectors.toList()));
+            setCanChangeTurn(true, player);
             if (!noControl) {
                 notify(EnableProductionResponse.getInstance(power, resourceToUse, players, players.indexOf(player), this.hashCode()));
                 askForMove();
             }
-            player.moveAheadFaith((int) power.getTo().stream().filter(elem -> elem.getType().equals(ResourceType.FAITH)).count());
-            player.getStrongBox().addAll(power.getTo().stream().filter(elem -> !elem.getType().equals(ResourceType.FAITH)).collect(Collectors.toList()));
         } else if (!noControl) {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             askForMove();
@@ -552,7 +581,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
     }
 
-    public abstract void endRoundInteraction(Player player, boolean noControl);
+    public void endRoundInteraction(Player player, boolean noControl) {
+        player.getStrongBox().addAll(pendingProductionResources);
+        pendingProductionResources = new ArrayList<>();
+    }
 
     public void updateTurn() {
         /*
@@ -586,6 +618,49 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         return true;
     }
+
+    //todo: testing
+    public void controlPopePath() {
+        // 5-8 (2 points, first pope favor tiles)
+        // 12-16 (3 points, second pope favor tiles)
+        // 19-24 (4 points, third pope favor tiles)
+        //remove popeFavor put it = null;
+
+        for (Player player : players) {
+            if (player.getPosFaithMarker() == 24) {
+                for (Player tempP : players) {
+                    if (tempP.getPosFaithMarker() >= 19) {
+                        if (tempP.getPopeFavorTiles().get(2) != null) {
+                            tempP.getPopeFavorTiles().get(2).active();
+                        }
+                    } else {
+                        tempP.getPopeFavorTiles().set(2, null);
+                    }
+                }
+            } else if (player.getPosFaithMarker() >= 16) {
+                for (Player tempP : players) {
+                    if (tempP.getPosFaithMarker() >= 12) {
+                        if (tempP.getPopeFavorTiles().get(1) != null) {
+                            tempP.getPopeFavorTiles().get(1).active();
+                        }
+                    } else {
+                        tempP.getPopeFavorTiles().set(1, null);
+                    }
+                }
+            } else if (player.getPosFaithMarker() >= 8) {
+                for (Player tempP : players) {
+                    if (tempP.getPosFaithMarker() >= 5) {
+                        if (tempP.getPopeFavorTiles().get(0) != null) {
+                            tempP.getPopeFavorTiles().get(0).active();
+                        }
+                    } else {
+                        tempP.getPopeFavorTiles().set(0, null);
+                    }
+                }
+            }
+        }
+    }
+
 
     public abstract ArrayList<Winner> whoIsWinner();
 
@@ -632,7 +707,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             temp += ("|DEVELOPMENT CARDS|            (P=Point, C=Costs, PP = Productive Powers)\n");
             temp += ("---------------\n");
-            temp += ("\t\t\t\t\t\t  "+DevelopmentCardType.GREEN+" \t\t\t\t\t\t  "+DevelopmentCardType.BLUE+" \t\t\t\t\t\t "+DevelopmentCardType.YELLOW+" \t\t\t\t\t\t "+DevelopmentCardType.PURPLE+"\n");
+            temp += ("\t\t\t\t\t\t  " + DevelopmentCardType.GREEN + " \t\t\t\t\t\t  " + DevelopmentCardType.BLUE + " \t\t\t\t\t\t " + DevelopmentCardType.YELLOW + " \t\t\t\t\t\t " + DevelopmentCardType.PURPLE + "\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.GREEN));
             int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.BLUE));
@@ -713,4 +788,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @return the {@link Player} which is playing
      */
     public abstract Player getCurrentPlayer();
+
+    //needed for match solo
+    public String executeAction(ActionToken action, Player player, boolean noControl){
+        return "";
+    }
 }

@@ -5,7 +5,6 @@ import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
 import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMove;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.controller.move.settings.EndMatch;
-import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 import java.io.Serializable;
 import java.util.*;
@@ -61,13 +60,14 @@ public class MatchMulti extends Match implements Serializable {
      * @param player the {@link Player} who wants to end his round
      */
     public void endRoundInteraction(Player player, boolean noControl) {
-        if (!noControl && (!isMyTurn(player) || pendingResources.size() != 0 || !getCanChangeTurn())) {
+        if (!noControl && (!isMyTurn(player) || pendingMarketResources.size() != 0 || !getCanChangeTurn())) {
             notify(EndRoundResponse.getInstance(new ArrayList<>(Arrays.asList(player)), getPlayers().indexOf(player), false, this.hashCode()));
             askForMove();
             return;
         }
+        super.endRoundInteraction (player,noControl);
         updateTurn();
-        this.pendingResources = new ArrayList<>();
+        this.pendingMarketResources = new ArrayList<>();
         notify(EndRoundResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode()));
         if (!hasWon(noControl)) {
             askForMove();
@@ -97,21 +97,6 @@ public class MatchMulti extends Match implements Serializable {
             //notifyModel();
             askForMove();
         }
-    }
-
-    public void askForMove() {
-        //notifyModel();
-        ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
-        if (!canChangeTurn) {
-            possibleMove.add(MovePlayerType.MARKET_INTERACTION);
-            possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
-            possibleMove.add(MovePlayerType.ENABLE_PRODUCTION); //TODO: to separate because multiple production could be activated
-        }
-        possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
-        possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
-        possibleMove.add(MovePlayerType.MOVE_RESOURCES);
-        possibleMove.add(MovePlayerType.END_TURN);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(turn))), possibleMove, turn, this.hashCode()));
     }
 
     @Override

@@ -114,7 +114,6 @@ public class Player implements Serializable {
     public void moveAheadFaith(int pos) {
         posFaithMarker += pos;
         posFaithMarker = Math.min(Utils.FAITH_LENGTH, posFaithMarker);
-        //tODO: CONTROL IF THE PLAYER ACTIVATE ANY CARD, MUST GET THE PLAYER LIST
     }
 
     //todo:testing
@@ -276,7 +275,7 @@ public class Player implements Serializable {
     public boolean discardLeaderCard(int leaderCardPosition) {
         if (leaderCardPosition < leaderCards.size()) {
             LeaderCard leaderCard = leaderCards.get(leaderCardPosition);
-            if (!leaderCard.isActive() && leaderCards.contains(leaderCard)) {
+            if (!leaderCard.isActive()) {
                 if (leaderCards.remove(leaderCard)) {
                     moveAheadFaith(1);
                     return true;

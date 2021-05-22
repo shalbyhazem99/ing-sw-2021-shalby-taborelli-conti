@@ -48,6 +48,7 @@ public class ClientCLI {
                             SendModel sendModel = ((SendModel) inputObject);
                             match = sendModel.getMatch();
                             playerPos = sendModel.getPlayerPosition();
+                            match.setWhoAmI(playerPos);
                             System.out.println(match.toString());
                             System.out.flush();
                         } else if (inputObject instanceof SendMessage) {
@@ -58,6 +59,7 @@ public class ClientCLI {
                             moveResponse.updateLocalMatch(match);
                             //verify the model correctness
                             if (match != null) {
+                                match.setWhoAmI(playerPos);
                                 System.out.println(match.toString());
                                 System.out.flush();
                                 if (match.hashCode() != moveResponse.getHashToVerify()) {

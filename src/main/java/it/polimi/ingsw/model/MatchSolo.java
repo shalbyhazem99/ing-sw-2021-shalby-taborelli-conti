@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
+import it.polimi.ingsw.controller.move.endRound.EndRoundSoloResponse;
 import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
@@ -9,8 +10,6 @@ import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
-import it.polimi.ingsw.model.leaderCard.LeaderCard;
-import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -27,7 +26,7 @@ public class MatchSolo extends Match implements Serializable {
     - moveAheadBlackCross(1) e shuffle()
     - discardDevelopmentCards(numero,tipo)
      */
-    private LinkedList<ActionToken> actionTokens;
+    private transient LinkedList<ActionToken> actionTokens;
     private int posBlackCross;
 
     /**
@@ -162,18 +161,32 @@ public class MatchSolo extends Match implements Serializable {
      * @throws EndRoundException {@link EndRoundException} thrown when an error occurs
      */
     public void endRoundInteraction(Player player, boolean noControl) {
+        if (!noControl && (!isMyTurn(player) || pendingMarketResources.size() != 0 || !getCanChangeTurn())) {
+            notify(EndRoundResponse.getInstance(new ArrayList<>(Arrays.asList(player)), getPlayers().indexOf(player), false, this.hashCode()));
+            askForMove();
+            return;
+        }
+        super.endRoundInteraction(player, noControl);
+        //execute lorenzo action
+        if (!noControl) {
+            ActionToken actionToken = pickActionToken();
+            String messageToSend = executeAction(actionToken, player, false);
+            notify(EndRoundSoloResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode(), messageToSend, actionToken));
+            askForMove();
+        }
+    }
+
+    public String executeAction(ActionToken action, Player player, boolean noControl) {
         setCanChangeTurn(false, player);
-        pendingResources = new ArrayList<>();
-        notify(EndRoundResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode()));
-        //ANDRA' ESEGUITA LA MOSSA DI LORENZO IL MAGNIFICO
-        ActionToken action = pickActionToken();
+        pendingMarketResources = new ArrayList<>();
         String u = "";
         switch (action.getAction()) {
             case MOVE:
                 u = "Lorenzo move ahead of " + action.getCount() + " passes\n";
                 if (action.getCount() == 1) {
                     moveAheadBlackCross(1);
-                    shuffleActionTokens();
+                    if (!noControl)
+                        shuffleActionTokens();
                 } else //count=2
                 {
                     moveAheadBlackCross(2);
@@ -196,8 +209,7 @@ public class MatchSolo extends Match implements Serializable {
                 }
                 break;
         }
-        notify(SendMessage.getInstance(u, player, players.indexOf(player), this.hashCode())); //todo: gives me problems
-        askForMove();
+        return u;
     }
 
     @Override
@@ -219,22 +231,6 @@ public class MatchSolo extends Match implements Serializable {
             //notifyModel();
             askForMove();
         }
-    }
-
-    @Override
-    public void askForMove() {
-        notifyModel();
-        ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
-        if (!canChangeTurn) {
-            possibleMove.add(MovePlayerType.MARKET_INTERACTION);
-            possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
-            possibleMove.add(MovePlayerType.ENABLE_PRODUCTION); //TODO: to separate because multiple production could be activated
-        }
-        possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
-        possibleMove.add(MovePlayerType.DISCARD_LEADER_CARD);
-        possibleMove.add(MovePlayerType.MOVE_RESOURCES);
-        possibleMove.add(MovePlayerType.END_TURN);
-        notify(AskForMove.getInstance(new ArrayList<>(Arrays.asList(players.get(0))), possibleMove, 0, this.hashCode()));
     }
 
     @Override

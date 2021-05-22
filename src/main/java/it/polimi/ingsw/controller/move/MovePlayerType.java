@@ -266,7 +266,7 @@ public enum MovePlayerType {
                         System.out.println("insert the index of the Leader Card power to activate (0,...)");
                         index = stdin.nextInt();
                         int type_index;
-                        resourceToUse = Utils.getRequiredResourceFrom(match.getPlayers().get(0).getAddedPower().get(index).getFrom(), stdin,match);
+                        resourceToUse = Utils.getRequiredResourceFrom(match.getCurrentPlayer().getAddedPower().get(index).getFrom(), stdin,match);
                         System.out.print("insert type ( ");
                         for (int i = 0; i < resourceTypes.length; i++) {
                             System.out.print(i + "->" +  Utils.resourceTypeToString(resourceTypes[i]) + " ");
@@ -283,7 +283,7 @@ public enum MovePlayerType {
                     case 2: //Development Card
                         System.out.println("insert the index of the Development Card power to activate (0,1,2)");
                         index = stdin.nextInt();
-                        resourceToUse = Utils.getRequiredResourceFrom(match.getPlayers().get(0).getDevelopmentCardSpaces().get(index).pickTopCard().getPowers().getFrom(), stdin,match);
+                        resourceToUse = Utils.getRequiredResourceFrom(match.getCurrentPlayer().getDevelopmentCardSpaces().get(index).pickTopCard().getPowers().getFrom(), stdin,match);
                         enableProductionPlayerMove = EnableProductionPlayerMoveDevelopmentCard.getInstance(resourceToUse, index);
                         break;
                     default:
