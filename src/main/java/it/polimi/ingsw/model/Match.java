@@ -676,24 +676,45 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|STRONGBOX|\n");
                 temp += ("-----------\n");
-                temp += (Utils.fromResourcesToResourceCount(player.getStrongBox()).toString() + "\n");
+                temp += (Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(player.getStrongBox())) + "\n");
+                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                temp += ("|LEADER CARD PRODUCTIVE POWERS|\n");
+                temp += ("-------------------------------\n");
+                for(int i = 0;i<player.getAddedPower().size();i++)
+                {
+                    temp += temp + " ("+i+")  "+player.getAddedPower().get(i).toString()+"\n";
+                }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|CARD SPACES|\n");
                 temp += ("-------------\n");
-
+                temp += ("| Type |  Level  | Points |   Costs   |   Productive Powers\n");
                 for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
-                    temp += (player.getDevelopmentCardSpaces().get(a).toString() + "\n");
+                    temp+="  ("+a+")   ";
+                    if(player.getDevelopmentCardSpaces().get(a).pickTopCard()!=null)
+                    {
+                        DevelopmentCard d = player.getDevelopmentCardSpaces().get(a).pickTopCard();
+                        temp += (d.getType()+"|"+d.getLevel()+"|  "+d.getEquivalentPoint()+"  | "
+                                +d.getCostsFormatted()+Utils.fillSpaces(30,d.getCostsFormatted().length()))
+                                +"| " + d.getPowersFormatted()+"\n";
+                    }
+                    else
+                    {
+                        temp += "  Empty\n";
+                    }
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|LEADER CARDS|\n");
                 temp += ("-------------\n");
-                temp += ("Ind |Active|Point|Type|   Res needed |  DevCardNeeded           |    Powers\n");
+                temp += ("Ind |Active|Point|Type|         Res needed        |      DevCardNeeded         |    Powers\n");
                 int uo = 0;
                 for (LeaderCard leaderCard : player.getLeaderCards()) {
                     temp += ("(" + uo + ") |" + leaderCard.toString() + "\n");
                     uo++;
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                //todo: waitin' shalby's merge
+                /*temp += ("|RESOURCES WAITING TO BE PLACED|           ([?] Resources obtained from Market that must be placed [?]) ");
+                temp += (Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(pendingResources)));*/
             }
         } catch (Exception e) {
             e.printStackTrace();

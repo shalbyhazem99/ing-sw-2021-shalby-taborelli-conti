@@ -27,6 +27,7 @@ public class Utils {
     public static final int DEV_CARD_COL_NUMBER = 4;
     public static final int MARKET_COL_NUMBER = 4;
     public static final int MARKET_ROW_NUMBER = 3;
+    public static final String DISABLE_MOVE = " (Insert -1 to come back to move menu)";
 
 
     /**
