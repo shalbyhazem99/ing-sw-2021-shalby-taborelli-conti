@@ -259,11 +259,7 @@ public class Player implements Serializable {
 
 
     public boolean isActionable(ArrayList<ResourcesCount> resourcesNeeded) {
-        ArrayList<ResourcesCount> resNeeded = resourcesNeeded;
-        if (hasDiscount()) {
-            resNeeded = Utils.applyDiscount(resourcesNeeded, getDiscounts());
-        }
-        return Utils.compareResources(getResources(), resNeeded);
+        return resourcesNeeded != null && Utils.compareResources(getResources(), resourcesNeeded);
     }
 
     /**

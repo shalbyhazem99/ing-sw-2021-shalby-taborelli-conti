@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.move.endRound.EndRoundResponse;
+import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsResponse;
 import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMove;
 import it.polimi.ingsw.controller.move.endMatch.EndMatchResponse;
+import it.polimi.ingsw.controller.move.settings.SendMessage;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
 
 import java.io.Serializable;
 import java.util.*;
@@ -89,8 +92,55 @@ public class MatchMulti extends Match implements Serializable {
     }
 
     @Override
-    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
-        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player);
+    public void askForDiscardLeaderCard() {
+        for (int i = 0; i < players.size(); i++) {
+            int numOfRes=0;
+            switch (i-posInkwell){
+                case 1:
+                case 2:
+                    numOfRes=1;
+                    break;
+                case 3:
+                    numOfRes=2;
+                    break;
+                default:
+                    numOfRes=0;
+            }
+            notify(DiscardTwoLeaderCardsResponse.getInstance(players.get(i), i, this.hashCode(),numOfRes));
+        }
+    }
+
+    @Override
+    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player, ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
+        if (posFirst != posSecond && posFirst >= 0 && posSecond >= 0 && posFirst < player.getLeaderCards().size() && posSecond < player.getLeaderCards().size()) {
+            LeaderCard first = player.getLeaderCard(posFirst);
+            LeaderCard second = player.getLeaderCard(posSecond);
+            player.getLeaderCards().remove(first);
+            player.getLeaderCards().remove(second);
+            numPlayerWhoDiscard++;
+        } else {
+            notify(SendMessage.getInstance("Something wrong, Leader Cards cannot be discarded, retry", player, players.indexOf(player), this.hashCode()));
+            notify(DiscardTwoLeaderCardsResponse.getInstance(player, players.indexOf(player), this.hashCode(),players.indexOf(player)-posInkwell ) );
+            return;
+        }
+        switch (players.indexOf(player)-posInkwell){ // get the turn position
+            case 1: // 2°
+                player.getWarehousesStandard().get(0).addResource(Resource.getInstance(resourceTypeFirst));
+                break;
+            case 2: // 3°
+                player.getWarehousesStandard().get(0).addResource(Resource.getInstance(resourceTypeFirst));
+                player.moveAheadFaith(1);
+                break;
+            case 3: // 4°
+                player.getWarehousesStandard().get(0).addResource(Resource.getInstance(resourceTypeFirst));
+                player.getWarehousesStandard().get(1).addResource(Resource.getInstance(resourceTypeSecond));
+                player.moveAheadFaith(1);
+                break;
+            default:
+                break;
+        }
+
+
         notifyModel();
         if (numPlayerWhoDiscard == players.size()) {
             //notifyModel();

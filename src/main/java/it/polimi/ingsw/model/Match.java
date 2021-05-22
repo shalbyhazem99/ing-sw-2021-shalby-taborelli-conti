@@ -44,6 +44,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     protected Stack<DevelopmentCard>[][] developmentCards;
     protected MarketBoard marketBoard;
     protected ArrayList<Resource> pendingMarketResources;
+    protected boolean productionActive;
     protected ArrayList<Resource> pendingProductionResources;
     protected int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
     protected boolean canChangeTurn = false;
@@ -66,7 +67,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         developmentCards = FileReader.readDevelopmentCards();
         marketBoard = MarketBoard.getInstance();
         pendingMarketResources = new ArrayList<>();
-        pendingProductionResources = new ArrayList<>();
         pendingProductionResources = new ArrayList<>();
     }
 
@@ -91,7 +91,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     public void askForDiscardLeaderCard() {
         for (int i = 0; i < players.size(); i++) {
-            notify(DiscardTwoLeaderCardsResponse.getInstance(players.get(i), i, this.hashCode()));
+            notify(DiscardTwoLeaderCardsResponse.getInstance(players.get(i), i, this.hashCode(),0));
         }
     }
 
@@ -218,7 +218,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     PLAYER INTERACTION
     -------------------------------------------------------------------------------------------------*/
 
-    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
+    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player, ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
         if (posFirst != posSecond && posFirst >= 0 && posSecond >= 0 && posFirst < player.getLeaderCards().size() && posSecond < player.getLeaderCards().size()) {
             LeaderCard first = player.getLeaderCard(posFirst);
             LeaderCard second = player.getLeaderCard(posSecond);
@@ -227,7 +227,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             numPlayerWhoDiscard++;
         } else {
             notify(SendMessage.getInstance("Something wrong, Leader Cards cannot be discarded, retry", player, players.indexOf(player), this.hashCode()));
-            notify(DiscardTwoLeaderCardsResponse.getInstance(player, players.indexOf(player), this.hashCode()));
+            notify(DiscardTwoLeaderCardsResponse.getInstance(player, players.indexOf(player), this.hashCode(),0 ) );
+            return;
         }
     }
 
@@ -277,7 +278,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             possibleMove.add(MovePlayerType.BUY_DEVELOPMENT_CARD);
         }
         //the player didn't do anything before or he plays another production before
-        if (!canChangeTurn || !pendingProductionResources.isEmpty()) {
+        if (!canChangeTurn || productionActive) {
             possibleMove.add(MovePlayerType.ENABLE_PRODUCTION);
         }
         possibleMove.add(MovePlayerType.ENABLE_LEADER_CARD);
@@ -443,7 +444,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
         //if the player can afford the development card requested
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getCosts().stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getCosts(player).stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
         //check if the resourto use are the required and if the player has this resources
         if (Utils.compareResources(resources, resourcesCounts) && player.canAfford(resourceToUse) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)) {
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
@@ -472,6 +473,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             player.moveAheadFaith((int) power.getTo().stream().filter(elem -> elem.getType().equals(ResourceType.FAITH)).count());
             controlPopePath();
             pendingProductionResources.addAll(power.getTo().stream().filter(elem -> !elem.getType().equals(ResourceType.FAITH)).collect(Collectors.toList()));
+            productionActive=true;
             setCanChangeTurn(true, player);
             if (!noControl) {
                 notify(EnableProductionResponse.getInstance(power, resourceToUse, players, players.indexOf(player), this.hashCode()));
@@ -584,6 +586,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void endRoundInteraction(Player player, boolean noControl) {
         player.getStrongBox().addAll(pendingProductionResources);
         pendingProductionResources = new ArrayList<>();
+        productionActive=false;
     }
 
     public void updateTurn() {

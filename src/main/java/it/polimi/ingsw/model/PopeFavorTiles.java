@@ -21,11 +21,6 @@ public class PopeFavorTiles implements Serializable {
             active =true;
     }
 
-    public void disable(){
-        active();
-        points=0;
-    }
-
     public int getPoints(){
         if(active){
             return this.points;

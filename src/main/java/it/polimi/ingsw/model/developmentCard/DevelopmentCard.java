@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.developmentCard;
 
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
@@ -91,8 +92,11 @@ public class DevelopmentCard implements Serializable {
      *
      * @return a shallow copy of {@link ArrayList} of {@link ResourcesCount} representing the card's costs
      */
-    public ArrayList<ResourcesCount> getCosts() {
-        return (ArrayList<ResourcesCount>) costs.clone();
+    public ArrayList<ResourcesCount> getCosts(Player player) {
+        ArrayList<ResourcesCount> costsTemp = (ArrayList<ResourcesCount>) costs.clone();
+        if(player.hasDiscount())
+           return Utils.applyDiscount(costsTemp,player.getDiscounts());
+        return costsTemp;
     }
 
     @Override

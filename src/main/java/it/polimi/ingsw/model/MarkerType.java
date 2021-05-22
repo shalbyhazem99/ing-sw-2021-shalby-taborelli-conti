@@ -4,5 +4,5 @@ import java.io.Serializable;
 
 public enum MarkerType implements Serializable {
     DISCARD,
-    MOVE;
+    MOVE
 }

@@ -18,8 +18,12 @@ public class PopeFavorTilesTest extends TestCase {
         final int count = 1;
         PopeFavorTiles popeFavorTiles = new PopeFavorTiles(count);
 
-        assertEquals(1,popeFavorTiles.getPoints());
+        assertEquals(0,popeFavorTiles.getPoints()); //is not active
         assertFalse(popeFavorTiles.isActive());
+
+        popeFavorTiles.active();
+        assertEquals(1,popeFavorTiles.getPoints()); //is not active
+        assertTrue(popeFavorTiles.isActive());
     }
 
     /**

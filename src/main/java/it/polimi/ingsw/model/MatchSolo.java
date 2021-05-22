@@ -256,8 +256,8 @@ public class MatchSolo extends Match implements Serializable {
     }
 
     @Override
-    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player) {
-        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player);
+    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player,ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
+        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player,resourceTypeFirst,resourceTypeSecond);
         notifyModel();
         if (numPlayerWhoDiscard == players.size()) {
             //notifyModel();

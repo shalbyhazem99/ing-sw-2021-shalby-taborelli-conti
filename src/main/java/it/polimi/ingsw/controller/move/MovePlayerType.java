@@ -87,7 +87,7 @@ public enum MovePlayerType {
                     }
                 } while (!parameters_valid);
                 //choose where ro get resources
-                ArrayList<ResourcePick> resourceToUse=Utils.getRequiredResourceFrom(match.getDevelopmentCardOnTop(type,level).getCosts(),stdin,match);
+                ArrayList<ResourcePick> resourceToUse=Utils.getRequiredResourceFrom(match.getDevelopmentCardOnTop(type,level).getCosts(match.getCurrentPlayer()),stdin,match);
                 developmentCardPlayerMove = BuyDevelopmentCardPlayerMove.getInstance(type, level, pos, resourceToUse);
             } catch (Exception e) {
                 System.out.println("Error retry:");

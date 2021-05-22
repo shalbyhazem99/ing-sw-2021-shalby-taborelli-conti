@@ -38,7 +38,7 @@ public class Utils {
      * @return true if a include b, false otherwise
      */
     public static boolean compareResources(ArrayList<Resource> a, ArrayList<ResourcesCount> b) {
-        return a.containsAll(b.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
+        return a != null && b != null && a.containsAll(b.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
     }
 
     /**
@@ -49,19 +49,58 @@ public class Utils {
      * @return a new (clone) {@link ArrayList} of the discount aaplied
      */
     public static ArrayList<ResourcesCount> applyDiscount(ArrayList<ResourcesCount> resourcesCounts, ArrayList<ResourcesCount> discount) {
-        ArrayList<ResourcesCount> elaborated = (ArrayList<ResourcesCount>) resourcesCounts.clone();
-        for (ResourcesCount res : elaborated) {
-            discount.stream().filter(elem -> elem.getType().equals(res.getType())).forEach(
-                    elem -> {
-                        //todo:add setCount to ResourceCount
-                        //res.setCount(res.getCount()- elem.getCount());
-                    }
-            );
-        }
-        return elaborated;
+        ArrayList<ResourcesCount> discounted = ResourcesCount.cloneList(resourcesCounts);
+        discount.stream()
+                .forEach(x -> {
+                    discounted.stream()
+                            .filter(elem -> elem.getType().equals(x.getType()))
+                            .findFirst().ifPresent(elem -> elem.decreaseCount());
+                });
+        //remove the resourcesCount with 0 count: may create problems
+        return (ArrayList<ResourcesCount> ) discounted.stream().filter(elem-> elem.getCount()>0).collect(Collectors.toList());
     }
 
-    public static ResourceType[] getUsableResourcesType(){
+    public static ArrayList<ResourcesCount> fromResourcesToResourceCount(ArrayList<Resource> resources) {
+        ArrayList<ResourcesCount> temp = new ArrayList<>();
+        ResourcesCount coin = new ResourcesCount(0, ResourceType.COIN);
+        ResourcesCount faith = new ResourcesCount(0, ResourceType.FAITH);
+        ResourcesCount shield = new ResourcesCount(0, ResourceType.SHIELD);
+        ResourcesCount stone = new ResourcesCount(0, ResourceType.STONE);
+        ResourcesCount servant = new ResourcesCount(0, ResourceType.SERVANT);
+        ResourcesCount any = new ResourcesCount(0, ResourceType.ANY);
+        temp.add(coin);
+        temp.add(faith);
+        temp.add(shield);
+        temp.add(stone);
+        temp.add(servant);
+        temp.add(any);
+        for (int i = 0; resources!=null && i < resources.size(); i++) {
+            switch (resources.get(i).getType()) {
+                case COIN:
+                    coin.addCount();
+                    break;
+                case FAITH:
+                    faith.addCount();
+                    break;
+                case STONE:
+                    stone.addCount();
+                    break;
+                case ANY:
+                    any.addCount();
+                    break;
+                case SHIELD:
+                    shield.addCount();
+                    break;
+                case SERVANT:
+                    servant.addCount();
+                    break;
+            }
+        }
+        return temp;
+    }
+
+
+    public static ResourceType[] getUsableResourcesType() {
         return Arrays.stream(ResourceType.values())
                 .filter(elem -> !(elem.equals(ResourceType.ANY) || elem.equals(ResourceType.FAITH)))
                 .collect(Collectors.toList()).toArray(ResourceType[]::new);
@@ -79,7 +118,7 @@ public class Utils {
         ArrayList<ResourcePick> resourcePicks = new ArrayList<>();
         for (ResourcesCount resourcesCount : resourcesCounts) {
             ArrayList<Resource> resourceArrayList = resourcesCount.toArrayListResources();
-            for (Resource res: resourceArrayList) {
+            for (Resource res : resourceArrayList) {
                 ResourceType resType = res.getType();
                 System.out.println("From where you get " + Utils.resourceTypeToString(res.getType()) + "(0-> Warehouse, 1-> Strongbox)");
                 switch (stdin.nextInt()) {
@@ -98,7 +137,7 @@ public class Utils {
                         if (position < 3)
                             resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, position, match.getCurrentPlayer().getWarehousesStandard().get(position).getResourceType()));
                         else
-                            resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, position, match.getCurrentPlayer().getWarehousesAdditional().get(position-3).getResourceType()));
+                            resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, position, match.getCurrentPlayer().getWarehousesAdditional().get(position - 3).getResourceType()));
                         break;
                     case 1:
                         if (res.getType().equals(ResourceType.ANY)) {
@@ -113,7 +152,7 @@ public class Utils {
                                 System.out.println(")");
                                 index = stdin.nextInt();
                             } while (index < 0 || index >= resourceTypes.length);
-                            resType=resourceTypes[index];
+                            resType = resourceTypes[index];
                         }
                         resourcePicks.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, resType));
                         break;
@@ -155,45 +194,6 @@ public class Utils {
             s = s + " ";
         }
         return s;
-    }
-
-    public static ArrayList<ResourcesCount> fromResourcesToResourceCount(ArrayList<Resource> resources) {
-        ArrayList<ResourcesCount> temp = new ArrayList<>();
-        ResourcesCount coin = new ResourcesCount(0, ResourceType.COIN);
-        ResourcesCount faith = new ResourcesCount(0, ResourceType.FAITH);
-        ResourcesCount shield = new ResourcesCount(0, ResourceType.SHIELD);
-        ResourcesCount stone = new ResourcesCount(0, ResourceType.STONE);
-        ResourcesCount servant = new ResourcesCount(0, ResourceType.SERVANT);
-        ResourcesCount any = new ResourcesCount(0, ResourceType.ANY);
-        temp.add(coin);
-        temp.add(faith);
-        temp.add(shield);
-        temp.add(stone);
-        temp.add(servant);
-        temp.add(any);
-        for (int i = 0; i < resources.size(); i++) {
-            switch (resources.get(i).getType()) {
-                case COIN:
-                    coin.addCount();
-                    break;
-                case FAITH:
-                    faith.addCount();
-                    break;
-                case STONE:
-                    stone.addCount();
-                    break;
-                case ANY:
-                    any.addCount();
-                    break;
-                case SHIELD:
-                    shield.addCount();
-                    break;
-                case SERVANT:
-                    servant.addCount();
-                    break;
-            }
-        }
-        return temp;
     }
 
     public static String resourceTypeToString(ResourceType r) {
@@ -241,4 +241,5 @@ public class Utils {
         str = str + "]";
         return str;
     }
+
 }

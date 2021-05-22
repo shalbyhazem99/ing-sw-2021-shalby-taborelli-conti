@@ -46,7 +46,7 @@ public abstract class LeaderCard implements Serializable {
                     return false;
             }
         }
-        if(!resourcesNeeded.isEmpty()) { //for future development we decide to not use else
+        if(resourcesNeeded !=null && !resourcesNeeded.isEmpty()) { //for future development we decide to not use else
             return player.isActionable(resourcesNeeded);
         }
         return true;
