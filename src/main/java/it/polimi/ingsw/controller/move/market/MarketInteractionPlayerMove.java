@@ -3,10 +3,11 @@ package it.polimi.ingsw.controller.move.market;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.market.MoveType;
+import it.polimi.ingsw.model.resource.Resource;
 
 public class MarketInteractionPlayerMove extends PlayerMove {
     /**
-     * Class representing the {@link PlayerMove} performed by the {@link it.polimi.ingsw.model.Player} in order to get {@link it.polimi.ingsw.model.Resource} from the {@link it.polimi.ingsw.model.market.MarketBoard}
+     * Class representing the {@link PlayerMove} performed by the {@link it.polimi.ingsw.model.Player} in order to get {@link Resource} from the {@link it.polimi.ingsw.model.market.MarketBoard}
      */
     MoveType moveType;
     int pos;

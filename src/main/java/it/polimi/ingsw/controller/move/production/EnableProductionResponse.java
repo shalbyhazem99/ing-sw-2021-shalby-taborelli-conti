@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductivePower;
-import it.polimi.ingsw.model.Resource;
 
 import java.util.ArrayList;
 import java.util.Scanner;

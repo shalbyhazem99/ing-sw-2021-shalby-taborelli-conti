@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
-import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
@@ -20,7 +20,7 @@ public class LeaderCardDiscountTest extends TestCase {
     @Test
     public void testGetPoints() {
         Player tester = new Player("tester");
-        LeaderCardDiscount leaderCardDiscount_null = new LeaderCardDiscount(3, null, null, null);
+        LeaderCardDiscount leaderCardDiscount_null = LeaderCardDiscount.getInstance(3, null, null, null);
         //Testing I can't get points from a disable Card
         assertEquals(0, leaderCardDiscount_null.getPoints());
         tester.addLeaderCard(leaderCardDiscount_null);
@@ -34,7 +34,7 @@ public class LeaderCardDiscountTest extends TestCase {
         ArrayList<DevelopmentCardNeeded> developmentCardNeeded = new ArrayList<>();
         DevelopmentCardNeeded cardNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         developmentCardNeeded.add(cardNeeded);
-        LeaderCardDiscount leaderCardDiscount = new LeaderCardDiscount(2, ResourceType.STONE, null, developmentCardNeeded);
+        LeaderCardDiscount leaderCardDiscount = LeaderCardDiscount.getInstance(2, ResourceType.STONE, null, developmentCardNeeded);
         leaderCardDiscount.active(tester);
         assertEquals(2, leaderCardDiscount.getPoints());
     }
@@ -44,7 +44,7 @@ public class LeaderCardDiscountTest extends TestCase {
         Player tester = new Player("Tester");
 
         //Testing a null card can always be activated
-        LeaderCardDiscount card_null = new LeaderCardDiscount(2, null, null, null);
+        LeaderCardDiscount card_null = LeaderCardDiscount.getInstance(2, null, null, null);
         assertTrue(card_null.isActionable(tester));
 
         //Testing a card that need development cards can be activated
@@ -57,19 +57,19 @@ public class LeaderCardDiscountTest extends TestCase {
         tester.addDevelopmentCard(card2, 0);
         ArrayList<DevelopmentCardNeeded> devCardList = new ArrayList<>();
         devCardList.add(developmentCardNeeded1);
-        LeaderCardDiscount cardDiscount1 = new LeaderCardDiscount(0, null, null, devCardList);
+        LeaderCardDiscount cardDiscount1 = LeaderCardDiscount.getInstance(0, null, null, devCardList);
         assertTrue(cardDiscount1.isActionable(tester));
 
         //Testing more than one card needed
         devCardList.add(developmentCardNeeded2);
-        LeaderCardDiscount cardDiscount2 = new LeaderCardDiscount(0, null, null, devCardList);
+        LeaderCardDiscount cardDiscount2 = LeaderCardDiscount.getInstance(0, null, null, devCardList);
         assertTrue(cardDiscount2.isActionable(tester));
 
         //Testing negative case
         DevelopmentCardNeeded developmentCardNeeded1Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devCardListWrong = new ArrayList<>();
         devCardListWrong.add(developmentCardNeeded1Wrong);
-        LeaderCardDiscount cardDiscountWrong1 = new LeaderCardDiscount(1, null, null, devCardListWrong);
+        LeaderCardDiscount cardDiscountWrong1 = LeaderCardDiscount.getInstance(1, null, null, devCardListWrong);
 
         assertFalse(cardDiscountWrong1.isActionable(tester));
 
@@ -88,12 +88,12 @@ public class LeaderCardDiscountTest extends TestCase {
         tester.addResourceToStrongBox(faith);
         tester.addResourceToStrongBox(faith);
 
-        LeaderCardDiscount cardDiscount3 = new LeaderCardDiscount(0, null, resourcesNeeded, null);
+        LeaderCardDiscount cardDiscount3 = LeaderCardDiscount.getInstance(0, null, resourcesNeeded, null);
         assertTrue(cardDiscount3.isActionable(tester));
 
         //Testing more type Resources needed
         resourcesNeeded.add(resources2);
-        LeaderCardDiscount cardDiscount4 = new LeaderCardDiscount(0, null, resourcesNeeded, null);
+        LeaderCardDiscount cardDiscount4 = LeaderCardDiscount.getInstance(0, null, resourcesNeeded, null);
         assertTrue(cardDiscount4.isActionable(tester));
 
     }
@@ -103,7 +103,7 @@ public class LeaderCardDiscountTest extends TestCase {
         Player tester = new Player("tester");
 
         //testing that a card with no power is activated
-        LeaderCardDiscount leaderCardDiscount_null = new LeaderCardDiscount(0, null, null, null);
+        LeaderCardDiscount leaderCardDiscount_null = LeaderCardDiscount.getInstance(0, null, null, null);
         tester.addLeaderCard(leaderCardDiscount_null);
         assertTrue(leaderCardDiscount_null.active(tester));
 
@@ -113,7 +113,7 @@ public class LeaderCardDiscountTest extends TestCase {
         DevelopmentCardNeeded developmentCardNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.YELLOW, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devListNeeded = new ArrayList<>();
         devListNeeded.add(developmentCardNeeded);
-        LeaderCardDiscount leaderCardDiscount = new LeaderCardDiscount(5, ResourceType.COIN, null, devListNeeded);
+        LeaderCardDiscount leaderCardDiscount = LeaderCardDiscount.getInstance(5, ResourceType.COIN, null, devListNeeded);
         tester.addLeaderCard(leaderCardDiscount);
         assertTrue(leaderCardDiscount.active(tester));
 
@@ -125,7 +125,7 @@ public class LeaderCardDiscountTest extends TestCase {
         DevelopmentCardNeeded developmentCardNeeded_Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devListNeeded_Wrong = new ArrayList<>();
         devListNeeded_Wrong.add(developmentCardNeeded_Wrong);
-        LeaderCardDiscount leaderCardDiscount_Wrong = new LeaderCardDiscount(5, ResourceType.COIN, null, devListNeeded_Wrong);
+        LeaderCardDiscount leaderCardDiscount_Wrong = LeaderCardDiscount.getInstance(5, ResourceType.COIN, null, devListNeeded_Wrong);
         tester.addLeaderCard(leaderCardDiscount_Wrong);
         assertFalse(leaderCardDiscount_Wrong.active(tester));
     }

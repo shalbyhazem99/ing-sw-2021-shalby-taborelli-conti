@@ -8,6 +8,7 @@ import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.Serializable;
 import java.util.*;
@@ -256,7 +257,7 @@ public class MatchSolo extends Match implements Serializable {
     }
 
     @Override
-    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player,ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
+    public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player, ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
         super.discardTwoLeaderCardInteraction(posFirst, posSecond, player,resourceTypeFirst,resourceTypeSecond);
         notifyModel();
         if (numPlayerWhoDiscard == players.size()) {

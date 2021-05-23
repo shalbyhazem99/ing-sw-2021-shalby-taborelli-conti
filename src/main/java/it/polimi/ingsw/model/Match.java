@@ -22,6 +22,9 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.model.market.MarketBoard;
 import it.polimi.ingsw.model.market.MoveType;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.utils.FileReader;
 import it.polimi.ingsw.utils.Utils;
@@ -398,9 +401,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 numberOfGainedResources--;
             } else if (
                     (whereToPlace.get(i) >= 0 && whereToPlace.get(i) < 3
-                            && (!standardTemp.get(whereToPlace.get(i)).addResource(pendingMarketResources.get(i))))
-                            || (whereToPlace.get(i) >= 3 && whereToPlace.get(i) < 5 && additionalTemp.size() > whereToPlace.get(i) - 3
-                            && (!additionalTemp.get(whereToPlace.get(i)).addResource(pendingMarketResources.get(i))))
+                            && !player.addResourceToWarehouseStandard(pendingMarketResources.get(i),whereToPlace.get(i)))
+                            || (whereToPlace.get(i) >= 3 && whereToPlace.get(i) < 5 && player.getWarehousesAdditional().size() > whereToPlace.get(i) - 3
+                            && !player.addResourceToWarehouseAdditional(pendingMarketResources.get(i),whereToPlace.get(i)))
             ) {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters 4", player, players.indexOf(player), this.hashCode()));
                 notify(MarketResponse.getInstance(pendingMarketResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
@@ -743,13 +746,13 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                         String code = "";
                         switch (i) {
                             case 0:
-                                code = "W ▶ ?        B ▶ \uD83D\uDEE1️";
+                                code = "W ▶ ?        B ▶ "+ResourceType.SHIELD.symbol;
                                 break;
                             case 1:
-                                code = "Y ▶ ⚫        G ▶ \uD83D\uDC8E";
+                                code = "Y ▶ "+ResourceType.COIN.symbol+"        G ▶ "+ResourceType.STONE.symbol;
                                 break;
                             case 2:
-                                code = "P ▶ ⚔        R ▶ ✝";
+                                code = "P ▶ "+ResourceType.SERVANT.symbol+"        R ▶ "+ResourceType.FAITH.symbol;
                                 break;
                         }
                         temp += ("|" + marketBoard.getRow(i).get(j).toString().toCharArray()[0] + "|  ◀  (" + i + ")           " + code + "\n");
@@ -789,7 +792,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 if (player == null) {
                     break;
                 }
-                temp += ("Pos Fede: " + player.getPosFaithMarker() + " ✝\n");
+                temp += ("Pos Fede: " + player.getPosFaithMarker() +" " +ResourceType.FAITH.symbol+ "\n");
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|WAREHOUSE STD|\n");
                 temp += ("---------------\n");

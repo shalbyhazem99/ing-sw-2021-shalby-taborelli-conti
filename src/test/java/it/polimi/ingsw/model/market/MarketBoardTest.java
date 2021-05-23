@@ -1,15 +1,12 @@
 package it.polimi.ingsw.model.market;
 
-import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.utils.Utils;
 import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MarketBoardTest extends TestCase {
 
@@ -41,10 +38,9 @@ public class MarketBoardTest extends TestCase {
      * - Correct "movement" of the {@link MarketBoard}'s {@link Marble}
      */
     @Test
-    public void testGenerateResourcesColumn()
-    {
+    public void testGenerateResourcesColumn() throws CloneNotSupportedException {
         final int selectedColumn = 0;
-        MarketBoard marketBoard = new MarketBoard();
+        MarketBoard marketBoard = MarketBoard.getInstance();
         MarketBoard temp = marketBoard.clone();
         ArrayList<Resource> resources = marketBoard.getResources(MoveType.COLUMN,selectedColumn);
         int t = resources.size();
@@ -73,8 +69,7 @@ public class MarketBoardTest extends TestCase {
      * - Correct "movement" of the {@link MarketBoard}'s {@link Marble}
      */
     @Test
-    public void testGenerateResourcesRow()
-    {
+    public void testGenerateResourcesRow() throws CloneNotSupportedException {
         final int selectedRow = 0;
         MarketBoard marketBoard = new MarketBoard();
         MarketBoard temp = marketBoard.clone();
@@ -108,7 +103,6 @@ public class MarketBoardTest extends TestCase {
         assertEquals(marketBoard.getResources(MoveType.COLUMN,5).size(),0);
     }
 
-    //TODO: THE INDICATIONS SAY THAT IT'S NOT SAFE TO CALL A TEST FROM ANOTHER TEST
     /**
      * Support method to check if there is a correct number of marble for each color
      */

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.resource;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ResourcesCount implements Serializable, Cloneable {
      * @return a {@link ArrayList} of {@link Resource} equivalent to the object
      */
     public ArrayList<Resource> toArrayListResources() {
-        return new ArrayList<Resource>() {{
+        return new ArrayList<>() {{
             for (int i = 0; i < count; i++) {
                 add(Resource.getInstance(type));
             }

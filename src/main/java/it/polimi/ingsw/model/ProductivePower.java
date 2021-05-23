@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
@@ -19,11 +21,11 @@ public class ProductivePower implements Serializable {
     }
 
     public ArrayList<ResourcesCount> getFrom() {
-        return (ArrayList<ResourcesCount>) from.clone();
+        return from;
     }
 
     public ArrayList<Resource> getTo() {
-        return (ArrayList<Resource>) to.clone();
+        return to;
     }
 
 

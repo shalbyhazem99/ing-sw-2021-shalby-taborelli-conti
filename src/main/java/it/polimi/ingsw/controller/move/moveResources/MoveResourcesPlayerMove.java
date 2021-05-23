@@ -2,10 +2,11 @@ package it.polimi.ingsw.controller.move.moveResources;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.resource.Resource;
 
 public class MoveResourcesPlayerMove extends PlayerMove {
     /**
-     * Class representing the {@link PlayerMove} performed by the {@link it.polimi.ingsw.model.Player} in order to move {@link it.polimi.ingsw.model.Resource} between two {@link it.polimi.ingsw.model.Warehouse}
+     * Class representing the {@link PlayerMove} performed by the {@link it.polimi.ingsw.model.Player} in order to move {@link Resource} between two {@link it.polimi.ingsw.model.Warehouse}
      * Indexes of warehouses can be {0,1,2} for standard warehouses or {3,4} for additional warehouses
      *
      */
@@ -17,7 +18,7 @@ public class MoveResourcesPlayerMove extends PlayerMove {
      * Default constructor
      * @param firstWarehouseIndex an int value to identify the first {@link it.polimi.ingsw.model.Warehouse}
      * @param secondWarehouseIndex an int value to identify the second {@link it.polimi.ingsw.model.Warehouse}
-     * @param numberOfResources an int value to indicate the number of {@link it.polimi.ingsw.model.Resource} to move
+     * @param numberOfResources an int value to indicate the number of {@link Resource} to move
      */
     public MoveResourcesPlayerMove(int firstWarehouseIndex, int secondWarehouseIndex, int numberOfResources) {
         this.firstWarehouseIndex = firstWarehouseIndex;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.market;
 
-import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.Serializable;
 

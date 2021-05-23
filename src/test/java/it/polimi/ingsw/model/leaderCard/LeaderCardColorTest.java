@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
-import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
@@ -24,7 +24,7 @@ public class LeaderCardColorTest extends TestCase {
     @Test
     public void testGetPoints(){
         Player tester = new Player("tester");
-        LeaderCardColor leaderCardColor_null = new LeaderCardColor(2, null, null, null);
+        LeaderCardColor leaderCardColor_null =  LeaderCardColor.getInstance(2, null, null, null);
         //Testing I can't get points from a disable Card
         assertEquals(0, leaderCardColor_null.getPoints());
         tester.addLeaderCard(leaderCardColor_null);
@@ -38,7 +38,7 @@ public class LeaderCardColorTest extends TestCase {
         ArrayList<DevelopmentCardNeeded> developmentCardNeeded = new ArrayList<>();
         DevelopmentCardNeeded cardNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         developmentCardNeeded.add(cardNeeded);
-        LeaderCardColor leaderCardColor = new LeaderCardColor(2, ResourceType.STONE, null, developmentCardNeeded);
+        LeaderCardColor leaderCardColor =  LeaderCardColor.getInstance(2, ResourceType.STONE, null, developmentCardNeeded);
         leaderCardColor.active(tester);
         assertEquals(2, leaderCardColor.getPoints());
 
@@ -52,7 +52,7 @@ public class LeaderCardColorTest extends TestCase {
         Player tester = new Player("Tester");
 
         //Testing a null card can always be activated
-        LeaderCardColor card_null = new LeaderCardColor(2, null, null, null);
+        LeaderCardColor card_null =  LeaderCardColor.getInstance(2, null, null, null);
         assertTrue(card_null.isActionable(tester));
 
         //Testing a card that need development cards can be activated
@@ -65,19 +65,19 @@ public class LeaderCardColorTest extends TestCase {
         tester.addDevelopmentCard(card2, 0);
         ArrayList<DevelopmentCardNeeded> devCardList = new ArrayList<>();
         devCardList.add(developmentCardNeeded1);
-        LeaderCardColor cardColor1 = new LeaderCardColor(0, null, null, devCardList);
+        LeaderCardColor cardColor1 =  LeaderCardColor.getInstance(0, null, null, devCardList);
         assertTrue(cardColor1.isActionable(tester));
 
         //Testing more than one card needed
         devCardList.add(developmentCardNeeded2);
-        LeaderCardColor cardColor2 = new LeaderCardColor(0, null, null, devCardList);
+        LeaderCardColor cardColor2 =  LeaderCardColor.getInstance(0, null, null, devCardList);
         assertTrue(cardColor2.isActionable(tester));
 
         //Testing negative case
         DevelopmentCardNeeded developmentCardNeeded1Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devCardListWrong = new ArrayList<>();
         devCardListWrong.add(developmentCardNeeded1Wrong);
-        LeaderCardColor cardColorWrong1 = new LeaderCardColor(1, null, null, devCardListWrong);
+        LeaderCardColor cardColorWrong1 =  LeaderCardColor.getInstance(1, null, null, devCardListWrong);
 
         assertFalse(cardColorWrong1.isActionable(tester));
 
@@ -96,12 +96,12 @@ public class LeaderCardColorTest extends TestCase {
         tester.addResourceToStrongBox(faith);
         tester.addResourceToStrongBox(faith);
 
-        LeaderCardColor cardColor3 = new LeaderCardColor(0, null, resourcesNeeded, null);
+        LeaderCardColor cardColor3 =  LeaderCardColor.getInstance(0, null, resourcesNeeded, null);
         assertTrue(cardColor3.isActionable(tester));
 
         //Testing more type Resources needed
         resourcesNeeded.add(resources2);
-        LeaderCardColor cardColor4 = new LeaderCardColor(0, null, resourcesNeeded, null);
+        LeaderCardColor cardColor4 =  LeaderCardColor.getInstance(0, null, resourcesNeeded, null);
         assertTrue(cardColor4.isActionable(tester));
     }
 
@@ -114,7 +114,7 @@ public class LeaderCardColorTest extends TestCase {
         Player tester = new Player("tester");
 
         //testing that a card with no power is activated
-        LeaderCardColor leaderCardColor_null = new LeaderCardColor(0, null, null, null);
+        LeaderCardColor leaderCardColor_null =  LeaderCardColor.getInstance(0, null, null, null);
         tester.addLeaderCard(leaderCardColor_null);
         assertTrue(leaderCardColor_null.active(tester));
 
@@ -124,7 +124,7 @@ public class LeaderCardColorTest extends TestCase {
         DevelopmentCardNeeded developmentCardNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.YELLOW, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devListNeeded = new ArrayList<>();
         devListNeeded.add(developmentCardNeeded);
-        LeaderCardColor leaderCardColor = new LeaderCardColor(5, ResourceType.COIN, null, devListNeeded);
+        LeaderCardColor leaderCardColor =  LeaderCardColor.getInstance(5, ResourceType.COIN, null, devListNeeded);
         tester.addLeaderCard(leaderCardColor);
         assertTrue(leaderCardColor.active(tester));
 
@@ -135,7 +135,7 @@ public class LeaderCardColorTest extends TestCase {
         DevelopmentCardNeeded developmentCardNeeded_Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devListNeeded_Wrong = new ArrayList<>();
         devListNeeded_Wrong.add(developmentCardNeeded_Wrong);
-        LeaderCardColor leaderCardColor_Wrong = new LeaderCardColor(5, ResourceType.COIN, null, devListNeeded_Wrong);
+        LeaderCardColor leaderCardColor_Wrong =  LeaderCardColor.getInstance(5, ResourceType.COIN, null, devListNeeded_Wrong);
         tester.addLeaderCard(leaderCardColor_Wrong);
         assertFalse(leaderCardColor_Wrong.active(tester));
     }

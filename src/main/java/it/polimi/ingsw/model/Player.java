@@ -5,50 +5,47 @@ import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Player implements Serializable {
-    private String name;
+    private final String name;
     private int posFaithMarker;
-    private ArrayList<PopeFavorTiles> popeFavorTiles;
-    private ArrayList<LeaderCard> leaderCards;
+    private final ArrayList<PopeFavorTiles> popeFavorTiles;
+    private final ArrayList<LeaderCard> leaderCards;
     private ArrayList<DevelopmentCardSpace> developmentCardSpaces;
     private ArrayList<Warehouse> warehousesStandard;
     private ArrayList<Resource> strongBox;
     private ArrayList<Warehouse> warehousesAdditional;
-    private ArrayList<ResourcesCount> discounts;
-    private ArrayList<ResourceType> conversionStrategies;
-    private ArrayList<ProductivePower> addedPower;
+    private final ArrayList<ResourcesCount> discounts;
+    private final ArrayList<ResourceType> conversionStrategies;
+    private final ArrayList<ProductivePower> addedPower;
 
     public Player(String name) {
         this.name = name;
-        popeFavorTiles = generatePopeFavorTiles();
+        //create all the needed Arraylist
+        popeFavorTiles = new ArrayList<>();
         leaderCards = new ArrayList<>();
-        geneDevelopmentCardSpaces();
-        warehousesStandard = generateWarehouse();
+        warehousesStandard = new ArrayList<>();
         strongBox = new ArrayList<>();
         warehousesAdditional = new ArrayList<>();
         discounts = new ArrayList<>();
         conversionStrategies = new ArrayList<>();
-        addedPower = generatePower();
-    }
-
-    public void geneDevelopmentCardSpaces() {
-        developmentCardSpaces = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            developmentCardSpaces.add(DevelopmentCardSpace.getInstance());
-        }
-    }
-
-    public String getName() {
-        return name;
+        addedPower = new ArrayList<>();
+        //generate powers
+        generatePopeFavorTiles();
+        generateDevelopmentCardSpaces();
+        generateWarehouse();
     }
 
     public static Player getInstance(String name) {
@@ -59,12 +56,49 @@ public class Player implements Serializable {
         return new Player("unknown");
     }
 
-    public ArrayList<PopeFavorTiles> getPopeFavorTiles() {
-        return popeFavorTiles;
+    //------------------------------------GENERATE PLAYER SUPPORT METHOD---------------------------------------
+    private void generateDevelopmentCardSpaces() {
+        developmentCardSpaces = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            developmentCardSpaces.add(DevelopmentCardSpace.getInstance());
+        }
+    }
+
+    private void generatePopeFavorTiles() {
+        popeFavorTiles.add(PopeFavorTiles.getInstance(2));
+        popeFavorTiles.add(PopeFavorTiles.getInstance(3));
+        popeFavorTiles.add(PopeFavorTiles.getInstance(4));
+    }
+
+    public void generateWarehouse() {
+        warehousesStandard.add(Warehouse.getInstance(1, ResourceType.ANY));
+        warehousesStandard.add(Warehouse.getInstance(2, ResourceType.ANY));
+        warehousesStandard.add(Warehouse.getInstance(3, ResourceType.ANY));
+    }
+
+    //------------------------------------------SIMPLE GETTER------------------------------------------------------
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<ProductivePower> getAddedPower() {
+        return addedPower;
+    }
+
+    public ArrayList<ResourceType> getConversionStrategies() {
+        return conversionStrategies;
     }
 
     public ArrayList<LeaderCard> getLeaderCards() {
         return leaderCards;
+    }
+
+    public ArrayList<DevelopmentCardSpace> getDevelopmentCardSpaces() {
+        return developmentCardSpaces;
+    }
+
+    public ArrayList<PopeFavorTiles> getPopeFavorTiles() {
+        return popeFavorTiles;
     }
 
     public LeaderCard getLeaderCard(int position) {
@@ -73,38 +107,156 @@ public class Player implements Serializable {
         return null;
     }
 
-    public ArrayList<ResourceType> getConversionStrategies() {
-        return conversionStrategies;
+    public int getPosFaithMarker() {
+        return posFaithMarker;
     }
 
-    public ArrayList<ProductivePower> getAddedPower() {
-        return addedPower;
+    public ArrayList<Warehouse> getWarehousesStandard() {
+        return warehousesStandard;
     }
 
-    public static ArrayList<PopeFavorTiles> generatePopeFavorTiles() {
-        ArrayList<PopeFavorTiles> temp = new ArrayList<>();
-        temp.add(PopeFavorTiles.getInstance(2));
-        temp.add(PopeFavorTiles.getInstance(3));
-        temp.add(PopeFavorTiles.getInstance(4));
-        return temp;
+    public ArrayList<Warehouse> getWarehousesAdditional() {
+        return warehousesAdditional;
     }
 
-    public static ArrayList<Warehouse> generateWarehouse() {
-        ArrayList<Warehouse> temp = new ArrayList<>();
-
-        temp.add(Warehouse.getInstance(1, ResourceType.ANY));
-        temp.add(Warehouse.getInstance(2, ResourceType.ANY));
-        temp.add(Warehouse.getInstance(3, ResourceType.ANY));
-        return temp;
+    public ArrayList<Resource> getStrongBox() {
+        return strongBox;
     }
 
-    public static ArrayList<ProductivePower> generatePower() {
-        return new ArrayList<>();
+    public ArrayList<ResourcesCount> getDiscounts() {
+        return discounts;
     }
 
+    public boolean hasDiscount() {
+        return getDiscounts().size() > 0;
+    }
+
+    public int numOfWhiteMarbleConversionStrategy() {
+        return conversionStrategies.size();
+    }
+
+    //------------------------------------------COMPLEX GETTER---------------------------------------------
+
+    /**
+     * all the {@link Player} {@link Resource}
+     *
+     * @return an {@link ArrayList} of {@link Resource} containing all the resources coming from the warehouses and the strongbox
+     */
+    public ArrayList<Resource> getResources() {
+        return (ArrayList<Resource>) Stream.concat(
+                Stream.concat(getStrongBox().stream(),
+                        getWarehousesStandard().stream().flatMap(elem -> elem.getResources().stream())),
+                getWarehousesAdditional().stream().flatMap(elem -> elem.getResources().stream()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * return all the {@link DevelopmentCard} even if covered
+     *
+     * @return an {@link ArrayList} of all the {@link Player} {@link DevelopmentCard}
+     */
+    public ArrayList<DevelopmentCard> getDevelopmentCards() {
+        return (ArrayList<DevelopmentCard>) developmentCardSpaces.stream()
+                .flatMap(elem -> elem.linearize().stream())
+                .collect(Collectors.toList());
+    }
+
+    //------------------------------------------SETTER------------------------------------------------------
+    public void setWarehousesStandard(ArrayList<Warehouse> warehousesStandard) {
+        this.warehousesStandard = warehousesStandard;
+    }
+
+    public void setWarehousesAdditional(ArrayList<Warehouse> warehousesAdditional) {
+        this.warehousesAdditional = warehousesAdditional;
+    }
+
+    public void setStrongBox(ArrayList<Resource> strongBox) {
+        this.strongBox = strongBox;
+    }
+
+    //---------------------------------------SIMPLE ADDER------------------------------------------------------
     public void addLeaderCard(LeaderCard leaderCard) {
         leaderCards.add(leaderCard);
     }
+
+    public void addDiscount(ResourcesCount resourcesCount) {
+        discounts.add(resourcesCount);
+    }
+
+    public void addPower(ProductivePower productivePower) {
+        addedPower.add(productivePower);
+    }
+
+    public void addConversionStrategies(ResourceType resourceType) {
+        conversionStrategies.add(resourceType);
+    }
+
+    public void addAdditionalWarehouse(Warehouse warehouse) {
+        warehousesAdditional.add(warehouse);
+    }
+
+    public void addResourceToStrongBox(Resource resource) {
+        strongBox.add(resource);
+    }
+
+    public void addResourceToStrongBox(ArrayList<Resource> resources) {
+        strongBox.addAll(resources);
+    }
+
+    //---------------------------------------COMPLEX ADDER------------------------------------------------------
+    public boolean addResourceToWarehouseAdditional(Resource resource, int index) {
+        if (index >= warehousesAdditional.size() || !resource.getType().equals(warehousesAdditional.get(index).getResourceType()) || warehousesAdditional.get(index).getSpaceAvailable() < 1)
+            return false;
+        return warehousesAdditional.get(index).addResource(resource);
+    }
+
+    public boolean addResourceToWarehouseAdditional(ArrayList<Resource> resources, int index) {
+        String warehousesAdditional =new Gson().toJson(getWarehousesAdditional());
+        for (Resource resource : resources) {
+            if (!addResourceToWarehouseAdditional(resource, index)) {
+                List<Warehouse> list = new ArrayList<>();
+                for (Warehouse warehouse : new Gson().fromJson(warehousesAdditional, Warehouse[].class)) {
+                    list.add(warehouse);
+                }
+                setWarehousesAdditional(new ArrayList<Warehouse>(list));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean addResourceToWarehouseStandard(Resource resource, int index) {
+        if (index >= warehousesStandard.size())
+            return false;
+        if (!warehousesStandard.get(index).getResourceType().equals(ResourceType.ANY) &&
+                (!resource.getType().equals(warehousesStandard.get(index).getResourceType()) ||
+                        warehousesStandard.get(index).getSpaceAvailable() < 1))
+            return false;
+        //if there are other warehouses with the same type of card
+        if (warehousesStandard.stream()
+                .anyMatch(elem -> !elem.equals(warehousesStandard.get(index)) && // different Warehouse index
+                        !elem.getResourceType().equals(ResourceType.ANY) && //not necessary but could prevents coding error
+                        elem.getResourceType().equals(warehousesStandard.get(index).getResourceType())))  // the same resource type
+            return false;
+        return warehousesStandard.get(index).addResource(resource);
+    }
+
+    public boolean addResourceToWarehouseStandard(ArrayList<Resource> resources, int index) {
+        String warehouseStandard =new Gson().toJson(getWarehousesStandard());
+        for (Resource resource : resources) {
+            if (!addResourceToWarehouseStandard(resource, index)) {
+                List<Warehouse> list = new ArrayList<>();
+                for (Warehouse warehouse : (new Gson().fromJson(warehouseStandard, Warehouse[].class))) {
+                    list.add(warehouse);
+                }
+                setWarehousesStandard(new ArrayList<>(list));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //------------------------------------------ACTION METHOD-------------------------------------------------
 
     /**
      * move the Faith Marker Ahead
@@ -116,7 +268,9 @@ public class Player implements Serializable {
         posFaithMarker = Math.min(Utils.FAITH_LENGTH, posFaithMarker);
     }
 
-    //todo:testing
+    public boolean isActionable(ArrayList<ResourcesCount> resourcesNeeded) {
+        return resourcesNeeded != null && Utils.compareResources(getResources(), resourcesNeeded);
+    }
 
     /**
      * Verify if the {@link Player} could activate the power and remove the resources
@@ -125,6 +279,8 @@ public class Player implements Serializable {
      * @return
      */
     public boolean canAfford(ArrayList<ResourcePick> resourceToUse) {
+        if (resourceToUse == null)
+            return false;
         Gson gson = new Gson();
         String warehouseStandard = gson.toJson(getWarehousesStandard());
         String warehouseAdditional = gson.toJson(getWarehousesAdditional());
@@ -142,16 +298,22 @@ public class Player implements Serializable {
                     if (resourcePick.getWarehousePosition() >= 0 && resourcePick.getWarehousePosition() < 3) {
                         resToBeRemoved = standardTemp.get(resourcePick.getWarehousePosition()).getResources();
                         standardTemp.get(resourcePick.getWarehousePosition()).incrementAvailability();
-                        if( standardTemp.get(resourcePick.getWarehousePosition()).getResources().size() ==1){
+                        if (standardTemp.get(resourcePick.getWarehousePosition()).getResources().size() == 1) {
                             standardTemp.get(resourcePick.getWarehousePosition()).changeResourceType(ResourceType.ANY);
                         }
                     } else if (additionalTemp.size() > resourcePick.getWarehousePosition() - 3 && resourcePick.getWarehousePosition() >= 3 && resourcePick.getWarehousePosition() < 5) {
                         resToBeRemoved = additionalTemp.get(resourcePick.getWarehousePosition() - 3).getResources();
-                        additionalTemp.get(resourcePick.getWarehousePosition()).incrementAvailability();
-                        if( additionalTemp.get(resourcePick.getWarehousePosition()).getResources().size() ==1){
-                            additionalTemp.get(resourcePick.getWarehousePosition()).changeResourceType(ResourceType.ANY);
-                        }
+                        additionalTemp.get(resourcePick.getWarehousePosition()-3).incrementAvailability();
                     } else {
+                        ArrayList<Warehouse> temp = new ArrayList<>();
+                        Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
+                        setWarehousesStandard(temp);
+                        temp = new ArrayList<>();
+                        Collections.addAll(temp, gson.fromJson(warehouseAdditional, Warehouse[].class));
+                        setWarehousesAdditional(temp);
+                        ArrayList<Resource> temp2 = new ArrayList<>();
+                        Collections.addAll(temp2, gson.fromJson(strongBox, Resource[].class));
+                        setStrongBox(temp2);
                         return false;
                     }
                     break;
@@ -175,91 +337,25 @@ public class Player implements Serializable {
         return true;
     }
 
+    public boolean developmentCardCanBeAdded(DevelopmentCard developmentCard, int spacePos) {
+        if (developmentCardSpaces.size() <= spacePos) {
+            return false;
+        }
+        return (developmentCardSpaces.get(spacePos).canBeAdded(developmentCard));
+    }
 
     /**
-     * get the faith position
+     * add a {@link DevelopmentCard} to the {@link DevelopmentCardSpace}
      *
-     * @return the faith position
+     * @param developmentCard
+     * @param spacePos        the {@link DevelopmentCardSpace} where the {@link DevelopmentCard} must be placed, and it start fro zero
+     * @return true if successful, false otherwise
      */
-    public int getPosFaithMarker() {
-        return posFaithMarker;
-    }
-
-    public void setWarehousesStandard(ArrayList<Warehouse> warehousesStandard) {
-        this.warehousesStandard = warehousesStandard;
-    }
-
-    public void setWarehousesAdditional(ArrayList<Warehouse> warehousesAdditional) {
-        this.warehousesAdditional = warehousesAdditional;
-    }
-
-    public void setStrongBox(ArrayList<Resource> strongBox) {
-        this.strongBox = strongBox;
-    }
-
-    /**
-     * @return a shallow copy of the warehouseStandard {@link ArrayList} of {@link Warehouse} of the {@link Player}
-     */
-    public ArrayList<Warehouse> getWarehousesStandard() {
-        return warehousesStandard;
-    }
-
-    /**
-     * @return a shallow copy of the strongbox {@link ArrayList} of {@link Resource} of the {@link Player}
-     */
-    public ArrayList<Resource> getStrongBox() {
-        return strongBox;
-    }
-
-    /**
-     * @return a shallow copy of the {@link ArrayList} of additional {@link Warehouse} of the {@link Player}
-     */
-    public ArrayList<Warehouse> getWarehousesAdditional() {
-        return warehousesAdditional;
-    }
-
-    /**
-     * all the {@link Player} {@link Resource}
-     *
-     * @return an {@link ArrayList} of {@link Resource} containing all the resources coming from the warehouses and the strongbox
-     */
-    public ArrayList<Resource> getResources() {
-        return (ArrayList<Resource>) Stream.concat(
-                Stream.concat(getStrongBox().stream(),
-                        getWarehousesStandard().stream().flatMap(elem -> elem.getResources().stream())),
-                getWarehousesAdditional().stream().flatMap(elem -> elem.getResources().stream()))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * @return a shallow copy of the discounts' {@link ArrayList} of {@link ResourcesCount} of the {@link Player}
-     */
-    public ArrayList<ResourcesCount> getDiscounts() {
-        return (ArrayList<ResourcesCount>) discounts.clone();
-    }
-
-    /**
-     * return all the {@link DevelopmentCard} even if covered
-     *
-     * @return an {@link ArrayList} of all the {@link Player} {@link DevelopmentCard}
-     */
-    public ArrayList<DevelopmentCard> getDevelopmentCards() {
-        return (ArrayList<DevelopmentCard>) developmentCardSpaces.stream()
-                .flatMap(elem -> elem.linearize().stream())
-                .collect(Collectors.toList());
-    }
-
-    public ArrayList<DevelopmentCardSpace> getDevelopmentCardSpaces() {
-        return developmentCardSpaces;
-    }
-
-    public boolean hasDiscount() {
-        return getDiscounts().size() > 0;
-    }
-
-
-    public boolean isActionable(ArrayList<ResourcesCount> resourcesNeeded) {
-        return resourcesNeeded != null && Utils.compareResources(getResources(), resourcesNeeded);
+    public boolean addDevelopmentCard(DevelopmentCard developmentCard, int spacePos) {
+        if (developmentCardSpaces.size() > spacePos) {
+            return developmentCardSpaces.get(spacePos).add(developmentCard);
+        }
+        return false;
     }
 
     /**
@@ -281,175 +377,40 @@ public class Player implements Serializable {
         return false;
     }
 
-    /**
-     * add a {@link DevelopmentCard} to the {@link DevelopmentCardSpace}
-     *
-     * @param developmentCard
-     * @param spacePos        the {@link DevelopmentCardSpace} where the {@link DevelopmentCard} must be placed, and it start fro zero
-     * @return true if successful, false otherwise
-     */
-    public boolean addDevelopmentCard(DevelopmentCard developmentCard, int spacePos) {
-        if (developmentCardSpaces.size() > spacePos) {
-            return developmentCardSpaces.get(spacePos).add(developmentCard);
-        }
-        return false;
-    }
-
-    //todo: do we still use this method?
-
-    /**
-     * Method used to know if the {@link Player} has enough {@link Resource} to enable the {@link ArrayList} of {@link ProductivePower}
-     *
-     * @param productivePowers the {@link ArrayList} containing all the {@link ProductivePower} that the {@link Player} want to enable
-     * @return true <==> all the {@link ProductivePower} can be enabled
-     */
-    public boolean canEnableProductivePowers(ArrayList<ProductivePower> productivePowers) {
-        //Each productivePower contains an ArrayList of ResourceCount "from" which represents the resources needed to perform the production
-        //Utils.compare(a,b) return true <==> a include b
-        //setOfE.parallelStream().anyMatch(e->eval(e));
-        /*
-        boolean anyTrue() {
-            for (Element e : setOfE) {
-                if (eval(e)) {
-                    return true;
-                  }
-                }
-            return false;
-            }
-         */
-        return productivePowers.parallelStream().anyMatch(elem -> Utils.compareResources(getResources(), elem.getFrom()));
-    }
-
-    public boolean developmentCardCanBeAdded(DevelopmentCard developmentCard, int spacePos) {
-        if (developmentCardSpaces.size() <= spacePos) {
-            return false;
-        }
-        return (developmentCardSpaces.get(spacePos).canBeAdded(developmentCard));
-    }
-
-    public void addResourceToStrongBox(Resource resource) {
-        strongBox.add(resource);
-    }
-
-    //todo: do we still use this method?
-    public void addResourceToStrongBox(ArrayList<Resource> resources) {
-        strongBox.addAll(resources);
-    }
-
-    /**
-     * Class used only during the testing phase
-     */
-    public boolean addResourceToWarehouseAdditional(Resource resource, int index) {
-        if (index > warehousesAdditional.size())
-            return false;
-        if(warehousesAdditional.get(index).getResourceType()==resource.getType()){
-            warehousesAdditional.get(index).addResource(resource);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * It's a dump class just used during the testing in order to make easier the phase
-     */
-    public boolean addResourceToWarehouseStandard(Resource resource, int index) {
-
-        if (index > warehousesStandard.size())
-            return false;
-        warehousesStandard.get(index).addResource(resource);
-        return true;
-    }
-
-    //setter Leader Card
-    public void addDiscount(ResourcesCount resourcesCount) {
-        discounts.add(resourcesCount);
-    }
-
-    public void addPower(ProductivePower productivePower) {
-        addedPower.add(productivePower);
-    }
-
-    public void addConversionStrategies(ResourceType resourceType) {
-        conversionStrategies.add(resourceType);
-    }
-
-    public void addAdditionalWarehouse(Warehouse warehouse) {
-        warehousesAdditional.add(warehouse);
-    }
-
-    public int numOfWhiteMarbleConversionStrategy() {
-        return conversionStrategies.size();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Player)) {
-            return false;
-        }
-        return this.name.equals(((Player) obj).getName());
-    }
-
-    //todo: do we still use this method?
-
-    /**
-     * Method used to remove the {@link Resource} specified in the parameter from the {@link Warehouse} of the {@link Player} if they exists
-     * PAY ATTENTION -> if
-     *
-     * @param resources the {@link ArrayList} containing the {@link Resource} to be removed
-     * @return true <==> no error occurs in the removing
-     */
-    public boolean removeResources(ArrayList<Resource> resources) {
-        if (resources == null) {
-            return true;
-        }
-        ArrayList<Warehouse> warehouses = (ArrayList<Warehouse>) Stream.concat(getWarehousesStandard().stream(), getWarehousesAdditional().stream()).collect(Collectors.toList());
-        for (int resourceIndex = 0; resourceIndex < resources.size(); resourceIndex++) {
-            boolean removed = false;
-            int warehouseIndex = 0;
-            do {
-                removed = warehouses.get(warehouseIndex).getResource(resources.get(resourceIndex));
-                warehouseIndex++;
-            } while (!removed && warehouseIndex < warehouses.size());
-            if (!removed) {
-                return false;
-            }
-        }
-        return true;
-    }
+    //------------------------------------------REVIEW-------------------------------------------------
 
     /**
      * {@link Player} choose how many {@link Resource} to move from the selected Warehouse and where to put them
-     * @param indexFirstWarehouse index of the source Warehouse
-     * @param indexSecondWarehouse index of the destination Warehouse
+     *
+     * @param indexFirstWarehouse         index of the source Warehouse
+     * @param indexSecondWarehouse        index of the destination Warehouse
      * @param resourcesFromFirstWarehouse number of the Resources to move
      * @return result of the operation
      */
-    public boolean moveResources(int indexFirstWarehouse, int indexSecondWarehouse, int resourcesFromFirstWarehouse){
+    public boolean moveResources(int indexFirstWarehouse, int indexSecondWarehouse, int resourcesFromFirstWarehouse) {
         Warehouse w1, w2;
         boolean firstIsStandard = true, secondIsStandard = true;
         //getting the warehouses from the player
         if (indexFirstWarehouse == 3 || indexFirstWarehouse == 4) {
             w1 = getWarehousesAdditional().get(indexFirstWarehouse - 3);
             firstIsStandard = false;
-        }
-        else {
+        } else {
             w1 = getWarehousesStandard().get(indexFirstWarehouse);
         }
         if (indexSecondWarehouse == 3 || indexSecondWarehouse == 4) {
             w2 = getWarehousesAdditional().get(indexSecondWarehouse - 3);
             secondIsStandard = false;
-        }
-        else{
+        } else {
             w2 = getWarehousesStandard().get(indexSecondWarehouse);
         }
 
         // Different Cases
-        if (w1.getResources().size()<resourcesFromFirstWarehouse){
+        if (w1.getResources().size() < resourcesFromFirstWarehouse) {
             return false;
         }
         //S<->S
-        if (firstIsStandard && secondIsStandard && resourcesFromFirstWarehouse<w2.getSpaceAvailable()+w2.getResources().size() ){
-            if (w2.getResourceType()==ResourceType.ANY && resourcesFromFirstWarehouse!= w1.getResources().size()){
+        if (firstIsStandard && secondIsStandard && resourcesFromFirstWarehouse < w2.getSpaceAvailable() + w2.getResources().size()) {
+            if (w2.getResourceType() == ResourceType.ANY && resourcesFromFirstWarehouse != w1.getResources().size()) {
                 return false;
             }
             ArrayList<Resource> temp = w1.getResources();
@@ -458,38 +419,36 @@ public class Player implements Serializable {
 
             w1.changeResources(w2.getResources());
             w1.changeResourceType(resourceType_w2);
-            if (w1.getResources().size()==0){
+            if (w1.getResources().size() == 0) {
                 w1.changeResourceType(ResourceType.ANY);
-                w1.changeAvailability(indexFirstWarehouse+1);
+                w1.changeAvailability(indexFirstWarehouse + 1);
             }
-            w1.changeAvailability(indexFirstWarehouse+1-w1.getResources().size());
+            w1.changeAvailability(indexFirstWarehouse + 1 - w1.getResources().size());
             w2.changeResources(temp);
             w2.changeResourceType(resourceType_w1);
-            if (w2.getResources().size()==0){
+            if (w2.getResources().size() == 0) {
                 w2.changeResourceType(ResourceType.ANY);
-                w2.changeAvailability(indexSecondWarehouse+1);
+                w2.changeAvailability(indexSecondWarehouse + 1);
             }
-            w2.changeAvailability(indexSecondWarehouse+1-w2.getResources().size());
+            w2.changeAvailability(indexSecondWarehouse + 1 - w2.getResources().size());
             return true;
         }
         // S->A || A->S the Resources are moved only if the two warehouses has the same ResourceType
-        else if((w1.getResourceType()==w2.getResourceType() || w2.getResourceType()== ResourceType.ANY) && (resourcesFromFirstWarehouse<=w2.getSpaceAvailable())){
-            if (w2.getResourceType()== ResourceType.ANY){
+        else if ((w1.getResourceType() == w2.getResourceType() || w2.getResourceType() == ResourceType.ANY) && (resourcesFromFirstWarehouse <= w2.getSpaceAvailable())) {
+            if (w2.getResourceType() == ResourceType.ANY) {
                 w2.changeResourceType(w1.getResourceType());
             }
             for (int i = 0; i < resourcesFromFirstWarehouse; i++) {
                 w1.getResources().remove(0);
-                w1.changeAvailability(w1.getSpaceAvailable()+1);
+                w1.changeAvailability(w1.getSpaceAvailable() + 1);
                 w2.getResources().add(Resource.getInstance(w2.getResourceType()));
-                w2.changeAvailability(w2.getSpaceAvailable()-1);
+                w2.changeAvailability(w2.getSpaceAvailable() - 1);
             }
-            if(w1.getResources().size()==0 && firstIsStandard){
+            if (w1.getResources().size() == 0 && firstIsStandard) {
                 w1.changeResourceType(ResourceType.ANY);
             }
             return true;
         }
         return false;
     }
-
-
 }

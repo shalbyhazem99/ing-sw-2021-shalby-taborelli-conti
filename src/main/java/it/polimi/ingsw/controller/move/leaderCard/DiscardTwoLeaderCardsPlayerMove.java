@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 public class DiscardTwoLeaderCardsPlayerMove extends PlayerMove {
     private int posFirst;

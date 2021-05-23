@@ -3,9 +3,9 @@ package it.polimi.ingsw.utils.jsonCreator;
 import com.google.gson.Gson;
 
 import it.polimi.ingsw.model.ProductivePower;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
-import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.*;
 
 

@@ -2,14 +2,18 @@ package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
- * the {@link LeaderCard} that add produtive power to the {@link Player}
+ * the {@link LeaderCard} that add productive power to the {@link Player}
  */
 public class LeaderCardAddProductive extends LeaderCard implements Serializable {
     /**
@@ -45,10 +49,10 @@ public class LeaderCardAddProductive extends LeaderCard implements Serializable 
      */
     @Override
     public boolean active(Player player) {
-        if(!active && isActionable(player)) { //if not active and it's not activable
+        if(!active && isActionable(player)) { //if not active and it's not actionable
             if (resourceTypeRelated!=null){
                 player.addPower(ProductivePower.getInstance(
-                        new ArrayList<>(Arrays.asList(ResourcesCount.getInstance(1, resourceTypeRelated))),
+                        new ArrayList<>(Collections.singletonList(ResourcesCount.getInstance(1, resourceTypeRelated))),
                         new ArrayList<>(Arrays.asList(
                                 Resource.getInstance(ResourceType.ANY),
                                 Resource.getInstance(ResourceType.FAITH))))
@@ -63,26 +67,6 @@ public class LeaderCardAddProductive extends LeaderCard implements Serializable 
 
     @Override
     public String toString() {
-        return super.toString()+" | NEW PRODUCTION : [ 1"+ Utils.resourceTypeToString(resourceTypeRelated)+"] ▶ [ 1A , 1✝ ]";
-    }
-
-    /**
-     * @param obj
-     * @return
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    /**
-     * clone {@link LeaderCardAddProductive}
-     *
-     * @return a clone of {@link LeaderCardAddProductive}
-     * @throws CloneNotSupportedException
-     */
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone());
+        return super.toString()+" | NEW PRODUCTION : [ 1"+ Utils.resourceTypeToString(resourceTypeRelated)+"] ▶ [ 1A , 1"+ResourceType.FAITH.symbol+" ]";
     }
 }

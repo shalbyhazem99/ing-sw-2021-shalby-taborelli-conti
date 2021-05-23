@@ -6,6 +6,8 @@ import it.polimi.ingsw.controller.move.production.move.EnableProductionPlayerMov
 import it.polimi.ingsw.controller.move.endMatch.EndMatchResponse;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.Serializable;
 import java.util.*;
@@ -83,8 +85,6 @@ public class MatchMulti extends Match implements Serializable {
     public void startMatch() {
         randomlyPickInkwellPlayer();
         turn = posInkwell;
-        //assign starting resources
-        //todo:choose resources
         //start
         super.startMatch();
         //askForDiscardLeaderCard();

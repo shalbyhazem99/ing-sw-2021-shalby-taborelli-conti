@@ -3,9 +3,10 @@ package it.polimi.ingsw.utils.jsonCreator;
 import com.google.gson.Gson;
 import java.io.FileWriter;
 
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.*;
 import it.polimi.ingsw.model.leaderCard.*;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

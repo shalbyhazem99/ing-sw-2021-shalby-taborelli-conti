@@ -1,4 +1,7 @@
 package it.polimi.ingsw.model;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -20,7 +23,7 @@ public class ProductivePowerTest extends TestCase {
     public void testProductivePower(){
         final int count = 1;
         ResourceType type = ResourceType.COIN;
-        ResourcesCount resourcesCount = new ResourcesCount(count, type);
+        ResourcesCount resourcesCount = ResourcesCount.getInstance(count, type);
         ArrayList<ResourcesCount> from = new ArrayList<>();
         from.add(resourcesCount);
 
@@ -28,7 +31,7 @@ public class ProductivePowerTest extends TestCase {
         ArrayList<Resource> to = new ArrayList<>();
         to.add(resource);
 
-        ProductivePower productivePower = new ProductivePower(from, to);
+        ProductivePower productivePower = ProductivePower.getInstance(from, to);
 
         assertEquals(from, productivePower.getFrom());
         assertEquals(to, productivePower.getTo());

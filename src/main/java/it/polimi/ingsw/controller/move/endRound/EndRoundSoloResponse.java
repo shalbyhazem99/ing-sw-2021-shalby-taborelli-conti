@@ -1,11 +1,10 @@
 package it.polimi.ingsw.controller.move.endRound;
 
-import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.ActionToken;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Resource;
+import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.ArrayList;
 import java.util.Scanner;

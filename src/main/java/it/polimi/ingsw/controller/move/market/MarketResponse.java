@@ -5,8 +5,8 @@ import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.utils.Utils;
 
@@ -22,7 +22,7 @@ public class MarketResponse extends MoveResponse {
      * that were part of the row/column selected we can convert, numOfMarbleToBeCoverted >=0
      * (! If the {@link it.polimi.ingsw.model.Player}
      * - When responding to a {@link MarketMarbleConversionMove} the resources parameter will contain the {@link Resource} got by the conversion
-     * of the white {@link it.polimi.ingsw.model.market.Marble} based on the {@link ArrayList} of {@link it.polimi.ingsw.model.ResourceType} previously
+     * of the white {@link it.polimi.ingsw.model.market.Marble} based on the {@link ArrayList} of {@link ResourceType} previously
      * specified and the
      */
     private ArrayList<Resource> resources;

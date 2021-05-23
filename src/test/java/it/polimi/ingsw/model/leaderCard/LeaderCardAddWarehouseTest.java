@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
-import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
@@ -27,7 +27,7 @@ public class LeaderCardAddWarehouseTest extends TestCase {
         Player tester = new Player("tester");
 
         //testing that a card with no power is activated
-        LeaderCardAddWarehouse leaderCardAddWarehouse_null = new LeaderCardAddWarehouse(0, null, null, null);
+        LeaderCardAddWarehouse leaderCardAddWarehouse_null = LeaderCardAddWarehouse.getInstance(0, null, null, null);
         tester.addLeaderCard(leaderCardAddWarehouse_null);
         assertTrue(leaderCardAddWarehouse_null.active(tester));
 
@@ -37,7 +37,7 @@ public class LeaderCardAddWarehouseTest extends TestCase {
         DevelopmentCardNeeded developmentCardNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.YELLOW, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devListNeeded = new ArrayList<>();
         devListNeeded.add(developmentCardNeeded);
-        LeaderCardAddWarehouse leaderCardAddWarehouse = new LeaderCardAddWarehouse(5, ResourceType.COIN, null, devListNeeded);
+        LeaderCardAddWarehouse leaderCardAddWarehouse = LeaderCardAddWarehouse.getInstance(5, ResourceType.COIN, null, devListNeeded);
         tester.addLeaderCard(leaderCardAddWarehouse);
         assertTrue(leaderCardAddWarehouse.active(tester));
 
@@ -48,7 +48,7 @@ public class LeaderCardAddWarehouseTest extends TestCase {
         DevelopmentCardNeeded developmentCardNeeded_Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devListNeeded_Wrong = new ArrayList<>();
         devListNeeded_Wrong.add(developmentCardNeeded_Wrong);
-        LeaderCardAddWarehouse leaderCardAddWarehouse_Wrong = new LeaderCardAddWarehouse(5, ResourceType.COIN, null, devListNeeded_Wrong);
+        LeaderCardAddWarehouse leaderCardAddWarehouse_Wrong = LeaderCardAddWarehouse.getInstance(5, ResourceType.COIN, null, devListNeeded_Wrong);
         tester.addLeaderCard(leaderCardAddWarehouse_Wrong);
         assertFalse(leaderCardAddWarehouse_Wrong.active(tester));
 
@@ -62,7 +62,7 @@ public class LeaderCardAddWarehouseTest extends TestCase {
         Player tester = new Player("Tester");
 
         //Testing a null card can always be activated
-        LeaderCardAddWarehouse card_null = new LeaderCardAddWarehouse(2, null, null, null);
+        LeaderCardAddWarehouse card_null = LeaderCardAddWarehouse.getInstance(2, null, null, null);
         assertTrue(card_null.isActionable(tester));
 
         //Testing a card that need development cards can be activated
@@ -75,19 +75,19 @@ public class LeaderCardAddWarehouseTest extends TestCase {
         tester.addDevelopmentCard(card2, 0);
         ArrayList<DevelopmentCardNeeded> devCardList = new ArrayList<>();
         devCardList.add(developmentCardNeeded1);
-        LeaderCardAddWarehouse cardAddWarehouse1 = new LeaderCardAddWarehouse(0, null, null, devCardList);
+        LeaderCardAddWarehouse cardAddWarehouse1 = LeaderCardAddWarehouse.getInstance(0, null, null, devCardList);
         assertTrue(cardAddWarehouse1.isActionable(tester));
 
         //Testing more than one card needed
         devCardList.add(developmentCardNeeded2);
-        LeaderCardAddWarehouse cardAddRename2 = new LeaderCardAddWarehouse(0, null, null, devCardList);
+        LeaderCardAddWarehouse cardAddRename2 = LeaderCardAddWarehouse.getInstance(0, null, null, devCardList);
         assertTrue(cardAddRename2.isActionable(tester));
 
         //Testing negative case
         DevelopmentCardNeeded developmentCardNeeded1Wrong = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         ArrayList<DevelopmentCardNeeded> devCardListWrong = new ArrayList<>();
         devCardListWrong.add(developmentCardNeeded1Wrong);
-        LeaderCardAddWarehouse cardAddWarehouseWrong1 = new LeaderCardAddWarehouse(1, null, null, devCardListWrong);
+        LeaderCardAddWarehouse cardAddWarehouseWrong1 = LeaderCardAddWarehouse.getInstance(1, null, null, devCardListWrong);
 
         assertFalse(cardAddWarehouseWrong1.isActionable(tester));
 
@@ -106,12 +106,12 @@ public class LeaderCardAddWarehouseTest extends TestCase {
         tester.addResourceToStrongBox(faith);
         tester.addResourceToStrongBox(faith);
 
-        LeaderCardAddWarehouse cardAddWarehouse3 = new LeaderCardAddWarehouse(0, null, resourcesNeeded, null);
+        LeaderCardAddWarehouse cardAddWarehouse3 = LeaderCardAddWarehouse.getInstance(0, null, resourcesNeeded, null);
         assertTrue(cardAddWarehouse3.isActionable(tester));
 
         //Testing more type Resources needed
         resourcesNeeded.add(resources2);
-        LeaderCardAddWarehouse cardAddWarehouse4 = new LeaderCardAddWarehouse(0, null, resourcesNeeded, null);
+        LeaderCardAddWarehouse cardAddWarehouse4 = LeaderCardAddWarehouse.getInstance(0, null, resourcesNeeded, null);
         assertTrue(cardAddWarehouse4.isActionable(tester));
     }
 
@@ -121,7 +121,7 @@ public class LeaderCardAddWarehouseTest extends TestCase {
     @Test
     public void testGetPoints(){
         Player tester = new Player("tester");
-        LeaderCardAddWarehouse leaderCardAddWarehouse_null = new LeaderCardAddWarehouse(2, null, null, null);
+        LeaderCardAddWarehouse leaderCardAddWarehouse_null = LeaderCardAddWarehouse.getInstance(2, null, null, null);
         //Testing I can't get points from a disable Card
         assertEquals(0, leaderCardAddWarehouse_null.getPoints());
         tester.addLeaderCard(leaderCardAddWarehouse_null);
@@ -135,7 +135,7 @@ public class LeaderCardAddWarehouseTest extends TestCase {
         ArrayList<DevelopmentCardNeeded> developmentCardNeeded = new ArrayList<>();
         DevelopmentCardNeeded cardNeeded = new DevelopmentCardNeeded(1, DevelopmentCardType.PURPLE, DevelopmentCardLevel.FIRST);
         developmentCardNeeded.add(cardNeeded);
-        LeaderCardAddWarehouse leaderCardAddWarehouse = new LeaderCardAddWarehouse(2, ResourceType.STONE, null, developmentCardNeeded);
+        LeaderCardAddWarehouse leaderCardAddWarehouse = LeaderCardAddWarehouse.getInstance(2, ResourceType.STONE, null, developmentCardNeeded);
         leaderCardAddWarehouse.active(tester);
         assertEquals(2, leaderCardAddWarehouse.getPoints());
 

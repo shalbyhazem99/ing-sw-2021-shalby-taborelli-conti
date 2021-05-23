@@ -1,12 +1,11 @@
 package it.polimi.ingsw.utils;
 
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
-import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class UtilsTest extends TestCase {
 

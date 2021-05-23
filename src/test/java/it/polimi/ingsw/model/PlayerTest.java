@@ -1,13 +1,17 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.move.production.move.ResourcePick;
+import it.polimi.ingsw.controller.move.production.move.ResourceWarehouseType;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.leaderCard.*;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import java.rmi.server.RemoteRef;
 import java.util.ArrayList;
 
 
@@ -20,15 +24,13 @@ public class PlayerTest extends TestCase {
      */
     @Test
     public void testMoveAheadFaith() {
-        //todo: for tabo rifare
-        /*Player tester = new Player("tester");
-
+        Player tester = new Player("tester");
         // 1) Testing the moving ahead when the {@link Player} stays under the 20 points
-        tester.moveAheadFaith(1,);
-        assertEquals(1, tester.getPosFaithMarker());
+        tester.moveAheadFaith(4);
+        assertEquals(4, tester.getPosFaithMarker());
         // 2) Testing the moving ahead when the {@link Player} goes over the 20 points
-        tester.moveAheadFaith(20);
-        assertEquals(Utils.FAITH_LENGTH, tester.getPosFaithMarker());*/
+        tester.moveAheadFaith(80);
+        assertEquals(Utils.FAITH_LENGTH, tester.getPosFaithMarker());
     }
 
     @Test
@@ -63,7 +65,7 @@ public class PlayerTest extends TestCase {
      * 5) testing the case when the player can not afford the price of a card
      */
     public void testIsActionable() {
-        Player tester = new Player("tester");
+        /*Player tester = new Player("tester");
         ArrayList<ResourcesCount> resourcesCountArrayList = new ArrayList<>();
 
         //1) Testing that a card that does not need anything can always be afforded
@@ -94,6 +96,8 @@ public class PlayerTest extends TestCase {
         //5) testing the case when the player can not afford the price of a card
         resourcesCountArrayList.add(ResourcesCount.getInstance(3, ResourceType.FAITH));
         assertFalse(tester.isActionable(resourcesCountArrayList));
+        */
+
     }
 
 
@@ -145,73 +149,73 @@ public class PlayerTest extends TestCase {
      * 4)Testing that {@link Player} add only one LEVEL.THIRD DevelopmentCard per {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace}
      */
     @Test
-    public void testAddDevelopmentCard(){
+    public void testAddDevelopmentCard() {
         Player tester = new Player("tester");
 
         //Testing when a Development card in a wrong space
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),5));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 5));
 
         //Testing that player add only one LEVEL.FIRST DevelopmentCard per DevelopmentCardSpace
 
         //DevSpace0
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),0));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),0));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),0));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 0));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 0));
         assertEquals(1, tester.getDevelopmentCards().size());
         //DevSpace1
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),1));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),1));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),1));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 1));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 1));
         assertEquals(2, tester.getDevelopmentCards().size());
         //DevSpace2
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),2));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),2));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),2));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 2));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 2));
         assertEquals(3, tester.getDevelopmentCards().size());
 
         //Testing that player add only one LEVEL.SECOND DevelopmentCard per DevelopmentCardSpace
 
         //DevSpace0
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),0));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),0));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),0));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 0));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 0));
         assertEquals(4, tester.getDevelopmentCards().size());
         //DevSpace1
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),1));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),1));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),1));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 1));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 1));
         assertEquals(5, tester.getDevelopmentCards().size());
         //DevSpace2
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),2));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),2));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),2));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 2));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 2));
         assertEquals(6, tester.getDevelopmentCards().size());
 
         //Testing that player add only one LEVEL.THIRD DevelopmentCard per DevelopmentCardSpace
 
         //DevSpace0
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),0));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),0));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),0));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 0));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 0));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 0));
         assertEquals(7, tester.getDevelopmentCards().size());
         //DevSpace1
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),1));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),1));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),1));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 1));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 1));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 1));
         assertEquals(8, tester.getDevelopmentCards().size());
         //DevSpace2
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null),2));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null),2));
-        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),2));
-        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null),2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, null, 0, null, null), 2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, null, 0, null, null), 2));
+        assertTrue(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 2));
+        assertFalse(tester.addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 2));
         assertEquals(9, tester.getDevelopmentCards().size());
     }
 
@@ -287,9 +291,228 @@ public class PlayerTest extends TestCase {
         assertFalse(tester.developmentCardCanBeAdded(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, null, 0, null, null), 2));
     }
 
+    public void testTestCanAfford() {
+        Player testPlayer = Player.getInstance("Tester");
+        //base case: null
+        assertFalse(testPlayer.canAfford(null));
+        ArrayList<ResourcePick> resourceToUse = new ArrayList<>();
+        //base case: empty
+        assertTrue(testPlayer.canAfford(resourceToUse));
+        //add element to resourceToUse
+        // 1 coin, 2 shield from strongbox
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.COIN));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.SHIELD));
+        //1 coin, 2 shield from standard warehouse
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 1, ResourceType.COIN));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2, ResourceType.SHIELD));
+
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        //add Resource to StrongBox
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        //add resource to warehouse
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT), 0);
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 1);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 1);
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertTrue(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+
+        //add additional to player
+
+        testPlayer.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.COIN));
+
+
+        //ANOTHER PROVE
+        testPlayer = Player.getInstance("Tester");
+        resourceToUse = new ArrayList<>();
+        //base case: empty
+        assertTrue(testPlayer.canAfford(resourceToUse));
+        //add element to resourceToUse
+        // 1 coin, 2 shield from strongbox
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.COIN));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.SHIELD));
+        //1 coin, 2 shield from standard warehouse
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 1, ResourceType.COIN));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 3, ResourceType.SERVANT));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        //add Resource to StrongBox
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        //add resource to warehouse
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT), 0);
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 1);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 1);
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+
+        //add additional to player
+
+        testPlayer.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.SERVANT));
+
+        assertFalse(testPlayer.canAfford(resourceToUse));
+
+        testPlayer.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SERVANT), 0);
+
+
+        assertTrue(testPlayer.canAfford(resourceToUse));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+
+
+        //ANOTHER PROVE #2
+        testPlayer = Player.getInstance("Tester");
+        resourceToUse = new ArrayList<>();
+        //base case: empty
+        assertTrue(testPlayer.canAfford(resourceToUse));
+        //add element to resourceToUse
+        // 1 coin, 2 shield from strongbox
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.COIN));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.STRONGBOX, 0, ResourceType.SHIELD));
+        //1 coin, 2 shield from standard warehouse
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 1, ResourceType.COIN));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 1, ResourceType.COIN));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2, ResourceType.SHIELD));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 3, ResourceType.SERVANT));
+        resourceToUse.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 4, ResourceType.SERVANT));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        //add Resource to StrongBox
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.COIN));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        testPlayer.addResourceToStrongBox(Resource.getInstance(ResourceType.SHIELD));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        //add resource to warehouse
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT), 0);
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 1);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 1);
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+        testPlayer.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 2);
+        assertFalse(testPlayer.canAfford(resourceToUse));
+
+        //add additional to player
+
+        testPlayer.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.SERVANT));
+        testPlayer.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.SERVANT));
+
+        assertFalse(testPlayer.canAfford(resourceToUse));
+
+        testPlayer.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SERVANT), 0);
+        testPlayer.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SERVANT), 1);
+
+
+        assertTrue(testPlayer.canAfford(resourceToUse));
+        assertFalse(testPlayer.canAfford(resourceToUse));
+
+
+    }
+
+    public void testAddResourceToWarehouseStandard() {
+        Player tester = Player.getInstance();
+        //base case
+        assertFalse(tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),22));
+
+        //add to 0
+        assertTrue(tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 0));
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(1, tester.getResources().size());
+        //try to add with a completed warehouse
+        assertFalse(tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 0));
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(1, tester.getResources().size());
+
+        ArrayList<Resource> resourcesToAdd = new ArrayList<>();
+        resourcesToAdd.add(Resource.getInstance(ResourceType.SERVANT));
+        resourcesToAdd.add(Resource.getInstance(ResourceType.SERVANT));
+        assertTrue(tester.addResourceToWarehouseStandard(resourcesToAdd, 1));
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(3, tester.getResources().size());
+
+        //try to add again
+        assertFalse(tester.addResourceToWarehouseStandard(resourcesToAdd, 1));
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(3, tester.getResources().size());
+
+        assertFalse(tester.addResourceToWarehouseStandard(resourcesToAdd,2));
+        assertEquals(3, tester.getResources().size());
+    }
+
+    public void testAddResourceToWarehouseAdditional() {
+        Player tester = Player.getInstance();
+        //base case
+        assertFalse(tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN),22));
+        tester.addAdditionalWarehouse(Warehouse.getInstance(2,ResourceType.COIN));
+        tester.addAdditionalWarehouse(Warehouse.getInstance(2,ResourceType.SERVANT));
+
+        //add to 0
+        assertTrue(tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 0));
+        assertEquals(ResourceType.COIN, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(1, tester.getResources().size());
+        //try to add with a completed warehouse
+        assertTrue(tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 0));
+        assertEquals(ResourceType.COIN, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getResources().size());
+
+        ArrayList<Resource> resourcesToAdd = new ArrayList<>();
+        resourcesToAdd.add(Resource.getInstance(ResourceType.SERVANT));
+        resourcesToAdd.add(Resource.getInstance(ResourceType.SERVANT));
+        assertTrue(tester.addResourceToWarehouseAdditional(resourcesToAdd, 1));
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(4, tester.getResources().size());
+
+        //try to add again
+        assertFalse(tester.addResourceToWarehouseAdditional(resourcesToAdd, 1));
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(4, tester.getResources().size());
+
+        assertFalse(tester.addResourceToWarehouseAdditional(resourcesToAdd,2));
+        assertEquals(4, tester.getResources().size());
+    }
+
+    public void testTestMoveResources() {
+        //TODO: DA FARE ANCORA
+    }
+
     @Test
-    public void testMoveResources(){
-        Player tester = new Player("tester");
+    public void testMoveResources() {
+       /* Player tester = new Player("tester");
         tester.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.SERVANT));
         tester.addAdditionalWarehouse(Warehouse.getInstance(2,ResourceType.SHIELD));
         //SITUATION: 0) 1) 2) 3) "SERVANT" 4) "SHIELD"
@@ -403,8 +626,7 @@ public class PlayerTest extends TestCase {
         assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
         assertEquals(3, tester.getWarehousesStandard().get(2).getResources().stream().filter(elem -> elem.getType() == ResourceType.SERVANT).count());
 
-
-
+        */
 
 
     }

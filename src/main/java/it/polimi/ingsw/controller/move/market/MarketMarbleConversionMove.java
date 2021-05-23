@@ -3,10 +3,6 @@ package it.polimi.ingsw.controller.move.market;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.ResourceType;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class MarketMarbleConversionMove extends PlayerMove {
     /**

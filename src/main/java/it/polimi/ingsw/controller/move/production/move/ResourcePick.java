@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.move.production.move;
 
 
-import it.polimi.ingsw.model.ResourceType;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.Serializable;
 

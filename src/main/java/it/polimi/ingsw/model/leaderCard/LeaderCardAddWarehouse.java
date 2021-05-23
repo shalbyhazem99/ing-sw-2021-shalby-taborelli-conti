@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
@@ -57,25 +59,5 @@ public class LeaderCardAddWarehouse extends LeaderCard implements Serializable {
     @Override
     public String toString() {
         return super.toString() + "| NEW WRH ADD : Type "+ Utils.resourceTypeToString(resourceTypeRelated);
-    }
-
-    /**
-     * @param obj
-     * @return
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    /**
-     * clone {@link LeaderCardAddWarehouse}
-     *
-     * @return a clone of {@link LeaderCardAddWarehouse}
-     * @throws CloneNotSupportedException
-     */
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return getInstance(points, resourceTypeRelated, (ArrayList<ResourcesCount>) resourcesNeeded.clone(), (ArrayList<DevelopmentCardNeeded>) developmentCardNeeded.clone());
     }
 }

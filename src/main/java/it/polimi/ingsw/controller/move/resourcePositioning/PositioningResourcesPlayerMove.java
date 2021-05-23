@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.resourcePositioning;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.ArrayList;
 
@@ -10,7 +11,7 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
 
     /**
      * Default constructor
-     * @param whereToPlaceResources an {@link ArrayList} of {@link Integer} that has the same size as the {@link ArrayList} of {@link it.polimi.ingsw.model.Resource}
+     * @param whereToPlaceResources an {@link ArrayList} of {@link Integer} that has the same size as the {@link ArrayList} of {@link Resource}
      *                              waiting to be placed, the value contained in the position i indicates where to add the iTH Resource,
      *                              the value can be {0,1,2,3,4,null}, {0,1,2} refers to standard {@link it.polimi.ingsw.model.Warehouse} {3,4} to additional {@link it.polimi.ingsw.model.Warehouse}
      *                              null means that the Resource has to be discarded

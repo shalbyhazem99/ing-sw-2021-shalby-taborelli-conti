@@ -132,4 +132,21 @@ public class DevelopmentCardSpaceTest extends TestCase {
         assertFalse( developmentCardSpace.canBeAdded(card1_1));
     }
 
+    public void testPickTopCard() {
+        DevelopmentCardSpace developmentCardSpace = DevelopmentCardSpace.getInstance();
+        assertEquals(null, developmentCardSpace.pickTopCard());
+        DevelopmentCard developmentCardA = DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST,DevelopmentCardType.GREEN);
+        DevelopmentCard developmentCardB = DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST,DevelopmentCardType.BLUE);
+        DevelopmentCard developmentCardC = DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND,DevelopmentCardType.YELLOW);
+        developmentCardSpace.add(developmentCardA);
+        assertEquals(developmentCardA,developmentCardSpace.pickTopCard());
+        assertEquals(1,developmentCardSpace.linearize().size());
+        developmentCardSpace.add(developmentCardB);
+        assertEquals(developmentCardA,developmentCardSpace.pickTopCard());
+        assertEquals(1,developmentCardSpace.linearize().size());
+        developmentCardSpace.add(developmentCardC);
+        assertEquals(developmentCardC,developmentCardSpace.pickTopCard());
+        assertEquals(2,developmentCardSpace.linearize().size());
+
+    }
 }

@@ -2,6 +2,9 @@ package it.polimi.ingsw.model.market;
 
 import java.io.Serializable;
 
+/**
+ * Class that represent the Marbles of the {@link MarketBoard}
+ */
 public class Marble implements Serializable,Cloneable {
     private final MarbleColor color;
 
@@ -9,8 +12,8 @@ public class Marble implements Serializable,Cloneable {
         this.color = color;
     }
 
-    public static Marble getInstance(MarbleColor colore) {
-        return new Marble(colore);
+    public static Marble getInstance(MarbleColor color) {
+        return new Marble(color);
     }
 
     public MarbleColor getColor() {

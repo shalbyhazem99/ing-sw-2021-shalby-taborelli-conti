@@ -3,9 +3,9 @@ package it.polimi.ingsw.utils;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.production.move.ResourceWarehouseType;
 import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.Resource;
-import it.polimi.ingsw.model.ResourceType;
-import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 
@@ -197,46 +197,14 @@ public class Utils {
     }
 
     public static String resourceTypeToString(ResourceType r) {
-        switch (r) {
-            case COIN:
-                return "⚫";
-            case FAITH:
-                return "✝";
-            case SERVANT:
-                return "⚔";
-            case ANY:
-                return "A";
-            case SHIELD:
-                return "\uD83D\uDEE1️";
-            case STONE:
-                return "\uD83D\uDC8E";
-        }
-        return null;
+        return r.symbol;
     }
 
     public static String formatResourcesCount(ArrayList<ResourcesCount> costs) {
         String str = "[";
         for (int i = 0; i < costs.size(); i++) {
-            switch (costs.get(i).getType()) {
-                case COIN:
-                    if (costs.get(i).getCount() != 0) str = str + " " + costs.get(i).getCount() + "⚫";
-                    break;
-                case FAITH:
-                    if (costs.get(i).getCount() != 0) str = str + " " + costs.get(i).getCount() + "✝";
-                    break;
-                case SERVANT:
-                    if (costs.get(i).getCount() != 0) str = str + " " + costs.get(i).getCount() + "⚔";
-                    break;
-                case ANY:
-                    if (costs.get(i).getCount() != 0) str = str + " " + costs.get(i).getCount() + "A";
-                    break;
-                case SHIELD:
-                    if (costs.get(i).getCount() != 0) str = str + " " + costs.get(i).getCount() + "\uD83D\uDEE1️";
-                    break;
-                case STONE:
-                    if (costs.get(i).getCount() != 0) str = str + " " + costs.get(i).getCount() + "\uD83D\uDC8E";
-                    break;
-            }
+            if (costs.get(i).getCount() != 0)
+                str = str + " " + costs.get(i).getCount() + costs.get(i).getType().symbol;
         }
         str = str + "]";
         return str;
