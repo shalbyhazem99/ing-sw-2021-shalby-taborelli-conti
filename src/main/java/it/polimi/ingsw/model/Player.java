@@ -211,7 +211,7 @@ public class Player implements Serializable {
     }
 
     public boolean addResourceToWarehouseAdditional(ArrayList<Resource> resources, int index) {
-        String warehousesAdditional =new Gson().toJson(getWarehousesAdditional());
+        String warehousesAdditional = new Gson().toJson(getWarehousesAdditional());
         for (Resource resource : resources) {
             if (!addResourceToWarehouseAdditional(resource, index)) {
                 List<Warehouse> list = new ArrayList<>();
@@ -242,7 +242,7 @@ public class Player implements Serializable {
     }
 
     public boolean addResourceToWarehouseStandard(ArrayList<Resource> resources, int index) {
-        String warehouseStandard =new Gson().toJson(getWarehousesStandard());
+        String warehouseStandard = new Gson().toJson(getWarehousesStandard());
         for (Resource resource : resources) {
             if (!addResourceToWarehouseStandard(resource, index)) {
                 List<Warehouse> list = new ArrayList<>();
@@ -303,7 +303,7 @@ public class Player implements Serializable {
                         }
                     } else if (additionalTemp.size() > resourcePick.getWarehousePosition() - 3 && resourcePick.getWarehousePosition() >= 3 && resourcePick.getWarehousePosition() < 5) {
                         resToBeRemoved = additionalTemp.get(resourcePick.getWarehousePosition() - 3).getResources();
-                        additionalTemp.get(resourcePick.getWarehousePosition()-3).incrementAvailability();
+                        additionalTemp.get(resourcePick.getWarehousePosition() - 3).incrementAvailability();
                     } else {
                         ArrayList<Warehouse> temp = new ArrayList<>();
                         Collections.addAll(temp, gson.fromJson(warehouseStandard, Warehouse[].class));
@@ -377,51 +377,45 @@ public class Player implements Serializable {
         return false;
     }
 
-    //------------------------------------------REVIEW-------------------------------------------------
-
     /**
      * {@link Player} choose how many {@link Resource} to move from the selected Warehouse and where to put them
      *
-     * @param indexFirstWarehouse         index of the source Warehouse
-     * @param indexSecondWarehouse        index of the destination Warehouse
-     * @param resourcesFromFirstWarehouse number of the Resources to move
-     * @param indexFirstWarehouse index of the source Warehouse
+     * @param indexFirstWarehouse  index of the source Warehouse
      * @param indexSecondWarehouse index of the destination Warehouse
-     * @param how_many_first number of  {@link Resource} to get from the first {@link Warehouse}
-     * @param how_many_second number of {@link Resource} to get from the second {@link Warehouse}
+     * @param indexFirstWarehouse  index of the source Warehouse
+     * @param indexSecondWarehouse index of the destination Warehouse
+     * @param how_many_first       number of  {@link Resource} to get from the first {@link Warehouse}
+     * @param how_many_second      number of {@link Resource} to get from the second {@link Warehouse}
      * @return result of the operation
      */
-    public boolean moveResources(int indexFirstWarehouse, int indexSecondWarehouse, int resourcesFromFirstWarehouse) {
-    public boolean moveResources(int indexFirstWarehouse, int indexSecondWarehouse, int how_many_first, int how_many_second){
+    public boolean moveResources(int indexFirstWarehouse, int indexSecondWarehouse, int how_many_first, int how_many_second) {
         Warehouse w1, w2;
         boolean firstIsStandard = true, secondIsStandard = true;
+        if(indexFirstWarehouse<0 || indexSecondWarehouse<0 || indexFirstWarehouse>=3+getWarehousesAdditional().size()|| indexSecondWarehouse>=3+getWarehousesAdditional().size())
+            return false;
         //getting the warehouses from the player
         if (indexFirstWarehouse == 3 || indexFirstWarehouse == 4) {
             w1 = getWarehousesAdditional().get(indexFirstWarehouse - 3);
             firstIsStandard = false;
-        }
-        else {
+        } else {
             w1 = getWarehousesStandard().get(indexFirstWarehouse);
         }
         if (indexSecondWarehouse == 3 || indexSecondWarehouse == 4) {
             w2 = getWarehousesAdditional().get(indexSecondWarehouse - 3);
             secondIsStandard = false;
-        }
-        else{
+        } else {
             w2 = getWarehousesStandard().get(indexSecondWarehouse);
         }
 
         //S<->S
-        if (firstIsStandard && secondIsStandard){ //if both standard I mustn't consider how many parameters, I must swap warehouses
+        if (firstIsStandard && secondIsStandard) { //if both standard I mustn't consider how many parameters, I must swap warehouses
             //if both warehouses are not empty and they've different types stored ==> error
             //they obviously are of different type (a part of if they're ANY)
             //check that the first warehouse can store the amount of resources taken from the second warehouse and viceversa
-            if(w1.getSpaceAvailable()+w1.getResources().size()<w2.getResources().size())
-            {
+            if (w1.getSpaceAvailable() + w1.getResources().size() < w2.getResources().size()) {
                 return false;
             }
-            if(w2.getSpaceAvailable()+w2.getResources().size()<w1.getResources().size())
-            {
+            if (w2.getSpaceAvailable() + w2.getResources().size() < w1.getResources().size()) {
                 return false;
             }
             ArrayList<Resource> temp = w1.getResources();
@@ -430,177 +424,124 @@ public class Player implements Serializable {
 
             w1.changeResources(w2.getResources());
             w1.changeResourceType(resourceType_w2);
-            w1.changeAvailability(indexFirstWarehouse+1-w1.getResources().size());
+            w1.changeAvailability(indexFirstWarehouse + 1 - w1.getResources().size());
+
             w2.changeResources(temp);
             w2.changeResourceType(resourceType_w1);
-            w2.changeAvailability(indexSecondWarehouse+1-w2.getResources().size());
+            w2.changeAvailability(indexSecondWarehouse + 1 - w2.getResources().size());
             return true;
         }
-        //BOTH ADDITIONAL, NOW HOW MANY WILL MATTER
-        else if(!firstIsStandard && !secondIsStandard)
-        {
-            if(!w1.getResourceType().equals(w2.getResourceType())) //resource type must be the same (it cannot be ANY)
+
+        int diff = how_many_first - how_many_second;
+        if (diff == 0)
+            return true;
+        //A<->A, NOW HOW MANY WILL MATTER
+        if (!firstIsStandard && !secondIsStandard) {
+            if (!w1.getResourceType().equals(w2.getResourceType())) //resource type must be the same (it cannot be ANY)
             {
                 return false;
             }
             //CHECK IF HOW_MANY indexes are correct
-            if(how_many_first<0 && how_many_first>2 && how_many_second<0 && how_many_second>2)
-            {
-                return false;
-            }
-            //CHECK IF HOW MANY PARAMETERS ARE COMPATIBLE WITH WAREHOUSES RESOURCES
-            if(!(how_many_first<=w1.getResources().size()&&how_many_second<=w2.getResources().size()))
-            {
+            if (how_many_first < 0 || how_many_first > w1.getResources().size() || how_many_second < 0 || how_many_second > w2.getResources().size()) {
                 return false;
             }
             //CHECK IF THE ACTION CAN BE PERFORMED
             //w1_new_space_available = how many things I can store before the action + how many things I "take out" from the warehouse
             //- how many things I have to put in
-            int w1_new_space_available = w1.getSpaceAvailable()+how_many_first-how_many_second;
-            if(w1_new_space_available<0)
-            {
+            int w1_new_space_available = w1.getSpaceAvailable() + how_many_first - how_many_second;
+            if (w1_new_space_available < 0) {
                 return false;
             }
-            int w2_new_space_available = w2.getSpaceAvailable()+how_many_second-how_many_first;
-            if(w2_new_space_available<0)
-            {
+            int w2_new_space_available = w2.getSpaceAvailable() + how_many_second - how_many_first;
+            if (w2_new_space_available < 0) {
                 return false;
             }
             w1.changeAvailability(w1_new_space_available);
             w2.changeAvailability(w2_new_space_available);
             ArrayList<Resource> from_w1_to_w2 = new ArrayList<>();
-            for(int i = 0;i<how_many_first;i++)
-            {
+            for (int i = 0; i < how_many_first; i++) {
                 from_w1_to_w2.add(w1.getResources().remove(0));
             }
             ArrayList<Resource> from_w2_to_w1 = new ArrayList<>();
-            for(int i = 0;i<how_many_second;i++)
-            {
+            for (int i = 0; i < how_many_second; i++) {
                 from_w2_to_w1.add(w2.getResources().remove(0));
             }
-            for (Resource res: from_w1_to_w2) {
+            for (Resource res : from_w1_to_w2) {
                 w2.getResources().add(res);
             }
-            for (Resource res: from_w2_to_w1) {
+            for (Resource res : from_w2_to_w1) {
                 w1.getResources().add(res);
             }
             return true;
         }
         //A->S becomes S->A
-        if(!firstIsStandard && secondIsStandard)
-        {
-            int t = indexFirstWarehouse;
-            int t2 = how_many_first;
+        if (!firstIsStandard && secondIsStandard) {
+            int temp = indexFirstWarehouse;
             indexFirstWarehouse = indexSecondWarehouse;
-            indexSecondWarehouse = t;
+            indexSecondWarehouse = temp;
+
+            temp=how_many_first;
             how_many_first = how_many_second;
-            how_many_second = t2;
+            how_many_second = temp;
+
             firstIsStandard = true;
             secondIsStandard = false;
+
+            Warehouse tempWarehouse =w1;
+            w1=w2;
+            w2=tempWarehouse;
+
+            diff *=-1; //the index are swapped
         }
         // S->A
-        if(firstIsStandard&&!secondIsStandard)
-        {
+        if (firstIsStandard && !secondIsStandard) {
             /*
                 We've 3 cases:
                 1) Withdraw from w1 and put to w2
                 2) Withdraw from w2 and put to w1
-                3) Withdraw from both
+                3) Withdraw from both become the first or the second case
              */
+            //3)
+            if (diff > 0) {
+                how_many_first -= how_many_second;
+                how_many_second = 0;
+            } else {
+                how_many_second -= how_many_first;
+                how_many_first = 0;
+            }
             //1)
-            if(how_many_first!=0 && how_many_second==0)
-            {
+            if (how_many_first != 0 && how_many_second == 0) {
                 //check how_many_first compatible with w1 and w2, check type
-                if(!(how_many_first<=w1.getResources().size() && how_many_first<=w2.getSpaceAvailable() && w1.getResourceType().equals(w2.getResourceType())))
-                {
+                if (!(how_many_first <= w1.getResources().size() && how_many_first <= w2.getSpaceAvailable() && w1.getResourceType().equals(w2.getResourceType()))) {
                     return false;
                 }
-                for(int i = 0;i<how_many_first;i++)
-                {
+                for (int i = 0; i < how_many_first; i++) {
                     w2.addResource(w1.getResources().remove(0)); //add resource will automatically manage spaceavailability
                 }
-                w1.changeAvailability(w1.getSpaceAvailable()+how_many_first);
+                w1.changeAvailability(w1.getSpaceAvailable() + how_many_first);
+                if(w1.getResources().size()==0){
+                    w1.changeResourceType(ResourceType.ANY);
+                }
+                return true;
             }
             //2)
-            else if(how_many_first==0 && how_many_second!=0)
-            {
+            else if (how_many_first == 0 && how_many_second != 0) {
                 //check how_many_first compatible with w1 and w2, check type
-                if(!(how_many_second<=w2.getResources().size() && how_many_second<=w1.getSpaceAvailable()))
-                {
+                if (!(how_many_second <= w2.getResources().size() && how_many_second <= w1.getSpaceAvailable())) {
                     return false;
                 }
-                if(w1.getResourceType().equals(ResourceType.ANY)) //it means that w1 is empty so we've to check fro 3 warehouse different resources check
-                {
-                    for(Warehouse w: getWarehousesStandard())
-                    {
-                        if(w.getResourceType().equals(w2.getResourceType())) //if any warehouse standard is storing the resource type we're trying to copy==> error
-                        {
-                            return false;
-                        }
-                    }
+                ArrayList<Resource> temp_from_additional = new ArrayList<>();
+                for (int i = 0; i < how_many_second; i++) {
+                    temp_from_additional.add(w2.getResources().remove(0));
                 }
-                else if(!w1.getResourceType().equals(w2.getResourceType())) //if is not empty, we must insert resources of the resourc type already stored
-                {
+                w2.changeAvailability(w2.getSpaceAvailable() + how_many_second);
+                if(!addResourceToWarehouseStandard(temp_from_additional,indexFirstWarehouse)){
+                    addResourceToWarehouseAdditional(temp_from_additional,indexSecondWarehouse-3);
                     return false;
                 }
-                for(int i = 0;i<how_many_second;i++)
-                {
-                    w1.addResource(w2.getResources().remove(0)); //add resource will automatically manage spaceavailability
-                }
-                w2.changeAvailability(w2.getSpaceAvailable()+how_many_second);
-            }
-            //3)
-            else if(how_many_first!=0 && how_many_second !=0)
-            {
-                if(!w1.getResourceType().equals(w2.getResourceType())) //resource type must be the same (it cannot be ANY)
-                {
-                    return false;
-                }
-                //CHECK IF HOW_MANY indexes are correct
-                if(how_many_first<0 && how_many_first>2 && how_many_second<0 && how_many_second>2)
-                {
-                    return false;
-                }
-                //CHECK IF HOW MANY PARAMETERS ARE COMPATIBLE WITH WAREHOUSES RESOURCES
-                if(!(how_many_first<=w1.getResources().size()&&how_many_second<=w2.getResources().size()))
-                {
-                    return false;
-                }
-                //CHECK IF THE ACTION CAN BE PERFORMED
-                //w1_new_space_available = how many things I can store before the action + how many things I "take out" from the warehouse
-                //- how many things I have to put in
-                int w1_new_space_available = w1.getSpaceAvailable()+how_many_first-how_many_second;
-                if(w1_new_space_available<0)
-                {
-                    return false;
-                }
-                int w2_new_space_available = w2.getSpaceAvailable()+how_many_second-how_many_first;
-                if(w2_new_space_available<0)
-                {
-                    return false;
-                }
-                w1.changeAvailability(w1_new_space_available);
-                w2.changeAvailability(w2_new_space_available);
-                ArrayList<Resource> from_w1_to_w2 = new ArrayList<>();
-                for(int i = 0;i<how_many_first;i++)
-                {
-                    from_w1_to_w2.add(w1.getResources().remove(0));
-                }
-                ArrayList<Resource> from_w2_to_w1 = new ArrayList<>();
-                for(int i = 0;i<how_many_second;i++)
-                {
-                    from_w2_to_w1.add(w2.getResources().remove(0));
-                }
-                for (Resource res: from_w1_to_w2) {
-                    w2.getResources().add(res);
-                }
-                for (Resource res: from_w2_to_w1) {
-                    w1.getResources().add(res);
-                }
+               return true;
             }
         }
         return false;
     }
-
-
 }

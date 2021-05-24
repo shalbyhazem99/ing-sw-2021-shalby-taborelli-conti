@@ -52,7 +52,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     protected int numOfWhiteMarbleToBeConverted; //number of white marbles to be converted
     protected boolean canChangeTurn = false;
     protected int numPlayerWhoDiscard = 0;
-    private transient int whoAmI;
+    protected transient int whoAmI;
 
     //when something wrong: resent the entire model
     //TODO: pensare a attributi aggiuntivi, esempio salvare su disco i record, memorizzare timestamp per sapere da quanto tempo si gioca ...
@@ -89,9 +89,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             Warehouse w1,w2;
             w1 = new Warehouse(2,ResourceType.COIN);
             w2 = new Warehouse(2,ResourceType.SHIELD);
-            w1.addResource(Resource.getInstance(ResourceType.COIN));
+            /*w1.addResource(Resource.getInstance(ResourceType.COIN));
             w1.addResource(Resource.getInstance(ResourceType.COIN));
             w2.addResource(Resource.getInstance(ResourceType.COIN));
+            */
             player.addAdditionalWarehouse(w1);
             player.addAdditionalWarehouse(w2);
             player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
@@ -384,7 +385,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         if (!noControl) {
             //CHECK 1)
             if (pendingMarketResources.size() == 0) {
-                return;
+                askForMove();return;
             }
             //CHECK 2)
             else if ((pendingMarketResources.size() != whereToPlace.size())) {
@@ -410,7 +411,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                     (whereToPlace.get(i) >= 0 && whereToPlace.get(i) < 3
                             && !player.addResourceToWarehouseStandard(pendingMarketResources.get(i),whereToPlace.get(i)))
                             || (whereToPlace.get(i) >= 3 && whereToPlace.get(i) < 5 && player.getWarehousesAdditional().size() > whereToPlace.get(i) - 3
-                            && !player.addResourceToWarehouseAdditional(pendingMarketResources.get(i),whereToPlace.get(i)))
+                            && !player.addResourceToWarehouseAdditional(pendingMarketResources.get(i),whereToPlace.get(i)-3))
             ) {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters 4", player, players.indexOf(player), this.hashCode()));
                 notify(MarketResponse.getInstance(pendingMarketResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
@@ -571,7 +572,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         if (indexFirstWarehouse == 3 || indexSecondWarehouse == 3) //check if the first additional warehouse exists
         {
-            if (player.getWarehousesAdditional().size() == 0) {
+            if (player.getWarehousesAdditional().size() < 1) {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
                 askForMove();
             }
@@ -584,8 +585,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             }
         }
         if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, how_may_first,how_many_second)) {
-            if (!noControl)
+            if (!noControl) {
                 notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), how_may_first, indexFirstWarehouse, indexSecondWarehouse));
+                askForMove();
+            }
             return;
         } else {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));

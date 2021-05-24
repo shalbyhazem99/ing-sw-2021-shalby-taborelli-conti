@@ -17,10 +17,6 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
      *                              null means that the Resource has to be discarded
      */
     public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources) throws Exception {
-        if(whereToPlaceResources==null||!check(whereToPlaceResources))
-        {
-            throw new Exception("Selected not existing warehouse!");
-        }
         this.whereToPlaceResources = (ArrayList<Integer>)whereToPlaceResources.clone();
     }
 
@@ -37,26 +33,5 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
     @Override
     public void execute(Match match) {
             match.positioningResourcesInteraction(whereToPlaceResources, getPlayer(),false);
-    }
-
-    /**
-     * Method to check if an invalid {@link it.polimi.ingsw.model.Warehouse} is contained in the whereToPlaceResources {@link ArrayList}
-     * @param whereToPlaceResources
-     * @return
-     */
-    public boolean check(ArrayList<Integer> whereToPlaceResources)
-    {
-        boolean somethingAddedToFirstAdditionalWarehouse = whereToPlaceResources.indexOf(3)!=-1;
-        boolean somethingAddedToSecondAdditionalWarehouse = whereToPlaceResources.indexOf(4)!=-1;
-        if(somethingAddedToFirstAdditionalWarehouse)
-        {
-            //TODO --> player è NULL e mi da problemi
-            if(player.getWarehousesAdditional().size()<1) {return false;}
-        }
-        if(somethingAddedToSecondAdditionalWarehouse)
-        {
-            if(player.getWarehousesAdditional().size()<2) {return false;}
-        }
-        return true;
     }
 }

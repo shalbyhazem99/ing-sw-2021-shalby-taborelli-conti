@@ -447,7 +447,7 @@ public class PlayerTest extends TestCase {
     public void testAddResourceToWarehouseStandard() {
         Player tester = Player.getInstance();
         //base case
-        assertFalse(tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),22));
+        assertFalse(tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 22));
 
         //add to 0
         assertTrue(tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 0));
@@ -470,16 +470,16 @@ public class PlayerTest extends TestCase {
         assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(1).getResourceType());
         assertEquals(3, tester.getResources().size());
 
-        assertFalse(tester.addResourceToWarehouseStandard(resourcesToAdd,2));
+        assertFalse(tester.addResourceToWarehouseStandard(resourcesToAdd, 2));
         assertEquals(3, tester.getResources().size());
     }
 
     public void testAddResourceToWarehouseAdditional() {
         Player tester = Player.getInstance();
         //base case
-        assertFalse(tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN),22));
-        tester.addAdditionalWarehouse(Warehouse.getInstance(2,ResourceType.COIN));
-        tester.addAdditionalWarehouse(Warehouse.getInstance(2,ResourceType.SERVANT));
+        assertFalse(tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 22));
+        tester.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.COIN));
+        tester.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.SERVANT));
 
         //add to 0
         assertTrue(tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 0));
@@ -502,134 +502,338 @@ public class PlayerTest extends TestCase {
         assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(1).getResourceType());
         assertEquals(4, tester.getResources().size());
 
-        assertFalse(tester.addResourceToWarehouseAdditional(resourcesToAdd,2));
+        assertFalse(tester.addResourceToWarehouseAdditional(resourcesToAdd, 2));
         assertEquals(4, tester.getResources().size());
-    }
-
-    public void testTestMoveResources() {
-        //TODO: DA FARE ANCORA
     }
 
     @Test
     public void testMoveResources() {
-       /* Player tester = new Player("tester");
+        Player tester = new Player("tester");
         tester.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.SERVANT));
-        tester.addAdditionalWarehouse(Warehouse.getInstance(2,ResourceType.SHIELD));
+        tester.addAdditionalWarehouse(Warehouse.getInstance(2, ResourceType.SHIELD));
         //SITUATION: 0) 1) 2) 3) "SERVANT" 4) "SHIELD"
 
-        //TODO: Tabo check assert
+        //the correct execution
         //Testing the swapping between the warehouses empty
-        //assertFalse(tester.moveResources(0, 1, 2));
-        //assertTrue(tester.moveResources(0, 1, 0));
-        assertEquals(ResourceType.ANY,tester.getWarehousesStandard().get(0).getResourceType());
+        assertTrue(tester.moveResources(0, 1, 2, 2));
+        assertTrue(tester.moveResources(0, 1, 0, 0));
+        //control first
+        assertEquals(ResourceType.ANY, tester.getWarehousesStandard().get(0).getResourceType());
         assertEquals(1, tester.getWarehousesStandard().get(0).getSpaceAvailable());
         assertEquals(0, tester.getWarehousesStandard().get(0).getResources().size());
-
-
-
+        //control second
+        assertEquals(ResourceType.ANY, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getResources().size());
         //Testing with one Resources and the different cases
-        tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD),0);
+        tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 0);
         //SITUATION: 0) SHIELD 1) 2) 3) "SERVANT" 4) "SHIELD"
 
-        //No more than one Resource is swapped
-        //assertFalse(tester.moveResources(0, 1, 2));
-
         //S<->S
-        //assertTrue(tester.moveResources(0, 1, 1));
+        assertTrue(tester.moveResources(0, 1, 1, 1));
         //SITUATION: 0) 1) SHIELD 2) 3) "SERVANT" 4) "SHIELD"
-        assertEquals(ResourceType.ANY,tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(ResourceType.ANY, tester.getWarehousesStandard().get(0).getResourceType());
         assertEquals(1, tester.getWarehousesStandard().get(0).getSpaceAvailable());
         assertEquals(0, tester.getWarehousesStandard().get(0).getResources().size());
-        assertEquals(ResourceType.SHIELD,tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(1).getResourceType());
         assertEquals(1, tester.getWarehousesStandard().get(1).getSpaceAvailable());
         assertTrue(tester.getWarehousesStandard().get(1).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
 
         //S <-> A
-        //assertTrue(tester.moveResources(1, 4, 1));
+        assertTrue(tester.moveResources(1, 4, 1, 0));
         //SITUATION: 0) 1) 2) 3) "SERVANT" 4) SHIELD
-        assertEquals(ResourceType.ANY,tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(ResourceType.ANY, tester.getWarehousesStandard().get(1).getResourceType());
         assertEquals(2, tester.getWarehousesStandard().get(1).getSpaceAvailable());
         assertEquals(0, tester.getWarehousesStandard().get(1).getResources().size());
-        assertEquals(ResourceType.SHIELD,tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
         assertEquals(1, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
         assertTrue(tester.getWarehousesAdditional().get(1).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
 
         //A <-> S
-       // assertFalse(tester.moveResources(4, 2, 2));
-        //assertTrue(tester.moveResources(4, 2, 1));
+        assertFalse(tester.moveResources(4, 2, 2,0));
+        assertTrue(tester.moveResources(4, 2, 1,0));
         //SITUATION: 0) 1) 2) SHIELD 3) "SERVANT" 4) "SHIELD"
-        assertEquals(ResourceType.SHIELD,tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
         assertEquals(2, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
         assertEquals(0, tester.getWarehousesAdditional().get(1).getResources().size());
-        assertEquals(ResourceType.SHIELD,tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(2).getResourceType());
         assertEquals(2, tester.getWarehousesStandard().get(2).getSpaceAvailable());
         assertTrue(tester.getWarehousesStandard().get(2).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
 
+
         //Testing that with one Resource per WarehouseStandard they are swapped
-        tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),0);
+        tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 0);
         //SITUATION: 0) COIN 1)  2) 3)SHIELD "SERVANT" 4) "SHIELD"
-        //assertTrue(tester.moveResources(0, 2, 1));
+        assertTrue(tester.moveResources(0, 2, 0,0)); //swap
         //SITUATION: 0) SHIELD 1) 2) COIN 3) "SERVANT" 4) "SHIELD"
-        assertEquals(ResourceType.SHIELD,tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
         assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
         assertTrue(tester.getWarehousesStandard().get(0).getResources().contains(Resource.getInstance(ResourceType.SHIELD)));
-        assertEquals(ResourceType.COIN,tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(2).getResourceType());
         assertEquals(2, tester.getWarehousesStandard().get(2).getSpaceAvailable());
         assertTrue(tester.getWarehousesStandard().get(2).getResources().contains(Resource.getInstance(ResourceType.COIN)));
 
         //Testing the moving of two Resources in a Warehouse
         tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 2);
         //SITUATION: 0) SHIELD 1) 2) COIN|COIN 3) "SERVANT" 4) "SHIELD"
-      //  assertFalse(tester.moveResources(2, 1, 1));
-      //  assertFalse(tester.moveResources(2, 3, 2));
-      //  assertFalse(tester.moveResources(2, 0, 2));
-      //  assertTrue(tester.moveResources(2, 1, 2));
+        //assert(tester.moveResources(2, 1, 0,0));//swap
+        //assertFalse(tester.moveResources(2, 3, 2,0));
+        //assertFalse(tester.moveResources(2, 0, 0,0));//swap
+        assertTrue(tester.moveResources(2, 1, 0,0)); //swap
         //SITUATION: 0) SHIELD 1) COIN|COIN 2) 3) "SERVANT" 4) "SHIELD"
-        assertEquals(ResourceType.COIN,tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
         assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
         assertEquals(2, tester.getWarehousesStandard().get(1).getResources().stream().filter(elem -> elem.getType() == ResourceType.COIN).count());
-        assertEquals(ResourceType.ANY,tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(ResourceType.ANY, tester.getWarehousesStandard().get(2).getResourceType());
         assertEquals(3, tester.getWarehousesStandard().get(2).getSpaceAvailable());
         assertEquals(0, tester.getWarehousesStandard().get(2).getResources().size());
 
         tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT), 2);
         tester.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT), 2);
         //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT 3) "SERVANT" 4) "SHIELD"
-     //   assertTrue(tester.moveResources(1, 2, 2));
+        assertTrue(tester.moveResources(1, 2, 0,0)); //swap
         //SITUATION: 0) SHIELD 1) SERVANT|SERVANT 2)COIN|COIN 3) "SERVANT" 4) "SHIELD"
-        assertEquals(ResourceType.SERVANT,tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(1).getResourceType());
         assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
         assertEquals(2, tester.getWarehousesStandard().get(1).getResources().stream().filter(elem -> elem.getType() == ResourceType.SERVANT).count());
-        assertEquals(ResourceType.COIN,tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(2).getResourceType());
         assertEquals(1, tester.getWarehousesStandard().get(2).getSpaceAvailable());
         assertEquals(2, tester.getWarehousesStandard().get(2).getResources().stream().filter(elem -> elem.getType() == ResourceType.COIN).count());
 
-       // assertTrue(tester.moveResources(1, 3, 1));
+        assertTrue(tester.moveResources(1, 3, 1,0));
         //SITUATION: 0) SHIELD 1) SERVANT 2)COIN|COIN 3) SERVANT 4) "SHIELD"
-        assertEquals(ResourceType.SERVANT,tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(1).getResourceType());
         assertEquals(1, tester.getWarehousesStandard().get(1).getSpaceAvailable());
         assertEquals(1, tester.getWarehousesStandard().get(1).getResources().size());
-        assertEquals(ResourceType.SERVANT,tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(0).getResourceType());
         assertEquals(1, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
         assertEquals(1, tester.getWarehousesAdditional().get(0).getResources().size());
 
         //testing with 3 Resources in the WarehouseStandard
-       // assertTrue(tester.moveResources(2,1,1));
+        assertTrue(tester.moveResources(2,1,0,0)); //swap
         tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SERVANT), 0);
         //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT 3) SERVANT|SERVANT 4) "SHIELD"
 
-       // assertTrue(tester.moveResources(3,2,2));
+        assertTrue(tester.moveResources(3,2,2,0));
         //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT 3) "SERVANT"  4) "SHIELD"
-        assertEquals(ResourceType.SERVANT,tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(0).getResourceType());
         assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
         assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
-        assertEquals(ResourceType.SERVANT,tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
         assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
         assertEquals(3, tester.getWarehousesStandard().get(2).getResources().stream().filter(elem -> elem.getType() == ResourceType.SERVANT).count());
 
-        */
+
+        assertFalse(tester.moveResources(0,1,0,0));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT 3) "SERVANT"  4) "SHIELD"
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(1).getResources().size());
 
 
+        assertFalse(tester.moveResources(2,1,0,0));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT 3) "SERVANT"  4) "SHIELD"
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        //CHANGE WITH ADDITIONAL EMPTY
+
+        tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SHIELD),1);
+        assertTrue(tester.moveResources(0,4,0,0));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT 3) "SERVANT"  4) SHIELD
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        assertFalse(tester.moveResources(0,4,0,1));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT 3) "SERVANT"  4) SHIELD
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        assertFalse(tester.moveResources(3,4,0,1));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT 3) "SERVANT"  4) SHIELD
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getResources().size());
+
+
+
+        tester.getWarehousesAdditional().set (0,Warehouse.getInstance(2,ResourceType.SHIELD));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) "SHIELD" 4) SHIELD
+        assertFalse(tester.moveResources(4,5,0,1));
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        tester.getWarehousesAdditional().set (0,Warehouse.getInstance(2,ResourceType.SHIELD));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) "SHIELD" 4) SHIELD
+        assertFalse(tester.moveResources(3,4,3,-1));
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getResources().size());
+
+
+        tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SHIELD),0);
+        tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SHIELD),1);
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) SHIELD 4) SHIELD|SHIELD
+        assertFalse(tester.moveResources(3,4,0,2));
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) SHIELD 4) SHIELD|SHIELD
+        assertFalse(tester.moveResources(3,4,1,0));
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) SHIELD 4) SHIELD|SHIELD
+        assertTrue(tester.moveResources(3,4,0,1));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) SHIELD|SHIELD 4) SHIELD
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) SHIELD|SHIELD 4) SHIELD
+        assertTrue(tester.moveResources(3,4,1,0));
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3) SHIELD 4) SHIELD|SHIELD
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SERVANT, tester.getWarehousesStandard().get(2).getResourceType());
+        assertEquals(0, tester.getWarehousesStandard().get(2).getSpaceAvailable());
+        assertEquals(3, tester.getWarehousesStandard().get(2).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(1, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesAdditional().get(0).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
+        assertEquals(0, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesAdditional().get(1).getResources().size());
     }
 }
 

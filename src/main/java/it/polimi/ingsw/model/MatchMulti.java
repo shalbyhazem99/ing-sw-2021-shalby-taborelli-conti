@@ -91,11 +91,18 @@ public class MatchMulti extends Match implements Serializable {
         //askForMove();
     }
 
+    private int getdistPlayerFromInkwell(int posPlayer){
+        if(posPlayer>=posInkwell)
+            return posPlayer-posInkwell;
+        else
+            return players.size()-posPlayer-posInkwell;
+    }
+
     @Override
     public void askForDiscardLeaderCard() {
         for (int i = 0; i < players.size(); i++) {
             int numOfRes=0;
-            switch (i-posInkwell){
+            switch (getdistPlayerFromInkwell(i)){
                 case 1:
                 case 2:
                     numOfRes=1;
@@ -120,10 +127,10 @@ public class MatchMulti extends Match implements Serializable {
             numPlayerWhoDiscard++;
         } else {
             notify(SendMessage.getInstance("Something wrong, Leader Cards cannot be discarded, retry", player, players.indexOf(player), this.hashCode()));
-            notify(DiscardTwoLeaderCardsResponse.getInstance(player, players.indexOf(player), this.hashCode(),players.indexOf(player)-posInkwell ) );
+            notify(DiscardTwoLeaderCardsResponse.getInstance(player, players.indexOf(player), this.hashCode(),getdistPlayerFromInkwell(players.indexOf(player)) ) );
             return;
         }
-        switch (players.indexOf(player)-posInkwell){ // get the turn position
+        switch (getdistPlayerFromInkwell(players.indexOf(player))){ // get the turn position
             case 1: // 2°
                 player.getWarehousesStandard().get(0).addResource(Resource.getInstance(resourceTypeFirst));
                 break;
@@ -132,7 +139,11 @@ public class MatchMulti extends Match implements Serializable {
                 player.moveAheadFaith(1);
                 break;
             case 3: // 4°
-                player.getWarehousesStandard().get(0).addResource(Resource.getInstance(resourceTypeFirst));
+                if(resourceTypeFirst.equals(resourceTypeSecond)){
+                    player.getWarehousesStandard().get(1).addResource(Resource.getInstance(resourceTypeFirst));
+                }else {
+                    player.getWarehousesStandard().get(0).addResource(Resource.getInstance(resourceTypeFirst));
+                }
                 player.getWarehousesStandard().get(1).addResource(Resource.getInstance(resourceTypeSecond));
                 player.moveAheadFaith(1);
                 break;
@@ -140,11 +151,12 @@ public class MatchMulti extends Match implements Serializable {
                 break;
         }
 
-
         notifyModel();
         if (numPlayerWhoDiscard == players.size()) {
             //notifyModel();
             askForMove();
+        }else {
+            notify(SendMessage.getInstance("Waiting for other to set The game", player, players.indexOf(player), this.hashCode()));
         }
     }
 
@@ -208,5 +220,16 @@ public class MatchMulti extends Match implements Serializable {
 
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        String temp = super.toString();
+        if(numPlayerWhoDiscard>=players.size() && turn != whoAmI) {
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            temp += "It's " + getCurrentPlayer().getName() + " Turn\n";
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        }
+        return temp;
     }
 }
