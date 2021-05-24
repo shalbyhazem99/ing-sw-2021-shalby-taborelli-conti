@@ -96,7 +96,7 @@ public class MarketResponse extends MoveResponse {
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         System.out.print("Resource gained: ");
-        resources.stream().forEach(elem -> System.out.print(elem.getType().toString() + " "));
+        resources.stream().forEach(elem -> System.out.print(Utils.resourceTypeToString(elem.getType()) + " "));
         System.out.println("\n");
         if (numOfMarbleToBeCoverted == 0) {
             ArrayList<Integer> whereToPlaceResources = new ArrayList<>();
