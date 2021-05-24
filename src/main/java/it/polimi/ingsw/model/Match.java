@@ -88,8 +88,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             w2 = new Warehouse(2,ResourceType.SHIELD);
             w1.addResource(Resource.getInstance(ResourceType.COIN));
             w1.addResource(Resource.getInstance(ResourceType.COIN));
-            w2.addResource(Resource.getInstance(ResourceType.SHIELD));
-            w2.addResource(Resource.getInstance(ResourceType.SHIELD));
+            w2.addResource(Resource.getInstance(ResourceType.COIN));
             player.addAdditionalWarehouse(w1);
             player.addAdditionalWarehouse(w2);
             player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
