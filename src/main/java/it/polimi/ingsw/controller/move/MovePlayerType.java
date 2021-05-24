@@ -7,10 +7,7 @@ import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
 import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
-import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.ResourceType;
-import it.polimi.ingsw.model.ResourcesCount;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
@@ -39,14 +36,14 @@ public enum MovePlayerType {
                     System.out.println(" )"+Utils.DISABLE_MOVE);
                     parameters_valid = true;
                     row = stdin.nextInt();
+                    if(row==-1)
+                    {
+                        return null;
+                    }
                     if(row<0||row>3)
                     {
                         parameters_valid = false;
                         System.err.println("Error insert valid parameters!");
-                    }
-                    if(row==-1)
-                    {
-                        return null;
                     }
                 } while (!parameters_valid);
                 DevelopmentCardType type = developmentCardTypes[row];
@@ -59,14 +56,14 @@ public enum MovePlayerType {
                     System.out.println(" )"+Utils.DISABLE_MOVE);
                     parameters_valid = true;
                     column = stdin.nextInt();
+                    if(column==-1)
+                    {
+                        return null;
+                    }
                     if(column<0||column>2)
                     {
                         parameters_valid = false;
                         System.err.println("Error insert valid parameters!");
-                    }
-                    if(column==-1)
-                    {
-                        return null;
                     }
                 } while (!parameters_valid);
                 DevelopmentCardLevel level = developmentCardLevels[column];
@@ -76,14 +73,14 @@ public enum MovePlayerType {
                     System.out.println("insert development card position( 0, 1, 2 )"+Utils.DISABLE_MOVE);
                     parameters_valid = true;
                     pos = stdin.nextInt();
+                    if(pos==-1)
+                    {
+                        return null;
+                    }
                     if(pos<0||pos>2)
                     {
                         parameters_valid = false;
                         System.err.println("Error insert valid parameters!");
-                    }
-                    if(pos==-1)
-                    {
-                        return null;
                     }
                 } while (!parameters_valid);
                 //choose where ro get resources
@@ -133,13 +130,13 @@ public enum MovePlayerType {
                     {
                         System.out.println("Insert the pos of the leader card to enable (0,1)"+Utils.DISABLE_MOVE);
                         position = stdin.nextInt();
-                        if(position<0 || position>1)
-                        {
-                            parameters_valid = false;
-                        }
                         if(position==-1)
                         {
                             return null;
+                        }
+                        if(position<0 || position>1)
+                        {
+                            parameters_valid = false;
                         }
                     }
                 }while(!parameters_valid);
@@ -183,13 +180,13 @@ public enum MovePlayerType {
                     {
                         System.out.print("Insert the pos of the leader card to discard (0,1)"+Utils.DISABLE_MOVE);
                         position = stdin.nextInt();
-                        if(position<0 || position>1)
-                        {
-                            parameters_valid = false;
-                        }
                         if(position==-1)
                         {
                             return null;
+                        }
+                        if(position<0 || position>1)
+                        {
+                            parameters_valid = false;
                         }
                     }
                 }while(!parameters_valid);
@@ -218,14 +215,13 @@ public enum MovePlayerType {
                 }
                 System.out.println(" )"+Utils.DISABLE_MOVE);
                 move = stdin.nextInt();
+                if(move==-1) {
+                    return null;
+                }
                 if(move!=0 && move!=1)
                 {
                     System.err.println("Error, insert a valid parameter!");
                     parameters_valid = false;
-                }
-                if(move==-1)
-                {
-                    return null;
                 }
                 }while(!parameters_valid);
                 MoveType type = moveTypes[move];
@@ -237,28 +233,30 @@ public enum MovePlayerType {
                     {
                         System.out.println("insert ROW position(0,1,2)"+Utils.DISABLE_MOVE);
                         pos = stdin.nextInt();
+                        if(pos==-1)
+                        {
+                            return null;
+                        }
                         if(pos<0||pos>2)
                         {
                             System.err.println("Error, insert a valid parameter!");
                             parameters_valid = false;
                         }
-                        if(pos==-1)
-                        {
-                            return null;
-                        }
+
                     } else //COLUMN
                     {
                         System.out.println("insert COLUMN position(0,1,2,3)"+Utils.DISABLE_MOVE);
                         pos = stdin.nextInt();
+                        if(pos==-1)
+                        {
+                            return null;
+                        }
                         if(pos<0||pos>3)
                         {
                             System.err.println("Error, insert a valid parameter!");
                             parameters_valid = false;
                         }
-                        if(pos==-1)
-                        {
-                            return null;
-                        }
+
                     }
                 }while (!parameters_valid);
                 marketInteractionPlayerMove = MarketInteractionPlayerMove.getInstance(type, pos);
@@ -337,20 +335,27 @@ public enum MovePlayerType {
         @Override
         public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
             MoveResourcesPlayerMove moveResourcesPlayerMove = null;
+            boolean both_std_warehouse = true;
             try {
                 //position
                 Player player = match.getCurrentPlayer();
-                int first;
-                int second;
-                int countToMove;
+                int first,second;
+                int how_many_first = 0,how_many_second = 0;
+                Warehouse first_w = null,second_w = null;
                 boolean parameters_valid = true;
                 do {
-                System.out.println("insert the pos of the first warehouse to swap (0...)");
+                System.out.println("insert the pos of the first warehouse (0...)"+Utils.DISABLE_MOVE);
                 first = stdin.nextInt();
-                System.out.println("insert the pos of the second warehouse to swap (0...)");
+                if(first==-1)
+                {
+                    return null;
+                }
+                System.out.println("insert the pos of the second warehouse (0...)"+Utils.DISABLE_MOVE);
                 second = stdin.nextInt();
-                System.out.println("insert the number of resources to move from the first warehouse");
-                countToMove = stdin.nextInt();
+                if(second==-1)
+                {
+                    return null;
+                }
                 //Controlling parameters
                 /*
                 CHECK:
@@ -388,12 +393,68 @@ public enum MovePlayerType {
                         parameters_valid = false;
                     }
                 }
-                if(countToMove<3){
-                    parameters_valid = false;
+                if(first>2 || second>2)
+                {
+                    both_std_warehouse = false;
+                }
+                if(parameters_valid)
+                {
+                    if(first>2)//ADDITIONAL
+                    {
+                        first_w = player.getWarehousesAdditional().get(first-3);
+                    }
+                    else//STD
+                    {
+                        first_w = player.getWarehousesStandard().get(first);
+                    }
+                    if(second>2)//ADDITIONAL
+                    {
+                        second_w = player.getWarehousesAdditional().get(second-3);
+                    }
+                    else//STD
+                    {
+                        second_w = player.getWarehousesStandard().get(second);
+                    }
+                }
+                if(parameters_valid &&!both_std_warehouse) //if both warehouses are standard we don't need to ask for how many resources to move
+                {
+                    System.out.println("How many " + Utils.resourceTypeToString(first_w.getResourceType()) + " from first warehouse?" +Utils.DISABLE_MOVE);
+                    how_many_first = stdin.nextInt();
+                    if(how_many_first==-1){return null;}
+                    if(how_many_first>first_w.getResources().size()) //we're trying to get more resources than we have
+                    {
+                        System.err.println("Error, you're trying to get too many resources");
+                        parameters_valid = false;
+                    }
+                }
+                if(parameters_valid&&!both_std_warehouse)
+                {
+                    System.out.println("How many " + Utils.resourceTypeToString(second_w.getResourceType()) + " from second warehouse?"+Utils.DISABLE_MOVE);
+                    how_many_second = stdin.nextInt();
+                    if(how_many_second==-1){return null;}
+                    if(how_many_second>second_w.getResources().size()) //we're trying to get more resources than we have
+                    {
+                        System.err.println("Error, you're trying to get too many resources");
+                        parameters_valid = false;
+                    }
+                    if(second==0 && first==0)
+                    {
+                        System.err.println("Error, useless move");
+                        parameters_valid = false;
+                    }
+                }
+                //Check dimension correctness
+                if(both_std_warehouse)
+                {
+                    //se non sono compatibili le dimensioni
+                    if((first_w.getSpaceAvailable()<second_w.getResources().size())||(second_w.getSpaceAvailable()<first_w.getResources().size()))
+                    {
+                        System.err.println("Error dimensions are not compatible");
+                    }
                 }
                 }while (!parameters_valid);
                 //End controlling parameters
-                moveResourcesPlayerMove = MoveResourcesPlayerMove.getInstance(first, second,countToMove);
+                moveResourcesPlayerMove = MoveResourcesPlayerMove.getInstance(first, second,how_many_first,how_many_second);
             } catch (Exception e) {
                 System.out.println("Error retry:");
                 elaborateMoveForCLI(stdin, match);

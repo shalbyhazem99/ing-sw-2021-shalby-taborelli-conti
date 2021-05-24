@@ -137,27 +137,7 @@ public class Warehouse implements Serializable, Cloneable {
         ArrayList<ResourcesCount> arr = Utils.fromResourcesToResourceCount(resources);
         for(int i = 0;i<arr.size();i++)
         {
-            switch (arr.get(i).getType())
-            {
-                case COIN:
-                    str = str + " " + arr.get(i).getCount()+ "⚫";
-                    break;
-                case FAITH:
-                    str = str + " " + arr.get(i).getCount()+ "✝";
-                    break;
-                case SERVANT:
-                    str = str + " " + arr.get(i).getCount()+ "⚔";
-                    break;
-                case ANY:
-                    str = str + " " + arr.get(i).getCount()+ "A";
-                    break;
-                case SHIELD:
-                    str = str + " " + arr.get(i).getCount()+ "\uD83D\uDEE1️";
-                    break;
-                case STONE:
-                    str = str + " " + arr.get(i).getCount()+ "\uD83D\uDC8E";
-                    break;
-            }
+            str = str + " " + arr.get(i).getCount()+ Utils.resourceTypeToString(arr.get(i).getType());
             str = str + "]";
         }
         String p = "";
@@ -176,7 +156,7 @@ public class Warehouse implements Serializable, Cloneable {
                 p = "⚔";
                 break;
             case SHIELD:
-                p = "\uD83D\uDEE1";
+                p = "\uD83D\uDEE1 ";
                 break;
             case STONE:
                 p = "\uD83D\uDC8E";

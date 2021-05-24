@@ -83,7 +83,15 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));
             aa.add(ResourcesCount.getInstance(10, ResourceType.STONE));
-
+            Warehouse w1,w2;
+            w1 = new Warehouse(2,ResourceType.COIN);
+            w2 = new Warehouse(2,ResourceType.SHIELD);
+            w1.addResource(Resource.getInstance(ResourceType.COIN));
+            w1.addResource(Resource.getInstance(ResourceType.COIN));
+            w2.addResource(Resource.getInstance(ResourceType.SHIELD));
+            w2.addResource(Resource.getInstance(ResourceType.SHIELD));
+            player.addAdditionalWarehouse(w1);
+            player.addAdditionalWarehouse(w2);
             player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
         }
         askForDiscardLeaderCard();
@@ -552,7 +560,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player               the {@link Player} that is performing the action
      * @throws MoveResourcesException the {@link MoveResourcesException} which is thrown if any error occur (not existing {@link Warehouse}, not enough available space ...)
      */
-    public void MoveResourcesInteraction(int indexFirstWarehouse, int indexSecondWarehouse, int numberOfResources, Player player, boolean noControl) {
+    public void MoveResourcesInteraction(int indexFirstWarehouse, int indexSecondWarehouse, int how_may_first,int how_many_second, Player player, boolean noControl) {
         if (indexFirstWarehouse == indexSecondWarehouse) {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             askForMove();
@@ -571,9 +579,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 askForMove();
             }
         }
-        if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, numberOfResources)) {
+        if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, how_may_first,how_many_second)) {
             if (!noControl)
-                notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), numberOfResources, indexFirstWarehouse, indexSecondWarehouse));
+                notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), how_may_first, indexFirstWarehouse, indexSecondWarehouse));
             return;
         } else {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
@@ -736,17 +744,17 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|WAREHOUSE STD|\n");
                 temp += ("---------------\n");
-                temp += ("   #   |Space|Type|      Resources\n");
+                temp += ("   #   |Dim|Space|Type|      Resources\n");
                 temp += ("----------------------------------------------------------------------------------\n");
                 for (int i = 0; i < player.getWarehousesStandard().size(); i++) {
-                    temp += ("  (" + i + ")   | " + player.getWarehousesStandard().get(i).toString() + "\n");
+                    temp += ("  (" + i + ")  |"+"("+ (i+1)+")|" + player.getWarehousesStandard().get(i).toString() + "\n");
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|WAREHOUSE ADDITIONAL|\n");
                 temp += ("----------------------\n");
-                temp += ("   #   |Space|Type|      Resources\n");
+                temp += ("   #   |Dim|Space|Type|      Resources\n");
                 for (int i = 0; i < player.getWarehousesAdditional().size(); i++) {
-                    temp += ("  (" + i + ")   | " + player.getWarehousesAdditional().get(i).toString());
+                    temp += ("  (" + (i+3) + ")  |"+" "+ (i+1)+" |" + player.getWarehousesAdditional().get(i).toString() + "\n");
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|STRONGBOX|\n");
@@ -762,7 +770,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|CARD SPACES|\n");
                 temp += ("-------------\n");
-                temp += ("| Type |  Level  | Points |   Costs   |   Productive Powers\n");
+                temp += ("|INDEX| Type |  Level  | Points |   Costs   |   Productive Powers\n");
                 for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
                     temp+="  ("+a+")   ";
                     if(player.getDevelopmentCardSpaces().get(a).pickTopCard()!=null)
@@ -783,13 +791,26 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 temp += ("Ind |Active|Point|Type|         Res needed        |      DevCardNeeded         |    Powers\n");
                 int uo = 0;
                 for (LeaderCard leaderCard : player.getLeaderCards()) {
-                    temp += ("(" + uo + ") |" + leaderCard.toString() + "\n");
+                    String str_leader="";
+                    if(!leaderCard.isActive()&&(whoAmI!=players.indexOf(player))) //if the leader card is not active and it's not "mine", I can't see it
+                    {
+                        str_leader = "\uD83D\uDEAB LeaderCard not activated yet \uD83D\uDEAB";
+                    }
+                    else
+                    {
+                        str_leader = leaderCard.toString();
+                    }
+                    temp += ("(" + uo + ") |" + str_leader + "\n");
                     uo++;
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                //todo: waitin' shalby's merge
-                /*temp += ("|RESOURCES WAITING TO BE PLACED|           ([?] Resources obtained from Market that must be placed [?]) ");
-                temp += (Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(pendingResources)));*/
+                if(!pendingProductionResources.isEmpty())
+                {
+                    temp += ("|RESOURCES GOT FROM PRODUCTION|   ([?]       Resources obtained during this turn from the production        [?]) ");
+                    temp += ("                                  ([?] they are frozen, at the end of the round they'll go to the strongbox [?]) ");
+                    temp += (Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(pendingProductionResources)));
+                    temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

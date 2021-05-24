@@ -32,7 +32,7 @@ public class EndRoundSoloResponse extends EndRoundResponse {
     @Override
     public void updateLocalMatch(Match match) {
         match.endRoundInteraction(match.getPlayerFromPosition(getExecutePlayerPos()),true);
-        match.executeAction(actionToken,match.getPlayerFromPosition(getExecutePlayerPos()),false);
+        match.executeAction(actionToken,match.getPlayerFromPosition(getExecutePlayerPos()),true);
     }
 
     @Override

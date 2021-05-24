@@ -49,11 +49,12 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
         boolean somethingAddedToSecondAdditionalWarehouse = whereToPlaceResources.indexOf(4)!=-1;
         if(somethingAddedToFirstAdditionalWarehouse)
         {
-            if(getPlayer().getWarehousesAdditional().size()<1) {return false;}
+            //TODO --> player è NULL e mi da problemi
+            if(player.getWarehousesAdditional().size()<1) {return false;}
         }
         if(somethingAddedToSecondAdditionalWarehouse)
         {
-            if(getPlayer().getWarehousesAdditional().size()<2) {return false;}
+            if(player.getWarehousesAdditional().size()<2) {return false;}
         }
         return true;
     }

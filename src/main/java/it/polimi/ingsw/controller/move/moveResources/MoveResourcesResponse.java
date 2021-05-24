@@ -38,7 +38,7 @@ public class MoveResourcesResponse extends MoveResponse {
 
     @Override
     public void updateLocalMatch(Match match) {
-        match.MoveResourcesInteraction(indexFirstWarehouse,indexSecondWarehouse,numberOfResourcesMoved,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+        match.MoveResourcesInteraction(indexFirstWarehouse,indexSecondWarehouse,numberOfResourcesMoved,numberOfResourcesMoved,match.getPlayerFromPosition(getExecutePlayerPos()),true);
     }
 
     @Override
