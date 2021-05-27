@@ -18,6 +18,7 @@ import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardResponse;
 import it.polimi.ingsw.exceptions.MoveResourcesException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.model.market.MarketBoard;
@@ -779,18 +780,28 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             temp += ("---------------\n");
             temp += ("\t\t\t\t\t\t  " + DevelopmentCardType.GREEN + " \t\t\t\t\t\t  " + DevelopmentCardType.BLUE + " \t\t\t\t\t\t " + DevelopmentCardType.YELLOW + " \t\t\t\t\t\t " + DevelopmentCardType.PURPLE + "\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-            int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.GREEN));
-            int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.BLUE));
-            ;
-            int yellow_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.YELLOW));
-            ;
-            int purple_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.PURPLE));
             int max = 30;
             for (int i = 0; i < 3; i++) {
-                temp += ("        | P:| " + Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][1].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][1].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][2].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][2].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][3].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][3].peek().getEquivalentPoint()).toString().length()) + "|\n");
+                //controllare bene se la lista è vuota
+                temp += ("        | P:| "
+                        + developmentCards[i][0].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString().length()) + "|"
+                        + developmentCards[i][1].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][1].peek().getEquivalentPoint()).toString().length()) + "|"
+                        + developmentCards[i][2].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][2].peek().getEquivalentPoint()).toString().length()) + "|"
+                        + developmentCards[i][3].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][3].peek().getEquivalentPoint()).toString().length()) + "|\n");
                 temp += ("LVL = " + (i + 1) + " | C:| " + developmentCards[i][0].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][0].peek().getCostsFormatted().length()) + "|" + developmentCards[i][1].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][1].peek().getCostsFormatted().length()) + "|" + developmentCards[i][2].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][2].peek().getCostsFormatted().length()) + "|" + developmentCards[i][3].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][3].peek().getCostsFormatted().length()) + "|\n");
                 temp += ("        |PP:| " + developmentCards[i][0].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][0].peek().getPowersFormatted().length()) + "|" + developmentCards[i][1].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][1].peek().getPowersFormatted().length()) + "|" + developmentCards[i][2].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][2].peek().getPowersFormatted().length()) + "|" + developmentCards[i][3].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][3].peek().getPowersFormatted().length()) + "|\n");
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            }
+            temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            temp += "|How many left|\n";
+            temp += "---------------\n";
+            for(int i = 0;i<Utils.DEV_CARD_ROW_NUMBER;i++)
+            {
+                for(int j = 0;j<Utils.DEV_CARD_COL_NUMBER;j++)
+                {
+                    temp += "["+developmentCards[i][j].size()+"]\t";
+                }
+                temp +="\n";
             }
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
@@ -802,7 +813,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 if (player == null) {
                     break;
                 }
-                temp += ("Pos Fede: " + player.getPosFaithMarker() +" " +ResourceType.FAITH.symbol+ "\n");
+                temp += ("Faith pos: " + player.getPosFaithMarker() +" " +ResourceType.FAITH.symbol+ "\n");
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|WAREHOUSE STD|\n");
                 temp += ("---------------\n");
@@ -832,7 +843,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|CARD SPACES|\n");
                 temp += ("-------------\n");
+                temp += ("|CARDS ON TOP|\n");
+                temp += ("--------------\n");
                 temp += ("|INDEX| Type |  Level  | Points |   Costs   |   Productive Powers\n");
+                String card_spaces = "";
                 for (int a = 0; a < player.getDevelopmentCardSpaces().size(); a++) {
                     temp+="  ("+a+")   ";
                     if(player.getDevelopmentCardSpaces().get(a).pickTopCard()!=null)
@@ -846,6 +860,18 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                     {
                         temp += "  Empty\n";
                     }
+                }
+                temp += ("-----------\n");
+                temp += ("|ALL CARDS|\n");
+                temp += ("-----------\n");
+                int pos=0;
+                for (DevelopmentCardSpace dev_space:player.getDevelopmentCardSpaces()) {
+                    temp += "("+pos+") ==> [";
+                    for (DevelopmentCard dev_card: dev_space.linearize()) {
+                        temp += dev_card.getType() + ", " + dev_card.getLevel() + " / ";
+                    }
+                    pos++;
+                    temp += "]\n";
                 }
                 temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
                 temp += ("|LEADER CARDS|\n");
