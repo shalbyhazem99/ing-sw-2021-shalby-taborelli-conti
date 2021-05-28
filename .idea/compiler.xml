@@ -9,6 +9,9 @@
         <module name="GC11" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="GC11-GUI" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-encoding UTF-8" />
