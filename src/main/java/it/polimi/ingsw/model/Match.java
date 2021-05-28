@@ -58,7 +58,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     //TODO: pensare a attributi aggiuntivi, esempio salvare su disco i record, memorizzare timestamp per sapere da quanto tempo si gioca ...
 
     /**
-     * Constructor that intitialize the Match settings reading from a file all the information
+     * Constructor that initialize the Match settings reading from a file all the information
      */
     public Match(int numberOfPlayers) {
         players = new ArrayList<>(numberOfPlayers);
