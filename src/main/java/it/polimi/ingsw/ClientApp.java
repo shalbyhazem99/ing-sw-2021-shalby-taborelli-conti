@@ -9,7 +9,7 @@ public class ClientApp
     public static void main(String[] args){
         //todo: ask the connection port, ask connectiontype(cli, grafica), locale o cosa
         //System.out.println("Insert the server port");
-        ClientCLI client = new ClientCLI("127.0.0.1",  49944);
+        ClientCLI client = new ClientCLI("127.0.0.1",  50498);
         try{
             client.run();
         }catch (IOException e){
