@@ -25,11 +25,15 @@ public class RemoteView extends Observable<PlayerMove> implements Observer<MoveR
         clientConnection.addObserver(new MessageReceiver());
     }
 
+    public ClientConnection getClientConnection() {
+        return clientConnection;
+    }
+
     public Player getPlayer() {
         return player;
     }
 
-    void handleMove(PlayerMove playerMove) {
+    public void handleMove(PlayerMove playerMove) {
         playerMove.concatPlayer(player);
         notify(playerMove); //notify it to the controller
     }

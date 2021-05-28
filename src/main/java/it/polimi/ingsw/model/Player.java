@@ -30,9 +30,11 @@ public class Player implements Serializable {
     private final ArrayList<ResourcesCount> discounts;
     private final ArrayList<ResourceType> conversionStrategies;
     private final ArrayList<ProductivePower> addedPower;
+    private boolean offline;
 
     public Player(String name) {
         this.name = name;
+        this.offline = false;
         //create all the needed Arraylist
         popeFavorTiles = new ArrayList<>();
         leaderCards = new ArrayList<>();
@@ -79,6 +81,10 @@ public class Player implements Serializable {
     //------------------------------------------SIMPLE GETTER------------------------------------------------------
     public String getName() {
         return name;
+    }
+
+    public boolean isOffline(){
+        return offline;
     }
 
     public ArrayList<ProductivePower> getAddedPower() {
@@ -172,6 +178,18 @@ public class Player implements Serializable {
 
     public void setStrongBox(ArrayList<Resource> strongBox) {
         this.strongBox = strongBox;
+    }
+
+    public void setOffline(boolean offline){
+        this.offline = offline;
+    }
+
+    public void returnOnline(){
+        offline=false;
+    }
+
+    public void makeOffline(){
+        offline=true;
     }
 
     //---------------------------------------SIMPLE ADDER------------------------------------------------------
@@ -539,7 +557,7 @@ public class Player implements Serializable {
                     addResourceToWarehouseAdditional(temp_from_additional,indexSecondWarehouse-3);
                     return false;
                 }
-               return true;
+                return true;
             }
         }
         return false;

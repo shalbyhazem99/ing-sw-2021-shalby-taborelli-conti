@@ -28,6 +28,7 @@ public class EndMatchResponse extends MoveResponse {
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
+        System.out.println("match End!");
         ArrayList<Winner> winners = match.whoIsWinner();
         if(winners.size()==1) {
             System.out.println("The winner is ");

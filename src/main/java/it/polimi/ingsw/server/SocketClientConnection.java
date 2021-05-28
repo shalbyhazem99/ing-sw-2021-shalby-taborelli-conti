@@ -59,7 +59,6 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
     }
 
     private void close() {
-        //todo: manage diconnection: maybe add active variable to player
         closeConnection();
         System.out.println("Deregistering client...");
         server.deregisterConnection(this);
