@@ -46,7 +46,7 @@ public class Utils {
      *
      * @param resourcesCounts {@link ArrayList} of ResourcesCount to discount
      * @param discount        arraylist of discount to apply
-     * @return a new (clone) {@link ArrayList} of the discount aaplied
+     * @return a new (clone) {@link ArrayList} of the discount applied
      */
     public static ArrayList<ResourcesCount> applyDiscount(ArrayList<ResourcesCount> resourcesCounts, ArrayList<ResourcesCount> discount) {
         ArrayList<ResourcesCount> discounted = ResourcesCount.cloneList(resourcesCounts);
@@ -60,6 +60,11 @@ public class Utils {
         return (ArrayList<ResourcesCount> ) discounted.stream().filter(elem-> elem.getCount()>0).collect(Collectors.toList());
     }
 
+    /**
+     * Convert an array of mixed {@link Resource} into an ArrayList of {@link ResourcesCount}
+     * @param resources to convert into ResourceCount
+     * @return the ArrayList of {@link ResourcesCount} containing all the {@link Resource} passed
+     */
     public static ArrayList<ResourcesCount> fromResourcesToResourceCount(ArrayList<Resource> resources) {
         ArrayList<ResourcesCount> temp = new ArrayList<>();
         ResourcesCount coin = new ResourcesCount(0, ResourceType.COIN);

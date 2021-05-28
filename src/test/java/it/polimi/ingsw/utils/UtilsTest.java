@@ -4,11 +4,13 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.resource.ResourcesCount;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
 public class UtilsTest extends TestCase {
 
+    @Test
     public void testApplyDiscount() {
         ArrayList<ResourcesCount> resourceNeeded = new ArrayList<>();
         ArrayList<ResourcesCount> discount = new ArrayList<>();
@@ -53,6 +55,7 @@ public class UtilsTest extends TestCase {
         assertEquals(2,discount.size());
     }
 
+    @Test
     public void testCompareResources() {
 
         ArrayList<ResourcesCount> resourceNeeded = new ArrayList<>();
@@ -95,6 +98,7 @@ public class UtilsTest extends TestCase {
         assertTrue(Utils.compareResources(resources,resourceNeeded));
     }
 
+    @Test
     public void testFromResourcesToResourceCount() {
         ArrayList<Resource> resources = new ArrayList<>();
         int count =0;
@@ -184,4 +188,5 @@ public class UtilsTest extends TestCase {
         //size assert
         assertEquals(6,resourcesCounts.size());
     }
+
 }
