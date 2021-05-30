@@ -180,8 +180,8 @@ public class Player implements Serializable {
         this.strongBox = strongBox;
     }
 
-    public void setOffline(boolean offline){
-        this.offline = offline;
+    public void setOffline(){
+        this.offline = true;
     }
 
     public void returnOnline(){

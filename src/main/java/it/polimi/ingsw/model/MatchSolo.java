@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -78,8 +79,8 @@ public class MatchSolo extends Match implements Serializable {
      */
     public int moveAheadBlackCross(int numberOfPasses) {
         posBlackCross = posBlackCross + numberOfPasses;
-        if (posBlackCross > 20) {
-            posBlackCross = 20;
+        if (posBlackCross > Utils.FAITH_LENGTH) {
+            posBlackCross = Utils.FAITH_LENGTH;
         }
         return posBlackCross;
     }
@@ -264,6 +265,10 @@ public class MatchSolo extends Match implements Serializable {
             //notifyModel();
             askForMove();
         }
+    }
+
+    public LinkedList<ActionToken> getActionTokens() {
+        return actionTokens;
     }
 
     @Override

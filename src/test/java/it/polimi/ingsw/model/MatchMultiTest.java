@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.resource.ResourceType;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -18,12 +19,6 @@ public class MatchMultiTest extends TestCase {
             assertEquals(-1, matchMulti.getPosInkwell());
             assertEquals(i, matchMulti.getPlayers().size());
         }
-    }
-
-    //todo: how can I test it?
-    @Test
-    public void testEndRoundInteraction() {
-
     }
 
     /**
@@ -63,6 +58,33 @@ public class MatchMultiTest extends TestCase {
         }
     }
 
+    /*
+    public int getdistPlayerFromInkwell(int posPlayer){
+        if(posPlayer>=posInkwell)
+            return posPlayer-posInkwell;
+        else
+            return players.size()+posPlayer-posInkwell;
+    }
+     */
+    @Test
+    public void testGetdistPlayerFromInkwell(){
+        for (int i = 2; i < 5; i++) {
+            MatchMulti matchMulti = new MatchMulti(i);
+            for (int j = 0; j < i; j++) {
+                matchMulti.addPlayer(Player.getInstance("Player"+j));
+            }
+            matchMulti.startMatch();
+            int inkwell = matchMulti.getPosInkwell();
+            for (int j = 0; j < i; j++) {
+                if (j>=inkwell){
+                    assertEquals(j-inkwell, matchMulti.getdistPlayerFromInkwell(j));
+                } else {
+                    assertEquals(i+j-inkwell, matchMulti.getdistPlayerFromInkwell(j));
+                }
+            }
+        }
+    }
+
 
     @Test
     public void testAskForDiscardLeaderCard(){
@@ -77,8 +99,134 @@ public class MatchMultiTest extends TestCase {
         }
     }
 
+
+    /**
+     * Testing the correct process of discarding LeaderCard and the assigment of Resources depending the order of play
+     */
     @Test
     public void testDiscardTwoLeaderCardInteraction(){
+        //Testing for every type of MatchMulti
+        for (int i = 2; i < 5; i++) {
+            MatchMulti matchMulti = new MatchMulti(i);
+            for (int j = 0; j < i; j++) {
+                matchMulti.addPlayer(Player.getInstance("Player"+j));
+            }
+            matchMulti.startMatch();
+
+            //Testing wrong input
+            //Case: Same index of discarding
+            matchMulti.discardTwoLeaderCardInteraction(0, 0, matchMulti.getCurrentPlayer(), ResourceType.COIN, ResourceType.SERVANT);
+            assertEquals(0, matchMulti.getCurrentPlayer().getWarehousesStandard().get(0).getResources().size());
+            assertEquals(ResourceType.ANY, matchMulti.getCurrentPlayer().getWarehousesStandard().get(0).getResourceType());
+            assertEquals(0, matchMulti.getCurrentPlayer().getWarehousesStandard().get(1).getResources().size());
+            assertEquals(ResourceType.ANY, matchMulti.getCurrentPlayer().getWarehousesStandard().get(1).getResourceType());
+            assertEquals(0, matchMulti.getCurrentPlayer().getPosFaithMarker());
+            assertEquals(4, matchMulti.getCurrentPlayer().getLeaderCards().size());
+
+            //Case: One Index>4
+            matchMulti.discardTwoLeaderCardInteraction(0, 99, matchMulti.getCurrentPlayer(), ResourceType.COIN, ResourceType.SERVANT);
+            assertEquals(0, matchMulti.getCurrentPlayer().getWarehousesStandard().get(0).getResources().size());
+            assertEquals(ResourceType.ANY, matchMulti.getCurrentPlayer().getWarehousesStandard().get(0).getResourceType());
+            assertEquals(0, matchMulti.getCurrentPlayer().getWarehousesStandard().get(1).getResources().size());
+            assertEquals(ResourceType.ANY, matchMulti.getCurrentPlayer().getWarehousesStandard().get(1).getResourceType());
+            assertEquals(0, matchMulti.getCurrentPlayer().getPosFaithMarker());
+            assertEquals(4, matchMulti.getCurrentPlayer().getLeaderCards().size());
+
+            //Case: Both with index>4
+            matchMulti.discardTwoLeaderCardInteraction(0, 0, matchMulti.getCurrentPlayer(), ResourceType.COIN, ResourceType.SERVANT);
+            assertEquals(0, matchMulti.getCurrentPlayer().getWarehousesStandard().get(0).getResources().size());
+            assertEquals(ResourceType.ANY, matchMulti.getCurrentPlayer().getWarehousesStandard().get(0).getResourceType());
+            assertEquals(0, matchMulti.getCurrentPlayer().getWarehousesStandard().get(1).getResources().size());
+            assertEquals(ResourceType.ANY, matchMulti.getCurrentPlayer().getWarehousesStandard().get(1).getResourceType());
+            assertEquals(0, matchMulti.getCurrentPlayer().getPosFaithMarker());
+            assertEquals(4, matchMulti.getCurrentPlayer().getLeaderCards().size());
+            
+            for(Player player : matchMulti.players){
+                /*
+                Asserting that the last player player in a match multi with 4 players, could choose 2 resources of the same type and they will
+                be allocated in the WarehouseStandard 1
+                 */
+                if (matchMulti.players.size()==4){
+                    matchMulti.discardTwoLeaderCardInteraction(0, 1, player, ResourceType.COIN, ResourceType.COIN);
+                    assertEquals(2, player.getLeaderCards().size());
+                    switch (matchMulti.getdistPlayerFromInkwell(matchMulti.getPlayers().indexOf(player))){ // get the turn position
+                        case 1: // Is the second to play One Resource is assigned
+                            assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(0, player.getPosFaithMarker());
+                            break;
+                        case 2: // Is the third to play One Resource and one Position Faith are assigned
+                            assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(1, player.getPosFaithMarker());
+                            break;
+                        case 3: // Is the last to play. Two Resources and one Position Faith are assigned
+                            assertEquals(0, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(2, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(1, player.getPosFaithMarker());
+                            break;
+                        default: //The first to play. No Resources of Position Faith are assigned
+                            assertEquals(0, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(0, player.getPosFaithMarker());
+                            break;
+                    }
+                }
+
+                else {
+                    matchMulti.discardTwoLeaderCardInteraction(0, 1, player, ResourceType.COIN, ResourceType.SHIELD);
+                    assertEquals(2, player.getLeaderCards().size());
+                    switch (matchMulti.getdistPlayerFromInkwell(matchMulti.getPlayers().indexOf(player))){ // get the turn position
+                        case 1: // Is the second to play One Resource is assigned
+                            assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(0, player.getPosFaithMarker());
+                            break;
+                        case 2: // Is the third to play One Resource and one Position Faith are assigned
+                            assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(1, player.getPosFaithMarker());
+                            break;
+                        case 3: // Is the last to play. Two Resources and one Position Faith are assigned
+                            assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(1, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.SHIELD, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(1, player.getPosFaithMarker());
+                            break;
+                        default: //The first to play. No Resources of Position Faith are assigned
+                            assertEquals(0, player.getWarehousesStandard().get(0).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(0).getResourceType());
+                            assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                            assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                            assertEquals(0, player.getPosFaithMarker());
+                            break;
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    /**
+     * Testing the correct process of changing of the turn, whether all the {@link Player} are online or one is offline
+     */
+    @Test
+    public void testUpdateTurn(){
+        int turn;
         for (int i = 2; i < 5; i++) {
             MatchMulti matchMulti = new MatchMulti(i);
             for (int j = 0; j < i; j++) {
@@ -87,9 +235,86 @@ public class MatchMultiTest extends TestCase {
             matchMulti.startMatch();
 
 
-        }
+            //Testing when all the players are online
+            turn=matchMulti.getTurn();
+            matchMulti.updateTurn();
+            if (turn== i-1){
+                turn=0;
+            } else {
+                turn++;
+            }
+            assertEquals(turn, matchMulti.getTurn());
 
+            //Setting the next Player offline
+            if(turn == i-1){
+                matchMulti.getPlayers().get(0).setOffline();
+            } else {
+                matchMulti.getPlayers().get(matchMulti.getTurn()+1).setOffline();
+            }
+
+            matchMulti.updateTurn();
+            if (turn == i-1){
+                assertEquals(1, matchMulti.getTurn());
+            } else if ( turn == i -2){
+                assertEquals(0, matchMulti.getTurn());
+            } else {
+                turn+=2;
+                assertEquals(turn, matchMulti.getTurn());
+            }
+        }
+    }
+
+    /**
+     * Testing the method returns the {@link Player} who is playing
+     */
+    @Test
+    public void testGetCurrentPlayer(){
+        for (int i = 2; i < 5; i++) {
+            MatchMulti matchMulti = new MatchMulti(i);
+
+            for (int j = 0; j < i; j++) {
+                matchMulti.addPlayer(Player.getInstance("Player"+j));
+            }
+
+            matchMulti.startMatch();
+            assertTrue(matchMulti.getPlayers().contains(matchMulti.getCurrentPlayer()));
+        }
     }
 
 
+    //todo:modificare in base a come si cambia la parte in MatchMulti
+
+    /*
+    @Test
+    public void testHasWon(){
+        for (int i = 2; i < 5; i++) {
+            MatchMulti matchMulti = new MatchMulti(i);
+
+            for (int j = 0; j < i; j++) {
+                matchMulti.addPlayer(Player.getInstance("Player"+j));
+            }
+
+            matchMulti.startMatch();
+            assertFalse(matchMulti.hasWon());
+
+            int index=0;
+            if(matchMulti.getPosInkwell()==0){
+                index=1;
+            }
+
+            matchMulti.getPlayers().get(index).moveAheadFaith(26);
+            if (matchMulti.getTurn()== matchMulti.getPosInkwell()){
+                matchMulti.updateTurn();
+            }
+            assertFalse(matchMulti.hasWon());
+            do {
+                matchMulti.updateTurn();
+            } while (matchMulti.getTurn() != matchMulti.getPosInkwell());
+
+            assertTrue(matchMulti.hasWon());
+        }
+
+
+    }
+    */
 }

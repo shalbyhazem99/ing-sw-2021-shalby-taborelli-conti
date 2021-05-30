@@ -175,6 +175,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return developmentCards[level.label][type.label].peek();
     }
 
+    //todo: never used
     public boolean getCanChangeTurn() {
         return canChangeTurn;
     }

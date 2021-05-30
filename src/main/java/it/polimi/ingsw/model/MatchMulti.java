@@ -91,12 +91,11 @@ public class MatchMulti extends Match implements Serializable {
         //askForMove();
     }
 
-    //todo: this method is private
-    private int getdistPlayerFromInkwell(int posPlayer){
+    public int getdistPlayerFromInkwell(int posPlayer){
         if(posPlayer>=posInkwell)
             return posPlayer-posInkwell;
         else
-            return players.size()-posPlayer-posInkwell;
+            return players.size()+posPlayer-posInkwell;
     }
 
     @Override
@@ -161,17 +160,27 @@ public class MatchMulti extends Match implements Serializable {
         }
     }
 
+    /**
+     * When the turn is changing this method set the turn to the next {@link Player} online
+     * If all the {@link Player} go offline //todo: inserire come gestiamo la cosa
+     */
     @Override
     public void updateTurn() {
         canChangeTurn = false;
-        if (turn < getPlayers().size() - 1)
-            turn++;
-        else
-            turn = 0;
+        int check = this.turn;
+        do {
+            if (turn < getPlayers().size()-1)
+                turn++;
+            else
+                turn = 0;
+            if (check == turn && this.players.get(check).isOffline()){
+                //todo: mettere qualcosa se tutti vanno offline
+            }
+        } while (this.players.get(turn).isOffline());
         //check if anyone is online
         //players.stream().anyMatch(player -> player.isOffline());
-        if(players.get(turn).isOffline())
-            updateTurn(); //todo: se si diconnettono tutti non so se è una feature o no che la partita rimanga in sospeso
+        //if(players.get(turn).isOffline())
+            //updateTurn(); //todo: se si disconnettono tutti non so se è una feature o no che la partita rimanga in sospeso
     }
 
     /**
@@ -204,6 +213,10 @@ public class MatchMulti extends Match implements Serializable {
         return getPlayers().get(turn);
     }
 
+    public int getTurn(){
+        return this.turn;
+    }
+
     public void enableFinalTurn() {
         this.finalTurn = true;
     }
@@ -217,10 +230,13 @@ public class MatchMulti extends Match implements Serializable {
                 return true;
             }
         }
+
+        //todo: Secondo me questa parte dovrebbe ritornare false, perchè anche se il giocatore vince ed è stato il primo deve esserci un giro in più
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getDevelopmentCards().size() >= 7 || players.get(i).getPosFaithMarker() >= 24) {
                 this.enableFinalTurn();
-                return turn == posInkwell;
+                //todo:vedere cosa combina
+                return getdistPlayerFromInkwell(turn) == players.size()-1;
             }
 
         }
