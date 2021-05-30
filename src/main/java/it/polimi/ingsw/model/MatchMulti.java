@@ -55,8 +55,8 @@ public class MatchMulti extends Match implements Serializable {
         return this.posInkwell;
     }
 
+    //todo:ATTENZIONE QUESTO METODO POI ANDRA' GESTITO DIVERSAMENTE DENTRO MATCHSOLO E MATCHMULTI, IO PER ORA LO METTO QUI E LO FACCIO PER MATCHMULTI
     /**
-     * ATTENZIONE QUESTO METODO POI ANDRA' GESTITO DIVERSAMENTE DENTRO MATCHSOLO E MATCHMULTI, IO PER ORA LO METTO QUI E LO FACCIO PER MATCHMULTI
      * Method used by the {@link Player} to end his round
      *
      * @param player the {@link Player} who wants to end his round
@@ -91,6 +91,7 @@ public class MatchMulti extends Match implements Serializable {
         //askForMove();
     }
 
+    //todo: this method is private
     private int getdistPlayerFromInkwell(int posPlayer){
         if(posPlayer>=posInkwell)
             return posPlayer-posInkwell;
