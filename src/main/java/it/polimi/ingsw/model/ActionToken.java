@@ -32,7 +32,6 @@ public class ActionToken implements Serializable {
     public static ActionToken getInstance(MarkerType action, int count, DevelopmentCardType cardToReject) {
         return new ActionToken(action,count,cardToReject);
     }
-    private DevelopmentCardType CardToReject;
 
     /**
      *
@@ -56,5 +55,18 @@ public class ActionToken implements Serializable {
      */
     public DevelopmentCardType getCardToReject() {
         return cardToReject;
+    }
+
+    /**
+     * Default toString
+     * @return the parameters of {@link ActionToken}
+     */
+    @Override
+    public String toString() {
+        return "ActionToken{" +
+                "action=" + action +
+                ", count=" + count +
+                ", cardToReject=" + cardToReject +
+                '}';
     }
 }

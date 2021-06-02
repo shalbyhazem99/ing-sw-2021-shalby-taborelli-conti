@@ -721,13 +721,13 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             if (winners.isEmpty()) {
                 winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
             } else {
-                if (winners.get(0).getPoints() < totalPoints) { //th winner is the considered player
+                if (winners.get(0).getPoints() < totalPoints) { //the winner is the considered player
                     winners.clear();
                     winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
                 } else if (winners.get(0).getPoints() == totalPoints) {
                     if (countRes == winners.get(0).getTotalResources()) { // draw
                         winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
-                    } else if (countRes > winners.get(0).getTotalResources()) {//th winner is the considered player
+                    } else if (countRes > winners.get(0).getTotalResources()) {//the winner is the considered player
                         winners.clear();
                         winners.add(Winner.getInstance(player.getName(), totalPoints, countRes));
                     }

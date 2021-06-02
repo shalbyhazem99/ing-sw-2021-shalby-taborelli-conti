@@ -101,6 +101,9 @@ public class MatchSolo extends Match implements Serializable {
         Collections.shuffle(actionTokens);
     }
 
+
+    //todo: lo abbiamo mai usato?
+
     /**
      * This method will discard from the {@link DevelopmentCard} matrix the requested amount of cards of a certain {@link DevelopmentCardType}
      * the method will try to discard LVL 1 cards, otherwise LVL 2 cards otherwise LVL 3 cards
@@ -176,7 +179,7 @@ public class MatchSolo extends Match implements Serializable {
                 String messageToSend = executeAction(actionToken, player, false);
                 if (hasLose()) {
                     notify(EndMatchSoloResponse.getInstance(players, 0, this.hashCode(), true));
-                }else {
+                } else {
                     notify(EndRoundSoloResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode(), messageToSend, actionToken));
                     askForMove();
                 }
@@ -193,8 +196,7 @@ public class MatchSolo extends Match implements Serializable {
                 u = "Lorenzo move ahead of " + action.getCount() + " passes\n";
                 if (action.getCount() == 1) {
                     moveAheadBlackCross(1);
-                    if (!noControl)
-                        shuffleActionTokens();
+                    shuffleActionTokens();
                 } else //count=2
                 {
                     moveAheadBlackCross(2);
@@ -259,7 +261,7 @@ public class MatchSolo extends Match implements Serializable {
 
     @Override
     public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player, ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
-        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player,resourceTypeFirst,resourceTypeSecond);
+        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player, resourceTypeFirst, resourceTypeSecond);
         notifyModel();
         if (numPlayerWhoDiscard == players.size()) {
             //notifyModel();

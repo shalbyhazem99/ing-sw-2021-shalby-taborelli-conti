@@ -1,8 +1,15 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.model.leaderCard.LeaderCardAddWarehouse;
+import it.polimi.ingsw.model.leaderCard.LeaderCardColor;
+import it.polimi.ingsw.model.leaderCard.LeaderCardDiscount;
+import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import junit.framework.TestCase;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 
 public class MatchMultiTest extends TestCase {
@@ -58,14 +65,6 @@ public class MatchMultiTest extends TestCase {
         }
     }
 
-    /*
-    public int getdistPlayerFromInkwell(int posPlayer){
-        if(posPlayer>=posInkwell)
-            return posPlayer-posInkwell;
-        else
-            return players.size()+posPlayer-posInkwell;
-    }
-     */
     @Test
     public void testGetdistPlayerFromInkwell(){
         for (int i = 2; i < 5; i++) {
@@ -281,40 +280,4 @@ public class MatchMultiTest extends TestCase {
         }
     }
 
-
-    //todo:modificare in base a come si cambia la parte in MatchMulti
-
-    /*
-    @Test
-    public void testHasWon(){
-        for (int i = 2; i < 5; i++) {
-            MatchMulti matchMulti = new MatchMulti(i);
-
-            for (int j = 0; j < i; j++) {
-                matchMulti.addPlayer(Player.getInstance("Player"+j));
-            }
-
-            matchMulti.startMatch();
-            assertFalse(matchMulti.hasWon());
-
-            int index=0;
-            if(matchMulti.getPosInkwell()==0){
-                index=1;
-            }
-
-            matchMulti.getPlayers().get(index).moveAheadFaith(26);
-            if (matchMulti.getTurn()== matchMulti.getPosInkwell()){
-                matchMulti.updateTurn();
-            }
-            assertFalse(matchMulti.hasWon());
-            do {
-                matchMulti.updateTurn();
-            } while (matchMulti.getTurn() != matchMulti.getPosInkwell());
-
-            assertTrue(matchMulti.hasWon());
-        }
-
-
-    }
-    */
 }

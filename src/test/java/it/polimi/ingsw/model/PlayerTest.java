@@ -34,7 +34,30 @@ public class PlayerTest extends TestCase {
     }
 
     @Test
-    public void testCanAfford() {
+    public void testAddedPowers(){
+        Player player = new Player("tester");
+
+        assertTrue(player.getAddedPower().isEmpty());
+        assertEquals(0, player.getAddedPower().size());
+
+        player.addLeaderCard(LeaderCardAddProductive.getInstance(2, ResourceType.COIN, null, null));
+        player.getLeaderCards().get(0).active(player);
+        assertEquals(1, player.getAddedPower().size());
+    }
+
+    /*
+    public void returnOnline(){
+        offline=false;
+    }
+     */
+    @Test
+    public void testReturnOnLine(){
+        Player player = new Player("Tester");
+        assertFalse(player.isOffline());
+        player.makeOffline();
+        assertTrue(player.isOffline());
+        player.returnOnline();
+        assertFalse(player.isOffline());
     }
 
     /**
