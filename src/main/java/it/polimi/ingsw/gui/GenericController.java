@@ -17,6 +17,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
 
     public void changeView(String fxml, ClientConnection clientConnection) throws IOException {
         URL url = new File("src/main/resources/fxml/"+fxml+".fxml").toURI().toURL();
+        System.out.println(fxml);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(url);
         Parent root =loader.load();

@@ -15,10 +15,6 @@ public class PrimaryController extends GenericController {
 
     Match match;
 
-    public void onClick(MouseEvent mouseEvent) {
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,0));
-        //block everything
-    }
 
 
     @Override

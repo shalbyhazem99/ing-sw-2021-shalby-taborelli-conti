@@ -1,10 +1,260 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 
-<AnchorPane prefHeight="538.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.PrimaryController">
-   <children>
-      <Button mnemonicParsing="false" onMouseClicked="#onClick" text="PLAY MARKET INTERACTION ON ROW 0" />
-   </children>
-</AnchorPane>
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="993.0" prefWidth="1255.0" fx:controller="it.polimi.ingsw.gui.RegistrationController" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+  <tabs>
+    <Tab text="Untitled Tab 1">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="994.0" prefWidth="1260.0">
+               <children>
+                  <Pane layoutX="3.0" prefHeight="49.0" prefWidth="1244.0" styleClass="grey-bg" stylesheets="@../css/grey-background.css">
+                     <children>
+                        <TextFlow layoutX="8.0" layoutY="5.0" prefHeight="33.0" prefWidth="1232.0" />
+                     </children></Pane>
+                  <Pane layoutX="136.0" layoutY="55.0" prefHeight="585.0" prefWidth="997.0" styleClass="punch" stylesheets="@../css/punch.css">
+                     <children>
+                        <StackPane layoutX="393.0" layoutY="250.0">
+                           <children>
+                              <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                 <children>
+                                    <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
+                        <StackPane layoutX="583.0" layoutY="250.0">
+                           <children>
+                              <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                 <children>
+                                    <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
+                        <StackPane layoutX="780.0" layoutY="250.0">
+                           <children>
+                              <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                 <children>
+                                    <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
+                        <Pane layoutX="32.0" layoutY="439.0" prefHeight="109.0" prefWidth="160.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Circle fill="DODGERBLUE" layoutX="134.0" layoutY="268.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Pane layoutX="39.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="88.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="136.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="136.0" layoutY="75.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="136.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="185.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="234.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="283.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="332.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="380.0" layoutY="36.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="380.0" layoutY="74.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="380.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="430.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="479.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="528.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="576.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="625.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="625.0" layoutY="75.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="625.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="674.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="869.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="723.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="820.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="772.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="918.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="299.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="456.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="649.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="851.0" layoutY="185.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Circle fill="DODGERBLUE" layoutX="110.0" layoutY="319.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="149.0" layoutY="319.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="170.0" layoutY="371.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="132.0" layoutY="371.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="94.0" layoutY="371.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Pane layoutX="496.0" layoutY="50.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                     </children></Pane>
+                  <Pane layoutX="731.0" layoutY="662.0" prefHeight="262.0" prefWidth="395.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                     <children>
+                        <Pane layoutX="20.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                        <Pane layoutX="220.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </Pane>
+                  <Pane layoutX="147.0" layoutY="730.0" prefHeight="131.0" prefWidth="185.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                  <Pane layoutX="468.0" layoutY="730.0" prefHeight="131.0" prefWidth="185.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                  <Text layoutX="192.0" layoutY="693.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MARKET PENDING" />
+                  <Text layoutX="504.0" layoutY="693.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRODUCTION PENDING" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+      <Tab text="Dev Card">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <StackPane layoutX="327.0" layoutY="74.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="575.0" layoutY="74.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="817.0" layoutY="74.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="1060.0" layoutY="74.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="327.0" layoutY="340.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="575.0" layoutY="340.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="817.0" layoutY="340.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="1060.0" layoutY="340.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <Text layoutX="158.0" layoutY="190.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 1" />
+                  <Text layoutX="157.0" layoutY="457.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 2" />
+                  <Text layoutX="157.0" layoutY="722.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 3" />
+                  <Text fill="#1dbff5" layoutX="387.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GREEN" />
+                  <Text fill="#0062ff" layoutX="639.0" layoutY="38.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BLUE" />
+                  <Text fill="#f2d30f" layoutX="872.0" layoutY="37.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="YELLOW" />
+                  <Text fill="#c60101" layoutX="1115.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PURPLE" />
+                  <StackPane layoutX="327.0" layoutY="610.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="575.0" layoutY="610.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="817.0" layoutY="610.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="1060.0" layoutY="610.0">
+                     <children>
+                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                           <children>
+                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
+    <Tab text="Marble Market">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Pane layoutX="272.0" layoutY="103.0" prefHeight="729.0" prefWidth="711.0" styleClass="wallpaper" stylesheets="@../css/tab2.css">
+                     <children>
+                        <Circle fill="DODGERBLUE" layoutX="249.0" layoutY="323.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="249.0" layoutY="254.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="249.0" layoutY="184.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="322.0" layoutY="324.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="322.0" layoutY="255.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="322.0" layoutY="185.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="406.0" layoutY="324.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="406.0" layoutY="255.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="406.0" layoutY="185.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="325.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="256.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="186.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="124.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                     </children>
+                  </Pane>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>

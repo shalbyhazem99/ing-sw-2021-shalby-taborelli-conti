@@ -27,7 +27,7 @@ public class ReconnectionResponse extends MoveResponse {
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
-        System.out.println(playerName+ "is back");
+        System.out.println(playerName+ " is back");
         return null;
     }
 

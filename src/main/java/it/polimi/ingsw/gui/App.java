@@ -26,13 +26,14 @@ public class App extends Application {
         loader.setLocation(url);
         Parent root =loader.load();
         GenericController myController = loader.getController();
-        connection = new ClientConnection("127.0.0.1",  51427);
+        connection = new ClientConnection("127.0.0.1",  53999);
         myController.addObserver(connection);
         connection.addObserver(myController);
         connection.asyncReadFromSocket();
 
-        scene = new Scene(root, 640, 480);
+        scene = new Scene(root, 1255, 993);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
     static void setRoot(Parent root) throws IOException {
