@@ -46,4 +46,10 @@ public class RegistrationController extends GenericController {
     public void onClickPlay(MouseEvent mouseEvent) throws IOException {
         changeView("primary",App.connection);
     }
+
+    @Override
+    public void blockView()
+    {
+
+    }
 }

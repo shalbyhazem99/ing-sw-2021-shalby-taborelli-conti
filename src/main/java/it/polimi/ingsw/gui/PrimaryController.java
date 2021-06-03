@@ -9,19 +9,31 @@ import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 import javafx.beans.InvalidationListener;
+import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 
 public class PrimaryController extends GenericController {
 
     Match match;
 
+    @FXML
+    private TabPane tabpane;
+
 
 
     @Override
     public void update(MoveResponse message) {
         //elaborate message
-        System.out.println("Message Recived");
+        System.out.println("Message Recived dio bon");
 
         //
     }
+
+    @Override
+    public void blockView() {
+        tabpane.setDisable(true);
+    }
+
+    //forse non serve metterlo in generic controller?
 }

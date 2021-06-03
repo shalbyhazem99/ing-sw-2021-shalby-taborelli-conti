@@ -2,6 +2,8 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.controller.move.endMatch.EndMatchResponse;
+import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 
@@ -17,6 +19,7 @@ public class ClientConnection extends Observable<MoveResponse> implements Observ
     private ObjectOutputStream socketOut;
     private ObjectInputStream socketIn;
     private boolean active = true;
+
 
     public ClientConnection(String ip, int port) throws IOException {
         this.socket = new Socket();
@@ -62,7 +65,14 @@ public class ClientConnection extends Observable<MoveResponse> implements Observ
                     if (inputObject instanceof MoveResponse) {
                         ClientConnection.this.notify((MoveResponse) inputObject);
                         System.out.println("new Object Received: \n" + inputObject.toString());
-                    } else {
+                    }
+                    else if (inputObject instanceof SendModel) {
+                        notify((SendModel) inputObject);
+                    }
+                    else if(inputObject instanceof EndMatchResponse) {
+
+                    }
+                    else {
                         throw new IllegalArgumentException();
                     }
                 }
