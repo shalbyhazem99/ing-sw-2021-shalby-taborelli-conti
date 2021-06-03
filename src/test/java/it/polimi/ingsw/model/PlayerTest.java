@@ -33,6 +33,9 @@ public class PlayerTest extends TestCase {
         assertEquals(Utils.FAITH_LENGTH, tester.getPosFaithMarker());
     }
 
+    /**
+     * Testing when a new power is added to {@link Player}
+     */
     @Test
     public void testAddedPowers(){
         Player player = new Player("tester");
@@ -45,10 +48,35 @@ public class PlayerTest extends TestCase {
         assertEquals(1, player.getAddedPower().size());
     }
 
-    /*
-    public void returnOnline(){
-        offline=false;
+    /**
+     * Testing when a {@link LeaderCardColor} is activated gives the correct power to the {@link Player}
+     */
+    public void testGetConversionStrategies(){
+        Player tester = new Player("tester");
+        tester.addLeaderCard(LeaderCardColor.getInstance(2, ResourceType.COIN, null, null));
+        tester.getLeaderCards().get(0).active(tester);
+        assertEquals(1, tester.getConversionStrategies().size());
+        assertEquals(ResourceType.COIN, tester.getConversionStrategies().get(0));
     }
+
+    /**
+     * Testing the generation of the {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} for a {@link Player}
+     */
+    public void testGetDevelopmentCardSpace(){
+        Player tester = new Player("Tester");
+        assertEquals(3, tester.getDevelopmentCardSpaces().size());
+    }
+
+    /**
+     * Testing a {@link Player} can't get a {@link LeaderCard} more the the ones he has
+     */
+    public void testGetLeaderCard(){
+        Player tester = new Player("Tester");
+        assertEquals(null, tester.getLeaderCard(4));
+    }
+
+    /**
+     * Testing the switch of a {@link Player} between Online and Offline status
      */
     @Test
     public void testReturnOnLine(){
@@ -58,6 +86,20 @@ public class PlayerTest extends TestCase {
         assertTrue(player.isOffline());
         player.returnOnline();
         assertFalse(player.isOffline());
+    }
+
+    /*
+    public int numOfWhiteMarbleConversionStrategy() {
+        return conversionStrategies.size();
+    }
+     */
+    public void testNumOfWhiteMarbleConversionStrategy(){
+        Player tester = new Player("Tester");
+        assertEquals(0, tester.numOfWhiteMarbleConversionStrategy());
+
+        tester.addLeaderCard(LeaderCardColor.getInstance(3, ResourceType.COIN, null, null));
+        tester.getLeaderCards().get(0).active(tester);
+        assertEquals(1, tester.numOfWhiteMarbleConversionStrategy());
     }
 
     /**
@@ -857,6 +899,31 @@ public class PlayerTest extends TestCase {
         assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(1).getResourceType());
         assertEquals(0, tester.getWarehousesAdditional().get(1).getSpaceAvailable());
         assertEquals(2, tester.getWarehousesAdditional().get(1).getResources().size());
+
+        //Testing I can't move Resources from a WarehouseStandard to an Additional if one hasn't enough space available
+        tester.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.SHIELD), 0);
+        //SITUATION: 0) SHIELD 1) COIN|COIN 2)SERVANT|SERVANT|SERVANT  3)SHIELD|SHIELD 4) SHIELD|SHIELD
+        assertFalse(tester.moveResources(0, 3, 1, 0));
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesStandard().get(0).getResourceType());
+        assertEquals(1, tester.getWarehousesStandard().get(0).getResources().size());
+        assertEquals(0, tester.getWarehousesStandard().get(0).getSpaceAvailable());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getResources().size());
+
+
+        //Testing I can't move Resources from a WarehouseAdditional to a WarehouseStandard with different Type
+        tester.getWarehousesStandard().get(1).getResources().remove(0);
+        tester.getWarehousesStandard().get(1).changeAvailability(1);
+        //SITUATION: 0) SHIELD 1) COIN 2)SERVANT|SERVANT|SERVANT  3)SHIELD|SHIELD 4) SHIELD|SHIELD
+        assertFalse(tester.moveResources(1, 3, 0, 1));
+        assertEquals(ResourceType.COIN, tester.getWarehousesStandard().get(1).getResourceType());
+        assertEquals(1, tester.getWarehousesStandard().get(1).getSpaceAvailable());
+        assertEquals(1, tester.getWarehousesStandard().get(1).getResources().size());
+        assertEquals(ResourceType.SHIELD, tester.getWarehousesAdditional().get(0).getResourceType());
+        assertEquals(0, tester.getWarehousesAdditional().get(0).getSpaceAvailable());
+        assertEquals(2, tester.getWarehousesAdditional().get(0).getResources().size());
+
     }
 }
 
