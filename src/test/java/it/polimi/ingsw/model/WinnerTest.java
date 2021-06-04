@@ -23,4 +23,10 @@ public class WinnerTest extends TestCase {
         Winner winner = new Winner("Winner", 3, 4);
         assertEquals(4, winner.getTotalResources());
     }
+
+    @Test
+    public void testToString(){
+        Winner winner = new Winner("Tester", 48, 17);
+        assertEquals("Tester(48 points)", winner.toString());
+    }
 }

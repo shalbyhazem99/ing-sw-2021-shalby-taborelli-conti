@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -83,8 +84,8 @@ public class MatchSolo extends Match implements Serializable {
      */
     public int moveAheadBlackCross(int numberOfPasses) {
         posBlackCross = posBlackCross + numberOfPasses;
-        if (posBlackCross > 20) {
-            posBlackCross = 20;
+        if (posBlackCross > Utils.FAITH_LENGTH) {
+            posBlackCross = Utils.FAITH_LENGTH;
         }
         return posBlackCross;
     }
@@ -104,6 +105,9 @@ public class MatchSolo extends Match implements Serializable {
     public void shuffleActionTokens() {
         Collections.shuffle(actionTokens);
     }
+
+
+    //todo: lo abbiamo mai usato?
 
     /**
      * This method will discard from the {@link DevelopmentCard} matrix the requested amount of cards of a certain {@link DevelopmentCardType}
@@ -180,7 +184,7 @@ public class MatchSolo extends Match implements Serializable {
                 String messageToSend = executeAction(actionToken, player, false);
                 if (hasLose()) {
                     notify(EndMatchSoloResponse.getInstance(players, 0, this.hashCode(), true));
-                }else {
+                } else {
                     notify(EndRoundSoloResponse.getInstance(getPlayers(), getPlayers().indexOf(player), true, this.hashCode(), messageToSend, actionToken));
                     askForMove();
                 }
@@ -197,8 +201,7 @@ public class MatchSolo extends Match implements Serializable {
                 u = "Lorenzo move ahead of " + action.getCount() + " passes\n";
                 if (action.getCount() == 1) {
                     moveAheadBlackCross(1);
-                    if (!noControl)
-                        shuffleActionTokens();
+                    shuffleActionTokens();
                 } else //count=2
                 {
                     moveAheadBlackCross(2);
@@ -263,12 +266,16 @@ public class MatchSolo extends Match implements Serializable {
 
     @Override
     public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player, ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
-        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player,resourceTypeFirst,resourceTypeSecond);
+        super.discardTwoLeaderCardInteraction(posFirst, posSecond, player, resourceTypeFirst, resourceTypeSecond);
         notifyModel();
         if (numPlayerWhoDiscard == players.size()) {
             //notifyModel();
             askForMove();
         }
+    }
+
+    public LinkedList<ActionToken> getActionTokens() {
+        return actionTokens;
     }
 
     @Override

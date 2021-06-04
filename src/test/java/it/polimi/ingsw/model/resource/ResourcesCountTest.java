@@ -18,6 +18,14 @@ public class ResourcesCountTest extends TestCase {
     public ResourcesCountTest() {
     }
 
+    @Test
+    public void testSetType(){
+        ResourcesCount resourcesCount = new ResourcesCount(1, ResourceType.ANY);
+
+        assertEquals(ResourceType.ANY, resourcesCount.getType());
+        resourcesCount.setType(ResourceType.FAITH);
+        assertEquals(ResourceType.FAITH, resourcesCount.getType());
+    }
 
     @Test
     public void testResourceCount(){
@@ -32,6 +40,15 @@ public class ResourcesCountTest extends TestCase {
         ArrayList<Resource> resources = resourcesCount.toArrayListResources();
         assertEquals(count,resources.size());
         assertTrue(resources.stream().allMatch(elem->elem.getType().equals(type)));
+    }
+
+    @Test
+    public void testAddCount(){
+        ResourcesCount resourcesCount = new ResourcesCount(1, ResourceType.ANY);
+
+        assertEquals(1, resourcesCount.getCount());
+        resourcesCount.addCount();
+        assertEquals(2, resourcesCount.getCount());
     }
 
 }
