@@ -1,10 +1,16 @@
 package it.polimi.ingsw.gui;
 
 import it.polimi.ingsw.client.ClientConnection;
+import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
+import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.ProductivePower;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +22,7 @@ import javafx.scene.control.ChoiceDialog;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +42,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         myController.addObserver(clientConnection);
         //add controller to notify the connection
         clientConnection.addObserver(myController);
-        if(myController instanceof PrimaryController)
+        /*if(myController instanceof PrimaryController)
         {
             //print discard
             String [] indexes = {"1","2","3","4"};
@@ -49,10 +56,44 @@ public abstract class GenericController extends Observable<PlayerMove> implement
             ((PrimaryController) myController).initialization();
             myController.printModel();
             //myController.blockView();
-        }
+        }*/
     }
     //abstact method to modify view
     public abstract void blockView();
 
     public void printModel(){};
+
+    public abstract void printMessage(String message);
+
+    public abstract void flipLeaderCard(int leaderCardPosition, int executePlayerPos);
+
+    public abstract void enableProduction(ProductivePower power, ArrayList<ResourcePick> resourceToUse, int executePlayerPos);
+
+    public abstract void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int executePlayerPos);
+
+    public abstract void discardLeaderCard(int leaderCardPosition, int executePlayerPos);
+
+    public abstract void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos);
+
+    public abstract void manageResourceMarketConvert(int first, int second, int executePlayerPos);
+
+    public abstract void manageAllowedMoves(ArrayList<MovePlayerType> possibleMove);
+
+    public abstract void manageEndTurn(boolean correctlyEnded, int executePlayerPos);
+
+    public abstract void manageEndMatch();
+
+    public abstract void updateModel(Match match, int playerPosition);
+
+    public abstract void manageReconnection(String playerName);
+
+    public abstract void manageResourceMarketPositioning(ArrayList<Integer> whereToPlace, int executePlayerPos);
+
+    public abstract void askToDiscardTwoLeader(int numOfResource, int executePlayerPos);
+
+    public abstract void askForData(String message, int executePlayerPos);
+
+    public abstract void moveResourceResponse(int numberOfResourcesMoved, int indexFirstWarehouse, int indexSecondWarehouse);
+
+    public abstract void manageDisconnection(String playerName);
 }

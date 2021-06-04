@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.move.market;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.Resource;
@@ -90,6 +91,15 @@ public class MarketResponse extends MoveResponse {
         }
         else if(first>=0){
             match.marketMarbleConvertInteraction(first,second,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+        }
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        if(pos>=0) {// resource obtained
+            controller.manageResourceMarket(moveType,pos,getExecutePlayerPos());
+        } else if(first>=0){ // how to convert
+            controller.manageResourceMarketConvert(first,second,getExecutePlayerPos());
         }
     }
 

@@ -26,7 +26,7 @@ public class App extends Application {
         loader.setLocation(url);
         Parent root =loader.load();
         GenericController myController = loader.getController();
-        connection = new ClientConnection("127.0.0.1",  61046);
+        connection = new ClientConnection("127.0.0.1",  50732);
         myController.addObserver(connection);
         connection.addObserver(myController);
         connection.asyncReadFromSocket();

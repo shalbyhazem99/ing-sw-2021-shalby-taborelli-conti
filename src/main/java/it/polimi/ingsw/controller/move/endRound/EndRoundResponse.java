@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.endRound;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.Resource;
@@ -24,6 +25,11 @@ public class EndRoundResponse extends MoveResponse {
 
     public static EndRoundResponse getInstance(ArrayList<Player> players,int executePlayerPos, boolean correctlyEnded,int hashToVerify) {
         return new EndRoundResponse(players, executePlayerPos, correctlyEnded,hashToVerify);
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.manageEndTurn(correctlyEnded,getExecutePlayerPos());
     }
 
     @Override

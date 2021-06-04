@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.resourcePositioning;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.Resource;
@@ -43,6 +44,11 @@ public class PositioningResourcesResponse extends MoveResponse {
     @Override
     public void updateLocalMatch(Match match) {
         match.positioningResourcesInteraction(whereToPlace,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.manageResourceMarketPositioning(whereToPlace,getExecutePlayerPos());
     }
 
     @Override

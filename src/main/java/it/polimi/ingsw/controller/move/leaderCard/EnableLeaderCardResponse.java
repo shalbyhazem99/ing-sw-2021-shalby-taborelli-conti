@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
@@ -33,5 +34,10 @@ public class EnableLeaderCardResponse extends MoveResponse {
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
        System.out.println("Leader Card enabled");
        return null;
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.flipLeaderCard(leaderCardPosition,getExecutePlayerPos());
     }
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.move.development;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
@@ -42,5 +43,10 @@ public class BuyDevelopmentCardReponse extends MoveResponse {
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         return null;
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.buyDevelopmentCard(type,level,posToAdd,resourceToUse,getExecutePlayerPos());
     }
 }

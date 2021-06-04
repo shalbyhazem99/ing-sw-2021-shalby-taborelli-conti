@@ -222,6 +222,12 @@ public class MatchMulti extends Match implements Serializable {
     }
 
     public boolean hasWon() {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getDevelopmentCards().size() >= 7 || players.get(i).getPosFaithMarker() >= 24) {
+                this.enableFinalTurn();
+            }
+
+        }
         if (this.finalTurn) {
             if (turn == posInkwell) {
                 for (int i = 0; i < players.size(); i++) {
@@ -229,16 +235,6 @@ public class MatchMulti extends Match implements Serializable {
                 }
                 return true;
             }
-        }
-
-        //todo: Secondo me questa parte dovrebbe ritornare false, perchè anche se il giocatore vince ed è stato il primo deve esserci un giro in più
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getDevelopmentCards().size() >= 7 || players.get(i).getPosFaithMarker() >= 24) {
-                this.enableFinalTurn();
-                //todo:vedere cosa combina
-                return getdistPlayerFromInkwell(turn) == players.size()-1;
-            }
-
         }
         return false;
     }

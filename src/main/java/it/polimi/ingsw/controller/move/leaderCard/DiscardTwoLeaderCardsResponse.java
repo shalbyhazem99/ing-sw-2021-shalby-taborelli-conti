@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -34,6 +35,11 @@ public class DiscardTwoLeaderCardsResponse extends MoveResponse {
     @Override
     public void updateLocalMatch(Match match) {
 
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.askToDiscardTwoLeader(numOfResource,getExecutePlayerPos());
     }
 
     @Override

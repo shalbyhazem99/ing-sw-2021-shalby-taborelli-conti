@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.settings.resilience;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
@@ -29,6 +30,11 @@ public class DisconnectionResponse extends MoveResponse {
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         System.out.println(playerName+ "is offline");
         return null;
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.manageDisconnection(playerName);
     }
 
     @Override

@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.endMatch;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Winner;
@@ -24,6 +25,11 @@ public class EndMatchResponse extends MoveResponse {
     @Override
     public void updateLocalMatch(Match match) {
 
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.manageEndMatch();
     }
 
     @Override

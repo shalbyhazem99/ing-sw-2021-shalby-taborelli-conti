@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.move.moveResources;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.Resource;
@@ -39,6 +40,11 @@ public class MoveResourcesResponse extends MoveResponse {
     @Override
     public void updateLocalMatch(Match match) {
         match.MoveResourcesInteraction(indexFirstWarehouse,indexSecondWarehouse,numberOfResourcesMoved,numberOfResourcesMoved,match.getPlayerFromPosition(getExecutePlayerPos()),true);
+    }
+
+    @Override
+    public void elaborateGUI(GenericController controller) {
+        controller.moveResourceResponse(numberOfResourcesMoved,indexFirstWarehouse,indexSecondWarehouse);
     }
 
     @Override

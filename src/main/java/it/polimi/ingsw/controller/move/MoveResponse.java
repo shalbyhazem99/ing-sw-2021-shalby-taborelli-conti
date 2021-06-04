@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.move;
 
+import it.polimi.ingsw.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
@@ -31,6 +32,8 @@ public abstract class MoveResponse implements Serializable {
     }
 
     public abstract PlayerMove elaborateCliInput(final Scanner stdin, Match match);
+
+    public abstract void elaborateGUI(GenericController controller);
 
     public abstract void updateLocalMatch(Match match);
 }
