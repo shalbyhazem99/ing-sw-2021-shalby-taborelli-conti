@@ -175,6 +175,11 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return developmentCards[level.label][type.label].peek();
     }
 
+    public int getWhoAmI()
+    {
+        return whoAmI;
+    }
+
     public boolean getCanChangeTurn() {
         return canChangeTurn;
     }
@@ -735,6 +740,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         return winners;
     }
+
 
     public String toString() {
         String temp = "";

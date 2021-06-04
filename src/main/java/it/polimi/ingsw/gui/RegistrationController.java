@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.ClientConnection;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.settings.MessageMove;
+import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.observer.Observer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class RegistrationController extends GenericController {
 
+
     @FXML
     private TextArea textAreaName;
 
@@ -39,8 +41,10 @@ public class RegistrationController extends GenericController {
 
     @Override
     public void update(MoveResponse message) {
-
-
+        if(message instanceof SendModel)
+        {
+            match = ((SendModel) message).getMatch();
+        }
     }
 
     public void onClickPlay(MouseEvent mouseEvent) throws IOException {
@@ -52,4 +56,6 @@ public class RegistrationController extends GenericController {
     {
 
     }
+
+
 }

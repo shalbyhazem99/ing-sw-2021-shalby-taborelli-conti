@@ -20,6 +20,7 @@ public abstract class LeaderCard implements Serializable {
     //requirements
     protected final ArrayList<ResourcesCount> resourcesNeeded;
     protected final ArrayList<DevelopmentCardNeeded> developmentCardNeeded;
+    protected String image;
 
     /**
      * constructor of {@link LeaderCard}
@@ -78,6 +79,10 @@ public abstract class LeaderCard implements Serializable {
             return points;
         else
             return 0;
+    }
+
+    public String getImage(){
+        return image;
     }
 
     @Override

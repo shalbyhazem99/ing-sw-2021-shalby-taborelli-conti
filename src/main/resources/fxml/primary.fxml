@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<TabPane fx:id="tabpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="993.0" prefWidth="1255.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.PrimaryController">
+<TabPane fx:id="tabpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="993.0" prefWidth="1255.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.PrimaryController">
   <tabs>
     <Tab text="Untitled Tab 1">
       <content>
@@ -76,7 +73,10 @@
                         <Pane layoutX="772.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane layoutX="918.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane layoutX="299.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane layoutX="456.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="456.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Pane>
                         <Pane layoutX="649.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane layoutX="851.0" layoutY="185.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Circle fill="DODGERBLUE" layoutX="110.0" layoutY="319.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
@@ -92,12 +92,12 @@
                      <children>
                         <Pane layoutX="20.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="leadercard1" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" stylesheets="@../css/trydevcard.css" />
                            </children>
                         </Pane>
                         <Pane layoutX="220.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="leadercard2" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" stylesheets="@../css/trydevcard.css" />
                            </children>
                         </Pane>
                      </children>
@@ -238,19 +238,19 @@
                <children>
                   <Pane layoutX="272.0" layoutY="103.0" prefHeight="729.0" prefWidth="711.0" styleClass="wallpaper" stylesheets="@../css/tab2.css">
                      <children>
-                        <Circle fill="DODGERBLUE" layoutX="249.0" layoutY="323.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="249.0" layoutY="254.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="249.0" layoutY="184.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="322.0" layoutY="324.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="322.0" layoutY="255.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="322.0" layoutY="185.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="406.0" layoutY="324.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="406.0" layoutY="255.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="406.0" layoutY="185.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="325.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="256.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="186.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fill="DODGERBLUE" layoutX="479.0" layoutY="124.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_20" fill="DODGERBLUE" layoutX="249.0" layoutY="323.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_10" fill="DODGERBLUE" layoutX="249.0" layoutY="254.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_00" fill="DODGERBLUE" layoutX="249.0" layoutY="184.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_21" fill="DODGERBLUE" layoutX="322.0" layoutY="324.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_11" fill="DODGERBLUE" layoutX="322.0" layoutY="255.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_01" fill="DODGERBLUE" layoutX="322.0" layoutY="185.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_22" fill="DODGERBLUE" layoutX="406.0" layoutY="324.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_12" fill="DODGERBLUE" layoutX="406.0" layoutY="255.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_02" fill="#800012" layoutX="406.0" layoutY="185.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_23" fill="#1500ff" layoutX="479.0" layoutY="325.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_13" fill="#1fff4a" layoutX="479.0" layoutY="256.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_03" fill="RED" layoutX="479.0" layoutY="186.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="m_add" fill="#000307" layoutX="479.0" layoutY="124.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
                      </children>
                   </Pane>
                </children></AnchorPane>

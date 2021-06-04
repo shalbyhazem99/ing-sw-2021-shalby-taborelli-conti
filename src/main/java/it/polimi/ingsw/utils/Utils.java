@@ -3,11 +3,13 @@ package it.polimi.ingsw.utils;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.production.move.ResourceWarehouseType;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.market.MarbleColor;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -213,6 +215,29 @@ public class Utils {
         }
         str = str + "]";
         return str;
+    }
+
+    public static Color fromMarbleColorToJavaFXColor(MarbleColor marbleColor){
+        Color color = null;
+        if(marbleColor==MarbleColor.BLUE){
+            color = Color.AQUA;
+        }
+        else if(marbleColor==MarbleColor.RED){
+            color = Color.RED;
+        }
+        else if(marbleColor==MarbleColor.GREY){
+            color = Color.GREY;
+        }
+        else if(marbleColor==MarbleColor.PURPLE){
+            color = Color.PURPLE;
+        }
+        else if(marbleColor==MarbleColor.YELLOW){
+            color = Color.YELLOW;
+        }
+        else if(marbleColor==MarbleColor.WHITE){
+            color = Color.WHITE;
+        }
+        return color;
     }
 
 }

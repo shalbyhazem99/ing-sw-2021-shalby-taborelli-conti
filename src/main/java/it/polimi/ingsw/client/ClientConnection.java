@@ -62,12 +62,13 @@ public class ClientConnection extends Observable<MoveResponse> implements Observ
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
-                    if (inputObject instanceof MoveResponse) {
+                    if (inputObject instanceof SendModel) {
+                        ClientConnection.this.notify((SendModel) inputObject);
+                        System.out.println("Model received");
+                    }
+                    else if (inputObject instanceof MoveResponse) {
                         ClientConnection.this.notify((MoveResponse) inputObject);
                         System.out.println("new Object Received: \n" + inputObject.toString());
-                    }
-                    else if (inputObject instanceof SendModel) {
-                        notify((SendModel) inputObject);
                     }
                     else if(inputObject instanceof EndMatchResponse) {
 
