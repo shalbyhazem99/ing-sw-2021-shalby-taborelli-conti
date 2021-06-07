@@ -11,10 +11,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -106,11 +103,22 @@ public class Utils {
         return temp;
     }
 
+    public static ArrayList<Resource> fromResourcePickToResources(ArrayList<ResourcePick> res){
+        ArrayList<Resource> temp = new ArrayList<>();
+        for(ResourcePick r: res){
+            temp.add(Resource.getInstance(r.getResourceType()));
+        }
+        return temp;
+    }
 
     public static ResourceType[] getUsableResourcesType() {
         return Arrays.stream(ResourceType.values())
                 .filter(elem -> !(elem.equals(ResourceType.ANY) || elem.equals(ResourceType.FAITH)))
                 .collect(Collectors.toList()).toArray(ResourceType[]::new);
+    }
+
+    public static String mapResTypeToImage(ResourceType a){
+        return a.toString().toLowerCase(Locale.ROOT)+"_c";
     }
 
     /**
@@ -215,6 +223,23 @@ public class Utils {
         }
         str = str + "]";
         return str;
+    }
+
+    public static ResourceType getResourceTypeFromUrl(String s){
+        if(s.contains("coin")){
+            return ResourceType.COIN;
+        }
+        else if(s.contains("shield")){
+            return ResourceType.SHIELD;
+        }
+        else if(s.contains("servant")){
+            return ResourceType.SERVANT;
+        }
+        else if(s.contains("stone")){
+            return ResourceType.STONE;
+        }
+        return null;
+
     }
 
     public static Color fromMarbleColorToJavaFXColor(MarbleColor marbleColor){

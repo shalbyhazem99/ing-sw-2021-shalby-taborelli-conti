@@ -84,6 +84,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         //todo: to remove
         for (Player player : players) {
             ArrayList<ResourcesCount> aa = new ArrayList<>();
+            players.get(0).addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),0);
             aa.add(ResourcesCount.getInstance(10, ResourceType.COIN));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));
@@ -935,6 +936,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
 
     public Player getPlayerFromName(String playerName) {
         return players.stream().filter(elem -> elem.getName().equals(playerName)).findFirst().orElse(null);
+    }
+
+    public ArrayList<Resource> getPendingMarketResources(){
+        return pendingMarketResources;
     }
 
     public void ReconnectPlayer(String playerName, boolean noControl) {

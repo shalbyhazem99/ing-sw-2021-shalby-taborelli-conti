@@ -35,4 +35,16 @@ public class ResourcePick implements Serializable {
     public void setResourceType(ResourceType resourceType) {
         this.resourceType = resourceType;
     }
+
+    public void setResourceWarehouseType(ResourceWarehouseType resourceWarehouseType) {
+        this.resourceWarehouseType = resourceWarehouseType;
+    }
+
+    public void setWarehousePosition(int warehousePosition) {
+        this.warehousePosition = warehousePosition;
+    }
+
+    public String toString(){
+        return warehousePosition+","+resourceType;
+    }
 }

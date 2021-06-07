@@ -4,36 +4,61 @@ import it.polimi.ingsw.client.ClientConnection;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
+import it.polimi.ingsw.controller.move.production.move.ResourceWarehouseType;
+import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
 import it.polimi.ingsw.controller.move.settings.MessageMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import it.polimi.ingsw.model.market.Marble;
 import it.polimi.ingsw.model.market.MoveType;
+import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.utils.Utils;
+import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class PrimaryController extends GenericController {
 
+    private Stack<ResourcePick> pendingSelected;
+    private ArrayList<Boolean> runningActions;
+    private ArrayList<Resource> resToBePlaced;
 
     @FXML
     private TabPane tabpane;
@@ -68,8 +93,147 @@ public class PrimaryController extends GenericController {
     @FXML
     private Circle m_23;
     @FXML
-    private Pane[] leadercards;
+    private Circle[][] marketBoardObj;
+    @FXML
+    private Circle additionalMarble;
+    //--------------------------
 
+    @FXML
+    private Pane[] leadercards;
+    @FXML
+    private Pane devcard_00;
+    @FXML
+    private Pane devcard_01;
+    @FXML
+    private Pane devcard_02;
+    @FXML
+    private Pane devcard_03;
+    @FXML
+    private Pane devcard_10;
+    @FXML
+    private Pane devcard_11;
+    @FXML
+    private Pane devcard_12;
+    @FXML
+    private Pane devcard_13;
+    @FXML
+    private Pane devcard_20;
+    @FXML
+    private Pane devcard_21;
+    @FXML
+    private Pane devcard_22;
+    @FXML
+    private Pane devcard_23;
+    @FXML
+    private Pane[][] devcardmatrix;
+    @FXML
+    private TextFlow msgBox;
+
+    @FXML
+    private Pane btn_col_0;
+    @FXML
+    private Pane btn_col_1;
+    @FXML
+    private Pane btn_col_2;
+    @FXML
+    private Pane btn_col_3;
+    @FXML
+    private Pane btn_row_0;
+    @FXML
+    private Pane btn_row_1;
+    @FXML
+    private Pane btn_row_2;
+    @FXML
+    private Pane[] market_button;
+
+    //PENDING
+    @FXML
+    private Pane coin_pending;
+    @FXML
+    private Pane stone_pending;
+    @FXML
+    private Pane servant_pending;
+    @FXML
+    private Pane shield_pending;
+    @FXML
+    private Text coin_pending_text;
+    @FXML
+    private Text stone_pending_text;
+    @FXML
+    private Text servant_pending_text;
+    @FXML
+    private Text shield_pending_text;
+
+    //FAITH
+    @FXML
+    private Pane faith_0;
+    @FXML
+    private Pane faith_1;
+    @FXML
+    private Pane faith_2;
+    @FXML
+    private Pane faith_3;
+    @FXML
+    private Pane faith_4;
+    @FXML
+    private Pane faith_5;
+    @FXML
+    private Pane faith_6;
+    @FXML
+    private Pane faith_7;
+    @FXML
+    private Pane faith_8;
+    @FXML
+    private Pane faith_9;
+    @FXML
+    private Pane faith_10;
+    @FXML
+    private Pane faith_11;
+    @FXML
+    private Pane faith_12;
+    @FXML
+    private Pane faith_13;
+    @FXML
+    private Pane faith_14;
+    @FXML
+    private Pane faith_15;
+    @FXML
+    private Pane faith_16;
+    @FXML
+    private Pane faith_17;
+    @FXML
+    private Pane faith_18;
+    @FXML
+    private Pane faith_19;
+    @FXML
+    private Pane faith_20;
+    @FXML
+    private Pane faith_21;
+    @FXML
+    private Pane faith_22;
+    @FXML
+    private Pane faith_23;
+    @FXML
+    private Pane faith_24;
+    @FXML
+    private Pane[] faithArray;
+    @FXML
+    private Rectangle faith_player;
+
+    @FXML
+    private Pane ware_00;
+    @FXML
+    private Pane ware_10;
+    @FXML
+    private Pane ware_11;
+    @FXML
+    private Pane ware_20;
+    @FXML
+    private Pane ware_21;
+    @FXML
+    private Pane ware_22;
+    @FXML
+    private ArrayList<ArrayList<Pane>> warehousesStandard;
 
 
     @Override
@@ -78,14 +242,345 @@ public class PrimaryController extends GenericController {
         if(match!=null){
             message.updateLocalMatch(match);
         }
+        //TODO: UPDATE SUCCEDE QUI
         message.elaborateGUI(this);
-        System.out.println("Something");
     }
 
     public void initialization(){
+        pendingSelected = new Stack<>();
+        runningActions = new ArrayList<>();
+        resToBePlaced = new ArrayList<>();
+        for(int i = 0;i<5;i++){
+            runningActions.add(false);
+        }
+
         leadercards = new Pane[2];
         leadercards[0] = leadercard1;
         leadercards[1] = leadercard2;
+
+        devcardmatrix = new Pane[3][4];
+        devcardmatrix[0][0] = devcard_00;
+        devcardmatrix[0][1] = devcard_01;
+        devcardmatrix[0][2] = devcard_02;
+        devcardmatrix[0][3] = devcard_03;
+        devcardmatrix[1][0] = devcard_10;
+        devcardmatrix[1][1] = devcard_11;
+        devcardmatrix[1][2] = devcard_12;
+        devcardmatrix[1][3] = devcard_13;
+        devcardmatrix[2][0] = devcard_20;
+        devcardmatrix[2][1] = devcard_21;
+        devcardmatrix[2][2] = devcard_22;
+        devcardmatrix[2][3] = devcard_23;
+        attachEventsToCards();
+
+        market_button = new Pane[7];
+        market_button[0] = btn_col_0;
+        market_button[1] = btn_col_1;
+        market_button[2] = btn_col_2;
+        market_button[3] = btn_col_3;
+        market_button[4] = btn_row_0;
+        market_button[5] = btn_row_1;
+        market_button[6] = btn_row_2;
+
+        marketBoardObj = new Circle[3][4];
+        marketBoardObj[0][0] = m_00;
+        marketBoardObj[0][1] = m_01;
+        marketBoardObj[0][2] = m_02;
+        marketBoardObj[0][3] = m_03;
+        marketBoardObj[1][0] = m_10;
+        marketBoardObj[1][1] = m_11;
+        marketBoardObj[1][2] = m_12;
+        marketBoardObj[1][3] = m_13;
+        marketBoardObj[2][0] = m_20;
+        marketBoardObj[2][1] = m_21;
+        marketBoardObj[2][2] = m_22;
+        marketBoardObj[2][3] = m_23;
+        additionalMarble = m_add;
+
+        faithArray = new Pane[25];
+        faithArray[0] = faith_0;
+        faithArray[1] = faith_1;
+        faithArray[2] = faith_2;
+        faithArray[3] = faith_3;
+        faithArray[4] = faith_4;
+        faithArray[5] = faith_5;
+        faithArray[6] = faith_6;
+        faithArray[7] = faith_7;
+        faithArray[8] = faith_8;
+        faithArray[9] = faith_9;
+        faithArray[10] = faith_10;
+        faithArray[10] = faith_10;
+        faithArray[11] = faith_11;
+        faithArray[12] = faith_12;
+        faithArray[13] = faith_13;
+        faithArray[14] = faith_14;
+        faithArray[15] = faith_15;
+        faithArray[16] = faith_16;
+        faithArray[17] = faith_17;
+        faithArray[18] = faith_18;
+        faithArray[19] = faith_19;
+        faithArray[20] = faith_20;
+        faithArray[21] = faith_21;
+        faithArray[22] = faith_22;
+        faithArray[23] = faith_23;
+        faithArray[24] = faith_24;
+
+        warehousesStandard = new ArrayList<>();
+        warehousesStandard.add(new ArrayList<Pane>() {{
+            add(ware_00);
+        }});
+        warehousesStandard.add(new ArrayList<Pane>() {{
+            add(ware_10);
+            add(ware_11);
+        }});
+        warehousesStandard.add(new ArrayList<Pane>() {{
+            add(ware_20);
+            add(ware_21);
+            add(ware_22);
+        }});
+    }
+    public void attachEventsToCards(){
+        EventHandler<MouseEvent> eventHandler;
+        for(int i=0;i<2;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                eventHandler = new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ok hai cliccato ");
+                    }
+                };
+                //devcardmatrix[i][j].addEventFilter(MouseEvent.MOUSE_CLICKED,eventHandler);
+            }
+        }
+    }
+    /*
+        POSITIONING RESOURCE:
+        - Click on the resource -> add resource pick to pending array (with random target warehouse)
+        - Click on the target resource -> set correctyle the target
+     */
+    public void coin_pending_click(){
+        int val = Integer.parseInt(coin_pending_text.getText().replaceAll("\\D+",""));
+        switch (getRunningAction()){
+            case -1:{
+                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else{
+                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
+                    unsetOtherActions(1);
+                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.COIN));
+                    coin_pending_text.setText(--val+"x");
+                    System.out.println(new ArrayList<>(pendingSelected));
+
+                }
+                break;
+            }
+            case 1:{
+                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else {
+                    if(pendingSelected.peek().getWarehousePosition()==-1){
+                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
+                    }
+                    else{
+                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.COIN));
+                        coin_pending_text.setText(--val+"x");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                    }
+                }
+                break;
+            }
+        }
+    }
+    public void stone_pending_click(){
+        int val = Integer.parseInt(stone_pending_text.getText().replaceAll("\\D+",""));
+        switch (getRunningAction()){
+            case -1:{
+                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else{
+                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
+                    unsetOtherActions(1);
+                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.STONE));
+                    stone_pending_text.setText(--val+"x");
+                    System.out.println(new ArrayList<>(pendingSelected));
+                }
+                break;
+            }
+            case 1:{
+                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else {
+                    if(pendingSelected.peek().getWarehousePosition()==-1){
+                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
+                    }
+                    else{
+                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.STONE));
+                        stone_pending_text.setText(--val+"x");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                    }
+                }
+                break;
+            }
+        }
+    }
+    public void servant_pending_click(){
+        int val = Integer.parseInt(servant_pending_text.getText().replaceAll("\\D+",""));
+        switch (getRunningAction()){
+            case -1:{
+                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else{
+                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
+                    unsetOtherActions(1);
+                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SERVANT));
+                    servant_pending_text.setText(--val+"x");
+                    System.out.println(new ArrayList<>(pendingSelected));
+                }
+                break;
+            }
+            case 1:{
+                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else {
+                    if(pendingSelected.peek().getWarehousePosition()==-1){
+                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
+                    }
+                    else{
+                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SERVANT));
+                        servant_pending_text.setText(--val+"x");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                    }
+                }
+                break;
+            }
+        }
+    }
+    public void shield_pending_click(){
+        int val = Integer.parseInt(shield_pending_text.getText().replaceAll("\\D+",""));
+        switch (getRunningAction()){
+            case -1:{
+                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else{
+                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
+                    unsetOtherActions(1);
+                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SHIELD));
+                    shield_pending_text.setText(--val+"x");
+                    System.out.println(new ArrayList<>(pendingSelected));
+                }
+                break;
+            }
+            case 1:{
+                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
+                if(val==0){
+                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+                }
+                else {
+                    if(pendingSelected.peek().getWarehousePosition()==-1){
+                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
+                    }
+                    else{
+                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SHIELD));
+                        shield_pending_text.setText(--val+"x");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                    }
+                }
+                break;
+            }
+        }
+    }
+    public void abortAction(){
+        for(int p = 0;p<runningActions.size();p++){
+            if(runningActions.get(p)) {
+                revertAction(p);
+                runningActions.set(p, false);
+            }
+        }
+        Platform.runLater(() -> {
+            Alert dialog = new Alert(Alert.AlertType.INFORMATION, "Action correctly aborted", ButtonType.OK);
+            dialog.show();
+        });
+    }
+    private void revertAction(int i){
+        switch (i) {
+            case 1: {
+                //POSITIONING RESOURCE ==> GIVE BACK REOSURCE TO PENDING MARKET
+                for(ResourcesCount r: Utils.fromResourcesToResourceCount(Utils.fromResourcePickToResources(new ArrayList<>(pendingSelected)))){
+                    switch(r.getType()){
+                        case COIN:{
+                            int n = Integer.parseInt(coin_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
+                            coin_pending_text.setText(n+"x");
+                            break;
+                        }
+                        case STONE:{
+                            int n = Integer.parseInt(stone_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
+                            stone_pending_text.setText(n+"x");
+                            break;
+                        }
+                        case SHIELD:{
+                            int n = Integer.parseInt(shield_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
+                            shield_pending_text.setText(n+"x");
+                            break;
+                        }
+                        case SERVANT:{
+                            int n = Integer.parseInt(servant_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
+                            servant_pending_text.setText(n+"x");
+                            break;
+                        }
+                    }
+                }
+                pendingSelected = new Stack<>();
+                mapWarehouses();
+                break;
+            }
+        }
+    }
+    private boolean isRunning(int i){
+        return runningActions.get(i);
+    }
+    private int getRunningAction(){
+        for(int i = 0;i<runningActions.size();i++){
+            if(runningActions.get(i)){
+                return i;
+            }
+        }
+        return -1;
+    }
+    public void unsetOtherActions(int i){
+        for(int p = 0;p<runningActions.size();p++){
+            if(i!=p){
+                runningActions.set(p,false);
+            }
+            else{
+                runningActions.set(p,true);
+            }
+        }
+    }
+    private boolean isLastPositioning(){
+        return new ArrayList<>(pendingSelected).stream().filter(el->el.getWarehousePosition()!=-1).count() == resToBePlaced.size();
+    }
+    private void runDialog(Alert.AlertType type,String message){
+        Platform.runLater(() -> {
+            Alert dialog = new Alert(type, message, ButtonType.OK);
+            dialog.show();
+        });
+
     }
 
     @Override
@@ -98,6 +593,23 @@ public class PrimaryController extends GenericController {
         // new Image(url)
         mapLeaderCards();
         mapMarbles();
+        mapWarehouses();
+    }
+
+    public void mapWarehouses(){
+        mapWarehousesStandard();
+        mapWarehousesAdditional();
+    }
+    public void mapWarehousesStandard(){
+        unsetAllBackgroundWarehouseStandard();
+        for(int i = 0;i<3;i++){
+            for(int j=0;j<match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResources().size();j++){
+                changeImage(warehousesStandard.get(i).get(j),Utils.mapResTypeToImage(match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResourceType()),"resources/");
+            }
+        }
+    }
+    public void mapWarehousesAdditional(){
+
     }
 
     public void mapMarbles(){
@@ -117,14 +629,312 @@ public class PrimaryController extends GenericController {
     }
 
     public void mapLeaderCards(){
-        changeImage(leadercards[0],match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(0).getImage());
-        changeImage(leadercards[1],match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(1).getImage());
+        changeImage(leadercards[0],match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(0).getImage(),"devcard_leadercard/");
+        changeImage(leadercards[1],match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(1).getImage(),"devcard_leadercard/");
     }
 
-    public void changeImage(Pane p,String s){
+    public void warehouse00Clicked(){
+        switch (getRunningAction()) {
+            case -1: {
+                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+
+                break;
+            }
+            case 1: {
+                //WE'RE INSIDE A POSITIONING
+                Background s = ware_00.getBackground();
+                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),0)){
+                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
+                    return;
+                }
+                if(ware_00.getBackground()==null){
+                    if(pendingSelected.peek().getWarehousePosition()!=-1){
+                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                    }
+                    else {
+                        pendingSelected.peek().setWarehousePosition(0);
+                        changeImage(ware_00,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                        if(isLastPositioning()){
+                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                            sendPlaceResourceMove();
+                        }
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                }
+                break;
+            }
+        }
+    }
+    public void warehouse10Clicked(){
+        switch (getRunningAction()) {
+            case -1: {
+                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+
+                break;
+            }
+            case 1: {
+                //WE'RE INSIDE A POSITIONING
+                Background s = ware_10.getBackground();
+                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),1)){
+                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
+                    return;
+                }
+                if(ware_10.getBackground()==null){
+                    if(pendingSelected.peek().getWarehousePosition()!=-1){
+                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                    }
+                    else{
+                        pendingSelected.peek().setWarehousePosition(1);
+                        changeImage(ware_10,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                        if(isLastPositioning()){
+                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                            sendPlaceResourceMove();
+                        }
+                    }
+
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                }
+                break;
+            }
+        }
+    }
+    public void warehouse11Clicked(){
+        switch (getRunningAction()) {
+            case -1: {
+                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+
+                break;
+            }
+            case 1: {
+                //WE'RE INSIDE A POSITIONING
+                Background s = ware_11.getBackground();
+                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),1)){
+                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
+                    return;
+                }
+                if(ware_11.getBackground()==null){
+                    if(pendingSelected.peek().getWarehousePosition()!=-1){
+                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                    }
+                    else{
+                        pendingSelected.peek().setWarehousePosition(1);
+                        changeImage(ware_11,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                        if(isLastPositioning()){
+                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                            sendPlaceResourceMove();
+                        }
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                }
+                break;
+            }
+        }
+    }
+    public void warehouse20Clicked(){
+        switch (getRunningAction()) {
+            case -1: {
+                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+
+                break;
+            }
+            case 1: {
+                //WE'RE INSIDE A POSITIONING
+                Background s = ware_20.getBackground();
+                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),2)){
+                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
+                    return;
+                }
+                if(ware_20.getBackground()==null){
+                    if(pendingSelected.peek().getWarehousePosition()!=-1){
+                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                    }
+                    else {
+                        pendingSelected.peek().setWarehousePosition(2);
+                        changeImage(ware_20, Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()), "resources/");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                        if(isLastPositioning()){
+                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                            sendPlaceResourceMove();
+                        }
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                }
+                break;
+            }
+        }
+    }
+    public void warehouse21Clicked(){
+        switch (getRunningAction()) {
+            case -1: {
+                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+
+                break;
+            }
+            case 1: {
+                //WE'RE INSIDE A POSITIONING
+                Background s = ware_21.getBackground();
+                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),2)){
+                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
+                    return;
+                }
+                if(ware_21.getBackground()==null){
+                    if(pendingSelected.peek().getWarehousePosition()!=-1){
+                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                    }
+                    else{
+                        pendingSelected.peek().setWarehousePosition(2);
+                        changeImage(ware_21,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                        if(isLastPositioning()){
+                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                            sendPlaceResourceMove();
+                        }
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                }
+                break;
+            }
+        }
+    }
+    public void warehouse22Clicked(){
+        switch (getRunningAction()) {
+            case -1: {
+                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+
+                break;
+            }
+            case 1: {
+                //WE'RE INSIDE A POSITIONING
+                Background s = ware_22.getBackground();
+                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),2)){
+                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
+                    return;
+                }
+                if(ware_22.getBackground()==null){
+                    if(pendingSelected.peek().getWarehousePosition()!=-1){
+                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                    }
+                    else{
+                        pendingSelected.peek().setWarehousePosition(2);
+                        changeImage(ware_22,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
+                        System.out.println(new ArrayList<>(pendingSelected));
+                        if(isLastPositioning()){
+                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                            sendPlaceResourceMove();
+                        }
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                }
+                break;
+            }
+        }
+    }
+
+    public void binClicked(){
+        switch (getRunningAction()) {
+            case -1: {
+                //NOTHING
+
+                break;
+            }
+            case 1: {
+                if(pendingSelected.peek().getWarehousePosition()!=-1){
+                    runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                }
+                else {
+                    pendingSelected.peek().setWarehousePosition(6); //6 = DISCARD
+                    System.out.println(new ArrayList<>(pendingSelected));
+                    if(isLastPositioning()){
+                        runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                        sendPlaceResourceMove();
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void sendPlaceResourceMove(){
+        runningActions.set(1,false);
+        //map respick to integer
+        ArrayList<Integer> whereToBePlaced = new ArrayList<>();
+        ArrayList<ResourcePick> whereArePlaced = new ArrayList<>(pendingSelected);
+        for (Resource r:resToBePlaced) {
+            for(int i = 0;i<pendingSelected.size();i++){
+                if(r.getType()==pendingSelected.get(i).getResourceType()){
+                    whereToBePlaced.add(pendingSelected.get(i).getWarehousePosition());
+                    System.out.println("Place a "+r.getType()+ " in : "+pendingSelected.get(i).getWarehousePosition());
+                    pendingSelected.remove(i);
+                }
+            }
+        }
+
+        try {
+            notify(PositioningResourcesPlayerMove.getInstance(whereToBePlaced));
+        }catch(Exception e){
+            //todo: what do we do?
+        }
+        pendingSelected = new Stack<>();
+        resToBePlaced = new ArrayList<>();
+    }
+
+    private boolean checkForTypeCorrectness(ResourceType resourceType, int where){
+        //check 3 warehouses rule
+        //TODO: warehouse addizionali
+        for(int i=0;i<warehousesStandard.size();i++){
+            for(int j=0;j<warehousesStandard.get(i).size();j++){
+                try{
+                    ResourceType res = Utils.getResourceTypeFromUrl(warehousesStandard.get(i).get(j).getBackground().getImages().get(0).getImage().getUrl());
+                    if(res==resourceType && where!=i){
+                        return false;
+                    }
+                }catch (Exception e){
+                    //è vuoto
+                }
+            }
+        }
+        //check warehouse correctness
+        for(int j=0;j<warehousesStandard.get(where).size();j++){
+            try{
+                ResourceType res = Utils.getResourceTypeFromUrl(warehousesStandard.get(where).get(j).getBackground().getImages().get(0).getImage().getUrl());
+                if(res!=resourceType){
+                    //trying to add to warehouse with different types
+                    return false;
+                }
+            }catch (Exception e){
+                //è vuoto
+            }
+        }
+        return true;
+    }
+
+    private void unsetAllBackgroundWarehouseStandard(){
+        for(int i = 0;i<3;i++){
+            for(int j=0;j<warehousesStandard.get(i).size();j++){
+                warehousesStandard.get(i).get(j).setBackground(null);
+            }
+        }
+    }
+
+    public void changeImage(Pane p,String s,String type){
         URL url = null;
         try{
-            url = new File("src/main/resources/images/devcard_leadercard/"+s+".png").toURI().toURL();
+            url = new File("src/main/resources/images/"+type+s+".png").toURI().toURL();
         }catch (Exception e){}
         Image image = new Image(url.toString());
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
@@ -133,7 +943,6 @@ public class PrimaryController extends GenericController {
         p.setBackground(r);
     }
 
-    //forse non serve metterlo in generic controller?
     @Override
     public void changeView(String fxml, ClientConnection clientConnection) throws IOException {
         super.changeView(fxml, clientConnection);
@@ -166,8 +975,172 @@ public class PrimaryController extends GenericController {
 
     @Override
     public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos) {
+        //BEGIN ANIMATION
+        ArrayList<TranslateTransition> translateTransitionArray = new ArrayList<>();
+        final double duration = 1;
+        TranslateTransition temp,t2,t3;
+        ParallelTransition parallelTransition = new ParallelTransition();
+        ParallelTransition parallelTransitionDouble = new ParallelTransition();
+        SequentialTransition sequentialTransition = new SequentialTransition();
 
+        if(moveType==MoveType.COLUMN)
+        {
+            t2 = new TranslateTransition(
+                    Duration.seconds(duration), additionalMarble
+            );
+            t3 = new TranslateTransition(
+                    Duration.seconds(duration), additionalMarble
+            );
+            t2.setByY(210);
+            t3.setByX(-1*(3-pos)*80);
+            System.out.println(marketBoardObj[0][pos].getLayoutX()-additionalMarble.getLayoutX());
+            parallelTransitionDouble.getChildren().add(t2);
+            parallelTransitionDouble.getChildren().add(t3);
+            sequentialTransition.getChildren().add(parallelTransitionDouble);
+            for(int i = 2;i>=0;i--)
+            {
+                temp = new TranslateTransition(
+                        Duration.seconds(duration), marketBoardObj[i][pos]
+                );
+                temp.setByY(-70);
+                parallelTransition.getChildren().add(temp);
+            }
+            temp = new TranslateTransition(
+                    Duration.seconds(duration), marketBoardObj[0][pos]
+            );
+            temp.setByX((3-pos)*80);
+            sequentialTransition.getChildren().add(parallelTransition);
+            sequentialTransition.getChildren().add(temp);
+            sequentialTransition.play();
+            slideColumn(pos);
+        }
+        else
+        {
+            t2 = new TranslateTransition(
+                    Duration.seconds(duration), additionalMarble
+            );
+            t3 = new TranslateTransition(
+                    Duration.seconds(duration), additionalMarble
+            );
+            t2.setByY((pos+1)*70);
+            t3.setByX(80);
+            System.out.println(marketBoardObj[0][pos].getLayoutX()-additionalMarble.getLayoutX());
+            parallelTransitionDouble.getChildren().add(t2);
+            parallelTransitionDouble.getChildren().add(t3);
+            sequentialTransition.getChildren().add(parallelTransitionDouble);
+            for(int i = 3;i>=0;i--)
+            {
+                temp = new TranslateTransition(
+                        Duration.seconds(duration), marketBoardObj[pos][i]
+                );
+                temp.setByX(-80);
+                parallelTransition.getChildren().add(temp);
+            }
+            temp = new TranslateTransition(
+                    Duration.seconds(duration), additionalMarble
+            );
+            temp.setByX(-80);
+            parallelTransition.getChildren().add(temp);
+            temp = new TranslateTransition(
+                    Duration.seconds(duration), marketBoardObj[pos][0]
+            );
+            temp.setByX(4*80);
+            temp.setByY(-1*(pos+1)*70);
+            sequentialTransition.getChildren().add(parallelTransition);
+            sequentialTransition.getChildren().add(temp);
+            sequentialTransition.play();
+            slideRow(pos);
+        }
+        updateMarketResource();
+        updateFaith(executePlayerPos);
+        print();
     }
+
+    private void updateMarketResource(){
+        ArrayList<ResourcesCount> res = Utils.fromResourcesToResourceCount(match.getPendingMarketResources());
+        resToBePlaced = match.getPendingMarketResources();
+        for(ResourcesCount r: res){
+            switch (r.getType()){
+                case COIN:{
+                    coin_pending_text.setText(r.getCount()+"x");
+                    break;
+                }
+                case STONE:{
+                    stone_pending_text.setText(r.getCount()+"x");
+                    break;
+                }
+                case SERVANT:{
+                    servant_pending_text.setText(r.getCount()+"x");
+                    break;
+                }
+                case SHIELD:{
+                    shield_pending_text.setText(r.getCount()+"x");
+                    break;
+                }
+                default: break;
+            }
+        }
+    }
+    private void updateFaith(int index){
+        System.out.println("Vai a > "+faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX()+", "+faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY());
+        faith_player.setLayoutX(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX()+10);
+        faith_player.setLayoutY(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY()+10);
+    }
+    private void slideRow(int row) {
+        Circle additionalMarbleTemp = additionalMarble;
+        this.additionalMarble = marketBoardObj[row][0]; //the marble in the left position of the row will be the next additionalMarble
+        marketBoardObj[row][0] = marketBoardObj[row][1]; //slide to left
+        marketBoardObj[row][1] = marketBoardObj[row][2]; //slide to left
+        marketBoardObj[row][2] = marketBoardObj[row][3]; //slide to left
+        marketBoardObj[row][3] = additionalMarbleTemp; //the old additional marble will be the marble in the right position of the row
+    }
+    private void slideColumn(int column) {
+        Circle additionalMarbleTemp = additionalMarble;
+        this.additionalMarble = marketBoardObj[0][column]; //the marble in the top position of the column will be the next additionalMarble
+        marketBoardObj[0][column] = marketBoardObj[1][column]; //slide top
+        marketBoardObj[1][column] = marketBoardObj[2][column]; //slide top
+        marketBoardObj[2][column] = additionalMarbleTemp;;  //the old additional marble will be the marble in the bottom position of the column
+    }
+    private String print(){
+        System.out.println(change(additionalMarble.getFill().toString()));
+        for(int i =0;i<3;i++)
+        {
+            for(int j=0;j<4;j++)
+            {
+                System.out.print(change(marketBoardObj[i][j].getFill().toString())+"\t");
+            }
+            System.out.println();
+        }
+        return null;
+    }
+    private String change(String s){
+        if(s.equals(Color.RED.toString()))
+        {
+            return "RED";
+        }
+        else if(s.equals(Color.AQUA.toString()))
+        {
+            return "AQ";
+        }
+        else if(s.equals(Color.WHITE.toString()))
+        {
+            return "WH";
+        }
+        else if(s.equals(Color.GREY.toString()))
+        {
+            return "GR";
+        }
+        else if(s.equals(Color.PURPLE.toString()))
+        {
+            return "PU";
+        }
+        else if(s.equals(Color.YELLOW.toString()))
+        {
+            return "YE";
+        }
+        return null;
+    }
+
 
     @Override
     public void manageResourceMarketConvert(int first, int second, int executePlayerPos) {
@@ -176,7 +1149,8 @@ public class PrimaryController extends GenericController {
 
     @Override
     public void manageAllowedMoves(ArrayList<MovePlayerType> possibleMove) {
-
+        enableMove(possibleMove);
+        System.out.println("manage");
     }
 
     @Override
@@ -242,5 +1216,52 @@ public class PrimaryController extends GenericController {
     @Override
     public void manageDisconnection(String playerName) {
 
+    }
+
+    public void playSound(String sound){
+        //Shalby's code, solo nome senza .wav
+    }
+
+    public void clickCol3(){
+        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,3));
+    }
+    public void clickCol2(){
+        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,2));
+    }
+    public void clickCol1(){
+        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,1));
+    }
+    public void clickCol0(){
+        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,0));
+    }
+    public void clickRow2(){
+        notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,2));
+    }
+    public void clickRow1(){
+        notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,1));
+    }
+    public void clickRow0(){
+        notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,0));
+    }
+
+
+    public void enableMove(ArrayList<MovePlayerType> moves){
+        Cursor c = null;
+        boolean dis = false;
+        //Market Interaction
+        if(moves.contains(MovePlayerType.MARKET_INTERACTION))
+        {
+            c = Cursor.HAND;
+            dis = false;
+        }
+        else
+        {
+            c = Cursor.CROSSHAIR;
+            dis = true;
+        }
+        for (Pane p: market_button) {
+            p.setCursor(c);
+            p.setDisable(dis);
+        }
     }
 }
