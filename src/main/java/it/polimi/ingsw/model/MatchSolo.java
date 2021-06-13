@@ -70,11 +70,7 @@ public class MatchSolo extends Match implements Serializable {
         actionTokens.add(temp);
         return temp;
     }
-    public static void main (String [] args)
-    {
-        MatchSolo m = new MatchSolo();
-        m.pickActionToken();
-    }
+
 
     /**
      * The method move the black cross ahead in the Faith's path
@@ -108,7 +104,6 @@ public class MatchSolo extends Match implements Serializable {
 
 
     //todo: lo abbiamo mai usato?
-
     /**
      * This method will discard from the {@link DevelopmentCard} matrix the requested amount of cards of a certain {@link DevelopmentCardType}
      * the method will try to discard LVL 1 cards, otherwise LVL 2 cards otherwise LVL 3 cards

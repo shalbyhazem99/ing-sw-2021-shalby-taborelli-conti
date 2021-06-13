@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
+import it.polimi.ingsw.model.resource.ResourceType;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -66,7 +70,7 @@ public class MatchSoloTest extends TestCase {
         assertEquals(0, matchSolo.getPosBlackCross());
 
         //Testing the movement between the tales 1 and 24
-        matchSolo.moveAheadBlackCross(2);
+        assertEquals(2, matchSolo.moveAheadBlackCross(2));
         assertEquals(2, matchSolo.getPosBlackCross());
 
         //Testing when the Black Cross goes further than the 24
@@ -87,12 +91,6 @@ public class MatchSoloTest extends TestCase {
     public void testIsMyTurn() {
         MatchSolo matchSolo = new MatchSolo();
         assertTrue(matchSolo.isMyTurn(matchSolo.getCurrentPlayer()));
-    }
-
-    //todo: inventarsi qualcosa per testare
-    @Test
-    public void testEndInteraction() {
-
     }
 
     /**
@@ -148,7 +146,7 @@ public class MatchSoloTest extends TestCase {
         matchSolo.moveAheadBlackCross(4);
         assertEquals("Lorenzo move ahead of " + 2 + " passes\n", matchSolo.executeAction(ActionToken.getInstance(MarkerType.MOVE, 2, null), matchSolo.getCurrentPlayer(), true));
         assertEquals(9, matchSolo.getPosBlackCross());
-        assertEquals(null, matchSolo.getCurrentPlayer().getPopeFavorTiles().get(0));
+        assertNull(matchSolo.getCurrentPlayer().getPopeFavorTiles().get(0));
 
         //CASE:ACTIVATION
         matchSolo.getCurrentPlayer().moveAheadFaith(13);
@@ -156,8 +154,62 @@ public class MatchSoloTest extends TestCase {
         assertEquals("Lorenzo move ahead of " + 2 + " passes\n", matchSolo.executeAction(ActionToken.getInstance(MarkerType.MOVE, 2, null), matchSolo.getCurrentPlayer(), true));
         assertEquals(16, matchSolo.getPosBlackCross());
         assertEquals(3, matchSolo.getCurrentPlayer().getPopeFavorTiles().get(1).getPoints());
+
+        //CASE: BLACK CROSS REACHES POS 24
+        matchSolo.moveAheadBlackCross(6);
+        assertEquals("Lorenzo move ahead of " + 2 + " passes\n", matchSolo.executeAction(ActionToken.getInstance(MarkerType.MOVE, 2, null), matchSolo.getCurrentPlayer(), true));
+        assertEquals(24, matchSolo.getPosBlackCross());
+        assertNull(matchSolo.getCurrentPlayer().getPopeFavorTiles().get(2));
+
+        //REMAINING MOVE CASE
+        MatchSolo matchSolo1 = new MatchSolo();
+        matchSolo1.addPlayer(Player.getInstance("Tester"));
+        matchSolo1.startMatch();
+
+        //Case: Black Cross reaches 8 and the first Pope's Tale of the player is activated
+        matchSolo1.moveAheadBlackCross(7);
+        matchSolo1.getCurrentPlayer().moveAheadFaith(7);
+        assertEquals("Lorenzo move ahead of " + 2 + " passes\n", matchSolo1.executeAction(ActionToken.getInstance(MarkerType.MOVE, 2, null), matchSolo1.getCurrentPlayer(), true));
+        assertEquals(9, matchSolo1.getPosBlackCross());
+        assertEquals(2, matchSolo1.getCurrentPlayer().getPopeFavorTiles().get(0).getPoints());
+        //Case: BlackCross reaches 16 and the second Pope's Tale is deactivated
+        matchSolo1.moveAheadBlackCross(6);
+        assertEquals("Lorenzo move ahead of " + 2 + " passes\n", matchSolo1.executeAction(ActionToken.getInstance(MarkerType.MOVE, 2, null), matchSolo1.getCurrentPlayer(), true));
+        assertEquals(17, matchSolo1.getPosBlackCross());
+        assertNull(matchSolo1.getCurrentPlayer().getPopeFavorTiles().get(1));
+        //Case: Black Cross reaches 24 and the third Pope's Tale is activated
+        matchSolo1.getCurrentPlayer().moveAheadFaith(13);
+        matchSolo1.moveAheadBlackCross(6);
+        assertEquals("Lorenzo move ahead of " + 2 + " passes\n", matchSolo1.executeAction(ActionToken.getInstance(MarkerType.MOVE, 2, null), matchSolo1.getCurrentPlayer(), true));
+        assertEquals(24, matchSolo1.getPosBlackCross());
+        assertEquals(4, matchSolo1.getCurrentPlayer().getPopeFavorTiles().get(2).getPoints());
     }
 
+    //todo: togliere le linee commentate quando si saranno tolte le risorse in più per testare il gioco
+    /**
+     * Testing the phase of early game in which the {@link Player} discards 2 {@link LeaderCard}
+     */
+    @Test
+    public void testDiscardTwoLeaderCard(){
+        Match matchSolo = new MatchSolo();
+        matchSolo.addPlayer(Player.getInstance("Player1"));
+        matchSolo.startMatch();
+        int leaderCard2 = matchSolo.getCurrentPlayer().getLeaderCards().get(2).hashCode();
+        int leaderCard3 = matchSolo.getCurrentPlayer().getLeaderCards().get(3).hashCode();
+        assertEquals(4, matchSolo.getCurrentPlayer().getLeaderCards().size());
+        //assertEquals(0, matchSolo.getCurrentPlayer().getResources().size());
+        matchSolo.discardTwoLeaderCardInteraction(2,3, matchSolo.getCurrentPlayer(), ResourceType.COIN, ResourceType.SERVANT);
+        assertEquals(2, matchSolo.getCurrentPlayer().getLeaderCards().size());
+        //assertEquals(0, matchSolo.getCurrentPlayer().getResources().size());
+        for (int i = 0; i < 2; i++) {
+            assertTrue(matchSolo.getCurrentPlayer().getLeaderCards().get(i).hashCode() != leaderCard2);
+            assertTrue(matchSolo.getCurrentPlayer().getLeaderCards().get(i).hashCode() != leaderCard3);
+        }
+    }
+
+    /**
+     * Testing the cases when the {@link Player} loses against the Black Cross
+     */
     @Test
     public void testHasLose(){
         MatchSolo matchSolo = new MatchSolo();
@@ -171,5 +223,35 @@ public class MatchSoloTest extends TestCase {
             matchSolo.executeAction(ActionToken.getInstance(MarkerType.DISCARD, 2, DevelopmentCardType.PURPLE), matchSolo.getCurrentPlayer(), true);
         }
         assertTrue(matchSolo.hasLose());
+    }
+
+    /**
+     * Testing the condition when the {@link Player} has won
+     */
+    @Test
+    public void testHasWon(){
+        MatchSolo matchSolo = new MatchSolo();
+        matchSolo.addPlayer(Player.getInstance("Player1"));
+        //asserting the normal way
+        assertFalse(matchSolo.hasWon());
+
+        //Testing the the Player reaches 24
+        matchSolo.getCurrentPlayer().moveAheadFaith(24);
+        assertTrue(matchSolo.hasWon());
+
+        //Testing the winning case when Player buys the 7th DevelopmentCard
+        matchSolo.getCurrentPlayer().moveAheadFaith(-3);
+        matchSolo.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, DevelopmentCardType.YELLOW, 3, null, null), 0);
+        matchSolo.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, DevelopmentCardType.PURPLE, 3, null, null), 1);
+        matchSolo.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, DevelopmentCardType.GREEN, 3, null, null), 2);
+        matchSolo.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, DevelopmentCardType.YELLOW, 3, null, null), 0);
+        matchSolo.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, DevelopmentCardType.PURPLE, 3, null, null), 1);
+        matchSolo.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, DevelopmentCardType.GREEN, 3, null, null), 2);
+        matchSolo.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, DevelopmentCardType.GREEN, 3, null, null), 2);
+        assertTrue(matchSolo.hasWon());
+
+        //Testing when both of the winning way are true
+        matchSolo.getCurrentPlayer().moveAheadFaith(3);
+        assertTrue(matchSolo.hasWon());
     }
 }

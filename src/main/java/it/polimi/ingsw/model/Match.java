@@ -137,6 +137,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return players;
     }
 
+    //todo:never used
     /**
      * Method to get a shallow copy of the {@link LeaderCard}'s {@link ArrayList}
      *
@@ -214,6 +215,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         this.whoAmI = whoAmI;
     }
 
+    //todo:never used
     //TODO pensare a come ridefinire l'equals, possiamo mettere un nickname che deve essere univoco, quindi dovrei fare un ulteriore controllo in addplayer
     //TODO noi scegliamo di fare la persistenza, se sì l'utente va eliminato dopo x turni che non accede?
     public boolean removeDisconnectedPlayer(Player toRemove) {

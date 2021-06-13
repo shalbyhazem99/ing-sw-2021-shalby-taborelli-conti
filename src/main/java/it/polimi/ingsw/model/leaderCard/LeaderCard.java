@@ -81,6 +81,22 @@ public abstract class LeaderCard implements Serializable {
             return 0;
     }
 
+    /**
+     *
+     * @return an ArrayList of {@link Resource} needed to activate the {@link LeaderCard}
+     */
+    public ArrayList<Resource> getResourcesNeeded(){
+        ArrayList<Resource> resourceArrayList = new ArrayList<>();
+        if (this.resourcesNeeded.size()!=0){
+            for (int i = 0; i < this.resourcesNeeded.size(); i++) {
+                for (int j = 0; j < this.resourcesNeeded.get(i).getCount(); j++) {
+                    resourceArrayList.add(Resource.getInstance(this.getResourcesNeeded().get(i).getType()));
+                }
+            }
+        }
+        return resourceArrayList;
+    }
+
     public String getImage(){
         return image;
     }
