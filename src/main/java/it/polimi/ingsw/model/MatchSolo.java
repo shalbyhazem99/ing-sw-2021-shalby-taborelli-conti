@@ -103,7 +103,7 @@ public class MatchSolo extends Match implements Serializable {
      * The method shuffles the action tokens list
      */
     public void shuffleActionTokens() {
-        Collections.shuffle(actionTokens);
+        try{Collections.shuffle(actionTokens);}catch (Exception e){}
     }
 
 

@@ -16,13 +16,13 @@
                      <children>
                         <TextFlow fx:id="msgBox" layoutX="8.0" layoutY="5.0" prefHeight="33.0" prefWidth="1232.0" />
                      </children></Pane>
-                  <Pane layoutX="141.0" layoutY="55.0" prefHeight="585.0" prefWidth="997.0" styleClass="punch" stylesheets="@../css/punch.css">
+                  <Pane layoutX="142.0" layoutY="55.0" prefHeight="585.0" prefWidth="997.0" styleClass="punch" stylesheets="@../css/punch.css">
                      <children>
                         <StackPane layoutX="393.0" layoutY="250.0">
                            <children>
                               <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                                  <children>
-                                    <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                                    <Pane fx:id="card_space_0" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                                  </children>
                               </Pane>
                            </children>
@@ -31,7 +31,7 @@
                            <children>
                               <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                                  <children>
-                                    <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                                    <Pane fx:id="card_space_1" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                                  </children>
                               </Pane>
                            </children>
@@ -40,12 +40,34 @@
                            <children>
                               <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                                  <children>
-                                    <Pane layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                                    <Pane fx:id="card_space_2" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                                  </children>
                               </Pane>
                            </children>
                         </StackPane>
-                        <Pane layoutX="32.0" layoutY="439.0" prefHeight="109.0" prefWidth="160.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane layoutX="32.0" layoutY="439.0" prefHeight="109.0" prefWidth="160.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                           <children>
+                              <Text fx:id="stone_strongbox_text" layoutX="13.0" layoutY="31.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                 <font>
+                                    <Font name="Algerian" size="12.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="coin_strongbox_text" layoutX="91.0" layoutY="31.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                 <font>
+                                    <Font name="Algerian" size="12.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="shield_strongbox_text" layoutX="91.0" layoutY="84.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                 <font>
+                                    <Font name="Algerian" size="12.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="servant_strongbox_text" layoutX="13.0" layoutY="85.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                 <font>
+                                    <Font name="Algerian" size="12.0" />
+                                 </font>
+                              </Text>
+                           </children></Pane>
                         <Pane fx:id="faith_0" layoutX="39.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane fx:id="faith_1" layoutX="88.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane fx:id="faith_2" layoutX="136.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
@@ -72,12 +94,12 @@
                         <Pane fx:id="faith_23" layoutX="869.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane fx:id="faith_24" layoutX="918.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane layoutX="299.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane layoutX="456.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                        <Pane fx:id="button_card_space_0" layoutX="456.0" layoutY="183.0" onMouseClicked="#button_card_space_0_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor></Pane>
-                        <Pane layoutX="649.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane layoutX="851.0" layoutY="185.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="button_card_space_1" layoutX="649.0" layoutY="183.0" onMouseClicked="#button_card_space_1_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="button_card_space_2" layoutX="851.0" layoutY="185.0" onMouseClicked="#button_card_space_2_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane layoutX="496.0" layoutY="50.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Pane layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
@@ -125,6 +147,10 @@
                            <font>
                               <Font name="Algerian" size="12.0" />
                            </font></Text>
+                        <Pane fx:id="stone_strongbox" layoutX="79.0" layoutY="-194.0" onMouseClicked="#stone_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="stone" stylesheets="@../css/resources.css" />
+                        <Pane fx:id="coin_strongbox" layoutX="160.0" layoutY="-195.0" onMouseClicked="#coin_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="coin" stylesheets="@../css/resources.css" />
+                        <Pane fx:id="servant_strongbox" layoutX="81.0" layoutY="-140.0" onMouseClicked="#servant_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="servant" stylesheets="@../css/resources.css" />
+                        <Pane fx:id="shield_strongbox" layoutX="161.0" layoutY="-138.0" onMouseClicked="#shield_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="shield" stylesheets="@../css/resources.css" />
                      </children></Pane>
                   <Pane layoutX="468.0" layoutY="730.0" prefHeight="131.0" prefWidth="185.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                   <Text layoutX="189.0" layoutY="676.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MARKET PENDING">
@@ -136,7 +162,7 @@
                         <Font name="Algerian" size="12.0" />
                      </font></Text>
                   <Pane layoutX="28.0" layoutY="151.0" onMouseClicked="#abortAction" prefHeight="76.0" prefWidth="80.0" styleClass="button-cross" stylesheets="@../css/other_objects.css" />
-                  <Pane layoutX="28.0" layoutY="63.0" prefHeight="78.0" prefWidth="80.0" styleClass="button-tick" stylesheets="@../css/other_objects.css" />
+                  <Pane layoutX="28.0" layoutY="63.0" onMouseClicked="#endTurn" prefHeight="78.0" prefWidth="80.0" styleClass="button-tick" stylesheets="@../css/other_objects.css" />
                   <Pane fx:id="bin" layoutX="31.0" layoutY="248.0" onMouseClicked="#binClicked" prefHeight="82.0" prefWidth="81.0" styleClass="bin" stylesheets="@../css/other_objects.css" />
                </children></AnchorPane>
          </content>
@@ -149,7 +175,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_00" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_00" layoutX="8.0" layoutY="6.0" onMouseClicked="#devcard00_click" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -158,7 +184,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_01" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_01" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -167,7 +193,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_02" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_02" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -176,7 +202,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_03" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_03" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -185,7 +211,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_10" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_10" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -194,7 +220,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_11" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_11" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -203,7 +229,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcards_12" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_12" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -212,7 +238,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_13" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_13" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -228,7 +254,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_20" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_20" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -237,7 +263,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_21" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_21" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -246,7 +272,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_22" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_22" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>
@@ -255,7 +281,7 @@
                      <children>
                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                            <children>
-                              <Pane fx:id="devcard_23" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" styleClass="devcard" stylesheets="@../css/trydevcard.css" />
+                              <Pane fx:id="devcard_23" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
                            </children>
                         </Pane>
                      </children>

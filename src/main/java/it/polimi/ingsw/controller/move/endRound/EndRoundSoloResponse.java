@@ -39,4 +39,8 @@ public class EndRoundSoloResponse extends EndRoundResponse {
         System.out.println(message);
         return null;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }

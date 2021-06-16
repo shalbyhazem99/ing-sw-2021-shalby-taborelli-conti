@@ -42,6 +42,8 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         myController.addObserver(clientConnection);
         //add controller to notify the connection
         clientConnection.addObserver(myController);
+        myController.initialization();
+        myController.disableAllMoves();
         /*if(myController instanceof PrimaryController)
         {
             //print discard
@@ -63,6 +65,10 @@ public abstract class GenericController extends Observable<PlayerMove> implement
 
     public void printModel(){};
 
+    public void disableAllMoves(){}
+
+    public void initialization(){}
+
     public abstract void printMessage(String message);
 
     public abstract void flipLeaderCard(int leaderCardPosition, int executePlayerPos);
@@ -79,7 +85,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
 
     public abstract void manageAllowedMoves(ArrayList<MovePlayerType> possibleMove);
 
-    public abstract void manageEndTurn(boolean correctlyEnded, int executePlayerPos);
+    public abstract void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message);
 
     public abstract void manageEndMatch();
 

@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import javafx.scene.paint.Color;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,6 +99,16 @@ public class Utils {
                 case SERVANT:
                     servant.addCount();
                     break;
+            }
+        }
+        return temp;
+    }
+
+    public static ArrayList<Resource> fromResourceCountToResources(ArrayList<ResourcesCount> resourcesCounts){
+        ArrayList<Resource> temp = new ArrayList<>();
+        for(ResourcesCount r:resourcesCounts){
+            for(int i = 0;i<r.getCount();i++){
+                temp.add(Resource.getInstance(r.getType()));
             }
         }
         return temp;

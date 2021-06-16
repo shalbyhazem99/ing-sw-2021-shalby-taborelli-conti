@@ -1,10 +1,13 @@
 package it.polimi.ingsw.gui;
 
+import com.sun.scenario.animation.AnimationPulse;
 import it.polimi.ingsw.client.ClientConnection;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
+import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
+import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
@@ -13,6 +16,7 @@ import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesP
 import it.polimi.ingsw.controller.move.settings.MessageMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ProductivePower;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.Marble;
@@ -23,10 +27,7 @@ import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.utils.Utils;
-import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.event.EventHandler;
@@ -59,6 +60,10 @@ public class PrimaryController extends GenericController {
     private Stack<ResourcePick> pendingSelected;
     private ArrayList<Boolean> runningActions;
     private ArrayList<Resource> resToBePlaced;
+    private boolean hasPerformedUnBlockingAction = false;
+    private DevelopmentCard developmentCardSelected;
+    private ArrayList<Resource> resNeededDevelopmentCardSelected;
+    private Stack<ResourcePick> resDevCardSelected;
 
     @FXML
     private TabPane tabpane;
@@ -128,7 +133,6 @@ public class PrimaryController extends GenericController {
     private Pane[][] devcardmatrix;
     @FXML
     private TextFlow msgBox;
-
     @FXML
     private Pane btn_col_0;
     @FXML
@@ -235,6 +239,40 @@ public class PrimaryController extends GenericController {
     @FXML
     private ArrayList<ArrayList<Pane>> warehousesStandard;
 
+    @FXML
+    private Pane button_card_space_0;
+    @FXML
+    private Pane button_card_space_1;
+    @FXML
+    private Pane button_card_space_2;
+    @FXML
+    private ArrayList<Pane> buttons_card_space;
+    @FXML
+    private ArrayList<Pane> card_space;
+    @FXML
+    private Pane card_space_0;
+    @FXML
+    private Pane card_space_1;
+    @FXML
+    private Pane card_space_2;
+
+    @FXML
+    private Pane stone_strongbox;
+    @FXML
+    private Pane coin_strongbox;
+    @FXML
+    private Pane servant_strongbox;
+    @FXML
+    private Pane shield_strongbox;
+    @FXML
+    private Text coin_strongbox_text;
+    @FXML
+    private Text servant_strongbox_text;
+    @FXML
+    private Text shield_strongbox_text;
+    @FXML
+    private Text stone_strongbox_text;
+
 
     @Override
     public void update(MoveResponse message) {
@@ -250,6 +288,12 @@ public class PrimaryController extends GenericController {
         pendingSelected = new Stack<>();
         runningActions = new ArrayList<>();
         resToBePlaced = new ArrayList<>();
+        resNeededDevelopmentCardSelected = new ArrayList<>();
+        resDevCardSelected = new Stack<>();
+        buttons_card_space = new ArrayList<>();
+        card_space = new ArrayList<>();
+        //1-->place resources
+        //2-->buy devcard
         for(int i = 0;i<5;i++){
             runningActions.add(false);
         }
@@ -338,6 +382,27 @@ public class PrimaryController extends GenericController {
             add(ware_21);
             add(ware_22);
         }});
+
+        devcardmatrix[0][0] = devcard_00;
+        devcardmatrix[0][1] = devcard_01;
+        devcardmatrix[0][2] = devcard_02;
+        devcardmatrix[0][3] = devcard_03;
+        devcardmatrix[1][0] = devcard_10;
+        devcardmatrix[1][1] = devcard_11;
+        devcardmatrix[1][2] = devcard_12;
+        devcardmatrix[1][3] = devcard_13;
+        devcardmatrix[2][0] = devcard_20;
+        devcardmatrix[2][1] = devcard_21;
+        devcardmatrix[2][2] = devcard_22;
+        devcardmatrix[2][3] = devcard_23;
+
+        buttons_card_space.add(button_card_space_0);
+        buttons_card_space.add(button_card_space_1);
+        buttons_card_space.add(button_card_space_2);
+
+        card_space.add(card_space_0);
+        card_space.add(card_space_1);
+        card_space.add(card_space_2);
     }
     public void attachEventsToCards(){
         EventHandler<MouseEvent> eventHandler;
@@ -395,6 +460,9 @@ public class PrimaryController extends GenericController {
                 }
                 break;
             }
+            default: {
+                runDialog(Alert.AlertType.ERROR,"Another move is already running, if you want to place resources from market pending to warehouses click abort");
+            }
         }
     }
     public void stone_pending_click(){
@@ -430,6 +498,21 @@ public class PrimaryController extends GenericController {
                     }
                 }
                 break;
+            }
+            case 2:{
+                System.out.println(resNeededDevelopmentCardSelected);
+                if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(ResourceType.STONE))){
+                    if(val!=0){
+                        resNeededDevelopmentCardSelected.remove(resNeededDevelopmentCardSelected.indexOf(Resource.getInstance(ResourceType.STONE)));
+                        runDialog(Alert.AlertType.INFORMATION,Utils.fromResourcesToResourceCount(resNeededDevelopmentCardSelected).toString());
+                    }
+                    else{
+                        runDialog(Alert.AlertType.ERROR,"Stone is required but you haven't got it");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Stone isn't required");
+                }
             }
         }
     }
@@ -467,6 +550,21 @@ public class PrimaryController extends GenericController {
                 }
                 break;
             }
+            case 2:{
+                System.out.println(resNeededDevelopmentCardSelected);
+                if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(ResourceType.SERVANT))){
+                    if(val!=0){
+                        resNeededDevelopmentCardSelected.remove(resNeededDevelopmentCardSelected.indexOf(Resource.getInstance(ResourceType.SERVANT)));
+                        runDialog(Alert.AlertType.INFORMATION,Utils.fromResourcesToResourceCount(resNeededDevelopmentCardSelected).toString());
+                    }
+                    else{
+                        runDialog(Alert.AlertType.ERROR,"Servant is required but you haven't got it");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Servant isn't required");
+                }
+            }
         }
     }
     public void shield_pending_click(){
@@ -502,6 +600,26 @@ public class PrimaryController extends GenericController {
                     }
                 }
                 break;
+            }
+            case 2:{
+                System.out.println(resNeededDevelopmentCardSelected);
+                if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(ResourceType.SHIELD))){
+                    if(val!=0){
+                        resNeededDevelopmentCardSelected.remove(resNeededDevelopmentCardSelected.indexOf(Resource.getInstance(ResourceType.SHIELD)));
+                        if(resNeededDevelopmentCardSelected.isEmpty()){
+                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the needed resources");
+                        }
+                        else{
+                            runDialog(Alert.AlertType.INFORMATION,Utils.fromResourcesToResourceCount(resNeededDevelopmentCardSelected).toString());
+                        }
+                    }
+                    else{
+                        runDialog(Alert.AlertType.ERROR,"Shield is required but you haven't got it");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Shield isn't required");
+                }
             }
         }
     }
@@ -549,6 +667,14 @@ public class PrimaryController extends GenericController {
                 mapWarehouses();
                 break;
             }
+            case 2:{
+                developmentCardSelected = null;
+                resNeededDevelopmentCardSelected = new ArrayList<>();
+                resDevCardSelected = new Stack<>();
+                mapWarehouses();
+                break;
+            }
+
         }
     }
     private boolean isRunning(int i){
@@ -575,6 +701,9 @@ public class PrimaryController extends GenericController {
     private boolean isLastPositioning(){
         return new ArrayList<>(pendingSelected).stream().filter(el->el.getWarehousePosition()!=-1).count() == resToBePlaced.size();
     }
+    private boolean isLastPickingDevCard(){
+        return new ArrayList<>(resDevCardSelected).stream().filter(el->el.getWarehousePosition()!=-1).count() == resNeededDevelopmentCardSelected.size();
+    }
     private void runDialog(Alert.AlertType type,String message){
         Platform.runLater(() -> {
             Alert dialog = new Alert(type, message, ButtonType.OK);
@@ -594,6 +723,31 @@ public class PrimaryController extends GenericController {
         mapLeaderCards();
         mapMarbles();
         mapWarehouses();
+        mapDevelopmentCards();
+        mapStrongBox();
+    }
+
+    public void mapStrongBox(){
+        for(ResourcesCount r:Utils.fromResourcesToResourceCount(match.getPlayers().get(match.getWhoAmI()).getStrongBox())){
+            switch (r.getType()){
+                case STONE:{
+                    stone_strongbox_text.setText(r.getCount()+"x");
+                    break;
+                }
+                case SERVANT:{
+                    servant_strongbox_text.setText(r.getCount()+"x");
+                    break;
+                }
+                case COIN:{
+                    coin_strongbox_text.setText(r.getCount()+"x");
+                    break;
+                }
+                case SHIELD:{
+                    shield_strongbox_text.setText(r.getCount()+"x");
+                    break;
+                }
+            }
+        }
     }
 
     public void mapWarehouses(){
@@ -610,6 +764,17 @@ public class PrimaryController extends GenericController {
     }
     public void mapWarehousesAdditional(){
 
+    }
+
+    public void mapDevelopmentCards(){
+        System.out.println("stiamo mappando le dev card");
+        for(int i = 0;i<3;i++){
+            for(int j = 0;j<4;j++){
+                System.out.println(i+","+j);
+                try{changeImage(devcardmatrix[i][j], match.getDevelopmentCards()[i][j].peek().getImage(),"devcard_leadercard/");}
+                catch (Exception e){}
+            }
+        }
     }
 
     public void mapMarbles(){
@@ -666,6 +831,27 @@ public class PrimaryController extends GenericController {
                 }
                 break;
             }
+            case 2:{
+                Background s = ware_00.getBackground();
+                System.out.println(resNeededDevelopmentCardSelected);
+
+                if(s!=null){
+                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
+                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
+                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,0,contained));
+                        ware_00.setBackground(null);
+                        if(isLastPickingDevCard()){
+                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
+                        }
+                    }
+                    else {
+                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
+                }
+            }
         }
     }
     public void warehouse10Clicked(){
@@ -702,6 +888,27 @@ public class PrimaryController extends GenericController {
                 }
                 break;
             }
+            case 2:{
+                Background s = ware_10.getBackground();
+                System.out.println(resNeededDevelopmentCardSelected);
+
+                if(s!=null){
+                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
+                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
+                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,1,contained));
+                        ware_10.setBackground(null);
+                        if(isLastPickingDevCard()){
+                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
+                        }
+                    }
+                    else {
+                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
+                }
+            }
         }
     }
     public void warehouse11Clicked(){
@@ -736,6 +943,27 @@ public class PrimaryController extends GenericController {
                     runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
                 }
                 break;
+            }
+            case 2:{
+                Background s = ware_11.getBackground();
+                System.out.println(resNeededDevelopmentCardSelected);
+
+                if(s!=null){
+                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
+                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
+                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,1,contained));
+                        ware_11.setBackground(null);
+                        if(isLastPickingDevCard()){
+                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
+                        }
+                    }
+                    else {
+                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
+                }
             }
         }
     }
@@ -772,6 +1000,27 @@ public class PrimaryController extends GenericController {
                 }
                 break;
             }
+            case 2:{
+                Background s = ware_20.getBackground();
+                System.out.println(resNeededDevelopmentCardSelected);
+
+                if(s!=null){
+                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
+                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
+                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,2,contained));
+                        ware_20.setBackground(null);
+                        if(isLastPickingDevCard()){
+                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
+                        }
+                    }
+                    else {
+                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
+                }
+            }
         }
     }
     public void warehouse21Clicked(){
@@ -806,6 +1055,27 @@ public class PrimaryController extends GenericController {
                     runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
                 }
                 break;
+            }
+            case 2:{
+                Background s = ware_21.getBackground();
+                System.out.println(resNeededDevelopmentCardSelected);
+
+                if(s!=null){
+                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
+                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
+                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,2,contained));
+                        ware_21.setBackground(null);
+                        if(isLastPickingDevCard()){
+                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
+                        }
+                    }
+                    else {
+                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
+                }
             }
         }
     }
@@ -842,7 +1112,58 @@ public class PrimaryController extends GenericController {
                 }
                 break;
             }
+            case 2:{
+                Background s = ware_22.getBackground();
+                System.out.println(resNeededDevelopmentCardSelected);
+
+                if(s!=null){
+                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
+                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
+                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,2,contained));
+                        ware_22.setBackground(null);
+                        if(isLastPickingDevCard()){
+                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
+                        }
+                    }
+                    else {
+                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
+                }
+            }
         }
+    }
+
+    public void button_card_space_0_clicked(){
+        switch(getRunningAction())
+        {
+            case 2:{
+                if(resNeededDevelopmentCardSelected.size()==resDevCardSelected.size()){
+                    if(match.getPlayers().get(match.getWhoAmI()).developmentCardCanBeAdded(developmentCardSelected, 0)){
+                        runDialog(Alert.AlertType.INFORMATION,"The card can be correctly placed here!");
+                        notify(BuyDevelopmentCardPlayerMove.getInstance(developmentCardSelected.getType(),developmentCardSelected.getLevel(),0,new ArrayList<>(resDevCardSelected)));
+                    }
+                    else{
+                        runDialog(Alert.AlertType.ERROR,"You can't place there your card!");
+                    }
+                }
+                else{
+                    runDialog(Alert.AlertType.ERROR,"Before trying to place the card you must pick all the resources needed!");
+                }
+                break;
+            }
+            default:{
+                runDialog(Alert.AlertType.ERROR,"Check which action you're performing!");
+            }
+        }
+    }
+    public void button_card_space_1_clicked(){
+
+    }
+    public void button_card_space_2_clicked(){
+
     }
 
     public void binClicked(){
@@ -932,6 +1253,7 @@ public class PrimaryController extends GenericController {
     }
 
     public void changeImage(Pane p,String s,String type){
+        System.out.println("Stiamo cambiando icona e settando : "+type+s);
         URL url = null;
         try{
             url = new File("src/main/resources/images/"+type+s+".png").toURI().toURL();
@@ -965,7 +1287,23 @@ public class PrimaryController extends GenericController {
 
     @Override
     public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
-
+        System.out.println("Correctly received buy decelopment card response");
+        changeImage(card_space.get(posToAdd),developmentCardSelected.getImage(),"devcard_leadercard/");
+        hasPerformedUnBlockingAction = true;
+        developmentCardSelected = null;
+        resNeededDevelopmentCardSelected = new ArrayList<>();
+        resDevCardSelected = new Stack<>();
+        hasPerformedUnBlockingAction = true;
+        runningActions.set(2,false);
+        disableAllMoves();
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        mapWarehouses();
+        mapDevelopmentCards();
     }
 
     @Override
@@ -1141,7 +1479,6 @@ public class PrimaryController extends GenericController {
         return null;
     }
 
-
     @Override
     public void manageResourceMarketConvert(int first, int second, int executePlayerPos) {
 
@@ -1154,8 +1491,9 @@ public class PrimaryController extends GenericController {
     }
 
     @Override
-    public void manageEndTurn(boolean correctlyEnded, int executePlayerPos) {
-
+    public void manageEndTurn(boolean correctlyEnded, int executePlayerPos,String message) {
+        runDialog(Alert.AlertType.INFORMATION,message);
+        mapDevelopmentCards();
     }
 
     @Override
@@ -1223,45 +1561,161 @@ public class PrimaryController extends GenericController {
     }
 
     public void clickCol3(){
+        disableAllMoves();
         notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,3));
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        hasPerformedUnBlockingAction = true;
     }
     public void clickCol2(){
+        disableAllMoves();
         notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,2));
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        hasPerformedUnBlockingAction = true;
     }
     public void clickCol1(){
+        disableAllMoves();
         notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,1));
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        hasPerformedUnBlockingAction = true;
     }
     public void clickCol0(){
+        disableAllMoves();
         notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,0));
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        hasPerformedUnBlockingAction = true;
     }
     public void clickRow2(){
+        disableAllMoves();
         notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,2));
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        hasPerformedUnBlockingAction = true;
     }
     public void clickRow1(){
         notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,1));
+        disableAllMoves();
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        hasPerformedUnBlockingAction = true;
     }
     public void clickRow0(){
+        disableAllMoves();
         notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,0));
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        hasPerformedUnBlockingAction = true;
     }
 
+    public void endTurn(){
+        //
+        System.out.println(match.getPendingMarketResources());
+        if(!match.getPendingMarketResources().isEmpty()){
+            runDialog(Alert.AlertType.ERROR,"You must place all the resources before ending your round");
+        }
+        else{
+            System.out.println(hasPerformedUnBlockingAction);
+            hasPerformedUnBlockingAction = false;
+            notify(EndRoundPlayerMove.getInstance());
+            disableAllMoves();
+            msgBox.getChildren().clear();
+            msgBox.getChildren().add( new Text("Waiting for other players"));
+        }
+    }
+
+    public void disableAllMoves(){
+        System.out.println("disable");
+        for(Pane p:leadercards){
+            p.setDisable(true);
+        }
+        /*for(Pane p[]:devcardmatrix){
+            for(Pane s:p){
+                s.setDisable(true);
+            }
+        }*/
+        for(Pane p:market_button){
+            p.setDisable(true);
+        }
+        coin_pending.setDisable(true);
+        stone_pending.setDisable(true);
+        servant_pending.setDisable(true);
+        shield_pending.setDisable(true);
+    }
 
     public void enableMove(ArrayList<MovePlayerType> moves){
+        System.out.println("enable "+ moves.toString());
         Cursor c = null;
         boolean dis = false;
         //Market Interaction
         if(moves.contains(MovePlayerType.MARKET_INTERACTION))
         {
-            c = Cursor.HAND;
-            dis = false;
+            for(Pane p:market_button){
+                p.setDisable(false);
+            }
         }
-        else
+        if(moves.contains(MovePlayerType.BUY_DEVELOPMENT_CARD))
         {
-            c = Cursor.CROSSHAIR;
-            dis = true;
+            /*for(Pane p[]:devcardmatrix){
+                for(Pane s:p){
+                    s.setDisable(true);
+                }
+            }*/
         }
-        for (Pane p: market_button) {
-            p.setCursor(c);
-            p.setDisable(dis);
+        if(moves.contains(MovePlayerType.MOVE_RESOURCES))
+        {
+            coin_pending.setDisable(false);
+            servant_pending.setDisable(false);
+            shield_pending.setDisable(false);
+            stone_pending.setDisable(false);
+        }
+    }
+
+    public void devcard00_click(){
+        if(getRunningAction()!=-1){
+            runDialog(Alert.AlertType.ERROR,"Another action is already running, abort it before performing another one!");
+        }
+        else{
+            runDialog(Alert.AlertType.INFORMATION,"Card correctly selected, now you must select from your warehouses the resources needed");
+            runningActions.set(2,true);
+            developmentCardSelected = match.getDevelopmentCards()[0][0].peek();
+            resNeededDevelopmentCardSelected = Utils.fromResourceCountToResources(developmentCardSelected.getCosts(match.getPlayers().get(match.getWhoAmI())));
+            ScaleTransition st = new ScaleTransition(Duration.millis(500),devcard_00.getParent());
+            st.setByX(0.3f);
+            st.setByY(0.3f);
+            st.setCycleCount(2);
+            st.setAutoReverse(true);
+            st.play();
         }
     }
 }

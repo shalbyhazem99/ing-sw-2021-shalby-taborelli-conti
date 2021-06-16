@@ -29,7 +29,11 @@ public class EndRoundResponse extends MoveResponse {
 
     @Override
     public void elaborateGUI(GenericController controller) {
-        controller.manageEndTurn(correctlyEnded,getExecutePlayerPos());
+        String message = "";
+        try{
+            message = ((EndRoundSoloResponse)this).getMessage();
+        }catch (Exception e){}
+        controller.manageEndTurn(correctlyEnded,getExecutePlayerPos(),message);
     }
 
     @Override

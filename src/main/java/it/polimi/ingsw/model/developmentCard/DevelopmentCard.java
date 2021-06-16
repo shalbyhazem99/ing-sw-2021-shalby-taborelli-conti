@@ -14,6 +14,7 @@ public class DevelopmentCard implements Serializable {
     private int equivalentPoint;
     private ArrayList<ResourcesCount> costs;
     private ProductivePower powers;
+    protected String image;
 
     /**
      *
@@ -125,5 +126,9 @@ public class DevelopmentCard implements Serializable {
         str = str + "] ▶ ";
         str = str + Utils.formatResourcesCount(Utils.fromResourcesToResourceCount(powers.getTo()));
         return str;
+    }
+
+    public String getImage(){
+        return image;
     }
 }

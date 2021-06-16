@@ -108,7 +108,7 @@ public class RegistrationController extends GenericController {
     }
 
     @Override
-    public void manageEndTurn(boolean correctlyEnded, int executePlayerPos) {
+    public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
 
     }
 
