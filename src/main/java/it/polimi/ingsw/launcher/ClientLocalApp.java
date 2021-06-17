@@ -1,14 +1,11 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.launcher;
 
-import it.polimi.ingsw.client.ClientSoloCLI;
+import it.polimi.ingsw.view.ClientSoloCLI;
 import it.polimi.ingsw.controller.GameManger;
-import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.MatchSolo;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.view.RemoteView;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientLocalApp {

@@ -1,10 +1,9 @@
-package it.polimi.ingsw.gui;
+package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.client.ClientConnection;
+import it.polimi.ingsw.connection.ClientConnectionView;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ProductivePower;
@@ -15,21 +14,16 @@ import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public abstract class GenericController extends Observable<PlayerMove> implements Observer<MoveResponse> {
 
     protected Match match;
-    public void changeView(String fxml, ClientConnection clientConnection) throws IOException {
+    public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
         URL url = new File("src/main/resources/fxml/"+fxml+".fxml").toURI().toURL();
         System.out.println(fxml);
         FXMLLoader loader = new FXMLLoader();
@@ -39,9 +33,9 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         GenericController myController = loader.getController();
         myController.match = this.match;
         //add the clientConnection
-        myController.addObserver(clientConnection);
+        myController.addObserver(clientConnectionView);
         //add controller to notify the connection
-        clientConnection.addObserver(myController);
+        clientConnectionView.addObserver(myController);
         myController.initialization();
         myController.disableAllMoves();
         /*if(myController instanceof PrimaryController)

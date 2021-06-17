@@ -1,18 +1,12 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.controller.move.settings.SendModel;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ClientSoloCLI extends Observable<PlayerMove> implements Observer<MoveResponse> {

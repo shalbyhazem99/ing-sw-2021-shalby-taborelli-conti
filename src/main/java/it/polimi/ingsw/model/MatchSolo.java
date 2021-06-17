@@ -70,11 +70,6 @@ public class MatchSolo extends Match implements Serializable {
         actionTokens.add(temp);
         return temp;
     }
-    public static void main (String [] args)
-    {
-        MatchSolo m = new MatchSolo();
-        m.pickActionToken();
-    }
 
     /**
      * The method move the black cross ahead in the Faith's path

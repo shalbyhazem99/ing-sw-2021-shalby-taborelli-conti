@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.move.settings.resilience;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.view.RemoteView;
+import it.polimi.ingsw.connection.view.RemoteView;
 
 public class DisconnectionMove extends PlayerMove {
     private String playerName;

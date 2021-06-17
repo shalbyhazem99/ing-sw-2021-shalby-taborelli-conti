@@ -1,35 +1,27 @@
-package it.polimi.ingsw.gui;
+package it.polimi.ingsw.view.gui;
 
-import com.sun.scenario.animation.AnimationPulse;
-import it.polimi.ingsw.client.ClientConnection;
+import it.polimi.ingsw.connection.ClientConnectionView;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
-import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
-import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.production.move.ResourceWarehouseType;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
-import it.polimi.ingsw.controller.move.settings.MessageMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
-import it.polimi.ingsw.model.market.Marble;
 import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.resource.ResourcesCount;
-import it.polimi.ingsw.observer.Observable;
-import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.utils.Utils;
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -40,7 +32,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -49,9 +40,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -1266,8 +1255,8 @@ public class PrimaryController extends GenericController {
     }
 
     @Override
-    public void changeView(String fxml, ClientConnection clientConnection) throws IOException {
-        super.changeView(fxml, clientConnection);
+    public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
+        super.changeView(fxml, clientConnectionView);
     }
 
     @Override

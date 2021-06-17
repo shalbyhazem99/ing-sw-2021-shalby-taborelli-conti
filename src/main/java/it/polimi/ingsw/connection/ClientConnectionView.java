@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.connection;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-public class ClientConnection extends Observable<MoveResponse> implements Observer<PlayerMove> {
+public class ClientConnectionView extends Observable<MoveResponse> implements Observer<PlayerMove> {
 
     private Socket socket;
     private ObjectOutputStream socketOut;
@@ -21,7 +21,7 @@ public class ClientConnection extends Observable<MoveResponse> implements Observ
     private boolean active = true;
 
 
-    public ClientConnection(String ip, int port) throws IOException {
+    public ClientConnectionView(String ip, int port) throws IOException {
         this.socket = new Socket();
         this.socket.connect(new InetSocketAddress(ip, port));
         System.out.println("Connection established");
@@ -58,21 +58,22 @@ public class ClientConnection extends Observable<MoveResponse> implements Observ
 
 
     public void asyncReadFromSocket() {
-        new Thread(() -> {
+         new Thread(() -> {
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
                     System.out.println(inputObject.getClass());
                     if (inputObject instanceof SendModel) {
-                        ClientConnection.this.notify((SendModel) inputObject);
+                        ClientConnectionView.this.notify((SendModel) inputObject);
                         System.out.println("Model received");
                     }
-                    else if (inputObject instanceof MoveResponse) {
-                        ClientConnection.this.notify((MoveResponse) inputObject);
-                        System.out.println("new Object Received: \n" + inputObject.toString());
-                    }
                     else if(inputObject instanceof EndMatchResponse) {
-
+                        setActive(false);
+                        ClientConnectionView.this.disconnect();
+                    }
+                    else if (inputObject instanceof MoveResponse) {
+                        ClientConnectionView.this.notify((MoveResponse) inputObject);
+                        System.out.println("new Object Received: \n" + inputObject.toString());
                     }
                     else {
                         throw new IllegalArgumentException();

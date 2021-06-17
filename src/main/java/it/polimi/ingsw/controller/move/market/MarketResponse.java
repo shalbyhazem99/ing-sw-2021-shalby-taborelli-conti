@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller.move.market;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
-import it.polimi.ingsw.gui.GenericController;
+import it.polimi.ingsw.view.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.Resource;

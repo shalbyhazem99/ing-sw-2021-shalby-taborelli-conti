@@ -19,6 +19,13 @@ import java.util.stream.Collectors;
  * describe a set of methods that are util for the whole project
  */
 public class Utils {
+
+    /**
+     * Connection info
+     */
+    public static String ip = "127.0.0.1";
+    public static int port = 56344;
+
     /**
      * the Faith path length
      */
@@ -57,11 +64,12 @@ public class Utils {
                             .findFirst().ifPresent(elem -> elem.decreaseCount());
                 });
         //remove the resourcesCount with 0 count: may create problems
-        return (ArrayList<ResourcesCount> ) discounted.stream().filter(elem-> elem.getCount()>0).collect(Collectors.toList());
+        return (ArrayList<ResourcesCount>) discounted.stream().filter(elem -> elem.getCount() > 0).collect(Collectors.toList());
     }
 
     /**
      * Convert an array of mixed {@link Resource} into an ArrayList of {@link ResourcesCount}
+     *
      * @param resources to convert into ResourceCount
      * @return the ArrayList of {@link ResourcesCount} containing all the {@link Resource} passed
      */
@@ -79,7 +87,7 @@ public class Utils {
         temp.add(stone);
         temp.add(servant);
         temp.add(any);
-        for (int i = 0; resources!=null && i < resources.size(); i++) {
+        for (int i = 0; resources != null && i < resources.size(); i++) {
             switch (resources.get(i).getType()) {
                 case COIN:
                     coin.addCount();
@@ -104,19 +112,19 @@ public class Utils {
         return temp;
     }
 
-    public static ArrayList<Resource> fromResourceCountToResources(ArrayList<ResourcesCount> resourcesCounts){
+    public static ArrayList<Resource> fromResourceCountToResources(ArrayList<ResourcesCount> resourcesCounts) {
         ArrayList<Resource> temp = new ArrayList<>();
-        for(ResourcesCount r:resourcesCounts){
-            for(int i = 0;i<r.getCount();i++){
+        for (ResourcesCount r : resourcesCounts) {
+            for (int i = 0; i < r.getCount(); i++) {
                 temp.add(Resource.getInstance(r.getType()));
             }
         }
         return temp;
     }
 
-    public static ArrayList<Resource> fromResourcePickToResources(ArrayList<ResourcePick> res){
+    public static ArrayList<Resource> fromResourcePickToResources(ArrayList<ResourcePick> res) {
         ArrayList<Resource> temp = new ArrayList<>();
-        for(ResourcePick r: res){
+        for (ResourcePick r : res) {
             temp.add(Resource.getInstance(r.getResourceType()));
         }
         return temp;
@@ -128,8 +136,8 @@ public class Utils {
                 .collect(Collectors.toList()).toArray(ResourceType[]::new);
     }
 
-    public static String mapResTypeToImage(ResourceType a){
-        return a.toString().toLowerCase(Locale.ROOT)+"_c";
+    public static String mapResTypeToImage(ResourceType a) {
+        return a.toString().toLowerCase(Locale.ROOT) + "_c";
     }
 
     /**
@@ -236,41 +244,33 @@ public class Utils {
         return str;
     }
 
-    public static ResourceType getResourceTypeFromUrl(String s){
-        if(s.contains("coin")){
+    public static ResourceType getResourceTypeFromUrl(String s) {
+        if (s.contains("coin")) {
             return ResourceType.COIN;
-        }
-        else if(s.contains("shield")){
+        } else if (s.contains("shield")) {
             return ResourceType.SHIELD;
-        }
-        else if(s.contains("servant")){
+        } else if (s.contains("servant")) {
             return ResourceType.SERVANT;
-        }
-        else if(s.contains("stone")){
+        } else if (s.contains("stone")) {
             return ResourceType.STONE;
         }
         return null;
 
     }
 
-    public static Color fromMarbleColorToJavaFXColor(MarbleColor marbleColor){
+    public static Color fromMarbleColorToJavaFXColor(MarbleColor marbleColor) {
         Color color = null;
-        if(marbleColor==MarbleColor.BLUE){
+        if (marbleColor == MarbleColor.BLUE) {
             color = Color.AQUA;
-        }
-        else if(marbleColor==MarbleColor.RED){
+        } else if (marbleColor == MarbleColor.RED) {
             color = Color.RED;
-        }
-        else if(marbleColor==MarbleColor.GREY){
+        } else if (marbleColor == MarbleColor.GREY) {
             color = Color.GREY;
-        }
-        else if(marbleColor==MarbleColor.PURPLE){
+        } else if (marbleColor == MarbleColor.PURPLE) {
             color = Color.PURPLE;
-        }
-        else if(marbleColor==MarbleColor.YELLOW){
+        } else if (marbleColor == MarbleColor.YELLOW) {
             color = Color.YELLOW;
-        }
-        else if(marbleColor==MarbleColor.WHITE){
+        } else if (marbleColor == MarbleColor.WHITE) {
             color = Color.WHITE;
         }
         return color;

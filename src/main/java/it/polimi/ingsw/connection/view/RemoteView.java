@@ -1,11 +1,11 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.connection.view;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
-import it.polimi.ingsw.server.ClientConnection;
+import it.polimi.ingsw.connection.ClientConnection;
 
 public class RemoteView extends Observable<PlayerMove> implements Observer<MoveResponse> {
 

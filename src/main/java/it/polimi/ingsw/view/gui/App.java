@@ -1,6 +1,7 @@
-package it.polimi.ingsw.gui;
+package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.client.ClientConnection;
+import it.polimi.ingsw.connection.ClientConnectionView;
+import it.polimi.ingsw.utils.Utils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +18,7 @@ import java.net.URL;
 public class App extends Application {
 
     private static Scene scene;
-    public static  ClientConnection connection;
+    public static ClientConnectionView connection;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -26,7 +27,7 @@ public class App extends Application {
         loader.setLocation(url);
         Parent root =loader.load();
         GenericController myController = loader.getController();
-        connection = new ClientConnection("127.0.0.1",  59910);
+        connection = new ClientConnectionView(Utils.ip,  Utils.port);
         myController.addObserver(connection);
         connection.addObserver(myController);
         connection.asyncReadFromSocket();

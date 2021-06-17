@@ -1,20 +1,18 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.connection;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
 import it.polimi.ingsw.controller.move.settings.AskForData;
-import it.polimi.ingsw.controller.move.settings.AskForMove;
 import it.polimi.ingsw.controller.move.settings.MessageMove;
 import it.polimi.ingsw.controller.move.settings.SendMessage;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
+
 /**
  * Class that manage the connection and the interaction with the client
  */

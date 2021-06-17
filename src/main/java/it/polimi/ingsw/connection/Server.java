@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.connection;
 
 import it.polimi.ingsw.controller.GameManger;
 import it.polimi.ingsw.controller.move.settings.resilience.DisconnectionMove;
@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.MatchMulti;
 import it.polimi.ingsw.model.MatchSolo;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.view.RemoteView;
+import it.polimi.ingsw.connection.view.RemoteView;
 
 import java.io.IOException;
 import java.net.ServerSocket;

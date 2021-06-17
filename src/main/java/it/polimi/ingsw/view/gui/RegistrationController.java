@@ -1,9 +1,8 @@
-package it.polimi.ingsw.gui;
+package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.client.ClientConnection;
+import it.polimi.ingsw.connection.ClientConnectionView;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
-import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.MessageMove;
 import it.polimi.ingsw.controller.move.settings.SendModel;
@@ -12,21 +11,12 @@ import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
-import it.polimi.ingsw.observer.Observer;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class RegistrationController extends GenericController {
@@ -58,8 +48,8 @@ public class RegistrationController extends GenericController {
     }
 
     @Override
-    public void changeView(String fxml, ClientConnection clientConnection) throws IOException {
-        super.changeView(fxml, clientConnection);
+    public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
+        super.changeView(fxml, clientConnectionView);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.connection;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.observer.Observer;
