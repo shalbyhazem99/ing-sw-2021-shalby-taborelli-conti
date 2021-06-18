@@ -38,8 +38,8 @@ public class RegistrationController extends GenericController {
     }
 
     public void onClickPlay(MouseEvent mouseEvent) throws IOException {
-        notify(MessageMove.getInstance(textAreaName.getText()));
         changeView("primary",App.connection);
+        notify(MessageMove.getInstance(textAreaName.getText()));
     }
 
     @Override

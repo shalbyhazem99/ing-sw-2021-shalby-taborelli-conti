@@ -12,6 +12,7 @@ import it.polimi.ingsw.controller.move.production.move.ResourceWarehouseType;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.ProductivePower;
+import it.polimi.ingsw.model.Warehouse;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -22,18 +23,18 @@ import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Sphere;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
@@ -47,8 +48,7 @@ import java.util.Stack;
 public class PrimaryController extends GenericController {
 
     private Stack<ResourcePick> pendingSelected;
-    private ArrayList<Boolean> runningActions;
-    private ArrayList<Resource> resToBePlaced;
+    private MovePlayerType runningAction;
     private boolean hasPerformedUnBlockingAction = false;
     private DevelopmentCard developmentCardSelected;
     private ArrayList<Resource> resNeededDevelopmentCardSelected;
@@ -60,36 +60,37 @@ public class PrimaryController extends GenericController {
     private Pane leadercard1;
     @FXML
     private Pane leadercard2;
+
     @FXML
-    private Circle m_add;
+    private Sphere m_add;
     @FXML
-    private Circle m_00;
+    private Sphere m_00;
     @FXML
-    private Circle m_01;
+    private Sphere m_01;
     @FXML
-    private Circle m_02;
+    private Sphere m_02;
     @FXML
-    private Circle m_03;
+    private Sphere m_03;
     @FXML
-    private Circle m_10;
+    private Sphere m_10;
     @FXML
-    private Circle m_11;
+    private Sphere m_11;
     @FXML
-    private Circle m_12;
+    private Sphere m_12;
     @FXML
-    private Circle m_13;
+    private Sphere m_13;
     @FXML
-    private Circle m_20;
+    private Sphere m_20;
     @FXML
-    private Circle m_21;
+    private Sphere m_21;
     @FXML
-    private Circle m_22;
+    private Sphere m_22;
     @FXML
-    private Circle m_23;
+    private Sphere m_23;
     @FXML
-    private Circle[][] marketBoardObj;
+    private Sphere[][] marketBoardObj;
     @FXML
-    private Circle additionalMarble;
+    private Sphere additionalMarble;
     //--------------------------
 
     @FXML
@@ -226,6 +227,9 @@ public class PrimaryController extends GenericController {
     @FXML
     private Pane ware_22;
     @FXML
+    private Pane bin;
+
+    @FXML
     private ArrayList<ArrayList<Pane>> warehousesStandard;
 
     @FXML
@@ -266,26 +270,22 @@ public class PrimaryController extends GenericController {
     @Override
     public void update(MoveResponse message) {
         //elaborate message
-        if(match!=null){
+        if (match != null) {
             message.updateLocalMatch(match);
         }
-        //TODO: UPDATE SUCCEDE QUI
         message.elaborateGUI(this);
     }
 
-    public void initialization(){
+    //--------------------------------------Initialization-----------------------------------------------------------
+
+    public void initialization() {
+
         pendingSelected = new Stack<>();
-        runningActions = new ArrayList<>();
-        resToBePlaced = new ArrayList<>();
+        runningAction = MovePlayerType.NOTHING;
         resNeededDevelopmentCardSelected = new ArrayList<>();
         resDevCardSelected = new Stack<>();
         buttons_card_space = new ArrayList<>();
         card_space = new ArrayList<>();
-        //1-->place resources
-        //2-->buy devcard
-        for(int i = 0;i<5;i++){
-            runningActions.add(false);
-        }
 
         leadercards = new Pane[2];
         leadercards[0] = leadercard1;
@@ -304,7 +304,6 @@ public class PrimaryController extends GenericController {
         devcardmatrix[2][1] = devcard_21;
         devcardmatrix[2][2] = devcard_22;
         devcardmatrix[2][3] = devcard_23;
-        attachEventsToCards();
 
         market_button = new Pane[7];
         market_button[0] = btn_col_0;
@@ -315,7 +314,7 @@ public class PrimaryController extends GenericController {
         market_button[5] = btn_row_1;
         market_button[6] = btn_row_2;
 
-        marketBoardObj = new Circle[3][4];
+        marketBoardObj = new Sphere[3][4];
         marketBoardObj[0][0] = m_00;
         marketBoardObj[0][1] = m_01;
         marketBoardObj[0][2] = m_02;
@@ -372,19 +371,6 @@ public class PrimaryController extends GenericController {
             add(ware_22);
         }});
 
-        devcardmatrix[0][0] = devcard_00;
-        devcardmatrix[0][1] = devcard_01;
-        devcardmatrix[0][2] = devcard_02;
-        devcardmatrix[0][3] = devcard_03;
-        devcardmatrix[1][0] = devcard_10;
-        devcardmatrix[1][1] = devcard_11;
-        devcardmatrix[1][2] = devcard_12;
-        devcardmatrix[1][3] = devcard_13;
-        devcardmatrix[2][0] = devcard_20;
-        devcardmatrix[2][1] = devcard_21;
-        devcardmatrix[2][2] = devcard_22;
-        devcardmatrix[2][3] = devcard_23;
-
         buttons_card_space.add(button_card_space_0);
         buttons_card_space.add(button_card_space_1);
         buttons_card_space.add(button_card_space_2);
@@ -393,261 +379,569 @@ public class PrimaryController extends GenericController {
         card_space.add(card_space_1);
         card_space.add(card_space_2);
     }
-    public void attachEventsToCards(){
-        EventHandler<MouseEvent> eventHandler;
-        for(int i=0;i<2;i++)
+
+    @Override
+    public void askToDiscardTwoLeader(int numOfResource, int executePlayerPos) {
+        //Todo:to Modify
+        notify(DiscardTwoLeaderCardsPlayerMove.getInstance(0, 1, ResourceType.COIN, ResourceType.FAITH));
+         /*if(myController instanceof PrimaryController)
         {
-            for(int j=0;j<3;j++)
-            {
-                eventHandler = new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                        System.out.println("ok hai cliccato ");
-                    }
-                };
-                //devcardmatrix[i][j].addEventFilter(MouseEvent.MOUSE_CLICKED,eventHandler);
+            //print discard
+            String [] indexes = {"1","2","3","4"};
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(indexes[0], indexes);
+            dialog.setHeaderText("Discard leader card");
+            dialog.setTitle("Choose");
+            dialog.setContentText("Discard #:");
+            Optional<String> choice = dialog.showAndWait();
+            //TODO: manage response
+            notify(DiscardLeaderCardPlayerMove.getInstance(Integer.parseInt(choice.get())));
+            ((PrimaryController) myController).initialization();
+            myController.printModel();
+            //myController.blockView();
+        }*/
+
+    }
+
+    //--------------------------------------PRINT MODEL---------------------------------------------------------------
+    @Override
+    public void printModel() {
+        // new Image(url)
+        mapLeaderCards();
+        mapMarbles();
+        mapWarehouses();
+        mapDevelopmentCards();
+        mapStrongBox();
+        mapMarketResource();
+    }
+
+    public void mapStrongBox() {
+        for (ResourcesCount r : Utils.fromResourcesToResourceCount(match.getPlayers().get(match.getWhoAmI()).getStrongBox())) {
+            switch (r.getType()) {
+                case STONE: {
+                    stone_strongbox_text.setText(r.getCount() + "x");
+                    break;
+                }
+                case SERVANT: {
+                    servant_strongbox_text.setText(r.getCount() + "x");
+                    break;
+                }
+                case COIN: {
+                    coin_strongbox_text.setText(r.getCount() + "x");
+                    break;
+                }
+                case SHIELD: {
+                    shield_strongbox_text.setText(r.getCount() + "x");
+                    break;
+                }
             }
         }
     }
-    /*
-        POSITIONING RESOURCE:
-        - Click on the resource -> add resource pick to pending array (with random target warehouse)
-        - Click on the target resource -> set correctyle the target
-     */
-    public void coin_pending_click(){
-        int val = Integer.parseInt(coin_pending_text.getText().replaceAll("\\D+",""));
-        switch (getRunningAction()){
-            case -1:{
-                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
-                }
-                else{
-                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
-                    unsetOtherActions(1);
-                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.COIN));
-                    coin_pending_text.setText(--val+"x");
-                    System.out.println(new ArrayList<>(pendingSelected));
 
+    /**
+     * Update the Market Pending resources
+     */
+    private void mapMarketResource() {
+        ArrayList<ResourcesCount> res = Utils.fromResourcesToResourceCount(match.getPendingMarketResources());
+        coin_pending.setDisable(true);
+        stone_pending.setDisable(true);
+        servant_pending.setDisable(true);
+        shield_pending.setDisable(true);
+        for (ResourcesCount r : res) {
+            Pane paneTemp = null;
+            switch (r.getType()) {
+                case COIN: {
+                    coin_pending_text.setText(r.getCount() + "x");
+                    coin_pending.setDisable(r.getCount() == 0);
+                    break;
                 }
-                break;
+                case STONE: {
+                    stone_pending_text.setText(r.getCount() + "x");
+                    stone_pending.setDisable(r.getCount() == 0);
+                    break;
+                }
+                case SERVANT: {
+                    servant_pending_text.setText(r.getCount() + "x");
+                    servant_pending.setDisable(r.getCount() == 0);
+                    break;
+                }
+                case SHIELD: {
+                    shield_pending_text.setText(r.getCount() + "x");
+                    shield_pending.setDisable(r.getCount() == 0);
+                    break;
+                }
+                default:
+                    break;
             }
-            case 1:{
-                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
+        }
+    }
+
+    public void mapWarehouses() {
+        mapWarehousesStandard();
+        mapWarehousesAdditional();
+    }
+
+    public void mapWarehousesStandard() {
+        unsetAllBackgroundWarehouseStandard();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResources().size(); j++) {
+                changeImage(warehousesStandard.get(i).get(j), Utils.mapResTypeToImage(match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResourceType()), "resources/");
+            }
+        }
+    }
+
+    public void mapWarehousesAdditional() {
+        //todo: to be implemented
+    }
+
+    public void mapDevelopmentCards() {
+        System.out.println("stiamo mappando le dev card");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.println(i + "," + j);
+                try {
+                    changeImage(devcardmatrix[i][j], match.getDevelopmentCards()[i][j].peek().getImage(), "devcard_leadercard/");
+                } catch (Exception e) {
                 }
-                else {
-                    if(pendingSelected.peek().getWarehousePosition()==-1){
-                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
+            }
+        }
+    }
+
+    public void mapMarbles() {
+        m_add.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getAdditionalMarble().getColor())));
+        m_00.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0, 0).getColor())));
+        m_01.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0, 1).getColor())));
+        m_02.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0, 2).getColor())));
+        m_03.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0, 3).getColor())));
+        m_10.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1, 0).getColor())));
+        m_11.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1, 1).getColor())));
+        m_12.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1, 2).getColor())));
+        m_13.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1, 3).getColor())));
+        m_20.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2, 0).getColor())));
+        m_21.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2, 1).getColor())));
+        m_22.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2, 2).getColor())));
+        m_23.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2, 3).getColor())));
+    }
+
+    public void mapLeaderCards() {
+        changeImage(leadercards[0], match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(0).getImage(), "devcard_leadercard/");
+        changeImage(leadercards[1], match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(1).getImage(), "devcard_leadercard/");
+    }
+
+    //-----------------------------------BUY DEVELOPMENT CARD---------------------------------------------------------
+    @Override
+    public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
+        System.out.println("Correctly received buy decelopment card response");
+        changeImage(card_space.get(posToAdd), developmentCardSelected.getImage(), "devcard_leadercard/");
+        hasPerformedUnBlockingAction = true;
+        developmentCardSelected = null;
+        resNeededDevelopmentCardSelected = new ArrayList<>();
+        resDevCardSelected = new Stack<>();
+        hasPerformedUnBlockingAction = true;
+        runningAction = MovePlayerType.NOTHING;
+        disableAllMoves();
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+        mapWarehouses();
+        mapDevelopmentCards();
+    }
+
+    public void devcard_click(MouseEvent event) {
+        Node node = (Node) event.getSource();
+        String[] data = ((String) node.getUserData()).split(",");
+        int row = Integer.parseInt(data[0]);
+        int column = Integer.parseInt(data[1]);
+
+        if (runningAction != MovePlayerType.NOTHING) {
+            runDialog(Alert.AlertType.ERROR, "Another action is already running, abort it before performing another one!");
+        } else {
+            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses the resources needed");
+            runningAction = MovePlayerType.BUY_DEVELOPMENT_CARD;
+            developmentCardSelected = match.getDevelopmentCards()[row][column].peek();
+            resNeededDevelopmentCardSelected = Utils.fromResourceCountToResources(developmentCardSelected.getCosts(match.getPlayers().get(match.getWhoAmI())));
+            ScaleTransition st = new ScaleTransition(Duration.millis(500), node.getParent());
+            st.setByX(0.3f);
+            st.setByY(0.3f);
+            st.setCycleCount(2);
+            st.setAutoReverse(true);
+            st.play();
+        }
+    }
+
+    public void button_card_space_clicked(MouseEvent event) {
+        Node node = (Node) event.getSource();
+        String data = (String) node.getUserData();
+        int card_space_pos = Integer.parseInt(data);
+
+        switch (runningAction) {
+            case BUY_DEVELOPMENT_CARD: {
+                if (resNeededDevelopmentCardSelected.size() == resDevCardSelected.size()) {
+                    if (match.getPlayers().get(match.getWhoAmI()).developmentCardCanBeAdded(developmentCardSelected, card_space_pos)) {
+                        runDialog(Alert.AlertType.INFORMATION, "The card can be correctly placed here!");
+                        notify(BuyDevelopmentCardPlayerMove.getInstance(developmentCardSelected.getType(), developmentCardSelected.getLevel(), 0, new ArrayList<>(resDevCardSelected)));
+                    } else {
+                        runDialog(Alert.AlertType.ERROR, "You can't place there your card!");
                     }
-                    else{
-                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.COIN));
-                        coin_pending_text.setText(--val+"x");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                    }
+                } else {
+                    runDialog(Alert.AlertType.ERROR, "Before trying to place the card you must pick all the resources needed!");
                 }
                 break;
             }
             default: {
-                runDialog(Alert.AlertType.ERROR,"Another move is already running, if you want to place resources from market pending to warehouses click abort");
+                runDialog(Alert.AlertType.ERROR, "Check which action you're performing!");
             }
         }
     }
-    public void stone_pending_click(){
-        int val = Integer.parseInt(stone_pending_text.getText().replaceAll("\\D+",""));
-        switch (getRunningAction()){
-            case -1:{
-                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
-                }
-                else{
-                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
-                    unsetOtherActions(1);
-                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.STONE));
-                    stone_pending_text.setText(--val+"x");
-                    System.out.println(new ArrayList<>(pendingSelected));
-                }
-                break;
+
+    //---------------------------------------MARKET INTERACTION-------------------------------------------------------
+
+    /**
+     * Manaage the click event on one of the marketBoard arrow
+     *
+     * @param event
+     */
+    @FXML
+    public void clickMarketInteraction(MouseEvent event) {
+        //get the pos and if > column dim means that the user click row
+        Node node = (Node) event.getSource();
+        String data = (String) node.getUserData();
+        int value = Integer.parseInt(data);
+
+        disableAllMoves();
+        if (value > Utils.MARKET_COL_NUMBER - 1) {
+            notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW, value - Utils.MARKET_COL_NUMBER));
+        } else {
+            notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN, value));
+        }
+        runningAction = MovePlayerType.MARKET_INTERACTION;
+        hasPerformedUnBlockingAction = true;
+    }
+
+    /**
+     * Manage the response to a market move
+     *
+     * @param moveType
+     * @param pos
+     * @param executePlayerPos
+     */
+    @Override
+    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos) {
+        //BEGIN ANIMATION
+        final double duration = 1;
+        TranslateTransition temp, t2, t3;
+        ParallelTransition parallelTransition = new ParallelTransition();
+        ParallelTransition parallelTransitionDouble = new ParallelTransition();
+        SequentialTransition sequentialTransition = new SequentialTransition();
+
+        t2 = new TranslateTransition(
+                Duration.seconds(duration), additionalMarble
+        );
+        t3 = new TranslateTransition(
+                Duration.seconds(duration), additionalMarble
+        );
+
+        if (moveType == MoveType.COLUMN) {
+            t2.setByY(210);
+            t3.setByX(-1 * (3 - pos) * 80);
+            System.out.println(marketBoardObj[0][pos].getLayoutX() - additionalMarble.getLayoutX());
+            parallelTransitionDouble.getChildren().add(t2);
+            parallelTransitionDouble.getChildren().add(t3);
+            sequentialTransition.getChildren().add(parallelTransitionDouble);
+            for (int i = 2; i >= 0; i--) {
+                temp = new TranslateTransition(
+                        Duration.seconds(duration), marketBoardObj[i][pos]
+                );
+                temp.setByY(-70);
+                parallelTransition.getChildren().add(temp);
             }
-            case 1:{
-                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
-                }
-                else {
-                    if(pendingSelected.peek().getWarehousePosition()==-1){
-                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
-                    }
-                    else{
-                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.STONE));
-                        stone_pending_text.setText(--val+"x");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                    }
-                }
-                break;
+            temp = new TranslateTransition(
+                    Duration.seconds(duration), marketBoardObj[0][pos]
+            );
+            temp.setByX((3 - pos) * 80);
+            sequentialTransition.getChildren().add(parallelTransition);
+            sequentialTransition.getChildren().add(temp);
+            sequentialTransition.play();
+            slideColumn(pos);
+        } else {
+            t2.setByY((pos + 1) * 70);
+            t3.setByX(80);
+            System.out.println(marketBoardObj[0][pos].getLayoutX() - additionalMarble.getLayoutX());
+            parallelTransitionDouble.getChildren().add(t2);
+            parallelTransitionDouble.getChildren().add(t3);
+            sequentialTransition.getChildren().add(parallelTransitionDouble);
+            for (int i = 3; i >= 0; i--) {
+                temp = new TranslateTransition(
+                        Duration.seconds(duration), marketBoardObj[pos][i]
+                );
+                temp.setByX(-80);
+                parallelTransition.getChildren().add(temp);
             }
-            case 2:{
-                System.out.println(resNeededDevelopmentCardSelected);
-                if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(ResourceType.STONE))){
-                    if(val!=0){
-                        resNeededDevelopmentCardSelected.remove(resNeededDevelopmentCardSelected.indexOf(Resource.getInstance(ResourceType.STONE)));
-                        runDialog(Alert.AlertType.INFORMATION,Utils.fromResourcesToResourceCount(resNeededDevelopmentCardSelected).toString());
-                    }
-                    else{
-                        runDialog(Alert.AlertType.ERROR,"Stone is required but you haven't got it");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Stone isn't required");
-                }
-            }
+            temp = new TranslateTransition(
+                    Duration.seconds(duration), additionalMarble
+            );
+            temp.setByX(-80);
+            parallelTransition.getChildren().add(temp);
+            temp = new TranslateTransition(
+                    Duration.seconds(duration), marketBoardObj[pos][0]
+            );
+            temp.setByX(4 * 80);
+            temp.setByY(-1 * (pos + 1) * 70);
+            sequentialTransition.getChildren().add(parallelTransition);
+            sequentialTransition.getChildren().add(temp);
+            sequentialTransition.play();
+            slideRow(pos);
+        }
+        mapMarketResource();
+        updateFaith(executePlayerPos);
+        enableMove(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.DISCARD_LEADER_CARD);
+            add(MovePlayerType.ENABLE_LEADER_CARD);
+            add(MovePlayerType.END_TURN);
+            add(MovePlayerType.MOVE_RESOURCES);
+        }});
+    }
+
+    @Override
+    public void manageResourceMarketConvert(int first, int second, int executePlayerPos) {
+        //TODO: to manage
+    }
+
+    private void slideRow(int row) {
+        Sphere additionalMarbleTemp = additionalMarble;
+        this.additionalMarble = marketBoardObj[row][0]; //the marble in the left position of the row will be the next additionalMarble
+        marketBoardObj[row][0] = marketBoardObj[row][1]; //slide to left
+        marketBoardObj[row][1] = marketBoardObj[row][2]; //slide to left
+        marketBoardObj[row][2] = marketBoardObj[row][3]; //slide to left
+        marketBoardObj[row][3] = additionalMarbleTemp; //the old additional marble will be the marble in the right position of the row
+    }
+
+    private void slideColumn(int column) {
+        Sphere additionalMarbleTemp = additionalMarble;
+        this.additionalMarble = marketBoardObj[0][column]; //the marble in the top position of the column will be the next additionalMarble
+        marketBoardObj[0][column] = marketBoardObj[1][column]; //slide top
+        marketBoardObj[1][column] = marketBoardObj[2][column]; //slide top
+        marketBoardObj[2][column] = additionalMarbleTemp;
+        ;  //the old additional marble will be the marble in the bottom position of the column
+    }
+
+    //---------------------------------------RESOURCE POSITIONING-------------------------------------------------------
+    private ResourceType resourceTypeDragged;
+
+    public void onResDragDetected(MouseEvent mouseEvent) {
+        Pane pane = (Pane) mouseEvent.getSource();
+        Text pending_text = null;
+        if (pane == coin_pending) {
+            resourceTypeDragged = ResourceType.COIN;
+            pending_text = coin_pending_text;
+        } else if (pane == shield_pending) {
+            resourceTypeDragged = ResourceType.SHIELD;
+            pending_text = shield_pending_text;
+        } else if (pane == stone_pending) {
+            resourceTypeDragged = ResourceType.STONE;
+            pending_text = stone_pending_text;
+        } else if (pane == servant_pending) {
+            resourceTypeDragged = ResourceType.SERVANT;
+            pending_text = servant_pending_text;
+        }
+        int val = Integer.parseInt(pending_text.getText().replaceAll("\\D+", ""));
+        if (val > 0) {
+            Dragboard db = pane.startDragAndDrop(TransferMode.COPY);
+            ClipboardContent cc = new ClipboardContent();
+            cc.putImage(pane.getBackground().getImages().get(0).getImage());
+            db.setContent(cc);
         }
     }
-    public void servant_pending_click(){
-        int val = Integer.parseInt(servant_pending_text.getText().replaceAll("\\D+",""));
-        switch (getRunningAction()){
-            case -1:{
-                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
-                }
-                else{
-                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
-                    unsetOtherActions(1);
-                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SERVANT));
-                    servant_pending_text.setText(--val+"x");
-                    System.out.println(new ArrayList<>(pendingSelected));
-                }
-                break;
-            }
-            case 1:{
-                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
-                }
-                else {
-                    if(pendingSelected.peek().getWarehousePosition()==-1){
-                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
-                    }
-                    else{
-                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SERVANT));
-                        servant_pending_text.setText(--val+"x");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                    }
-                }
-                break;
-            }
-            case 2:{
-                System.out.println(resNeededDevelopmentCardSelected);
-                if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(ResourceType.SERVANT))){
-                    if(val!=0){
-                        resNeededDevelopmentCardSelected.remove(resNeededDevelopmentCardSelected.indexOf(Resource.getInstance(ResourceType.SERVANT)));
-                        runDialog(Alert.AlertType.INFORMATION,Utils.fromResourcesToResourceCount(resNeededDevelopmentCardSelected).toString());
-                    }
-                    else{
-                        runDialog(Alert.AlertType.ERROR,"Servant is required but you haven't got it");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Servant isn't required");
-                }
-            }
-        }
+
+    public void onDragOver(DragEvent dragEvent) {
+        dragEvent.acceptTransferModes(TransferMode.COPY);
     }
-    public void shield_pending_click(){
-        int val = Integer.parseInt(shield_pending_text.getText().replaceAll("\\D+",""));
-        switch (getRunningAction()){
-            case -1:{
-                //NO ACTIONS ALREADY RUNNING --> INITIALIZE NEW ACTION
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
-                }
-                else{
-                    runDialog(Alert.AlertType.INFORMATION, "Move all pending resources to warehouses, click on the resource and then click the target's warehouse");
-                    unsetOtherActions(1);
-                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SHIELD));
-                    shield_pending_text.setText(--val+"x");
+
+    public void onDragDroped(DragEvent dragEvent) {
+        if (dragEvent.isAccepted()) {
+            Pane warehousePane = (Pane) dragEvent.getSource();
+            int warehousePos = 0;
+            if (warehousePane == ware_00) {
+                warehousePos = 0;
+            } else if (warehousePane == ware_10 || warehousePane == ware_11) {
+                warehousePos = 1;
+            } else if (warehousePane == ware_20 || warehousePane == ware_21 || warehousePane == ware_22) {
+                warehousePos = 2;
+            } else if (warehousePane == bin) { // discard resources
+                if (runningAction.equals(MovePlayerType.MARKET_INTERACTION)) {
+                    pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, -1, resourceTypeDragged));
+                    pendingSelected.peek().setWarehousePosition(6); //6 = DISCARD
+                    decrementPendingLabelCount(resourceTypeDragged);
                     System.out.println(new ArrayList<>(pendingSelected));
-                }
-                break;
-            }
-            case 1:{
-                //RESOURCE POSITION ALREADY RUNNING, CHECK THAT PREVIOUSLY NO RESOURCE WERE LEFT WITHOUT PLACE
-                if(val==0){
-                    runDialog(Alert.AlertType.ERROR, "Error you have 0 resources");
-                }
-                else {
-                    if(pendingSelected.peek().getWarehousePosition()==-1){
-                        runDialog(Alert.AlertType.ERROR, "Before selecting another resource you must position the "+pendingSelected.peek().getResourceType());
-                    }
-                    else{
-                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,-1,ResourceType.SHIELD));
-                        shield_pending_text.setText(--val+"x");
-                        System.out.println(new ArrayList<>(pendingSelected));
+                    if (isLastPositioning()) {
+                        runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                        sendPlaceResourceMove();
                     }
                 }
-                break;
+                dragEvent.setDropCompleted(true);
+                return;
             }
-            case 2:{
-                System.out.println(resNeededDevelopmentCardSelected);
-                if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(ResourceType.SHIELD))){
-                    if(val!=0){
-                        resNeededDevelopmentCardSelected.remove(resNeededDevelopmentCardSelected.indexOf(Resource.getInstance(ResourceType.SHIELD)));
-                        if(resNeededDevelopmentCardSelected.isEmpty()){
-                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the needed resources");
+            switch (runningAction) {
+                case NOTHING: {
+                    //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+                    break;
+                }
+                case MARKET_INTERACTION: {
+                    //WE'RE INSIDE A POSITIONING
+                    if (!checkForTypeCorrectness(resourceTypeDragged, warehousePos)) {
+                        runDialog(Alert.AlertType.ERROR, "Error you must respect the warehousePane's type rule!");
+                        return;
+                    }
+                    if (warehousePane.getBackground() == null) {
+                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, -1, resourceTypeDragged));
+                        if (pendingSelected.peek().getWarehousePosition() != -1) {
+                            runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
+                        } else {
+                            pendingSelected.peek().setWarehousePosition(warehousePos);
+                            decrementPendingLabelCount(resourceTypeDragged);
+                            changeImage(warehousePane, Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()), "resources/");
+                            System.out.println(new ArrayList<>(pendingSelected));
+                            if (isLastPositioning()) {
+                                runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                                sendPlaceResourceMove();
+                            }
                         }
-                        else{
-                            runDialog(Alert.AlertType.INFORMATION,Utils.fromResourcesToResourceCount(resNeededDevelopmentCardSelected).toString());
-                        }
+                    } else {
+                        runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
                     }
-                    else{
-                        runDialog(Alert.AlertType.ERROR,"Shield is required but you haven't got it");
-                    }
+                    break;
                 }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Shield isn't required");
+                /*case BUY_DEVELOPMENT_CARD: {
+                    //select
+                    Background s = warehousePane.getBackground();
+                    System.out.println(resNeededDevelopmentCardSelected);
+
+                    if (s != null) {
+                        ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
+                        if (resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))) {
+                            resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 0, contained));
+                            warehousePane.setBackground(null);
+                            if (isLastPickingDevCard()) {
+                                runDialog(Alert.AlertType.INFORMATION, "You've correctly picked all the resources, now you must choose where to place the devcard!");
+                            }
+                        } else {
+                            runDialog(Alert.AlertType.ERROR, contained + " is not required!");
+                        }
+                    } else {
+                        runDialog(Alert.AlertType.ERROR, "Nothing selected!");
+                    }
+                }*/
+            }
+        }
+        dragEvent.setDropCompleted(true);
+    }
+
+    private void decrementPendingLabelCount(ResourceType resourceType) {
+        Text pending_text = null;
+        switch (resourceType) {
+            case COIN:
+                pending_text = coin_pending_text;
+                break;
+            case SHIELD:
+                pending_text = shield_pending_text;
+                break;
+            case SERVANT:
+                pending_text = servant_pending_text;
+                break;
+            case STONE:
+                pending_text = stone_pending_text;
+                break;
+        }
+        int val = Integer.parseInt(pending_text.getText().replaceAll("\\D+", ""));
+        pending_text.setText(--val + "x");
+    }
+
+    private boolean isLastPositioning() {
+        return new ArrayList<>(pendingSelected).stream().filter(el -> el.getWarehousePosition() != -1).count() == match.getPendingMarketResources().size();
+    }
+
+    private void sendPlaceResourceMove() {
+        runningAction = MovePlayerType.NOTHING;
+        //map respick to integer
+        ArrayList<Integer> whereToBePlaced = new ArrayList<>();
+        for (Resource res : match.getPendingMarketResources())
+            for (int i = 0; i < pendingSelected.size(); i++) {
+                if (res.getType() == pendingSelected.get(i).getResourceType()) {
+                    whereToBePlaced.add(pendingSelected.get(i).getWarehousePosition());
+                    System.out.println("Place a " + res.getType() + " in : " + pendingSelected.get(i).getWarehousePosition());
+                    pendingSelected.remove(i);
+                    break;
                 }
             }
+        notify(PositioningResourcesPlayerMove.getInstance(whereToBePlaced));
+        pendingSelected = new Stack<>();
+    }
+
+    //----------------------------------------END TURN----------------------------------------------------------------
+    public void endTurn() {
+        System.out.println(match.getPendingMarketResources());
+        if (!match.getPendingMarketResources().isEmpty()) {
+            runDialog(Alert.AlertType.ERROR, "You must place all the resources before ending your round");
+        } else {
+            System.out.println(hasPerformedUnBlockingAction);
+            hasPerformedUnBlockingAction = false;
+            notify(EndRoundPlayerMove.getInstance());
+            disableAllMoves();
+            msgBox.getChildren().clear();
+            msgBox.getChildren().add(new Text("Waiting for other players"));
         }
     }
-    public void abortAction(){
-        for(int p = 0;p<runningActions.size();p++){
-            if(runningActions.get(p)) {
-                revertAction(p);
-                runningActions.set(p, false);
-            }
-        }
+
+    @Override
+    public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
+        runDialog(Alert.AlertType.INFORMATION, message);
+        mapDevelopmentCards();
+    }
+
+    //--------------------------------------SUPPORT METHODS---------------------------------------------------------
+    private void updateFaith(int index) {
+        System.out.println("Vai a > " + faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX() + ", " + faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY());
+        faith_player.setLayoutX(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX() + 10);
+        faith_player.setLayoutY(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY() + 10);
+    }
+
+    //------------------------------------OTHERS----------------------------------------------------------------------
+
+    public void abortAction() {
+        revertAction();
+        runningAction = MovePlayerType.NOTHING;
         Platform.runLater(() -> {
             Alert dialog = new Alert(Alert.AlertType.INFORMATION, "Action correctly aborted", ButtonType.OK);
             dialog.show();
         });
     }
-    private void revertAction(int i){
-        switch (i) {
-            case 1: {
+
+    private void revertAction() {
+        switch (runningAction) {
+            case MARKET_INTERACTION: {
                 //POSITIONING RESOURCE ==> GIVE BACK REOSURCE TO PENDING MARKET
-                for(ResourcesCount r: Utils.fromResourcesToResourceCount(Utils.fromResourcePickToResources(new ArrayList<>(pendingSelected)))){
-                    switch(r.getType()){
-                        case COIN:{
-                            int n = Integer.parseInt(coin_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
-                            coin_pending_text.setText(n+"x");
+                for (ResourcesCount r : Utils.fromResourcesToResourceCount(Utils.fromResourcePickToResources(new ArrayList<>(pendingSelected)))) {
+                    switch (r.getType()) {
+                        case COIN: {
+                            int n = Integer.parseInt(coin_pending_text.getText().replaceAll("\\D+", "")) + r.getCount();
+                            coin_pending_text.setText(n + "x");
                             break;
                         }
-                        case STONE:{
-                            int n = Integer.parseInt(stone_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
-                            stone_pending_text.setText(n+"x");
+                        case STONE: {
+                            int n = Integer.parseInt(stone_pending_text.getText().replaceAll("\\D+", "")) + r.getCount();
+                            stone_pending_text.setText(n + "x");
                             break;
                         }
-                        case SHIELD:{
-                            int n = Integer.parseInt(shield_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
-                            shield_pending_text.setText(n+"x");
+                        case SHIELD: {
+                            int n = Integer.parseInt(shield_pending_text.getText().replaceAll("\\D+", "")) + r.getCount();
+                            shield_pending_text.setText(n + "x");
                             break;
                         }
-                        case SERVANT:{
-                            int n = Integer.parseInt(servant_pending_text.getText().replaceAll("\\D+","")) + r.getCount();
-                            servant_pending_text.setText(n+"x");
+                        case SERVANT: {
+                            int n = Integer.parseInt(servant_pending_text.getText().replaceAll("\\D+", "")) + r.getCount();
+                            servant_pending_text.setText(n + "x");
                             break;
                         }
                     }
@@ -656,7 +950,7 @@ public class PrimaryController extends GenericController {
                 mapWarehouses();
                 break;
             }
-            case 2:{
+            case BUY_DEVELOPMENT_CARD: {
                 developmentCardSelected = null;
                 resNeededDevelopmentCardSelected = new ArrayList<>();
                 resDevCardSelected = new Stack<>();
@@ -666,34 +960,13 @@ public class PrimaryController extends GenericController {
 
         }
     }
-    private boolean isRunning(int i){
-        return runningActions.get(i);
+
+
+    private boolean isLastPickingDevCard() {
+        return new ArrayList<>(resDevCardSelected).stream().filter(el -> el.getWarehousePosition() != -1).count() == resNeededDevelopmentCardSelected.size();
     }
-    private int getRunningAction(){
-        for(int i = 0;i<runningActions.size();i++){
-            if(runningActions.get(i)){
-                return i;
-            }
-        }
-        return -1;
-    }
-    public void unsetOtherActions(int i){
-        for(int p = 0;p<runningActions.size();p++){
-            if(i!=p){
-                runningActions.set(p,false);
-            }
-            else{
-                runningActions.set(p,true);
-            }
-        }
-    }
-    private boolean isLastPositioning(){
-        return new ArrayList<>(pendingSelected).stream().filter(el->el.getWarehousePosition()!=-1).count() == resToBePlaced.size();
-    }
-    private boolean isLastPickingDevCard(){
-        return new ArrayList<>(resDevCardSelected).stream().filter(el->el.getWarehousePosition()!=-1).count() == resNeededDevelopmentCardSelected.size();
-    }
-    private void runDialog(Alert.AlertType type,String message){
+
+    private void runDialog(Alert.AlertType type, String message) {
         Platform.runLater(() -> {
             Alert dialog = new Alert(type, message, ButtonType.OK);
             dialog.show();
@@ -706,550 +979,65 @@ public class PrimaryController extends GenericController {
         tabpane.setDisable(true);
     }
 
-    @Override
-    public void printModel() {
-        // new Image(url)
-        mapLeaderCards();
-        mapMarbles();
-        mapWarehouses();
-        mapDevelopmentCards();
-        mapStrongBox();
-    }
-
-    public void mapStrongBox(){
-        for(ResourcesCount r:Utils.fromResourcesToResourceCount(match.getPlayers().get(match.getWhoAmI()).getStrongBox())){
-            switch (r.getType()){
-                case STONE:{
-                    stone_strongbox_text.setText(r.getCount()+"x");
-                    break;
-                }
-                case SERVANT:{
-                    servant_strongbox_text.setText(r.getCount()+"x");
-                    break;
-                }
-                case COIN:{
-                    coin_strongbox_text.setText(r.getCount()+"x");
-                    break;
-                }
-                case SHIELD:{
-                    shield_strongbox_text.setText(r.getCount()+"x");
-                    break;
-                }
-            }
-        }
-    }
-
-    public void mapWarehouses(){
-        mapWarehousesStandard();
-        mapWarehousesAdditional();
-    }
-    public void mapWarehousesStandard(){
-        unsetAllBackgroundWarehouseStandard();
-        for(int i = 0;i<3;i++){
-            for(int j=0;j<match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResources().size();j++){
-                changeImage(warehousesStandard.get(i).get(j),Utils.mapResTypeToImage(match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResourceType()),"resources/");
-            }
-        }
-    }
-    public void mapWarehousesAdditional(){
+    public void resource_pending_click() {
 
     }
 
-    public void mapDevelopmentCards(){
-        System.out.println("stiamo mappando le dev card");
-        for(int i = 0;i<3;i++){
-            for(int j = 0;j<4;j++){
-                System.out.println(i+","+j);
-                try{changeImage(devcardmatrix[i][j], match.getDevelopmentCards()[i][j].peek().getImage(),"devcard_leadercard/");}
-                catch (Exception e){}
-            }
-        }
-    }
-
-    public void mapMarbles(){
-        m_add.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getAdditionalMarble().getColor()));
-        m_00.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0,0).getColor()));
-        m_01.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0,1).getColor()));
-        m_02.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0,2).getColor()));
-        m_03.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0,3).getColor()));
-        m_10.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1,0).getColor()));
-        m_11.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1,1).getColor()));
-        m_12.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1,2).getColor()));
-        m_13.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(1,3).getColor()));
-        m_20.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2,0).getColor()));
-        m_21.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2,1).getColor()));
-        m_22.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2,2).getColor()));
-        m_23.setFill(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2,3).getColor()));
-    }
-
-    public void mapLeaderCards(){
-        changeImage(leadercards[0],match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(0).getImage(),"devcard_leadercard/");
-        changeImage(leadercards[1],match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(1).getImage(),"devcard_leadercard/");
-    }
-
-    public void warehouse00Clicked(){
-        switch (getRunningAction()) {
-            case -1: {
-                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
-
-                break;
-            }
-            case 1: {
-                //WE'RE INSIDE A POSITIONING
-                Background s = ware_00.getBackground();
-                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),0)){
-                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
-                    return;
-                }
-                if(ware_00.getBackground()==null){
-                    if(pendingSelected.peek().getWarehousePosition()!=-1){
-                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
-                    }
-                    else {
-                        pendingSelected.peek().setWarehousePosition(0);
-                        changeImage(ware_00,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                        if(isLastPositioning()){
-                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                            sendPlaceResourceMove();
-                        }
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
-                }
-                break;
-            }
-            case 2:{
-                Background s = ware_00.getBackground();
-                System.out.println(resNeededDevelopmentCardSelected);
-
-                if(s!=null){
-                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
-                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
-                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,0,contained));
-                        ware_00.setBackground(null);
-                        if(isLastPickingDevCard()){
-                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
-                        }
-                    }
-                    else {
-                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
-                }
-            }
-        }
-    }
-    public void warehouse10Clicked(){
-        switch (getRunningAction()) {
-            case -1: {
-                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
-
-                break;
-            }
-            case 1: {
-                //WE'RE INSIDE A POSITIONING
-                Background s = ware_10.getBackground();
-                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),1)){
-                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
-                    return;
-                }
-                if(ware_10.getBackground()==null){
-                    if(pendingSelected.peek().getWarehousePosition()!=-1){
-                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
-                    }
-                    else{
-                        pendingSelected.peek().setWarehousePosition(1);
-                        changeImage(ware_10,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                        if(isLastPositioning()){
-                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                            sendPlaceResourceMove();
-                        }
-                    }
-
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
-                }
-                break;
-            }
-            case 2:{
-                Background s = ware_10.getBackground();
-                System.out.println(resNeededDevelopmentCardSelected);
-
-                if(s!=null){
-                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
-                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
-                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,1,contained));
-                        ware_10.setBackground(null);
-                        if(isLastPickingDevCard()){
-                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
-                        }
-                    }
-                    else {
-                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
-                }
-            }
-        }
-    }
-    public void warehouse11Clicked(){
-        switch (getRunningAction()) {
-            case -1: {
-                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
-
-                break;
-            }
-            case 1: {
-                //WE'RE INSIDE A POSITIONING
-                Background s = ware_11.getBackground();
-                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),1)){
-                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
-                    return;
-                }
-                if(ware_11.getBackground()==null){
-                    if(pendingSelected.peek().getWarehousePosition()!=-1){
-                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
-                    }
-                    else{
-                        pendingSelected.peek().setWarehousePosition(1);
-                        changeImage(ware_11,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                        if(isLastPositioning()){
-                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                            sendPlaceResourceMove();
-                        }
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
-                }
-                break;
-            }
-            case 2:{
-                Background s = ware_11.getBackground();
-                System.out.println(resNeededDevelopmentCardSelected);
-
-                if(s!=null){
-                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
-                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
-                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,1,contained));
-                        ware_11.setBackground(null);
-                        if(isLastPickingDevCard()){
-                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
-                        }
-                    }
-                    else {
-                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
-                }
-            }
-        }
-    }
-    public void warehouse20Clicked(){
-        switch (getRunningAction()) {
-            case -1: {
-                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
-
-                break;
-            }
-            case 1: {
-                //WE'RE INSIDE A POSITIONING
-                Background s = ware_20.getBackground();
-                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),2)){
-                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
-                    return;
-                }
-                if(ware_20.getBackground()==null){
-                    if(pendingSelected.peek().getWarehousePosition()!=-1){
-                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
-                    }
-                    else {
-                        pendingSelected.peek().setWarehousePosition(2);
-                        changeImage(ware_20, Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()), "resources/");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                        if(isLastPositioning()){
-                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                            sendPlaceResourceMove();
-                        }
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
-                }
-                break;
-            }
-            case 2:{
-                Background s = ware_20.getBackground();
-                System.out.println(resNeededDevelopmentCardSelected);
-
-                if(s!=null){
-                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
-                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
-                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,2,contained));
-                        ware_20.setBackground(null);
-                        if(isLastPickingDevCard()){
-                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
-                        }
-                    }
-                    else {
-                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
-                }
-            }
-        }
-    }
-    public void warehouse21Clicked(){
-        switch (getRunningAction()) {
-            case -1: {
-                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
-
-                break;
-            }
-            case 1: {
-                //WE'RE INSIDE A POSITIONING
-                Background s = ware_21.getBackground();
-                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),2)){
-                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
-                    return;
-                }
-                if(ware_21.getBackground()==null){
-                    if(pendingSelected.peek().getWarehousePosition()!=-1){
-                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
-                    }
-                    else{
-                        pendingSelected.peek().setWarehousePosition(2);
-                        changeImage(ware_21,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                        if(isLastPositioning()){
-                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                            sendPlaceResourceMove();
-                        }
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
-                }
-                break;
-            }
-            case 2:{
-                Background s = ware_21.getBackground();
-                System.out.println(resNeededDevelopmentCardSelected);
-
-                if(s!=null){
-                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
-                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
-                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,2,contained));
-                        ware_21.setBackground(null);
-                        if(isLastPickingDevCard()){
-                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
-                        }
-                    }
-                    else {
-                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
-                }
-            }
-        }
-    }
-    public void warehouse22Clicked(){
-        switch (getRunningAction()) {
-            case -1: {
-                //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
-
-                break;
-            }
-            case 1: {
-                //WE'RE INSIDE A POSITIONING
-                Background s = ware_22.getBackground();
-                if(!checkForTypeCorrectness(pendingSelected.peek().getResourceType(),2)){
-                    runDialog(Alert.AlertType.ERROR, "Error you must respect the warehouse's type rule!");
-                    return;
-                }
-                if(ware_22.getBackground()==null){
-                    if(pendingSelected.peek().getWarehousePosition()!=-1){
-                        runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
-                    }
-                    else{
-                        pendingSelected.peek().setWarehousePosition(2);
-                        changeImage(ware_22,Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()),"resources/");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                        if(isLastPositioning()){
-                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                            sendPlaceResourceMove();
-                        }
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
-                }
-                break;
-            }
-            case 2:{
-                Background s = ware_22.getBackground();
-                System.out.println(resNeededDevelopmentCardSelected);
-
-                if(s!=null){
-                    ResourceType contained = Utils.getResourceTypeFromUrl(s.getImages().get(0).getImage().getUrl());
-                    if(resNeededDevelopmentCardSelected.contains(Resource.getInstance(contained))){
-                        resDevCardSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE,2,contained));
-                        ware_22.setBackground(null);
-                        if(isLastPickingDevCard()){
-                            runDialog(Alert.AlertType.INFORMATION,"You've correctly picked all the resources, now you must choose where to place the devcard!");
-                        }
-                    }
-                    else {
-                        runDialog(Alert.AlertType.ERROR,contained + " is not required!");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Nothing selected!");
-                }
-            }
-        }
-    }
-
-    public void button_card_space_0_clicked(){
-        switch(getRunningAction())
-        {
-            case 2:{
-                if(resNeededDevelopmentCardSelected.size()==resDevCardSelected.size()){
-                    if(match.getPlayers().get(match.getWhoAmI()).developmentCardCanBeAdded(developmentCardSelected, 0)){
-                        runDialog(Alert.AlertType.INFORMATION,"The card can be correctly placed here!");
-                        notify(BuyDevelopmentCardPlayerMove.getInstance(developmentCardSelected.getType(),developmentCardSelected.getLevel(),0,new ArrayList<>(resDevCardSelected)));
-                    }
-                    else{
-                        runDialog(Alert.AlertType.ERROR,"You can't place there your card!");
-                    }
-                }
-                else{
-                    runDialog(Alert.AlertType.ERROR,"Before trying to place the card you must pick all the resources needed!");
-                }
-                break;
-            }
-            default:{
-                runDialog(Alert.AlertType.ERROR,"Check which action you're performing!");
-            }
-        }
-    }
-    public void button_card_space_1_clicked(){
-
-    }
-    public void button_card_space_2_clicked(){
+    public void warehouseClicked() {
 
     }
 
-    public void binClicked(){
-        switch (getRunningAction()) {
-            case -1: {
-                //NOTHING
 
-                break;
-            }
-            case 1: {
-                if(pendingSelected.peek().getWarehousePosition()!=-1){
-                    runDialog(Alert.AlertType.ERROR, "Resource already placed, select another one!");
-                }
-                else {
-                    pendingSelected.peek().setWarehousePosition(6); //6 = DISCARD
-                    System.out.println(new ArrayList<>(pendingSelected));
-                    if(isLastPositioning()){
-                        runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                        sendPlaceResourceMove();
-                    }
-                }
-                break;
-            }
-        }
-    }
+    //-------------------------------ON CLICK METHODS-----------------------
 
-    private void sendPlaceResourceMove(){
-        runningActions.set(1,false);
-        //map respick to integer
-        ArrayList<Integer> whereToBePlaced = new ArrayList<>();
-        ArrayList<ResourcePick> whereArePlaced = new ArrayList<>(pendingSelected);
-        for (Resource r:resToBePlaced) {
-            for(int i = 0;i<pendingSelected.size();i++){
-                if(r.getType()==pendingSelected.get(i).getResourceType()){
-                    whereToBePlaced.add(pendingSelected.get(i).getWarehousePosition());
-                    System.out.println("Place a "+r.getType()+ " in : "+pendingSelected.get(i).getWarehousePosition());
-                    pendingSelected.remove(i);
-                }
-            }
-        }
-
-        try {
-            notify(PositioningResourcesPlayerMove.getInstance(whereToBePlaced));
-        }catch(Exception e){
-            //todo: what do we do?
-        }
-        pendingSelected = new Stack<>();
-        resToBePlaced = new ArrayList<>();
-    }
-
-    private boolean checkForTypeCorrectness(ResourceType resourceType, int where){
+    private boolean checkForTypeCorrectness(ResourceType resourceType, int where) {
         //check 3 warehouses rule
         //TODO: warehouse addizionali
-        for(int i=0;i<warehousesStandard.size();i++){
-            for(int j=0;j<warehousesStandard.get(i).size();j++){
-                try{
+        for (int i = 0; i < warehousesStandard.size(); i++) {
+            for (int j = 0; j < warehousesStandard.get(i).size(); j++) {
+                try {
                     ResourceType res = Utils.getResourceTypeFromUrl(warehousesStandard.get(i).get(j).getBackground().getImages().get(0).getImage().getUrl());
-                    if(res==resourceType && where!=i){
+                    if (res == resourceType && where != i) {
                         return false;
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     //è vuoto
                 }
             }
         }
         //check warehouse correctness
-        for(int j=0;j<warehousesStandard.get(where).size();j++){
-            try{
+        for (int j = 0; j < warehousesStandard.get(where).size(); j++) {
+            try {
                 ResourceType res = Utils.getResourceTypeFromUrl(warehousesStandard.get(where).get(j).getBackground().getImages().get(0).getImage().getUrl());
-                if(res!=resourceType){
+                if (res != resourceType) {
                     //trying to add to warehouse with different types
                     return false;
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 //è vuoto
             }
         }
         return true;
     }
 
-    private void unsetAllBackgroundWarehouseStandard(){
-        for(int i = 0;i<3;i++){
-            for(int j=0;j<warehousesStandard.get(i).size();j++){
+    private void unsetAllBackgroundWarehouseStandard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < warehousesStandard.get(i).size(); j++) {
                 warehousesStandard.get(i).get(j).setBackground(null);
             }
         }
     }
 
-    public void changeImage(Pane p,String s,String type){
-        System.out.println("Stiamo cambiando icona e settando : "+type+s);
+    public void changeImage(Pane p, String s, String type) {
+        System.out.println("Stiamo cambiando icona e settando : " + type + s);
         URL url = null;
-        try{
-            url = new File("src/main/resources/images/"+type+s+".png").toURI().toURL();
-        }catch (Exception e){}
+        try {
+            url = new File("src/main/resources/images/" + type + s + ".png").toURI().toURL();
+        } catch (Exception e) {
+        }
         Image image = new Image(url.toString());
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
-        BackgroundImage myBI= new BackgroundImage(new Image(url.toString()),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+        BackgroundImage myBI = new BackgroundImage(new Image(url.toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
         Background r = new Background(myBI);
         p.setBackground(r);
     }
@@ -1274,215 +1062,17 @@ public class PrimaryController extends GenericController {
 
     }
 
-    @Override
-    public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
-        System.out.println("Correctly received buy decelopment card response");
-        changeImage(card_space.get(posToAdd),developmentCardSelected.getImage(),"devcard_leadercard/");
-        hasPerformedUnBlockingAction = true;
-        developmentCardSelected = null;
-        resNeededDevelopmentCardSelected = new ArrayList<>();
-        resDevCardSelected = new Stack<>();
-        hasPerformedUnBlockingAction = true;
-        runningActions.set(2,false);
-        disableAllMoves();
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        mapWarehouses();
-        mapDevelopmentCards();
-    }
 
     @Override
     public void discardLeaderCard(int leaderCardPosition, int executePlayerPos) {
 
     }
 
-    @Override
-    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos) {
-        //BEGIN ANIMATION
-        ArrayList<TranslateTransition> translateTransitionArray = new ArrayList<>();
-        final double duration = 1;
-        TranslateTransition temp,t2,t3;
-        ParallelTransition parallelTransition = new ParallelTransition();
-        ParallelTransition parallelTransitionDouble = new ParallelTransition();
-        SequentialTransition sequentialTransition = new SequentialTransition();
-
-        if(moveType==MoveType.COLUMN)
-        {
-            t2 = new TranslateTransition(
-                    Duration.seconds(duration), additionalMarble
-            );
-            t3 = new TranslateTransition(
-                    Duration.seconds(duration), additionalMarble
-            );
-            t2.setByY(210);
-            t3.setByX(-1*(3-pos)*80);
-            System.out.println(marketBoardObj[0][pos].getLayoutX()-additionalMarble.getLayoutX());
-            parallelTransitionDouble.getChildren().add(t2);
-            parallelTransitionDouble.getChildren().add(t3);
-            sequentialTransition.getChildren().add(parallelTransitionDouble);
-            for(int i = 2;i>=0;i--)
-            {
-                temp = new TranslateTransition(
-                        Duration.seconds(duration), marketBoardObj[i][pos]
-                );
-                temp.setByY(-70);
-                parallelTransition.getChildren().add(temp);
-            }
-            temp = new TranslateTransition(
-                    Duration.seconds(duration), marketBoardObj[0][pos]
-            );
-            temp.setByX((3-pos)*80);
-            sequentialTransition.getChildren().add(parallelTransition);
-            sequentialTransition.getChildren().add(temp);
-            sequentialTransition.play();
-            slideColumn(pos);
-        }
-        else
-        {
-            t2 = new TranslateTransition(
-                    Duration.seconds(duration), additionalMarble
-            );
-            t3 = new TranslateTransition(
-                    Duration.seconds(duration), additionalMarble
-            );
-            t2.setByY((pos+1)*70);
-            t3.setByX(80);
-            System.out.println(marketBoardObj[0][pos].getLayoutX()-additionalMarble.getLayoutX());
-            parallelTransitionDouble.getChildren().add(t2);
-            parallelTransitionDouble.getChildren().add(t3);
-            sequentialTransition.getChildren().add(parallelTransitionDouble);
-            for(int i = 3;i>=0;i--)
-            {
-                temp = new TranslateTransition(
-                        Duration.seconds(duration), marketBoardObj[pos][i]
-                );
-                temp.setByX(-80);
-                parallelTransition.getChildren().add(temp);
-            }
-            temp = new TranslateTransition(
-                    Duration.seconds(duration), additionalMarble
-            );
-            temp.setByX(-80);
-            parallelTransition.getChildren().add(temp);
-            temp = new TranslateTransition(
-                    Duration.seconds(duration), marketBoardObj[pos][0]
-            );
-            temp.setByX(4*80);
-            temp.setByY(-1*(pos+1)*70);
-            sequentialTransition.getChildren().add(parallelTransition);
-            sequentialTransition.getChildren().add(temp);
-            sequentialTransition.play();
-            slideRow(pos);
-        }
-        updateMarketResource();
-        updateFaith(executePlayerPos);
-        print();
-    }
-
-    private void updateMarketResource(){
-        ArrayList<ResourcesCount> res = Utils.fromResourcesToResourceCount(match.getPendingMarketResources());
-        resToBePlaced = match.getPendingMarketResources();
-        for(ResourcesCount r: res){
-            switch (r.getType()){
-                case COIN:{
-                    coin_pending_text.setText(r.getCount()+"x");
-                    break;
-                }
-                case STONE:{
-                    stone_pending_text.setText(r.getCount()+"x");
-                    break;
-                }
-                case SERVANT:{
-                    servant_pending_text.setText(r.getCount()+"x");
-                    break;
-                }
-                case SHIELD:{
-                    shield_pending_text.setText(r.getCount()+"x");
-                    break;
-                }
-                default: break;
-            }
-        }
-    }
-    private void updateFaith(int index){
-        System.out.println("Vai a > "+faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX()+", "+faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY());
-        faith_player.setLayoutX(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX()+10);
-        faith_player.setLayoutY(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY()+10);
-    }
-    private void slideRow(int row) {
-        Circle additionalMarbleTemp = additionalMarble;
-        this.additionalMarble = marketBoardObj[row][0]; //the marble in the left position of the row will be the next additionalMarble
-        marketBoardObj[row][0] = marketBoardObj[row][1]; //slide to left
-        marketBoardObj[row][1] = marketBoardObj[row][2]; //slide to left
-        marketBoardObj[row][2] = marketBoardObj[row][3]; //slide to left
-        marketBoardObj[row][3] = additionalMarbleTemp; //the old additional marble will be the marble in the right position of the row
-    }
-    private void slideColumn(int column) {
-        Circle additionalMarbleTemp = additionalMarble;
-        this.additionalMarble = marketBoardObj[0][column]; //the marble in the top position of the column will be the next additionalMarble
-        marketBoardObj[0][column] = marketBoardObj[1][column]; //slide top
-        marketBoardObj[1][column] = marketBoardObj[2][column]; //slide top
-        marketBoardObj[2][column] = additionalMarbleTemp;;  //the old additional marble will be the marble in the bottom position of the column
-    }
-    private String print(){
-        System.out.println(change(additionalMarble.getFill().toString()));
-        for(int i =0;i<3;i++)
-        {
-            for(int j=0;j<4;j++)
-            {
-                System.out.print(change(marketBoardObj[i][j].getFill().toString())+"\t");
-            }
-            System.out.println();
-        }
-        return null;
-    }
-    private String change(String s){
-        if(s.equals(Color.RED.toString()))
-        {
-            return "RED";
-        }
-        else if(s.equals(Color.AQUA.toString()))
-        {
-            return "AQ";
-        }
-        else if(s.equals(Color.WHITE.toString()))
-        {
-            return "WH";
-        }
-        else if(s.equals(Color.GREY.toString()))
-        {
-            return "GR";
-        }
-        else if(s.equals(Color.PURPLE.toString()))
-        {
-            return "PU";
-        }
-        else if(s.equals(Color.YELLOW.toString()))
-        {
-            return "YE";
-        }
-        return null;
-    }
-
-    @Override
-    public void manageResourceMarketConvert(int first, int second, int executePlayerPos) {
-
-    }
 
     @Override
     public void manageAllowedMoves(ArrayList<MovePlayerType> possibleMove) {
         enableMove(possibleMove);
         System.out.println("manage");
-    }
-
-    @Override
-    public void manageEndTurn(boolean correctlyEnded, int executePlayerPos,String message) {
-        runDialog(Alert.AlertType.INFORMATION,message);
-        mapDevelopmentCards();
     }
 
     @Override
@@ -1492,7 +1082,7 @@ public class PrimaryController extends GenericController {
 
     @Override
     public void updateModel(Match match, int playerPosition) {
-        this.match= match;
+        this.match = match;
         initialization();
         printModel();
         //todo: print
@@ -1508,27 +1098,6 @@ public class PrimaryController extends GenericController {
 
     }
 
-    @Override
-    public void askToDiscardTwoLeader(int numOfResource, int executePlayerPos) {
-        //Todo:to Modify
-        notify(DiscardTwoLeaderCardsPlayerMove.getInstance(0,1, ResourceType.COIN,ResourceType.FAITH));
-         /*if(myController instanceof PrimaryController)
-        {
-            //print discard
-            String [] indexes = {"1","2","3","4"};
-            ChoiceDialog<String> dialog = new ChoiceDialog<>(indexes[0], indexes);
-            dialog.setHeaderText("Discard leader card");
-            dialog.setTitle("Choose");
-            dialog.setContentText("Discard #:");
-            Optional<String> choice = dialog.showAndWait();
-            //TODO: manage response
-            notify(DiscardLeaderCardPlayerMove.getInstance(Integer.parseInt(choice.get())));
-            ((PrimaryController) myController).initialization();
-            myController.printModel();
-            //myController.blockView();
-        }*/
-
-    }
 
     @Override
     public void askForData(String message, int executePlayerPos) {
@@ -1545,107 +1114,14 @@ public class PrimaryController extends GenericController {
 
     }
 
-    public void playSound(String sound){
+    public void playSound(String sound) {
         //Shalby's code, solo nome senza .wav
     }
 
-    public void clickCol3(){
-        disableAllMoves();
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,3));
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        hasPerformedUnBlockingAction = true;
-    }
-    public void clickCol2(){
-        disableAllMoves();
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,2));
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        hasPerformedUnBlockingAction = true;
-    }
-    public void clickCol1(){
-        disableAllMoves();
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,1));
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        hasPerformedUnBlockingAction = true;
-    }
-    public void clickCol0(){
-        disableAllMoves();
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN,0));
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        hasPerformedUnBlockingAction = true;
-    }
-    public void clickRow2(){
-        disableAllMoves();
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,2));
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        hasPerformedUnBlockingAction = true;
-    }
-    public void clickRow1(){
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,1));
-        disableAllMoves();
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        hasPerformedUnBlockingAction = true;
-    }
-    public void clickRow0(){
-        disableAllMoves();
-        notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW,0));
-        enableMove(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.DISCARD_LEADER_CARD);
-            add(MovePlayerType.ENABLE_LEADER_CARD);
-            add(MovePlayerType.END_TURN);
-            add(MovePlayerType.MOVE_RESOURCES);
-        }});
-        hasPerformedUnBlockingAction = true;
-    }
 
-    public void endTurn(){
-        //
-        System.out.println(match.getPendingMarketResources());
-        if(!match.getPendingMarketResources().isEmpty()){
-            runDialog(Alert.AlertType.ERROR,"You must place all the resources before ending your round");
-        }
-        else{
-            System.out.println(hasPerformedUnBlockingAction);
-            hasPerformedUnBlockingAction = false;
-            notify(EndRoundPlayerMove.getInstance());
-            disableAllMoves();
-            msgBox.getChildren().clear();
-            msgBox.getChildren().add( new Text("Waiting for other players"));
-        }
-    }
-
-    public void disableAllMoves(){
+    public void disableAllMoves() {
         System.out.println("disable");
-        for(Pane p:leadercards){
+        for (Pane p : leadercards) {
             p.setDisable(true);
         }
         /*for(Pane p[]:devcardmatrix){
@@ -1653,7 +1129,7 @@ public class PrimaryController extends GenericController {
                 s.setDisable(true);
             }
         }*/
-        for(Pane p:market_button){
+        for (Pane p : market_button) {
             p.setDisable(true);
         }
         coin_pending.setDisable(true);
@@ -1662,49 +1138,28 @@ public class PrimaryController extends GenericController {
         shield_pending.setDisable(true);
     }
 
-    public void enableMove(ArrayList<MovePlayerType> moves){
-        System.out.println("enable "+ moves.toString());
+    public void enableMove(ArrayList<MovePlayerType> moves) {
+        System.out.println("enable " + moves.toString());
         Cursor c = null;
         boolean dis = false;
         //Market Interaction
-        if(moves.contains(MovePlayerType.MARKET_INTERACTION))
-        {
-            for(Pane p:market_button){
+        if (moves.contains(MovePlayerType.MARKET_INTERACTION)) {
+            for (Pane p : market_button) {
                 p.setDisable(false);
             }
         }
-        if(moves.contains(MovePlayerType.BUY_DEVELOPMENT_CARD))
-        {
+        if (moves.contains(MovePlayerType.BUY_DEVELOPMENT_CARD)) {
             /*for(Pane p[]:devcardmatrix){
                 for(Pane s:p){
                     s.setDisable(true);
                 }
             }*/
         }
-        if(moves.contains(MovePlayerType.MOVE_RESOURCES))
-        {
+        if (moves.contains(MovePlayerType.MOVE_RESOURCES)) {
             coin_pending.setDisable(false);
             servant_pending.setDisable(false);
             shield_pending.setDisable(false);
             stone_pending.setDisable(false);
-        }
-    }
-
-    public void devcard00_click(){
-        if(getRunningAction()!=-1){
-            runDialog(Alert.AlertType.ERROR,"Another action is already running, abort it before performing another one!");
-        }
-        else{
-            runDialog(Alert.AlertType.INFORMATION,"Card correctly selected, now you must select from your warehouses the resources needed");
-            runningActions.set(2,true);
-            developmentCardSelected = match.getDevelopmentCards()[0][0].peek();
-            resNeededDevelopmentCardSelected = Utils.fromResourceCountToResources(developmentCardSelected.getCosts(match.getPlayers().get(match.getWhoAmI())));
-            ScaleTransition st = new ScaleTransition(Duration.millis(500),devcard_00.getParent());
-            st.setByX(0.3f);
-            st.setByY(0.3f);
-            st.setCycleCount(2);
-            st.setAutoReverse(true);
-            st.play();
         }
     }
 }

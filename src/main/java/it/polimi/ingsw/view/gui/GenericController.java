@@ -38,21 +38,6 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         clientConnectionView.addObserver(myController);
         myController.initialization();
         myController.disableAllMoves();
-        /*if(myController instanceof PrimaryController)
-        {
-            //print discard
-            String [] indexes = {"1","2","3","4"};
-            ChoiceDialog<String> dialog = new ChoiceDialog<>(indexes[0], indexes);
-            dialog.setHeaderText("Discard leader card");
-            dialog.setTitle("Choose");
-            dialog.setContentText("Discard #:");
-            Optional<String> choice = dialog.showAndWait();
-            //TODO: manage response
-            notify(DiscardLeaderCardPlayerMove.getInstance(Integer.parseInt(choice.get())));
-            ((PrimaryController) myController).initialization();
-            myController.printModel();
-            //myController.blockView();
-        }*/
     }
     //abstact method to modify view
     public abstract void blockView();

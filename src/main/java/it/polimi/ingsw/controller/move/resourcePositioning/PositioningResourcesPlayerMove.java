@@ -16,8 +16,8 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
      *                              the value can be {0,1,2,3,4,null}, {0,1,2} refers to standard {@link it.polimi.ingsw.model.Warehouse} {3,4} to additional {@link it.polimi.ingsw.model.Warehouse}
      *                              null means that the Resource has to be discarded
      */
-    public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources) throws Exception {
-        this.whereToPlaceResources = (ArrayList<Integer>)whereToPlaceResources.clone();
+    public PositioningResourcesPlayerMove(ArrayList<Integer> whereToPlaceResources){
+        this.whereToPlaceResources = whereToPlaceResources;
     }
 
     /**
@@ -25,7 +25,7 @@ public class PositioningResourcesPlayerMove extends PlayerMove {
      * @param whereToPlaceResources an {@link ArrayList} of {@link Integer}
      * @return an instance of {@link PositioningResourcesPlayerMove}
      */
-    public static PositioningResourcesPlayerMove getInstance(ArrayList<Integer> whereToPlaceResources) throws Exception
+    public static PositioningResourcesPlayerMove getInstance(ArrayList<Integer> whereToPlaceResources)
     {
         return new PositioningResourcesPlayerMove(whereToPlaceResources);
     }

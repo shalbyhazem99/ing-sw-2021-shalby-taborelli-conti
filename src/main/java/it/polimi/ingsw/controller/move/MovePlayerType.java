@@ -463,6 +463,12 @@ public enum MovePlayerType {
             }
             return moveResourcesPlayerMove;
         }
+    },
+    NOTHING("Nothing"){
+        @Override
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
+            return null;
+        }
     };
 
     private String description;
