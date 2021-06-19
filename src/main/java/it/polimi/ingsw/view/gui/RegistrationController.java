@@ -21,13 +21,8 @@ import java.util.ArrayList;
 
 public class RegistrationController extends GenericController {
 
-
     @FXML
     private TextArea textAreaName;
-
-    public void onClick(MouseEvent mouseEvent) {
-        notify(MessageMove.getInstance(textAreaName.getText()));
-    }
 
     @Override
     public void update(MoveResponse message) {

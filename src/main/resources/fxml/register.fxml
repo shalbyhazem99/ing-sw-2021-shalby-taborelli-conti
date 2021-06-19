@@ -8,7 +8,6 @@
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
             <TextArea fx:id="textAreaName" prefHeight="175.0" prefWidth="356.0" />
-            <Button mnemonicParsing="false" onMouseClicked="#onClick" text="SET VALUE" />
             <Button mnemonicParsing="false" onMouseClicked="#onClickPlay" text="PLAY!" />
          </children>
       </VBox>

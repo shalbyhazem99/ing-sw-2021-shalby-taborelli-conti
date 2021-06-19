@@ -941,7 +941,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public ArrayList<Resource> getPendingMarketResources(){
         return pendingMarketResources;
     }
-
+    public ArrayList<Resource> getPendingProductionResources() {
+        return pendingProductionResources;
+    }
     public void ReconnectPlayer(String playerName, boolean noControl) {
         Player player = getPlayerFromName(playerName);
         if (player == null) {
