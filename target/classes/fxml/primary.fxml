@@ -23,7 +23,7 @@
                                     <children>
                                         <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                                             <children>
-                                                <Pane fx:id="card_space_0" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
+                                                <Pane fx:id="card_space_0" layoutX="8.0" layoutY="6.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="230.0" prefWidth="143.0" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -95,7 +95,6 @@
                                 <Pane fx:id="faith_22" layoutX="820.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane fx:id="faith_23" layoutX="869.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane fx:id="faith_24" layoutX="918.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                                <Pane layoutX="299.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane fx:id="button_card_space_0" layoutX="456.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" userData="0">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
@@ -107,22 +106,47 @@
                                 <Pane layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Rectangle fx:id="faith_player" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="20.0" layoutX="48.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="20.0" />
-                                <Pane fx:id="ware_11" layoutX="130.0" layoutY="291.0" onDragDropped="#onDragDroped" onDragOver="#onDragOver" onMouseClicked="#warehouseClicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                                <Pane fx:id="ware_10" layoutX="74.0" layoutY="291.0" onDragDropped="#onDragDroped" onDragOver="#onDragOver" onMouseClicked="#warehouseClicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                                <Pane fx:id="ware_00" layoutX="105.0" layoutY="231.0" onDragDropped="#onDragDroped" onDragOver="#onDragOver" onMouseClicked="#warehouseClicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                                <Pane fx:id="ware_22" layoutX="160.0" layoutY="344.0" onDragDropped="#onDragDroped" onDragOver="#onDragOver" onMouseClicked="#warehouseClicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                                <Pane fx:id="ware_21" layoutX="108.0" layoutY="344.0" onDragDropped="#onDragDroped" onDragOver="#onDragOver" onMouseClicked="#warehouseClicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                                <Pane fx:id="ware_20" layoutX="54.0" layoutY="345.0" onDragDropped="#onDragDroped" onDragOver="#onDragOver" onMouseClicked="#warehouseClicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_11" layoutX="130.0" layoutY="291.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_10" layoutX="74.0" layoutY="291.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_00" layoutX="105.0" layoutY="231.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_22" layoutX="160.0" layoutY="344.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_21" layoutX="108.0" layoutY="344.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_20" layoutX="54.0" layoutY="345.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="production_base_from_1" layoutX="265.0" layoutY="416.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="production_base_from_2" layoutX="265.0" layoutY="444.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="production_base_to" layoutX="323.0" layoutY="427.0" prefHeight="33.0" prefWidth="35.0" userData="-1" />
+                        <Button fx:id="changeProductionBaseTo" layoutX="308.0" layoutY="460.0" mnemonicParsing="false" onMouseClicked="#onClickChangeProductionTo" text="change">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Button>
+                        <Pane layoutX="294.0" layoutY="514.0" onMouseClicked="#activateProduction" prefHeight="52.0" prefWidth="37.0" styleClass="red-bg" stylesheets="@../css/red-bg.css" />
+                        <Pane layoutX="239.0" layoutY="204.0" prefHeight="92.0" prefWidth="131.0" styleClass="punch" stylesheets="@../css/leader_production.css" />
+                        <Pane layoutX="243.0" layoutY="299.0" prefHeight="92.0" prefWidth="131.0" styleClass="punch" stylesheets="@../css/leader_production.css" />
+                        <Pane fx:id="production_leader_to_1" layoutX="326.0" layoutY="347.0" prefHeight="33.0" prefWidth="35.0" userData="-1" />
+                        <Button fx:id="changeProductionLeader1" layoutX="311.0" layoutY="380.0" mnemonicParsing="false" onMouseClicked="#onClickChangeProductionTo" text="change">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Button>
+                        <Pane fx:id="production_leader_to_2" layoutX="318.0" layoutY="250.0" prefHeight="33.0" prefWidth="35.0" userData="-1" />
+                        <Button fx:id="changeProductionLeader2" layoutX="303.0" layoutY="283.0" mnemonicParsing="false" onMouseClicked="#onClickChangeProductionTo" text="change">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Button>
+                        <Pane fx:id="production_leader_from_1" layoutX="263.0" layoutY="331.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" styleClass="coin" stylesheets="@../css/resources.css" />
+                        <Pane fx:id="production_leader_from_2" layoutX="261.0" layoutY="237.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" styleClass="coin" stylesheets="@../css/resources.css" />
                             </children>
                         </Pane>
-                        <Pane layoutX="731.0" layoutY="662.0" prefHeight="262.0" prefWidth="395.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                        <Pane layoutX="744.0" layoutY="695.0" prefHeight="262.0" prefWidth="395.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
                             <children>
-                                <Pane layoutX="20.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                <Pane layoutX="20.0" layoutY="10.0" onDragDetected="#onLeaderCardDragDetected" onMouseClicked="#enableCardClick" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css" userData="0">
                                     <children>
                                         <Pane fx:id="leadercard1" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" stylesheets="@../css/trydevcard.css" />
                                     </children>
                                 </Pane>
-                                <Pane layoutX="220.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                <Pane layoutX="220.0" layoutY="10.0" onDragDetected="#onLeaderCardDragDetected" onMouseClicked="#enableCardClick" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css" userData="1">
                                     <children>
                                         <Pane fx:id="leadercard2" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" stylesheets="@../css/trydevcard.css" />
                                     </children>
@@ -155,26 +179,70 @@
                                         <Font name="Algerian" size="12.0" />
                                     </font>
                                 </Text>
-                                <Pane fx:id="stone_strongbox" layoutX="79.0" layoutY="-194.0" onMouseClicked="#resource_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="stone" stylesheets="@../css/resources.css" />
-                                <Pane fx:id="coin_strongbox" layoutX="160.0" layoutY="-195.0" onMouseClicked="#resource_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="coin" stylesheets="@../css/resources.css" />
-                                <Pane fx:id="servant_strongbox" layoutX="81.0" layoutY="-140.0" onMouseClicked="#resource_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="servant" stylesheets="@../css/resources.css" />
-                                <Pane fx:id="shield_strongbox" layoutX="161.0" layoutY="-138.0" onMouseClicked="#resource_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="shield" stylesheets="@../css/resources.css" />
+                                <Pane fx:id="stone_strongbox" layoutX="79.0" layoutY="-194.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="stone" stylesheets="@../css/resources.css" />
+                                <Pane fx:id="coin_strongbox" layoutX="160.0" layoutY="-195.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="coin" stylesheets="@../css/resources.css" />
+                                <Pane fx:id="servant_strongbox" layoutX="81.0" layoutY="-140.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="servant" stylesheets="@../css/resources.css" />
+                                <Pane fx:id="shield_strongbox" layoutX="161.0" layoutY="-138.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="shield" stylesheets="@../css/resources.css" />
                             </children>
                         </Pane>
-                        <Pane layoutX="468.0" layoutY="730.0" prefHeight="131.0" prefWidth="185.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                         <Text layoutX="189.0" layoutY="676.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MARKET PENDING">
                             <font>
                                 <Font name="Algerian" size="12.0" />
                             </font>
                         </Text>
-                        <Text layoutX="504.0" layoutY="693.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRODUCTION PENDING">
+                        <Text layoutX="487.0" layoutY="675.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRODUCTION PENDING">
                             <font>
                                 <Font name="Algerian" size="12.0" />
                             </font>
                         </Text>
                         <Pane layoutX="28.0" layoutY="151.0" onMouseClicked="#abortAction" prefHeight="76.0" prefWidth="80.0" styleClass="button-cross" stylesheets="@../css/other_objects.css" />
                         <Pane layoutX="28.0" layoutY="63.0" onMouseClicked="#endTurn" prefHeight="78.0" prefWidth="80.0" styleClass="button-tick" stylesheets="@../css/other_objects.css" />
-                        <Pane fx:id="bin" layoutX="31.0" layoutY="248.0" onDragDropped="#onDragDroped" onDragOver="#onDragOver" prefHeight="82.0" prefWidth="81.0" styleClass="bin" stylesheets="@../css/other_objects.css" />
+                        <Pane fx:id="bin" layoutX="31.0" layoutY="248.0" onDragDropped="#onBinDragDropped" onDragOver="#onBinDragOver" prefHeight="82.0" prefWidth="81.0" styleClass="bin" stylesheets="@../css/other_objects.css" />
+                  <Pane layoutX="444.0" layoutY="697.0" prefHeight="257.0" prefWidth="208.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                     <children>
+                        <Pane layoutX="110.0" layoutY="8.0" prefHeight="53.0" prefWidth="51.0" styleClass="coin" stylesheets="@../css/resources.css" />
+                        <Text fx:id="coin_production_pending_text" layoutX="48.0" layoutY="35.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                        <Pane layoutX="110.0" layoutY="67.0" prefHeight="53.0" prefWidth="51.0" styleClass="stone" stylesheets="@../css/resources.css" />
+                        <Text fx:id="stone_production_pending_text" layoutX="48.0" layoutY="94.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                        <Pane layoutX="110.0" layoutY="126.0" prefHeight="53.0" prefWidth="51.0" styleClass="servant" stylesheets="@../css/resources.css" />
+                        <Text fx:id="servant_production_pending_text" layoutX="48.0" layoutY="153.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                        <Pane layoutX="110.0" layoutY="185.0" prefHeight="53.0" prefWidth="51.0" styleClass="shield" stylesheets="@../css/resources.css" />
+                        <Text fx:id="shield_production_pending_text" layoutX="48.0" layoutY="212.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+                  <Text layoutX="31.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ADDITIONAL WAREHOUSE" wrappingWidth="81.275390625">
+                     <font>
+                        <Font name="Algerian" size="12.0" />
+                     </font>
+                  </Text>
+                  <Pane layoutX="12.0" layoutY="404.0" prefHeight="76.0" prefWidth="124.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                     <children>
+                        <Pane fx:id="ware_30" layoutX="7.0" layoutY="12.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="ware_31" layoutX="63.0" layoutY="12.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="12.0" layoutY="493.0" prefHeight="76.0" prefWidth="124.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                     <children>
+                        <Pane fx:id="ware_40" layoutX="7.0" layoutY="12.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="ware_41" layoutX="63.0" layoutY="12.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                     </children>
+                  </Pane>
                     </children>
                 </AnchorPane>
             </content>

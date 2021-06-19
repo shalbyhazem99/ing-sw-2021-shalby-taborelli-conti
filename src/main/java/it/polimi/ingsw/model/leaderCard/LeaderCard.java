@@ -42,7 +42,7 @@ public abstract class LeaderCard implements Serializable {
      * @param player the player to verify
      * @return true if tha power is actionable, false otherwise
      */
-    protected boolean isActionable(Player player){
+    public boolean isActionable(Player player){
         if(developmentCardNeeded !=null) {
             for (DevelopmentCardNeeded dev : developmentCardNeeded) {
                 if (dev.getCount() > player.getDevelopmentCards().stream().filter(elem -> elem.getType().equals(dev.getType())
@@ -83,6 +83,14 @@ public abstract class LeaderCard implements Serializable {
 
     public String getImage(){
         return image;
+    }
+
+    public ArrayList<ResourcesCount> getResourcesNeeded() {
+        return resourcesNeeded;
+    }
+
+    public ArrayList<DevelopmentCardNeeded> getDevelopmentCardNeeded() {
+        return developmentCardNeeded;
     }
 
     @Override
