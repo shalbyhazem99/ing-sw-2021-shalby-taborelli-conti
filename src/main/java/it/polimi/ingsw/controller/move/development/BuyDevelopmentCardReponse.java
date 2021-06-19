@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//todo:refactor nome sbagliato
 public class BuyDevelopmentCardReponse extends MoveResponse {
     /**
      * Class used to represent the response of the system when the {@link it.polimi.ingsw.model.Player} asks to buy a specific {@link DevelopmentCard}

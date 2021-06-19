@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.leaderCard;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardNeeded;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -63,6 +64,41 @@ public abstract class LeaderCard implements Serializable {
      */
     public abstract boolean active(Player player);
 
+
+    /**
+     *
+     * @return an ArrayList of {@link Resource} needed to activate the {@link LeaderCard}
+     */
+    public ArrayList<Resource> getResourcesNeeded(){
+        ArrayList<Resource> resourceArrayList = new ArrayList<>();
+        for (ResourcesCount resourcesCount : this.resourcesNeeded){
+            for (int j = 0; j <resourcesCount.getCount(); j++) {
+                resourceArrayList.add(Resource.getInstance(resourcesCount.getType()));
+            }
+        }
+
+        return resourceArrayList;
+    }
+
+
+    /**
+     *
+     * @return an ArrayList of {@link DevelopmentCard} to activate the {@link LeaderCard}
+     */
+    public ArrayList<DevelopmentCard> getDevelopmentCardNeeded(){
+        ArrayList<DevelopmentCard> developmentCardArrayList = new ArrayList<>();
+
+        if(this.developmentCardNeeded.size()!=0){
+            for (DevelopmentCardNeeded developmentCardNeeded : this.developmentCardNeeded){
+                for (int i = 0; i < developmentCardNeeded.getCount(); i++) {
+                    developmentCardArrayList.add(DevelopmentCard.getInstance(developmentCardNeeded.getLevel(), developmentCardNeeded.getType(), 0, null, null));
+                }
+            }
+        }
+
+        return developmentCardArrayList;
+    }
+
    /**
      *
      * @return true if the card is active, false otherwise
@@ -81,21 +117,7 @@ public abstract class LeaderCard implements Serializable {
             return 0;
     }
 
-    /**
-     *
-     * @return an ArrayList of {@link Resource} needed to activate the {@link LeaderCard}
-     */
-    public ArrayList<Resource> getResourcesNeeded(){
-        ArrayList<Resource> resourceArrayList = new ArrayList<>();
-        if (this.resourcesNeeded.size()!=0){
-            for (int i = 0; i < this.resourcesNeeded.size(); i++) {
-                for (int j = 0; j < this.resourcesNeeded.get(i).getCount(); j++) {
-                    resourceArrayList.add(Resource.getInstance(this.getResourcesNeeded().get(i).getType()));
-                }
-            }
-        }
-        return resourceArrayList;
-    }
+
 
     public String getImage(){
         return image;

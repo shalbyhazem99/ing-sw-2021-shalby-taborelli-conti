@@ -184,6 +184,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public boolean getCanChangeTurn() {
         return canChangeTurn;
     }
+
+    public ArrayList<Resource> getPendingMarketResources(){return (ArrayList<Resource>) this.pendingMarketResources.clone();}
     /*-----------------------------------------------------------------------------------------------
     END GETTER
     -------------------------------------------------------------------------------------------------*/
@@ -291,6 +293,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         askForMove();
     }
 
+
     public void askForMove() {
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
         if (!canChangeTurn) {
@@ -384,7 +387,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player, boolean noControl) {
         /*
             Check
-            1) if are there any resources to be placed
+            1) if there are any resources to be placed
             2) if the 2 arraylist sizes are equal
             3) if the warehouses can correctly store everything (simulating all the transferring process using .clone())
             If no errors ==>
@@ -408,6 +411,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         Gson gson = new Gson();
         String warehouseStandard = gson.toJson(player.getWarehousesStandard());
         String warehouseAdditional = gson.toJson(player.getWarehousesAdditional());
+
+        //todo: never used params
         ArrayList<Warehouse> standardTemp = player.getWarehousesStandard();
         ArrayList<Warehouse> additionalTemp = player.getWarehousesAdditional();
 

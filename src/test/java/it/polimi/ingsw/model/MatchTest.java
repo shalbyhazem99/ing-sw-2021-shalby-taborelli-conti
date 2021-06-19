@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.leaderCard.LeaderCardColor;
 import it.polimi.ingsw.model.leaderCard.LeaderCardDiscount;
 import it.polimi.ingsw.model.market.Marble;
 import it.polimi.ingsw.model.market.MarbleColor;
+import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import junit.framework.TestCase;
@@ -23,16 +24,16 @@ public class MatchTest extends TestCase {
      * Testing the evaluation of the Winner
      */
     @Test
-    public void testWhoIsTheWinner1(){
+    public void testWhoIsTheWinner1() {
         Match match = new MatchMulti(4);
         //Setting the different Players
         for (int i = 0; i < 4; i++) {
-            match.addPlayer(Player.getInstance("Player"+i));
+            match.addPlayer(Player.getInstance("Player" + i));
         }
-        int i=-1;
-        for (Player player: match.players){
+        int i = -1;
+        for (Player player : match.players) {
             i++;
-            switch (i){
+            switch (i) {
                 case 0:
                     //Position
                     player.moveAheadFaith(13);
@@ -47,15 +48,15 @@ public class MatchTest extends TestCase {
                     //Resources
                     player.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 0);
                     player.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT), 2);
-                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN),0);
-                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN),0);
+                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 0);
+                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 0);
                     break;
                 case 1:
                     //Position
                     player.moveAheadFaith(24);
                     //Pope's Tales
                     player.getPopeFavorTiles().get(0).active();
-                    player.getPopeFavorTiles().set(1,null);
+                    player.getPopeFavorTiles().set(1, null);
                     player.getPopeFavorTiles().get(2).active();
                     //LeaderCards
                     player.addLeaderCard(LeaderCardDiscount.getInstance(3, ResourceType.SERVANT, null, null));
@@ -97,8 +98,8 @@ public class MatchTest extends TestCase {
                     //Position
                     player.moveAheadFaith(24);
                     //Pope's Tales
-                    player.getPopeFavorTiles().set(0,null);
-                    player.getPopeFavorTiles().set(1,null);
+                    player.getPopeFavorTiles().set(0, null);
+                    player.getPopeFavorTiles().set(1, null);
                     player.getPopeFavorTiles().get(2).active();
                     //LeaderCards
                     player.addLeaderCard(LeaderCardDiscount.getInstance(3, ResourceType.SERVANT, null, null));
@@ -122,16 +123,16 @@ public class MatchTest extends TestCase {
      * Testing the evaluation of the Winner. 2 {@link Player} win
      */
     @Test
-    public void testWhoIsTheWinner2(){
+    public void testWhoIsTheWinner2() {
         Match match = new MatchMulti(4);
         //Setting the different Players
         for (int i = 0; i < 4; i++) {
-            match.addPlayer(Player.getInstance("Player"+i));
+            match.addPlayer(Player.getInstance("Player" + i));
         }
-        int i=-1;
-        for (Player player: match.players){
+        int i = -1;
+        for (Player player : match.players) {
             i++;
-            switch (i){
+            switch (i) {
                 case 0:
                     //Position
                     player.moveAheadFaith(10);
@@ -146,15 +147,15 @@ public class MatchTest extends TestCase {
                     //Resources
                     player.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SHIELD), 0);
                     player.addResourceToWarehouseStandard(Resource.getInstance(ResourceType.SERVANT), 2);
-                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN),0);
-                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN),0);
+                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 0);
+                    player.addResourceToWarehouseAdditional(Resource.getInstance(ResourceType.COIN), 0);
                     break;
                 case 1:
                     //Position
                     player.moveAheadFaith(24);
                     //Pope's Tales
                     player.getPopeFavorTiles().get(0).active();
-                    player.getPopeFavorTiles().set(1,null);
+                    player.getPopeFavorTiles().set(1, null);
                     player.getPopeFavorTiles().get(2).active();
                     //LeaderCards
                     player.addLeaderCard(LeaderCardDiscount.getInstance(3, ResourceType.SERVANT, null, null));
@@ -196,7 +197,7 @@ public class MatchTest extends TestCase {
                     //Position
                     player.moveAheadFaith(23);
                     //Pope's Tales
-                    player.getPopeFavorTiles().set(0,null);
+                    player.getPopeFavorTiles().set(0, null);
                     player.getPopeFavorTiles().get(1).active();
                     player.getPopeFavorTiles().get(2).active();
                     //LeaderCards
@@ -227,7 +228,7 @@ public class MatchTest extends TestCase {
      * Testing the correct getting of a {@link Player} from is position
      */
     @Test
-    public void testGetPlayerFromPosition(){
+    public void testGetPlayerFromPosition() {
         Match match = new MatchMulti(2);
         match.addPlayer(Player.getInstance("Player0"));
         match.addPlayer(Player.getInstance("Player1"));
@@ -239,7 +240,7 @@ public class MatchTest extends TestCase {
      * Testing the correct creation of the DevelopmentCard
      */
     @Test
-    public void testGetDevelopmentCard(){
+    public void testGetDevelopmentCard() {
         Match match = new MatchSolo();
         match.addPlayer(Player.getInstance("Player"));
         match.startMatch();
@@ -251,7 +252,8 @@ public class MatchTest extends TestCase {
         for (int i = 0; i < 4; i++) {
             assertEquals(DevelopmentCardLevel.FIRST, match.getDevelopmentCards()[0][1].get(i).getLevel());
             assertEquals(DevelopmentCardType.BLUE, match.getDevelopmentCards()[0][1].get(i).getType());
-        }for (int i = 0; i < 4; i++) {
+        }
+        for (int i = 0; i < 4; i++) {
             assertEquals(DevelopmentCardLevel.FIRST, match.getDevelopmentCards()[0][0].get(i).getLevel());
             assertEquals(DevelopmentCardType.YELLOW, match.getDevelopmentCards()[0][2].get(i).getType());
         }
@@ -266,7 +268,8 @@ public class MatchTest extends TestCase {
         for (int i = 0; i < 4; i++) {
             assertEquals(DevelopmentCardLevel.SECOND, match.getDevelopmentCards()[1][1].get(i).getLevel());
             assertEquals(DevelopmentCardType.BLUE, match.getDevelopmentCards()[1][1].get(i).getType());
-        }for (int i = 0; i < 4; i++) {
+        }
+        for (int i = 0; i < 4; i++) {
             assertEquals(DevelopmentCardLevel.SECOND, match.getDevelopmentCards()[1][0].get(i).getLevel());
             assertEquals(DevelopmentCardType.YELLOW, match.getDevelopmentCards()[1][2].get(i).getType());
         }
@@ -281,7 +284,8 @@ public class MatchTest extends TestCase {
         for (int i = 0; i < 4; i++) {
             assertEquals(DevelopmentCardLevel.THIRD, match.getDevelopmentCards()[2][1].get(i).getLevel());
             assertEquals(DevelopmentCardType.BLUE, match.getDevelopmentCards()[1][1].get(i).getType());
-        }for (int i = 0; i < 4; i++) {
+        }
+        for (int i = 0; i < 4; i++) {
             assertEquals(DevelopmentCardLevel.THIRD, match.getDevelopmentCards()[2][0].get(i).getLevel());
             assertEquals(DevelopmentCardType.YELLOW, match.getDevelopmentCards()[1][2].get(i).getType());
         }
@@ -295,46 +299,46 @@ public class MatchTest extends TestCase {
      * Testing the correct creation of the {@link it.polimi.ingsw.model.market.MarketBoard}
      */
     @Test
-    public void testGetMarketBoard(){
+    public void testGetMarketBoard() {
         Match match = new MatchSolo();
         assertEquals(12, match.getMarketBoard().getRow(0).size() + match.getMarketBoard().getRow(1).size() + match.getMarketBoard().getRow(2).size());
 
         //Looking if Additional Marble is Blue
-        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.BLUE) != 0){
-            assertEquals(2, (int) match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.BLUE).count() + (int)match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.BLUE).count() + (int)match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.BLUE).count() );
+        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.BLUE) != 0) {
+            assertEquals(2, (int) match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.BLUE).count() + (int) match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.BLUE).count() + (int) match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.BLUE).count());
         } else {
-            assertEquals(1, (int)match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.BLUE).count() + (int)match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.BLUE).count() + (int)match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.BLUE).count() );
+            assertEquals(1, (int) match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.BLUE).count() + (int) match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.BLUE).count() + (int) match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.BLUE).count());
         }
 
         //Looking if Additional Marble is Red
-        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.RED) != 0){
-            assertEquals(1, (int) match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.RED).count() );
+        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.RED) != 0) {
+            assertEquals(1, (int) match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.RED).count());
         } else {
-            assertEquals(0, (int) match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.RED).count());
+            assertEquals(0, (int) match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.RED).count() + (int) match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.RED).count());
         }
         //Looking if Additional Marble is White
-        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.WHITE)!= 0){
-            assertEquals(4, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.WHITE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.WHITE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.WHITE).count() );
+        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.WHITE) != 0) {
+            assertEquals(4, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.WHITE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.WHITE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.WHITE).count());
         } else {
-            assertEquals(3, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.WHITE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.WHITE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.WHITE).count());
+            assertEquals(3, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.WHITE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.WHITE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.WHITE).count());
         }
         //Looking if Additional Marble is Grey
-        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.GREY)!= 0){
-            assertEquals(2, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.GREY).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.GREY).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.GREY).count() );
+        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.GREY) != 0) {
+            assertEquals(2, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.GREY).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.GREY).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.GREY).count());
         } else {
-            assertEquals(1, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.GREY).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.GREY).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.GREY).count());
+            assertEquals(1, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.GREY).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.GREY).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.GREY).count());
         }
         //Looking if Additional Marble is Yellow
-        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.YELLOW)!= 0){
-            assertEquals(2, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.YELLOW).count() );
+        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.YELLOW) != 0) {
+            assertEquals(2, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.YELLOW).count());
         } else {
-            assertEquals(1, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.YELLOW).count());
+            assertEquals(1, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.YELLOW).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.YELLOW).count());
         }
         //Looking if Additional Marble is Purple
-        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.PURPLE)!= 0){
-            assertEquals(2, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.PURPLE).count() );
+        if (match.getMarketBoard().getAdditionalMarble().getColor().compareTo(MarbleColor.PURPLE) != 0) {
+            assertEquals(2, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.PURPLE).count());
         } else {
-            assertEquals(1, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor()== MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor()== MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor()== MarbleColor.PURPLE).count());
+            assertEquals(1, match.getMarketBoard().getRow(0).stream().filter(marble -> marble.getColor() == MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(1).stream().filter(marble -> marble.getColor() == MarbleColor.PURPLE).count() + match.getMarketBoard().getRow(2).stream().filter(marble -> marble.getColor() == MarbleColor.PURPLE).count());
         }
     }
 
@@ -342,7 +346,7 @@ public class MatchTest extends TestCase {
      * Testing the {@link it.polimi.ingsw.model.developmentCard.DevelopmentCard} given for each {@link DevelopmentCardLevel} and {@link DevelopmentCardType}
      */
     @Test
-    public void testGetDevelopmentCardOnTop(){
+    public void testGetDevelopmentCardOnTop() {
         Match match = new MatchSolo();
         match.addPlayer(Player.getInstance("Player0"));
         match.startMatch();
@@ -388,17 +392,17 @@ public class MatchTest extends TestCase {
 
     //todo: così va bene come test?
     @Test
-    public void testGetWhoAmI(){
+    public void testGetWhoAmI() {
         Match match = new MatchSolo();
         match.addPlayer(Player.getInstance("Player0"));
         match.startMatch();
 
-        assertEquals(0,match.getWhoAmI());
+        assertEquals(0, match.getWhoAmI());
     }
 
 
     @Test
-    public void testAddPlayer(){
+    public void testAddPlayer() {
         Match match = new MatchMulti(2);
 
         assertFalse(match.addPlayer(null));
@@ -407,7 +411,7 @@ public class MatchTest extends TestCase {
     }
 
     @Test
-    public void testSetWhoAmI(){
+    public void testSetWhoAmI() {
         Match match = new MatchSolo();
         match.setWhoAmI(3);
         assertEquals(3, match.getWhoAmI());
@@ -417,7 +421,7 @@ public class MatchTest extends TestCase {
      * Testing the correct picked of a {@link DevelopmentCard} on top
      */
     @Test
-    public void testPickDevelopmentCardOnTop(){
+    public void testPickDevelopmentCardOnTop() {
         Match match = new MatchSolo();
         match.addPlayer(Player.getInstance("Player0"));
         match.startMatch();
@@ -477,7 +481,7 @@ public class MatchTest extends TestCase {
      * Testing the correct discarding of two {@link it.polimi.ingsw.model.leaderCard.LeaderCard}
      */
     @Test
-    public void testDiscardTwoLeaderCardInteraction(){
+    public void testDiscardTwoLeaderCardInteraction() {
         Match match = new MatchSolo();
         match.addPlayer(Player.getInstance("Player"));
         match.startMatch();
@@ -493,7 +497,7 @@ public class MatchTest extends TestCase {
      * Testing the correct interaction of discarding a {@link it.polimi.ingsw.model.leaderCard.LeaderCard}
      */
     @Test
-    public void testDiscardLeaderCardInteraction(){
+    public void testDiscardLeaderCardInteraction() {
         Match match = new MatchSolo();
         match.addPlayer(Player.getInstance("Player0"));
         match.startMatch();
@@ -509,44 +513,109 @@ public class MatchTest extends TestCase {
         assertEquals(2, match.getCurrentPlayer().getLeaderCards().size());
     }
 
-    /*
-    public void enableLeaderCardInteraction(int leaderCardPosition, Player player, boolean noControl) {
-        if (noControl) {
-            player.getLeaderCard(leaderCardPosition).active(player);
-            return;
-        }
-        if (leaderCardPosition < player.getLeaderCards().size() && player.getLeaderCard(leaderCardPosition).active(player)) {
-            notify(EnableLeaderCardResponse.getInstance(players, players.indexOf(player), leaderCardPosition, this.hashCode()));
-        } else {
-            notify(SendMessage.getInstance("Something wrong, Leader Card cannot be enabled, retry", player, players.indexOf(player), this.hashCode()));
-        }
-        askForMove();
-    }
-     */
 
     @Test
-    public void testEnableLeaderCardInteraction(){
+    public void testEnableLeaderCardInteraction() {
         Match match = new MatchSolo();
         match.addPlayer(Player.getInstance("Player0"));
         match.startMatch();
 
-        match.discardTwoLeaderCardInteraction(2,3, match.getCurrentPlayer(), ResourceType.COIN, ResourceType.SERVANT);
+        match.discardTwoLeaderCardInteraction(2, 3, match.getCurrentPlayer(), ResourceType.COIN, ResourceType.SERVANT);
         assertFalse(match.getCurrentPlayer().getLeaderCards().get(0).isActive());
         assertFalse(match.getCurrentPlayer().getLeaderCards().get(1).isActive());
 
+        //Player Test has always 3 DevelopmentCard lv1, easy implementation for the test
+        match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, DevelopmentCardType.GREEN, 3, null, null), 0);
+        match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, DevelopmentCardType.BLUE, 3, null, null), 1);
+        match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.FIRST, DevelopmentCardType.YELLOW, 3, null, null), 2);
+
+
+        //For each leaderCard it adds the resources and the developmentCard to activate the power
         for (int i = 0; i < 2; i++) {
             //todo:testing the method in the LeaderCard
-            if (match.getCurrentPlayer().getLeaderCards().get(i).getResourcesNeeded().size()!=1){
+
+            //Adding Resources needed
+            if (match.getCurrentPlayer().getLeaderCards().get(i).getResourcesNeeded().size() != 0) {
                 match.getCurrentPlayer().addResourceToStrongBox(match.getCurrentPlayer().getLeaderCards().get(i).getResourcesNeeded());
             }
-            //todo:finishing adding the resources to player in order to activate the LeaderCards
+
+            //Adding DevelopmentCard needed
+            //CASE SIZE=1 -> LeaderCard needs only a DevelopmentCard lv2 of a certain type
+            if (match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().size() == 1) {
+                match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().get(0).getType(), 3, null, null), i);
+            }
+            //CASE SIZE=2 -> LeaderCard needs 2 different DevelopmentCard of ony level, add another one if a Type Purple is needed
+            else if (match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().size() == 2) {
+                for (int j = 0; j < 2; j++) {
+                    if (match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().get(j).getType() == DevelopmentCardType.PURPLE) {
+                        match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, DevelopmentCardType.PURPLE, 3, null, null), i);
+                    }
+                }
+            }
+            //CASE SIZE=3 -> LeaderCard needs 2 LeaderCard of one type and another one of a different type. Handling different situations
+            else if (match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().size() == 3) {
+                if (match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().get(1).getType() == DevelopmentCardType.PURPLE) {
+                    match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, DevelopmentCardType.PURPLE, 3, null, null), i);
+                    match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, DevelopmentCardType.PURPLE, 3, null, null), i);
+                } else {
+                    match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.SECOND, match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().get(1).getType(), 3, null, null), i);
+                    if (match.getCurrentPlayer().getLeaderCards().get(i).getDevelopmentCardNeeded().get(2).getType() == DevelopmentCardType.PURPLE) {
+                        match.getCurrentPlayer().addDevelopmentCard(DevelopmentCard.getInstance(DevelopmentCardLevel.THIRD, DevelopmentCardType.PURPLE, 3, null, null), i);
+                    }
+                }
+            }
         }
 
+        //Calling the method
         match.enableLeaderCardInteraction(1, match.getCurrentPlayer(), true);
         assertTrue(match.getCurrentPlayer().getLeaderCards().get(1).isActive());
-        match.enableLeaderCardInteraction(1, match.getCurrentPlayer(), false);
-        assertFalse(match.getCurrentPlayer().getLeaderCards().get(1).isActive());
+        match.enableLeaderCardInteraction(3, match.getCurrentPlayer(), false);
+        assertFalse(match.getCurrentPlayer().getLeaderCards().get(0).isActive());
         match.enableLeaderCardInteraction(0, match.getCurrentPlayer(), false);
         assertTrue(match.getCurrentPlayer().getLeaderCards().get(0).isActive());
     }
+
+    @Test
+    public void testMarketInteraction() {
+        Match match = new MatchSolo();
+        match.addPlayer(Player.getInstance("Player0"));
+        match.startMatch();
+
+        //Testing if the move is not possible nothing is done
+        match.marketInteraction(MoveType.COLUMN, 3, match.getCurrentPlayer(), false);
+        for (int i = 0; i < 3; i++) {
+            assertEquals(0, match.getCurrentPlayer().getWarehousesStandard().get(i).getResources().size());
+        }
+
+        //todo:finishing testing
+
+    }
+
+    /*
+    @Test
+    public void testPositioningResourcesInteraction(){
+        Match match = new  MatchSolo();
+        match.addPlayer(Player.getInstance("Player0"));
+        match.startMatch();
+        ArrayList<Integer> whereToPlace = new ArrayList<>();
+
+        //Testing when no Resources need to be place nothing happen
+        match.positioningResourcesInteraction(whereToPlace, match.getCurrentPlayer(), false);
+        for (int i = 0; i < 3; i++) {
+            assertEquals(0, match.getCurrentPlayer().getWarehousesStandard().get(i).getResources().size());
+        }
+
+
+
+        //todo: finish and control the method
+        //Testing when there are not enough position index nothing happen
+        match.marketInteraction(MoveType.COLUMN, 0, match.getCurrentPlayer(), true);
+        match.positioningResourcesInteraction(whereToPlace, match.getCurrentPlayer(), false);
+        for (int i = 0; i < 3; i++) {
+            assertEquals(0, match.getCurrentPlayer().getWarehousesStandard().get(i).getResources().size());
+        }
+        assertEquals(match.getPendingMarketResources().size(), match.pendingMarketResources.size());
+    }
+
+     */
 }
