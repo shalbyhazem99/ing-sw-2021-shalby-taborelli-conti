@@ -53,6 +53,7 @@ public class SendModel extends MoveResponse {
     }
 
     public Match getMatch() {
+        match.setWhoAmI(playerPosition);
         return match;
     }
 }

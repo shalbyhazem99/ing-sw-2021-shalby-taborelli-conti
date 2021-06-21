@@ -304,23 +304,6 @@ public class PrimaryController extends GenericController {
 
     @Override
     public void askToDiscardTwoLeader(int numOfResource, int executePlayerPos) {
-        //Todo:to Modify
-        notify(DiscardTwoLeaderCardsPlayerMove.getInstance(0, 1, ResourceType.COIN, ResourceType.FAITH));
-         /*if(myController instanceof PrimaryController)
-        {
-            //print discard
-            String [] indexes = {"1","2","3","4"};
-            ChoiceDialog<String> dialog = new ChoiceDialog<>(indexes[0], indexes);
-            dialog.setHeaderText("Discard leader card");
-            dialog.setTitle("Choose");
-            dialog.setContentText("Discard #:");
-            Optional<String> choice = dialog.showAndWait();
-            //TODO: manage response
-            notify(DiscardLeaderCardPlayerMove.getInstance(Integer.parseInt(choice.get())));
-            ((PrimaryController) myController).initialization();
-            myController.printModel();
-            //myController.blockView();
-        }*/
 
     }
 
@@ -447,7 +430,7 @@ public class PrimaryController extends GenericController {
     public void mapWarehousesAdditional() {
         unsetAllBackgroundWarehouseAdditional();
         for (int i = 0; i < match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().size(); i++) {
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(i).getResources().size() ; j++) {
                 changeImage(warehousesAdditional.get(i).get(j), Utils.mapResTypeToImage(match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(i).getResourceType()), "resources/");
             }
         }
@@ -954,7 +937,9 @@ public class PrimaryController extends GenericController {
     public void onLeaderCardDragDetected(MouseEvent mouseEvent) {
         if (runningAction.equals(MovePlayerType.NOTHING)) {
             Pane pane = (Pane) mouseEvent.getSource();
-            if (!pane.isDisable()) {
+            String data = (String) pane.getUserData();
+            int value = Integer.parseInt(data);
+            if (!match.getPlayerFromPosition(match.getWhoAmI()).getLeaderCard(value).isActive()) {
                 Dragboard db = pane.startDragAndDrop(TransferMode.COPY);
                 ClipboardContent cc = new ClipboardContent();
                 db.setDragView(pane.snapshot(null, null));
@@ -1212,14 +1197,6 @@ public class PrimaryController extends GenericController {
         pending_text.setText(--val + "x");
     }
 
-    private void runDialog(Alert.AlertType type, String message) {
-        Platform.runLater(() -> {
-            Alert dialog = new Alert(type, message, ButtonType.OK);
-            dialog.show();
-        });
-
-    }
-
     @Override
     public void blockView() {
         tabpane.setDisable(true);
@@ -1372,20 +1349,6 @@ public class PrimaryController extends GenericController {
         }
     }
 
-    public void changeImage(Pane p, String s, String type) {
-        System.out.println("Stiamo cambiando icona e settando : " + type + s);
-        URL url = null;
-        try {
-            url = new File("src/main/resources/images/" + type + s + ".png").toURI().toURL();
-        } catch (Exception e) {
-        }
-        Image image = new Image(url.toString());
-        BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
-        BackgroundImage myBI = new BackgroundImage(new Image(url.toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
-        Background r = new Background(myBI);
-        p.setBackground(r);
-    }
-
     @Override
     public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
         super.changeView(fxml, clientConnectionView);
@@ -1407,6 +1370,7 @@ public class PrimaryController extends GenericController {
     public void manageAllowedMoves(ArrayList<MovePlayerType> possibleMove) {
         disableAllMoves();
         enableMoves(possibleMove, false);
+        updateFaith(match.getWhoAmI());
     }
 
     @Override

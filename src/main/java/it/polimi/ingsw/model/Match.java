@@ -89,15 +89,15 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));
             aa.add(ResourcesCount.getInstance(10, ResourceType.STONE));
-            Warehouse w1, w2;
-            w1 = new Warehouse(2, ResourceType.COIN);
-            w2 = new Warehouse(2, ResourceType.SHIELD);
+            //Warehouse w1, w2;
+            //w1 = new Warehouse(2, ResourceType.COIN);
+           // w2 = new Warehouse(2, ResourceType.SHIELD);
             /*w1.addResource(Resource.getInstance(ResourceType.COIN));
             w1.addResource(Resource.getInstance(ResourceType.COIN));
             w2.addResource(Resource.getInstance(ResourceType.COIN));
             */
-            player.addAdditionalWarehouse(w1);
-            player.addAdditionalWarehouse(w2);
+            //player.addAdditionalWarehouse(w1);
+            //player.addAdditionalWarehouse(w2);
             player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
         }
         askForDiscardLeaderCard();
@@ -953,8 +953,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         player.returnOnline();
         //notifyModel();
         if (!noControl) {
-            notify(SendModel.getInstance(this, player, players.indexOf(player), this.hashCode()));
             notify(ReconnectionResponse.getInstance(playerName, players, players.indexOf(player), this.hashCode()));
+            notify(SendModel.getInstance(this, player, players.indexOf(player), this.hashCode()));
         }
     }
 }

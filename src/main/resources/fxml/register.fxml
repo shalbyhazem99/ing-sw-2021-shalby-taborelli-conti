@@ -1,15 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.RegistrationController">
-   <children>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.RegistrationController">
+      <VBox fx:id="askDataPane" alignment="CENTER" layoutX="292.0" layoutY="14.0" nodeOrientation="RIGHT_TO_LEFT">
          <children>
-            <TextArea fx:id="textAreaName" prefHeight="175.0" prefWidth="356.0" />
-            <Button mnemonicParsing="false" onMouseClicked="#onClickPlay" text="PLAY!" />
+            <Text fx:id="messageToAskData" text="message" textAlignment="CENTER">
+               <font>
+                  <Font name="Algerian" size="12.0" />
+               </font></Text>
+            <TextField fx:id="dataTextField" alignment="TOP_CENTER">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            <font>
+               <Font name="Algerian" size="12.0" />
+            </font></TextField>
+
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" onMouseClicked="#onClickPlay" text="SEND">
+               <font>
+                  <Font name="Algerian" size="12.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin></Button>
          </children>
+            <VBox.margin>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </VBox.margin>
       </VBox>
-   </children>
-</AnchorPane>
+         <VBox fx:id="discardTwoLeaderCardPane" alignment="TOP_CENTER" visible="false">
+            <Text text="SELECT THE TWO CARD TO KEEP" textAlignment="CENTER">
+               <font>
+                  <Font name="Algerian" size="12.0" />
+               </font></Text>
+      <HBox accessibleRole="IMAGE_VIEW" alignment="TOP_CENTER" layoutY="137.0" prefHeight="277.0" prefWidth="733.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <Pane fx:id="leader_card_1" onMouseClicked="#onLeaderCardMouseClick" prefHeight="200.0" prefWidth="200.0" styleClass="red-bg" userData="0">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Pane>
+            <Pane fx:id="leader_card_2" onMouseClicked="#onLeaderCardMouseClick" prefHeight="200.0" prefWidth="200.0" userData="0">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Pane>
+            <Pane fx:id="leader_card_3" onMouseClicked="#onLeaderCardMouseClick" prefHeight="200.0" prefWidth="200.0" userData="0">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Pane>
+            <Pane fx:id="leader_card_4" onMouseClicked="#onLeaderCardMouseClick" prefHeight="200.0" prefWidth="200.0" userData="0">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Pane>
+         </children>
+            <VBox.margin>
+               <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
+            </VBox.margin>
+      </HBox>
+      <Button alignment="TOP_CENTER" mnemonicParsing="false" onMouseClicked="#onClickDiscard" text="DISCARD">
+         <font>
+            <Font name="Algerian" size="12.0" />
+         </font>
+      </Button>
+      <VBox.margin>
+         <Insets bottom="20.0" />
+      </VBox.margin>
+         </VBox>
+      </VBox>

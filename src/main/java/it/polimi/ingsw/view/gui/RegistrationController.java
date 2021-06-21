@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.connection.ClientConnectionView;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
+import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.MessageMove;
 import it.polimi.ingsw.controller.move.settings.SendModel;
@@ -11,30 +12,112 @@ import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
+import it.polimi.ingsw.model.resource.ResourceType;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class RegistrationController extends GenericController {
 
     @FXML
-    private TextArea textAreaName;
+    private Text messageToAskData;
+    @FXML
+    private TextField dataTextField;
+    @FXML
+    private VBox askDataPane;
+
+    @FXML
+    private VBox discardTwoLeaderCardPane;
+
+
+    @FXML
+    Pane leader_card_1,leader_card_2,leader_card_3,leader_card_4;
+
+
 
     @Override
     public void update(MoveResponse message) {
-        if(message instanceof SendModel)
-        {
+        if(message instanceof SendModel) {
             match = ((SendModel) message).getMatch();
+        }else {
+            message.elaborateGUI(this);
         }
     }
 
+
+    @Override
+    public void askToDiscardTwoLeader(int numOfResource, int executePlayerPos) {
+        changeImage(leader_card_1,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(0).getImage(),"devcard_leadercard/");
+        changeImage(leader_card_2,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(1).getImage(),"devcard_leadercard/");
+        changeImage(leader_card_3,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(2).getImage(),"devcard_leadercard/");
+        changeImage(leader_card_4,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(3).getImage(),"devcard_leadercard/");
+        discardTwoLeaderCardPane.setVisible(true);
+    }
+
+    @Override
+    public void askForData(String message, int executePlayerPos) {
+        messageToAskData.setText(message);
+        discardTwoLeaderCardPane.setVisible(false);
+
+    }
+
     public void onClickPlay(MouseEvent mouseEvent) throws IOException {
-        changeView("primary",App.connection);
-        notify(MessageMove.getInstance(textAreaName.getText()));
+        notify(MessageMove.getInstance(dataTextField.getText()));
+        askDataPane.setVisible(false);
+    }
+
+    public void onLeaderCardMouseClick(MouseEvent mouseEvent){
+        Pane selectedPane = (Pane) mouseEvent.getSource();
+        Pane leaderCards[]= {leader_card_1,leader_card_2,leader_card_3,leader_card_4};
+        if(Integer.parseInt(selectedPane.getUserData().toString())==0) {
+            if (Arrays.stream(leaderCards).filter(elem -> !elem.equals(selectedPane) && Integer.parseInt(elem.getUserData().toString()) != 0).count() < 2) {
+                selectedPane.setUserData("1");
+                selectedPane.scaleXProperty().setValue(1.2);
+                selectedPane.scaleYProperty().setValue(1.2);
+                selectedPane.scaleZProperty().setValue(1.2);
+            }
+            else {
+                runDialog(Alert.AlertType.WARNING,"You have already selected two leader cards, unselect one of them");
+            }
+        }
+        else {
+            selectedPane.setUserData("0");
+            selectedPane.scaleXProperty().setValue(1);
+            selectedPane.scaleYProperty().setValue(1);
+            selectedPane.scaleZProperty().setValue(1);
+        }
+    }
+
+    public void onClickDiscard() throws IOException {
+        ArrayList<Pane> leaderCards=new ArrayList<>();
+        leaderCards.add(leader_card_1);
+        leaderCards.add(leader_card_2);
+        leaderCards.add(leader_card_3);
+        leaderCards.add(leader_card_4);
+        if (leaderCards.stream().filter(elem-> Integer.parseInt(elem.getUserData().toString()) != 0).count() ==2) {
+            int first=-1;
+            int second=-1;
+            Pane[] selectedLeaderCards = leaderCards.stream().filter(elem-> Integer.parseInt(elem.getUserData().toString()) == 0).toArray(Pane[]::new);
+            first = leaderCards.indexOf(selectedLeaderCards[0]);
+            second = leaderCards.indexOf(selectedLeaderCards[1]);
+            System.out.println("leader cards discarded: first:"+first+", second:"+second);
+            changeView("primary",App.connection);
+            notify(DiscardTwoLeaderCardsPlayerMove.getInstance(first, second, ResourceType.COIN, ResourceType.FAITH));
+        }
+        else {
+            runDialog(Alert.AlertType.WARNING,"You have to select two leader cards");
+        }
     }
 
     @Override
@@ -108,8 +191,12 @@ public class RegistrationController extends GenericController {
     }
 
     @Override
-    public void manageReconnection(String playerName) {
-
+    public void manageReconnection(String playerName){
+        try {
+            changeView("primary", App.connection);
+        }catch (Exception e){
+            //todo:manage
+        }
     }
 
     @Override
@@ -117,15 +204,6 @@ public class RegistrationController extends GenericController {
 
     }
 
-    @Override
-    public void askToDiscardTwoLeader(int numOfResource, int executePlayerPos) {
-
-    }
-
-    @Override
-    public void askForData(String message, int executePlayerPos) {
-
-    }
 
     @Override
     public void moveResourceResponse(int numberOfResourcesMoved, int indexFirstWarehouse, int indexSecondWarehouse) {

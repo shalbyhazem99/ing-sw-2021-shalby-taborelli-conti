@@ -12,8 +12,13 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +43,27 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         clientConnectionView.addObserver(myController);
         myController.initialization();
         myController.disableAllMoves();
+    }
+
+    public void changeImage(Pane p, String s, String type) {
+        System.out.println("Stiamo cambiando icona e settando : " + type + s);
+        URL url = null;
+        try {
+            url = new File("src/main/resources/images/" + type + s + ".png").toURI().toURL();
+        } catch (Exception e) {
+        }
+        Image image = new Image(url.toString());
+        BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
+        BackgroundImage myBI = new BackgroundImage(new Image(url.toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+        Background r = new Background(myBI);
+        p.setBackground(r);
+    }
+    public void runDialog(Alert.AlertType type, String message) {
+        Platform.runLater(() -> {
+            Alert dialog = new Alert(type, message, ButtonType.OK);
+            dialog.show();
+        });
+
     }
     //abstact method to modify view
     public abstract void blockView();

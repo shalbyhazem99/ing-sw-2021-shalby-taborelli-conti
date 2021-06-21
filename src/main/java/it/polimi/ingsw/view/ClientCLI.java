@@ -32,7 +32,6 @@ public class ClientCLI extends Observable<PlayerMove> implements Observer<MoveRe
             SendModel sendModel = ((SendModel) message);
             match = sendModel.getMatch();
             playerPos = sendModel.getPlayerPosition();
-            match.setWhoAmI(playerPos);
             System.out.println(match.toString());
             System.out.flush();
         } else if (message instanceof EndMatchResponse) {
@@ -43,7 +42,6 @@ public class ClientCLI extends Observable<PlayerMove> implements Observer<MoveRe
             message.updateLocalMatch(match);
             //verify the model correctness
             if (match != null) {
-                match.setWhoAmI(playerPos);
                 System.out.println(match.toString());
                 System.out.flush();
                 if (match.hashCode() != message.getHashToVerify()) {
