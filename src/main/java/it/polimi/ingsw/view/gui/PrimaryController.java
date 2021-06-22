@@ -34,6 +34,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
@@ -43,6 +45,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -691,6 +694,7 @@ public class PrimaryController extends GenericController {
             sequentialTransition.getChildren().add(parallelTransition);
             sequentialTransition.getChildren().add(temp);
             sequentialTransition.play();
+            playSound("market-column");
             slideColumn(pos);
         } else {
             t2.setByY((pos + 1) * 70);
@@ -719,6 +723,7 @@ public class PrimaryController extends GenericController {
             sequentialTransition.getChildren().add(parallelTransition);
             sequentialTransition.getChildren().add(temp);
             sequentialTransition.play();
+            playSound("market-row");
             slideRow(pos);
         }
         mapMarketResource();
@@ -918,7 +923,7 @@ public class PrimaryController extends GenericController {
             if (!player.getLeaderCard(value).isActionable(player)) {
                 runDialog(Alert.AlertType.CONFIRMATION, "You can't activate this leaderCard");
             } else {
-                runningAction = MovePlayerType.ENABLE_PRODUCTION;
+                runningAction = MovePlayerType.ENABLE_LEADER_CARD;
                 notify(EnableLeaderCardPlayerMove.getInstance(value));
             }
         }
@@ -1076,6 +1081,8 @@ public class PrimaryController extends GenericController {
                 manageProductionLeaderAddResource(0, pane);
             } else if (production_leader_from_2.equals(pane) && isProductionPossible(ProductionType.LEADER_CARD, 1)) {
                 manageProductionLeaderAddResource(1, pane);
+            }else {
+                runningAction = MovePlayerType.NOTHING;
             }
         }
         dragEvent.setDropCompleted(true);
@@ -1400,7 +1407,22 @@ public class PrimaryController extends GenericController {
     }
 
     public void playSound(String sound) {
-        //Shalby's code, solo nome senza .wav
+        /*URL resource = null;
+        try {
+            resource = new File("src/main/resources/audio/" + sound + ".wav").toURI().toURL();
+            MediaPlayer a =new MediaPlayer(new Media(resource.toString()));
+            a.play();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }*/
+        URL resource = null;
+        try {
+            resource = new File("src/main/resources/audio/" + sound + ".wav").toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        MediaPlayer a =new MediaPlayer(new Media(resource.toString()));
+        a.play();
     }
 
     //--------------------------------------DISABLE/ENABLE METHODS-------------------------------------------------

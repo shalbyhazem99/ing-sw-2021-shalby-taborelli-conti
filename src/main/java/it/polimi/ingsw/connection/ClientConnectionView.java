@@ -70,6 +70,7 @@ public class ClientConnectionView extends Observable<MoveResponse> implements Ob
                     else if(inputObject instanceof EndMatchResponse) {
                         setActive(false);
                         ClientConnectionView.this.disconnect();
+                        ClientConnectionView.this.notify((MoveResponse) inputObject);
                     }
                     else if (inputObject instanceof MoveResponse) {
                         ClientConnectionView.this.notify((MoveResponse) inputObject);
