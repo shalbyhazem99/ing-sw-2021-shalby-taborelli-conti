@@ -85,10 +85,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         for (Player player : players) {
             ArrayList<ResourcesCount> aa = new ArrayList<>();
             //players.get(0).addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),0);
-            aa.add(ResourcesCount.getInstance(10, ResourceType.COIN));
-            aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
-            aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));
-            aa.add(ResourcesCount.getInstance(10, ResourceType.STONE));
+            aa.add(ResourcesCount.getInstance(20, ResourceType.COIN));
+            aa.add(ResourcesCount.getInstance(20, ResourceType.SERVANT));
+            aa.add(ResourcesCount.getInstance(20, ResourceType.SHIELD));
+            aa.add(ResourcesCount.getInstance(20, ResourceType.STONE));
             Warehouse w1, w2;
             w1 = new Warehouse(2, ResourceType.COIN);
             w2 = new Warehouse(2, ResourceType.SHIELD);
@@ -98,6 +98,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             */
             player.addAdditionalWarehouse(w1);
             player.addAdditionalWarehouse(w2);
+            player.addConversionStrategies(ResourceType.COIN);
+            player.addConversionStrategies(ResourceType.STONE);
             player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
         }
         askForDiscardLeaderCard();
@@ -173,7 +175,11 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @return The top {@link DevelopmentCard} of the {@link Stack}
      */
     public DevelopmentCard getDevelopmentCardOnTop(DevelopmentCardType type, DevelopmentCardLevel level) {
-        return developmentCards[level.label][type.label].peek();
+        try{
+            return developmentCards[level.label][type.label].peek();
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public int getWhoAmI()
@@ -322,9 +328,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         } else {
             ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
             if (moveType.equals(MoveType.COLUMN)) {
-                numOfWhiteMarbleToBeConverted = Utils.MARKET_COL_NUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
+                numOfWhiteMarbleToBeConverted = Utils.MARKET_ROW_NUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
             } else {
-                numOfWhiteMarbleToBeConverted = Utils.MARKET_ROW_NUMBER - resourcesGained.size(); //how many white marbles are there in the selected ROW
+                numOfWhiteMarbleToBeConverted = Utils.MARKET_COL_NUMBER - resourcesGained.size(); //how many white marbles are there in the selected ROW
             }
         /*
                 If there are any white marbles selected and if the user which is requesting the marketInteraction
@@ -356,7 +362,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * Method used to perform the conversion of the white marbles, the {@link Resource} gained are placed into pendingResources {@link ArrayList}
      */
     public void marketMarbleConvertInteraction(int first, int second, Player player, boolean noControl) {
-        if (!noControl && ((first + second) > numOfWhiteMarbleToBeConverted)) {
+        if (!noControl && (((first + second) != numOfWhiteMarbleToBeConverted))) {
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters 2", player, players.indexOf(player), this.hashCode()));
             notify(MarketResponse.getInstance(pendingMarketResources, numOfWhiteMarbleToBeConverted, new ArrayList<>(Arrays.asList(player)), players.indexOf(player), -1, 0, this.hashCode()));
         } else {
@@ -369,7 +375,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             }
             //notifyModel();
             if (!noControl)
-                notify(MarketResponse.getInstance(resourcesGained, 0, players, players.indexOf(player), first, second, this.hashCode()));
+                notify(MarketResponse.getInstance(pendingMarketResources, 0, players, players.indexOf(player), first, second, this.hashCode()));
         }
     }
 
@@ -463,6 +469,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
         //if the player can afford the development card requested
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
+        if(getDevelopmentCardOnTop(type, level)==null){
+            //empty stack
+            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
+            askForMove();
+            return;
+        }
         ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getCosts(player).stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
         //check if the resourto use are the required and if the player has this resources
         if (Utils.compareResources(resources, resourcesCounts) && player.canAfford(resourceToUse) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)) {
@@ -788,18 +800,64 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             temp += ("---------------\n");
             temp += ("\t\t\t\t\t\t  " + DevelopmentCardType.GREEN + " \t\t\t\t\t\t  " + DevelopmentCardType.BLUE + " \t\t\t\t\t\t " + DevelopmentCardType.YELLOW + " \t\t\t\t\t\t " + DevelopmentCardType.PURPLE + "\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-            int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.GREEN));
-            int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.BLUE));
-            ;
-            int yellow_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.YELLOW));
-            ;
-            int purple_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.PURPLE));
             int max = 30;
             for (int i = 0; i < 3; i++) {
-                temp += ("        | P:| " + Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][0].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][1].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][1].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][2].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][2].peek().getEquivalentPoint()).toString().length()) + "|" + developmentCards[i][3].peek().getEquivalentPoint() + Utils.fillSpaces(max, Integer.valueOf(developmentCards[i][3].peek().getEquivalentPoint()).toString().length()) + "|\n");
-                temp += ("LVL = " + (i + 1) + " | C:| " + developmentCards[i][0].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][0].peek().getCostsFormatted().length()) + "|" + developmentCards[i][1].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][1].peek().getCostsFormatted().length()) + "|" + developmentCards[i][2].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][2].peek().getCostsFormatted().length()) + "|" + developmentCards[i][3].peek().getCostsFormatted() + Utils.fillSpaces(max, developmentCards[i][3].peek().getCostsFormatted().length()) + "|\n");
-                temp += ("        |PP:| " + developmentCards[i][0].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][0].peek().getPowersFormatted().length()) + "|" + developmentCards[i][1].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][1].peek().getPowersFormatted().length()) + "|" + developmentCards[i][2].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][2].peek().getPowersFormatted().length()) + "|" + developmentCards[i][3].peek().getPowersFormatted() + Utils.fillSpaces(max, developmentCards[i][3].peek().getPowersFormatted().length()) + "|\n");
-                temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                DevelopmentCard first,second,third,fourth;
+                try{
+                    first = developmentCards[i][0].peek();
+                }catch (Exception e){
+                    first = null;
+                }
+                try{
+                    second = developmentCards[i][1].peek();
+                }catch (Exception e){
+                    second = null;
+                }
+                try{
+                    third = developmentCards[i][2].peek();
+                }catch (Exception e){
+                    third = null;
+                }
+                try{
+                    fourth = developmentCards[i][3].peek();
+                }catch (Exception e){
+                    fourth = null;
+                }
+                ArrayList<DevelopmentCard> arr = new ArrayList<>();
+                arr.add(first);
+                arr.add(second);
+                arr.add(third);
+                arr.add(fourth);
+
+                temp += "        | P:| ";
+                for (DevelopmentCard d:arr) {
+                    if(d!=null){
+                        temp +=Integer.valueOf(d.getEquivalentPoint()).toString() + Utils.fillSpaces(max, Integer.valueOf(d.getEquivalentPoint()).toString().length()) + "|";
+                    }else{
+                        temp +=Integer.valueOf(0).toString() + Utils.fillSpaces(max, Integer.valueOf(0).toString().length()) + "|";
+                    }
+                }
+                temp += "\n";
+                temp += "LVL = " + (i + 1) + " | C:| ";
+                for (DevelopmentCard d:arr) {
+                    if(d!=null){
+                        temp +=d.getCostsFormatted() + Utils.fillSpaces(max, d.getCostsFormatted().length()) + "|";
+                    }
+                    else{
+                        temp +="empty" + Utils.fillSpaces(max, "empty".length()) + "|";
+                    }
+                }
+                temp += "\n";
+                temp += ("        |PP:| ");
+                for (DevelopmentCard d:arr) {
+                    if(d!=null){
+                        temp += d.getPowersFormatted() + Utils.fillSpaces(max, d.getPowersFormatted().length()) + "|";
+                    }
+                    else{
+                        temp += "empty" + Utils.fillSpaces(max, "empty".length()) + "|";
+                    }
+                }
+                temp += ("\n-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
