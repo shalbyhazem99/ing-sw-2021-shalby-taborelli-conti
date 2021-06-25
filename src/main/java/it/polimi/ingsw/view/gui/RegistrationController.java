@@ -72,6 +72,11 @@ public class RegistrationController extends GenericController {
 
     }
 
+    @Override
+    public void moveResourceResponse(int num_from_first, int num_from_second, int indexFirstWarehouse, int indexSecondWarehouse) {
+
+    }
+
     public void onClickPlay(MouseEvent mouseEvent) throws IOException {
         notify(MessageMove.getInstance(dataTextField.getText()));
         askDataPane.setVisible(false);
@@ -204,11 +209,6 @@ public class RegistrationController extends GenericController {
 
     }
 
-
-    @Override
-    public void moveResourceResponse(int numberOfResourcesMoved, int indexFirstWarehouse, int indexSecondWarehouse) {
-
-    }
 
     @Override
     public void manageDisconnection(String playerName) {

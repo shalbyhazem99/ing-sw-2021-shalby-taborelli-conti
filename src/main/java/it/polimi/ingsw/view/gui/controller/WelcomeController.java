@@ -221,7 +221,7 @@ public class WelcomeController extends GenericController {
     }
 
     @Override
-    public void moveResourceResponse(int numberOfResourcesMoved, int indexFirstWarehouse, int indexSecondWarehouse) {
+    public void moveResourceResponse(int num_from_first, int num_from_second, int indexFirstWarehouse, int indexSecondWarehouse) {
 
     }
 

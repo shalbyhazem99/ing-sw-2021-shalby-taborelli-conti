@@ -594,7 +594,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, how_may_first, how_many_second)) {
             if (!noControl) {
-                notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), how_may_first, indexFirstWarehouse, indexSecondWarehouse));
+                notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), how_may_first,how_many_second, indexFirstWarehouse, indexSecondWarehouse));
                 askForMove();
             }
             return;

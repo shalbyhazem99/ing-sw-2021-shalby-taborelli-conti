@@ -113,6 +113,16 @@ public class Player implements Serializable {
         return null;
     }
 
+    public Warehouse getWarehouseFromPosition(int pos){
+        if(pos>=0 && pos<warehousesStandard.size()){
+            return warehousesStandard.get(pos);
+        }else if(pos>=warehousesStandard.size() && pos<warehousesStandard.size()+warehousesAdditional.size()){
+            return warehousesAdditional.get(pos-warehousesStandard.size());
+        }else {
+            return null;
+        }
+    }
+
     public int getPosFaithMarker() {
         return posFaithMarker;
     }

@@ -9,11 +9,13 @@ import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
+import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductivePower;
+import it.polimi.ingsw.model.Warehouse;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -42,6 +44,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import jdk.jshell.execution.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +54,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
-public class PrimaryController extends GenericController {
+public
+
+class PrimaryController extends GenericController {
 
     private Stack<ResourcePick> pendingSelected;
     private MovePlayerType runningAction;
@@ -61,6 +66,7 @@ public class PrimaryController extends GenericController {
     private Stack<ResourcePick> resDevCardSelected;
     private DataFormat leaderCardDragFormat = new DataFormat("leaderCard");
     private DataFormat marketPendingDragFormat = new DataFormat("marketPending");
+    private DataFormat resourceDragFormat = new DataFormat("resource");
 
     @FXML
     private TabPane tabpane;
@@ -107,6 +113,10 @@ public class PrimaryController extends GenericController {
     private Pane servant_pending;
     @FXML
     private Pane shield_pending;
+
+    @FXML
+    private ArrayList<Pane> market_pending_panes;
+
     @FXML
     private Text coin_pending_text;
     @FXML
@@ -178,6 +188,10 @@ public class PrimaryController extends GenericController {
     private Pane servant_strongbox;
     @FXML
     private Pane shield_strongbox;
+    @FXML
+    private ArrayList<Pane> strongbox_panes;
+
+
     @FXML
     private Text coin_strongbox_text;
     @FXML
@@ -303,6 +317,19 @@ public class PrimaryController extends GenericController {
             add(ware_40);
             add(ware_41);
         }});
+
+        strongbox_panes = new ArrayList<>();
+        strongbox_panes.add(stone_strongbox);
+        strongbox_panes.add(coin_strongbox);
+        strongbox_panes.add(shield_strongbox);
+        strongbox_panes.add(servant_strongbox);
+
+        market_pending_panes = new ArrayList<>();
+        market_pending_panes.add(coin_pending);
+        market_pending_panes.add(stone_pending);
+        market_pending_panes.add(shield_pending);
+        market_pending_panes.add(servant_pending);
+
     }
 
     @Override
@@ -433,7 +460,7 @@ public class PrimaryController extends GenericController {
     public void mapWarehousesAdditional() {
         unsetAllBackgroundWarehouseAdditional();
         for (int i = 0; i < match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().size(); i++) {
-            for (int j = 0; j < match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(i).getResources().size() ; j++) {
+            for (int j = 0; j < match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(i).getResources().size(); j++) {
                 changeImage(warehousesAdditional.get(i).get(j), Utils.mapResTypeToImage(match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(i).getResourceType()), "resources/");
             }
         }
@@ -468,6 +495,7 @@ public class PrimaryController extends GenericController {
             try {
                 changeImage(space, match.getPlayers().get(match.getWhoAmI()).getDevelopmentCardSpaces().get(i).pickTopCard().getImage(), "devcard_leadercard/");
             } catch (Exception e) {
+                space.setDisable(true);
             }
         }
     }
@@ -516,6 +544,7 @@ public class PrimaryController extends GenericController {
     public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
         System.out.println("Correctly received buy development card response");
         changeImage(card_spaces.get(posToAdd), developmentCardSelected.getImage(), "devcard_leadercard/");
+        card_spaces.get(posToAdd).setDisable(false);
         hasPerformedUnBlockingAction = true;
         developmentCardSelected = null;
         resNeededDevelopmentCardSelected = new ArrayList<>();
@@ -790,49 +819,112 @@ public class PrimaryController extends GenericController {
         }
     }
 
-    public void onDragOver(DragEvent dragEvent) {
-        dragEvent.acceptTransferModes(TransferMode.COPY);
+    public void onWarehousesDragOver(DragEvent dragEvent) {
+        Pane sourcePane = (Pane) dragEvent.getGestureSource();
+        Pane pane = (Pane) dragEvent.getSource();
+        boolean prova = !pane.isDisable();
+        if (!pane.isDisable() && !pane.equals(sourcePane) && (market_pending_panes.contains(sourcePane) || warehousesStandard.stream().anyMatch(elem->elem.contains(sourcePane))|| warehousesAdditional.stream().anyMatch(elem->elem.contains(sourcePane)))) {
+            dragEvent.acceptTransferModes(TransferMode.COPY);
+        }
     }
 
-    public void onDragDropped(DragEvent dragEvent) {
+    private int getWarehousePositionFromPane(Pane warehousePane) {
+        if (warehousePane == ware_00) {
+            return 0;
+        } else if (warehousePane == ware_10 || warehousePane == ware_11) {
+            return 1;
+        } else if (warehousePane == ware_20 || warehousePane == ware_21 || warehousePane == ware_22) {
+            return 2;
+        } else if (warehousePane == ware_30 || warehousePane == ware_31) {
+            return 3;
+        } else if (warehousePane == ware_40 || warehousePane == ware_41) {
+            return 4;
+        }
+        return -1;
+    }
+
+    public void onWarehousesDragDropped(DragEvent dragEvent) {
         if (dragEvent.isAccepted()) {
-            Pane warehousePane = (Pane) dragEvent.getSource();
-            int warehousePos = 0;
-            if (warehousePane == ware_00) {
-                warehousePos = 0;
-            } else if (warehousePane == ware_10 || warehousePane == ware_11) {
-                warehousePos = 1;
-            } else if (warehousePane == ware_20 || warehousePane == ware_21 || warehousePane == ware_22) {
-                warehousePos = 2;
-            } else if (warehousePane == ware_30 || warehousePane == ware_31) {
-                warehousePos = 3;
-            } else if (warehousePane == ware_40 || warehousePane == ware_41) {
-                warehousePos = 4;
-            }
+            Pane warehousePaneFrom = (Pane) dragEvent.getGestureSource();
+            Pane warehousePaneTo = (Pane) dragEvent.getSource();
+            int toWarehousePos = getWarehousePositionFromPane(warehousePaneTo);
+
             switch (runningAction) {
-                case NOTHING: {
-                    //todo:the swap must be done here
-                    //PROBABLY A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+                case NOTHING: { //A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
+                    if ( warehousesStandard.stream().anyMatch(elem->elem.contains(warehousePaneFrom))|| warehousesAdditional.stream().anyMatch(elem->elem.contains(warehousePaneFrom))) {
+                        int fromWarehousePos = getWarehousePositionFromPane(warehousePaneFrom);
+                        if(toWarehousePos== fromWarehousePos){
+                            //for the code organization shouldn't enter here but is better to prevent
+                            return;
+                        }
+                        boolean firstIsStandard = true, secondIsStandard = true;
+                        //getting the warehouses from the player
+                        if (fromWarehousePos == 3 || fromWarehousePos == 4) {
+                           firstIsStandard = false;
+                        }
+                        if (toWarehousePos == 3 || toWarehousePos == 4) {
+                            secondIsStandard = false;
+                        }
+                        Warehouse w1 = match.getPlayerFromPosition(match.getWhoAmI()).getWarehouseFromPosition(fromWarehousePos);
+                        Warehouse w2 = match.getPlayerFromPosition(match.getWhoAmI()).getWarehouseFromPosition(toWarehousePos);
+                        //A<->A
+                        if(!firstIsStandard && !secondIsStandard){
+                            //not possible for the game rule
+                            runDialog(Alert.AlertType.ERROR, "Error you must respect the warehousePane's type rule!");
+                            break;
+                        }
+                        //S<->S
+                        if (firstIsStandard && secondIsStandard) {
+                            if (w1.getSpaceAvailable() + w1.getResources().size() < w2.getResources().size()) {
+                                runDialog(Alert.AlertType.ERROR, "swap not possible");
+                                return;
+                            }
+                            if (w2.getSpaceAvailable() + w2.getResources().size() < w1.getResources().size()) {
+                                runDialog(Alert.AlertType.ERROR, "swap not possible");
+                                return;
+                            }
+                            notify(MoveResourcesPlayerMove.getInstance(fromWarehousePos,toWarehousePos,0,0));
+                            disableAllMoves();
+                            return;
+                        }
+
+                        if(!checkForTypeCorrectness(Utils.getResourceTypeFromUrl(warehousePaneFrom.getBackground().getImages().get(0).getImage().getUrl()),toWarehousePos)){
+                            runDialog(Alert.AlertType.ERROR, "Error you must respect the warehousePane's type rule!");
+                            return;
+                        }
+                        if(warehousePaneTo.getBackground()!=null){
+                            runDialog(Alert.AlertType.ERROR, "pane is not empty");
+                            return;
+                        }
+                        //A->S  || S->A
+                        if ((!firstIsStandard && secondIsStandard) ||(firstIsStandard && !secondIsStandard) ) {
+                            //send message
+                            notify(MoveResourcesPlayerMove.getInstance(fromWarehousePos,toWarehousePos,1,0));
+                            disableAllMoves();
+                        }
+                    }
                     break;
                 }
                 case MARKET_INTERACTION: {
                     //WE'RE INSIDE A POSITIONING
-                    if (!checkForTypeCorrectness(resourceTypeDragged, warehousePos)) {
-                        runDialog(Alert.AlertType.ERROR, "Error you must respect the warehousePane's type rule!");
-                        return;
-                    }
-                    if (warehousePane.getBackground() == null) {
-                        pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, -1, resourceTypeDragged));
-                        pendingSelected.peek().setWarehousePosition(warehousePos);
-                        decrementPendingLabelCount(resourceTypeDragged);
-                        changeImage(warehousePane, Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()), "resources/");
-                        System.out.println(new ArrayList<>(pendingSelected));
-                        if (isLastPositioning()) {
-                            runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
-                            sendPlaceResourceMove();
+                    if (market_pending_panes.contains(warehousePaneFrom)) {
+                        if (!checkForTypeCorrectness(resourceTypeDragged, toWarehousePos)) {
+                            runDialog(Alert.AlertType.ERROR, "Error you must respect the warehousePane's type rule!");
+                            return;
                         }
-                    } else {
-                        runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                        if (warehousePaneTo.getBackground() == null) {
+                            pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, -1, resourceTypeDragged));
+                            pendingSelected.peek().setWarehousePosition(toWarehousePos);
+                            decrementPendingLabelCount(resourceTypeDragged);
+                            changeImage(warehousePaneTo, Utils.mapResTypeToImage(pendingSelected.peek().getResourceType()), "resources/");
+                            System.out.println(new ArrayList<>(pendingSelected));
+                            if (isLastPositioning()) {
+                                runDialog(Alert.AlertType.CONFIRMATION, "You've correctly placed all the market pending resources");
+                                sendPlaceResourceMove();
+                            }
+                        } else {
+                            runDialog(Alert.AlertType.ERROR, "Error Warehouse is not empty!");
+                        }
                     }
                     break;
                 }
@@ -906,8 +998,6 @@ public class PrimaryController extends GenericController {
     @Override
     public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
         printModel();
-        /*runDialog(Alert.AlertType.INFORMATION, message);
-        mapDevelopmentCards();*/
     }
 
     //------------------------------------ENABLE LEADER CARD---------------------------------------------------------
@@ -990,7 +1080,7 @@ public class PrimaryController extends GenericController {
                 production_base_from_2.setBackground(null);
                 production_base_to.setBackground(null);
                 production_base_to.setUserData(-1);
-                runningAction=MovePlayerType.NOTHING;
+                runningAction = MovePlayerType.NOTHING;
             }
         } else if (activeProduction.equals(ProductionType.LEADER_CARD)) {
             if ((production_leader_to_1.getBackground() != null && activeProductionIndex == 0)
@@ -1011,7 +1101,7 @@ public class PrimaryController extends GenericController {
                 production_leader_to_1.setUserData(-1);
                 production_leader_to_2.setBackground(null);
                 production_leader_to_2.setUserData(-1);
-                runningAction=MovePlayerType.NOTHING;
+                runningAction = MovePlayerType.NOTHING;
                 disableAllMoves();
             }
         }
@@ -1023,8 +1113,18 @@ public class PrimaryController extends GenericController {
         if (runningAction.equals(MovePlayerType.NOTHING) || runningAction.equals(MovePlayerType.ENABLE_PRODUCTION)) {
             Dragboard db = pane.startDragAndDrop(TransferMode.COPY);
             ClipboardContent cc = new ClipboardContent();
-            cc.putImage(pane.getBackground().getImages().get(0).getImage());
+            db.setDragView(pane.snapshot(null, null));
+            db.setDragViewOffsetX(mouseEvent.getX());
+            db.setDragViewOffsetY(mouseEvent.getY());
+            cc.put(resourceDragFormat, "prova");
             db.setContent(cc);
+
+
+
+
+
+
+
             posWareHouseProduction = -1;
             if (pane == ware_00) {
                 posWareHouseProduction = 0;
@@ -1062,7 +1162,11 @@ public class PrimaryController extends GenericController {
     }
 
     public void onProductionDragOver(DragEvent dragEvent) {
-        dragEvent.acceptTransferModes(TransferMode.COPY);
+        Pane sourcePane = (Pane) dragEvent.getGestureSource();
+        Pane pane = (Pane) dragEvent.getSource();
+        if (!pane.isDisable() &&  (warehousesStandard.stream().anyMatch(elem->elem.contains(sourcePane))|| warehousesAdditional.stream().anyMatch(elem->elem.contains(sourcePane)) || strongbox_panes.contains(sourcePane))) {
+            dragEvent.acceptTransferModes(TransferMode.COPY);
+        }
     }
 
     public void onProductionDragDropped(DragEvent dragEvent) {
@@ -1081,7 +1185,7 @@ public class PrimaryController extends GenericController {
                 manageProductionLeaderAddResource(0, pane);
             } else if (production_leader_from_2.equals(pane) && isProductionPossible(ProductionType.LEADER_CARD, 1)) {
                 manageProductionLeaderAddResource(1, pane);
-            }else {
+            } else {
                 runningAction = MovePlayerType.NOTHING;
             }
         }
@@ -1129,8 +1233,8 @@ public class PrimaryController extends GenericController {
                 runDialog(Alert.AlertType.INFORMATION, "You've correctly picked all the resources, Production activated");
                 pendingSelected = new Stack<>();
                 activeProduction = ProductionType.NOTHING;
-                activeProductivePowerCost=null;
-                runningAction=MovePlayerType.NOTHING;
+                activeProductivePowerCost = null;
+                runningAction = MovePlayerType.NOTHING;
                 disableAllMoves();
             } else {
                 runDialog(Alert.AlertType.INFORMATION, "You've correctly picked a required resource, pick the others");
@@ -1216,14 +1320,19 @@ public class PrimaryController extends GenericController {
     }
 
     public void onBinDragOver(DragEvent dragEvent) {
-        dragEvent.acceptTransferModes(TransferMode.COPY);
+        Pane sourcePane = (Pane) dragEvent.getGestureSource();
+        Pane pane = (Pane) dragEvent.getSource();
+        if (!pane.isDisable() && (market_pending_panes.contains(sourcePane) || leadercards[0].equals(sourcePane) || leadercards[1].equals(sourcePane))) {
+            dragEvent.acceptTransferModes(TransferMode.COPY);
+        }
     }
 
     public void onBinDragDropped(DragEvent dragEvent) {
         if (dragEvent.isAccepted()) {
+            Pane sourcePane = (Pane) dragEvent.getGestureSource();
             Pane pane = (Pane) dragEvent.getSource();
             if (pane == bin) { // discard resources
-                if (runningAction.equals(MovePlayerType.MARKET_INTERACTION)) { // discard resources
+                if (runningAction.equals(MovePlayerType.MARKET_INTERACTION) && market_pending_panes.contains(sourcePane)) { // discard resources
                     pendingSelected.push(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, -1, resourceTypeDragged));
                     pendingSelected.peek().setWarehousePosition(6); //6 = DISCARD
                     decrementPendingLabelCount(resourceTypeDragged);
@@ -1397,9 +1506,12 @@ public class PrimaryController extends GenericController {
     }
 
     @Override
-    public void moveResourceResponse(int numberOfResourcesMoved, int indexFirstWarehouse, int indexSecondWarehouse) {
+    public void moveResourceResponse(int num_from_first, int num_from_second, int indexFirstWarehouse, int indexSecondWarehouse) {
+        runDialog(Alert.AlertType.CONFIRMATION, "Move resources success");
+        mapWarehouses();
 
     }
+
 
     @Override
     public void manageDisconnection(String playerName) {
@@ -1421,7 +1533,7 @@ public class PrimaryController extends GenericController {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        MediaPlayer a =new MediaPlayer(new Media(resource.toString()));
+        MediaPlayer a = new MediaPlayer(new Media(resource.toString()));
         a.play();
     }
 
@@ -1480,9 +1592,9 @@ public class PrimaryController extends GenericController {
     }
 
     private void disableDevelopmentCardsSpace(boolean disable) {
-        card_space_0.setDisable(disable);
-        card_space_1.setDisable(disable);
-        card_space_2.setDisable(disable);
+        card_space_0.setDisable(disable || card_space_0.getBackground()==null);
+        card_space_1.setDisable(disable || card_space_0.getBackground()==null);
+        card_space_2.setDisable(disable || card_space_0.getBackground()==null);
     }
 
     private void disableLeaderCard(boolean disable) {

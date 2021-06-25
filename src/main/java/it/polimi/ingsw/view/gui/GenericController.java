@@ -104,7 +104,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
 
     public abstract void askForData(String message, int executePlayerPos);
 
-    public abstract void moveResourceResponse(int numberOfResourcesMoved, int indexFirstWarehouse, int indexSecondWarehouse);
+    public abstract void moveResourceResponse(int num_from_first,int num_from_second,int indexFirstWarehouse, int indexSecondWarehouse);
 
     public abstract void manageDisconnection(String playerName);
 }
