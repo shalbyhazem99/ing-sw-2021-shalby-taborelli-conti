@@ -676,7 +676,6 @@ public class MatchTest extends TestCase {
             reps++;
         }
         match.positioningResourcesInteraction(whereToPlace, match.getCurrentPlayer(), true);
-        //Todo: capire perchè una volta ogni morte di papa non va
         int resourcesLocated = match.getCurrentPlayer().getWarehousesStandard().get(0).getResources().size() + match.getCurrentPlayer().getWarehousesStandard().get(1).getResources().size() + match.getCurrentPlayer().getWarehousesStandard().get(2).getResources().size();
         assertEquals(3 - whiteMarbleCOLMN - redMarbleCOLMN, resourcesLocated);
 
@@ -787,8 +786,6 @@ public class MatchTest extends TestCase {
         assertEquals(numberGreyMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.STONE).count());
         assertEquals(numberPurpleMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.SERVANT).count());
 
-
-
     }
 
     //todo:
@@ -836,8 +833,7 @@ public class MatchTest extends TestCase {
         match.addPlayer(Player.getInstance("Player"));
         match.startMatch();
         ArrayList<ResourcePick> resourcesToPick = new ArrayList<>();
-
-        //todo: sistemare il bug, molto probabilmente è il Utils.compare.Resources()
+        //todo: CONTROLLARE CHE NON SPARISCANO LE RISORSE
         int index = 0;
         for (ResourcesCount resourcesCount : match.getDevelopmentCardOnTop(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST).getCosts(match.getCurrentPlayer())) {
             for (int i = 0; i < resourcesCount.getCount(); i++) {

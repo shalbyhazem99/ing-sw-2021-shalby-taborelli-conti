@@ -123,14 +123,6 @@ public abstract class LeaderCard implements Serializable {
         return image;
     }
 
-    public ArrayList<ResourcesCount> getResourcesNeeded() {
-        return resourcesNeeded;
-    }
-
-    public ArrayList<DevelopmentCardNeeded> getDevelopmentCardNeeded() {
-        return developmentCardNeeded;
-    }
-
     @Override
     public String toString() {
         String s = "";

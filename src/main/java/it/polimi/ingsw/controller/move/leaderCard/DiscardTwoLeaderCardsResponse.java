@@ -82,8 +82,6 @@ public class DiscardTwoLeaderCardsResponse extends MoveResponse {
             System.out.println(" )");
             resSecond = stdin.nextInt();
         }
-
-
         return DiscardTwoLeaderCardsPlayerMove.getInstance(first, second,resourceTypes[resFirst],resourceTypes[resSecond]);
     }
 }

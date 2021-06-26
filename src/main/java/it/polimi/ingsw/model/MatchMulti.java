@@ -55,7 +55,6 @@ public class MatchMulti extends Match implements Serializable {
         return this.posInkwell;
     }
 
-    //todo:ATTENZIONE QUESTO METODO POI ANDRA' GESTITO DIVERSAMENTE DENTRO MATCHSOLO E MATCHMULTI, IO PER ORA LO METTO QUI E LO FACCIO PER MATCHMULTI
     /**
      * Method used by the {@link Player} to end his round
      *

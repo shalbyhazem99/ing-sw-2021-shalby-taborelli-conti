@@ -14,13 +14,13 @@ public class AskForMove extends MoveResponse {
 
     ArrayList<MovePlayerType> possibleMove;
 
-    public AskForMove(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove,int executePlayerPos,int hashToVerify) {
-        super(players,executePlayerPos,hashToVerify);
+    public AskForMove(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove, int executePlayerPos, int hashToVerify) {
+        super(players, executePlayerPos, hashToVerify);
         this.possibleMove = possibleMove;
     }
 
-    public static AskForMove getInstance(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove,int executePlayerPos,int hashToVerify) {
-        return new AskForMove(players, possibleMove,executePlayerPos,hashToVerify);
+    public static AskForMove getInstance(ArrayList<Player> players, ArrayList<MovePlayerType> possibleMove, int executePlayerPos, int hashToVerify) {
+        return new AskForMove(players, possibleMove, executePlayerPos, hashToVerify);
     }
 
     @Override
@@ -41,8 +41,11 @@ public class AskForMove extends MoveResponse {
             for (int i = 0; i < possibleMove.size(); i++) {
                 System.out.println(i + ") " + possibleMove.get(i).getDescription());
             }
-            //todo:controlli sull'int
-            int move = stdin.nextInt();
+
+            int move;
+            do {
+                move = stdin.nextInt();
+            } while (move >= possibleMove.size() || move < 0);
             playerMove = possibleMove.get(move).elaborateMoveForCLI(stdin, match);
         } while (playerMove == null);
         return playerMove;

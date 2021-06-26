@@ -78,12 +78,6 @@ public class MatchSoloTest extends TestCase {
         assertEquals(24, matchSolo.getPosBlackCross());
     }
 
-    //todo: controllare che sia veramente utilizzata
-    @Test
-    public void testDiscardDevelopmentCards() {
-
-    }
-
     /**
      * Testing the method returns always true, because there is only one {@link Player} in play
      */

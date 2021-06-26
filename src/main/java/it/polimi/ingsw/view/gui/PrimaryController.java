@@ -1122,7 +1122,7 @@ class PrimaryController extends GenericController {
                 production_leader_to_2.setBackground(null);
                 production_leader_to_2.setUserData(-1);
                 runningAction = MovePlayerType.NOTHING;
-                disableAllMoves();
+               //disableAllMoves();
             }
         }
 
@@ -1226,7 +1226,7 @@ class PrimaryController extends GenericController {
     }
 
     private void manageProductionDevelopmentCardAddResource(int pos) {
-        if (activeProductivePowerCost == null) {
+        if (activeProductivePowerCost == null || activeProductivePowerCost.size()==0 ) {
             activeProductivePowerCost = Utils.fromResourceCountToResources(match.getPlayerFromPosition(match.getWhoAmI()).getDevelopmentCardSpaces().get(pos).pickTopCard().getPowers().getFrom());
         }
         if (activeProductivePowerCost.remove(Resource.getInstance(resourceTypeProduction))) {
@@ -1248,7 +1248,7 @@ class PrimaryController extends GenericController {
                 activeProduction = ProductionType.NOTHING;
                 activeProductivePowerCost = null;
                 runningAction = MovePlayerType.NOTHING;
-                disableAllMoves();
+                //disableAllMoves();
             } else {
                 runDialog(Alert.AlertType.INFORMATION, "You've correctly picked a required resource, pick the others");
             }
@@ -1564,7 +1564,7 @@ class PrimaryController extends GenericController {
             disableDevelopmentCardsMatrix(disable);
         }
         if (moves.contains(MovePlayerType.MOVE_RESOURCES)) {
-            //todo: to be done
+
         }
         if (moves.contains(MovePlayerType.ENABLE_LEADER_CARD) || moves.contains(MovePlayerType.DISCARD_LEADER_CARD)) {
             disableLeaderCard(disable);
@@ -1597,8 +1597,8 @@ class PrimaryController extends GenericController {
 
     private void disableDevelopmentCardsSpace(boolean disable) {
         card_space_0.setDisable(disable || card_space_0.getBackground() == null);
-        card_space_1.setDisable(disable || card_space_0.getBackground() == null);
-        card_space_2.setDisable(disable || card_space_0.getBackground() == null);
+        card_space_1.setDisable(disable || card_space_1.getBackground() == null);
+        card_space_2.setDisable(disable || card_space_2.getBackground() == null);
     }
 
     private void disableLeaderCard(boolean disable) {

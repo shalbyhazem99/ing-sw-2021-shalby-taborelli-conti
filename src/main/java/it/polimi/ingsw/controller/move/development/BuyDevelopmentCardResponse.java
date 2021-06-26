@@ -13,8 +13,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//todo:refactor nome sbagliato
-public class BuyDevelopmentCardReponse extends MoveResponse {
+public class BuyDevelopmentCardResponse extends MoveResponse {
     /**
      * Class used to represent the response of the system when the {@link it.polimi.ingsw.model.Player} asks to buy a specific {@link DevelopmentCard}
      */
@@ -23,7 +22,7 @@ public class BuyDevelopmentCardReponse extends MoveResponse {
     private int posToAdd;
     private ArrayList<ResourcePick> resourceToUse;
 
-    public BuyDevelopmentCardReponse(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse,int hashToVerify) {
+    public BuyDevelopmentCardResponse(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int hashToVerify) {
         super(players, executePlayerPos,hashToVerify);
         this.type = type;
         this.level = level;
@@ -31,8 +30,8 @@ public class BuyDevelopmentCardReponse extends MoveResponse {
         this.resourceToUse = resourceToUse;
     }
 
-    public static BuyDevelopmentCardReponse getInstance(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse,int hashToVerify) {
-        return new BuyDevelopmentCardReponse(players, executePlayerPos, type, level, posToAdd, resourceToUse,hashToVerify);
+    public static BuyDevelopmentCardResponse getInstance(ArrayList<Player> players, int executePlayerPos, DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int hashToVerify) {
+        return new BuyDevelopmentCardResponse(players, executePlayerPos, type, level, posToAdd, resourceToUse,hashToVerify);
     }
 
 

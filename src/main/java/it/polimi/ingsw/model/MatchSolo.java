@@ -101,52 +101,6 @@ public class MatchSolo extends Match implements Serializable {
         try{Collections.shuffle(actionTokens);}catch (Exception e){}
     }
 
-
-    //todo: lo abbiamo mai usato?
-
-    /**
-     * This method will discard from the {@link DevelopmentCard} matrix the requested amount of cards of a certain {@link DevelopmentCardType}
-     * the method will try to discard LVL 1 cards, otherwise LVL 2 cards otherwise LVL 3 cards
-     *
-     * @param numberOfCardsToDiscard how many card we have to discard
-     * @param cardType               which {@link DevelopmentCardType} we have to focus on
-     * @return the {@link ArrayList} of {@link DevelopmentCard} that got discarded (it can be empty if no compatible cards are found
-     */
-    public ArrayList<DevelopmentCard> discardDevelopmentCards(int numberOfCardsToDiscard, DevelopmentCardType cardType) {
-        /*
-            COLUMNS:        GREEN / BLUE / YELLOW / PURPLE
-            ROWS: LVL 3->
-                  LVL 2->
-                  LVL 1->
-         */
-        ArrayList<DevelopmentCard> temp = new ArrayList<>();
-        DevelopmentCardLevel cardLevel = DevelopmentCardLevel.FIRST;
-        do {
-            if (developmentCards[cardLevel.label][cardType.label].size() != 0) //if the stack is empty try the next level otherwise discard
-            {
-                temp.add(developmentCards[cardLevel.label][cardType.label].pop());
-                numberOfCardsToDiscard--;
-            } else //if the stack we're operating on is empty we try to move a stack of an higher level
-            {
-                switch (cardLevel.label) {
-                    case 0: {
-                        cardLevel = null;
-                        break;
-                    } //it means we are int highest row on the third level, we cannot discard anything else
-                    case 1: {
-                        cardLevel = DevelopmentCardLevel.THIRD;
-                        break;
-                    } //LVL 2 --> LVL 3
-                    case 2: {
-                        cardLevel = DevelopmentCardLevel.SECOND;
-                        break;
-                    } //LVL 1 --> LVL 2
-                }
-            }
-        } while (numberOfCardsToDiscard != 0 && cardLevel != null); //stop if the correct amount of cards is discarded or if there are no more cards of that color left
-        return temp;
-    }
-
     @Override
     public boolean isMyTurn(Player player) {
         return true;
@@ -185,6 +139,11 @@ public class MatchSolo extends Match implements Serializable {
                 }
             }
         }
+    }
+
+    @Override
+    public void updateTurn() {
+
     }
 
     public String executeAction(ActionToken action, Player player, boolean noControl) {
