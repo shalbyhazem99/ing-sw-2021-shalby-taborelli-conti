@@ -350,7 +350,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             for (int i = 0; i < second; i++) {
                 pendingMarketResources.add(Resource.getInstance(player.getConversionStrategies().get(1)));
             }
-            //notifyModel();
             if (!noControl)
                 notify(MarketResponse.getInstance(pendingMarketResources, 0, players, players.indexOf(player), first, second, this.hashCode()));
         }
@@ -447,7 +446,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
         if (getDevelopmentCardOnTop(type, level) == null) {
             //empty stack
-            notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
+            //todo: ho cambiato il messaggio di errore
+            notify(SendMessage.getInstance("DevelopmentCards for this stack are finished, choose another one to buy ", player, players.indexOf(player), this.hashCode()));
             askForMove();
             return;
         }
@@ -462,6 +462,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             } else {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             }
+            //Qua sparisce una risorsa
         } else if (!player.canAfford(resourceToUse)) {
             notify(SendMessage.getInstance("Something wrong, Not enough resources", player, players.indexOf(player), this.hashCode()));
         } else {
@@ -946,7 +947,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         if (player.getLeaderCards().size() == 4) {
             discardTwoLeaderCardInteraction(0, 1, player, ResourceType.COIN, ResourceType.COIN);
         }
-        //todo:test
         else if (!noControl && iAmPlaying && numPlayerWhoDiscard == players.size()) { // i can't ask for move if i'm in the discard mode
             askForMove();
         }
