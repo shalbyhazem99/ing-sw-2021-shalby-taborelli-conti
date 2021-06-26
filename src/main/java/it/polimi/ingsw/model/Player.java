@@ -66,6 +66,7 @@ public class Player implements Serializable {
         }
     }
 
+
     private void generatePopeFavorTiles() {
         popeFavorTiles.add(PopeFavorTiles.getInstance(2));
         popeFavorTiles.add(PopeFavorTiles.getInstance(3));
