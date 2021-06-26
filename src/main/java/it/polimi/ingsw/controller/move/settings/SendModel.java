@@ -43,12 +43,11 @@ public class SendModel extends MoveResponse {
 
     @Override
     public void elaborateGUI(GenericController controller) {
-        controller.updateModel(match,playerPosition);
+        controller.updateModel(getMatch(),playerPosition);
     }
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
-        //TODO: require which to discard
         return null;
     }
 

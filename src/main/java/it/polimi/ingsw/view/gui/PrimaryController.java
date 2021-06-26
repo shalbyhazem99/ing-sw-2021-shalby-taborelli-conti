@@ -27,12 +27,13 @@ import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -50,12 +51,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
 
 public
-
 class PrimaryController extends GenericController {
 
     private Stack<ResourcePick> pendingSelected;
@@ -242,6 +240,7 @@ class PrimaryController extends GenericController {
     private ResourceType resourceTypeProduction;
     private Pane wareHousePaneFromProduction;
     private ArrayList<Resource> activeProductivePowerCost = null;
+    private int activePlayerPos;
 
     private enum ProductionType {BASE, LEADER_CARD, DEVELOPMENT_CARD, NOTHING;}
 
@@ -255,6 +254,9 @@ class PrimaryController extends GenericController {
     private Text servant_production_pending_text;
     @FXML
     private Text shield_production_pending_text;
+
+    @FXML
+    private ComboBox players_list_combobox;
 
     @Override
     public void update(MoveResponse message) {
@@ -330,6 +332,11 @@ class PrimaryController extends GenericController {
         market_pending_panes.add(shield_pending);
         market_pending_panes.add(servant_pending);
 
+        //
+        players_list_combobox.setItems(FXCollections
+                .observableArrayList(match.getPlayers()));
+        players_list_combobox.getSelectionModel().select(activePlayerPos);
+
     }
 
     @Override
@@ -341,26 +348,27 @@ class PrimaryController extends GenericController {
     @Override
     public void updateModel(Match match, int playerPosition) {
         this.match = match;
+        activePlayerPos = playerPosition;
         initialization();
         printModel();
     }
 
     @Override
     public void printModel() {
-        mapLeaderCards();
-        mapLeaderCardProduction();
+        mapMyLeaderCards(activePlayerPos);
+        mapLeaderCardProduction(activePlayerPos);
         mapMarbles();
-        mapWarehouses();
+        mapWarehouses(activePlayerPos);
         mapDevelopmentCards();
-        mapDevelopmentCardsSpaces();
-        mapStrongBox();
+        mapDevelopmentCardsSpaces(activePlayerPos);
+        mapStrongBox(activePlayerPos);
         mapMarketResource();
         mapProductionResource();
-        updateFaith(match.getWhoAmI());
+        updateFaith(activePlayerPos);
     }
 
-    public void mapStrongBox() {
-        for (ResourcesCount r : Utils.fromResourcesToResourceCount(match.getPlayers().get(match.getWhoAmI()).getStrongBox())) {
+    public void mapStrongBox(int posPlayer) {
+        for (ResourcesCount r : Utils.fromResourcesToResourceCount(match.getPlayers().get(posPlayer).getStrongBox())) {
             switch (r.getType()) {
                 case STONE: {
                     stone_strongbox_text.setText(r.getCount() + "x");
@@ -389,7 +397,6 @@ class PrimaryController extends GenericController {
         servant_pending.setDisable(true);
         shield_pending.setDisable(true);
         for (ResourcesCount r : res) {
-            Pane paneTemp = null;
             switch (r.getType()) {
                 case COIN: {
                     coin_pending_text.setText(r.getCount() + "x");
@@ -443,34 +450,34 @@ class PrimaryController extends GenericController {
         }
     }
 
-    public void mapWarehouses() {
-        mapWarehousesStandard();
-        mapWarehousesAdditional();
+    public void mapWarehouses(int posPlayer) {
+        mapWarehousesStandard(posPlayer);
+        mapWarehousesAdditional(posPlayer);
     }
 
-    public void mapWarehousesStandard() {
+    public void mapWarehousesStandard(int posPlayer) {
         unsetAllBackgroundWarehouseStandard();
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResources().size(); j++) {
-                changeImage(warehousesStandard.get(i).get(j), Utils.mapResTypeToImage(match.getPlayers().get(match.getWhoAmI()).getWarehousesStandard().get(i).getResourceType()), "resources/");
+            for (int j = 0; j < match.getPlayers().get(posPlayer).getWarehousesStandard().get(i).getResources().size(); j++) {
+                changeImage(warehousesStandard.get(i).get(j), Utils.mapResTypeToImage(match.getPlayers().get(posPlayer).getWarehousesStandard().get(i).getResourceType()), "resources/");
             }
         }
     }
 
-    public void mapWarehousesAdditional() {
+    public void mapWarehousesAdditional(int posPlayer) {
         unsetAllBackgroundWarehouseAdditional();
-        for (int i = 0; i < match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().size(); i++) {
-            for (int j = 0; j < match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(i).getResources().size(); j++) {
-                changeImage(warehousesAdditional.get(i).get(j), Utils.mapResTypeToImage(match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(i).getResourceType()), "resources/");
+        for (int i = 0; i < match.getPlayers().get(posPlayer).getWarehousesAdditional().size(); i++) {
+            for (int j = 0; j < match.getPlayers().get(posPlayer).getWarehousesAdditional().get(i).getResources().size(); j++) {
+                changeImage(warehousesAdditional.get(i).get(j), Utils.mapResTypeToImage(match.getPlayers().get(posPlayer).getWarehousesAdditional().get(i).getResourceType()), "resources/");
             }
         }
-        ware_add_1.setVisible(match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().size() > 0);
-        ware_add_2.setVisible(match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().size() > 1);
+        ware_add_1.setVisible(match.getPlayers().get(posPlayer).getWarehousesAdditional().size() > 0);
+        ware_add_2.setVisible(match.getPlayers().get(posPlayer).getWarehousesAdditional().size() > 1);
         if (ware_add_1.isVisible()) {
-            ware_add_type_1.setText(match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(0).getResourceType().toString());
+            ware_add_type_1.setText(match.getPlayers().get(posPlayer).getWarehousesAdditional().get(0).getResourceType().toString());
         }
         if (ware_add_2.isVisible()) {
-            ware_add_type_2.setText(match.getPlayers().get(match.getWhoAmI()).getWarehousesAdditional().get(1).getResourceType().toString());
+            ware_add_type_2.setText(match.getPlayers().get(posPlayer).getWarehousesAdditional().get(1).getResourceType().toString());
         }
     }
 
@@ -487,13 +494,13 @@ class PrimaryController extends GenericController {
         }
     }
 
-    public void mapDevelopmentCardsSpaces() {
+    public void mapDevelopmentCardsSpaces(int posPlayer) {
         System.out.println("stiamo mappando le dev card");
         for (int i = 0; i < card_spaces.size(); i++) {
             Pane space = card_spaces.get(i);
             space.setBackground(null);
             try {
-                changeImage(space, match.getPlayers().get(match.getWhoAmI()).getDevelopmentCardSpaces().get(i).pickTopCard().getImage(), "devcard_leadercard/");
+                changeImage(space, match.getPlayers().get(posPlayer).getDevelopmentCardSpaces().get(i).pickTopCard().getImage(), "devcard_leadercard/");
             } catch (Exception e) {
                 space.setDisable(true);
             }
@@ -516,17 +523,30 @@ class PrimaryController extends GenericController {
         m_23.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2, 3).getColor())));
     }
 
-    public void mapLeaderCards() {
+    public void mapMyLeaderCards(int posPlayer) {
         try {
-            changeImage(leadercards[0], match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(0).getImage(), "devcard_leadercard/");
-            changeImage(leadercards[1], match.getPlayers().get(match.getWhoAmI()).getLeaderCards().get(1).getImage(), "devcard_leadercard/");
+            changeImage(leadercards[0], match.getPlayers().get(posPlayer).getLeaderCards().get(0).getImage(), "devcard_leadercard/");
+            changeImage(leadercards[1], match.getPlayers().get(posPlayer).getLeaderCards().get(1).getImage(), "devcard_leadercard/");
         } catch (Exception exception) {
 
         }
     }
 
-    public void mapLeaderCardProduction() {
-        ArrayList<ProductivePower> activePower = match.getPlayerFromPosition(match.getWhoAmI()).getAddedPower();
+    public void mapOthersLeaderCards(int posPlayer) {
+        leadercards[0].setBackground(null);
+        leadercards[1].setBackground(null);
+        try {
+            if (match.getPlayers().get(posPlayer).getLeaderCards().get(0).isActive())
+                changeImage(leadercards[0], match.getPlayers().get(posPlayer).getLeaderCards().get(0).getImage(), "devcard_leadercard/");
+            if (match.getPlayers().get(posPlayer).getLeaderCards().get(1).isActive())
+                changeImage(leadercards[1], match.getPlayers().get(posPlayer).getLeaderCards().get(1).getImage(), "devcard_leadercard/");
+        } catch (Exception exception) {
+
+        }
+    }
+
+    public void mapLeaderCardProduction(int posPlayer) {
+        ArrayList<ProductivePower> activePower = match.getPlayerFromPosition(posPlayer).getAddedPower();
         production_leader_1.setVisible(false);
         production_leader_2.setVisible(false);
         if (activePower.size() > 0) {
@@ -823,7 +843,7 @@ class PrimaryController extends GenericController {
         Pane sourcePane = (Pane) dragEvent.getGestureSource();
         Pane pane = (Pane) dragEvent.getSource();
         boolean prova = !pane.isDisable();
-        if (!pane.isDisable() && !pane.equals(sourcePane) && (market_pending_panes.contains(sourcePane) || warehousesStandard.stream().anyMatch(elem->elem.contains(sourcePane))|| warehousesAdditional.stream().anyMatch(elem->elem.contains(sourcePane)))) {
+        if (!pane.isDisable() && !pane.equals(sourcePane) && (market_pending_panes.contains(sourcePane) || warehousesStandard.stream().anyMatch(elem -> elem.contains(sourcePane)) || warehousesAdditional.stream().anyMatch(elem -> elem.contains(sourcePane)))) {
             dragEvent.acceptTransferModes(TransferMode.COPY);
         }
     }
@@ -851,16 +871,16 @@ class PrimaryController extends GenericController {
 
             switch (runningAction) {
                 case NOTHING: { //A SWAP WAREHOUSE INTERACTION IS GOING TO HAPPEN
-                    if ( warehousesStandard.stream().anyMatch(elem->elem.contains(warehousePaneFrom))|| warehousesAdditional.stream().anyMatch(elem->elem.contains(warehousePaneFrom))) {
+                    if (warehousesStandard.stream().anyMatch(elem -> elem.contains(warehousePaneFrom)) || warehousesAdditional.stream().anyMatch(elem -> elem.contains(warehousePaneFrom))) {
                         int fromWarehousePos = getWarehousePositionFromPane(warehousePaneFrom);
-                        if(toWarehousePos== fromWarehousePos){
+                        if (toWarehousePos == fromWarehousePos) {
                             //for the code organization shouldn't enter here but is better to prevent
                             return;
                         }
                         boolean firstIsStandard = true, secondIsStandard = true;
                         //getting the warehouses from the player
                         if (fromWarehousePos == 3 || fromWarehousePos == 4) {
-                           firstIsStandard = false;
+                            firstIsStandard = false;
                         }
                         if (toWarehousePos == 3 || toWarehousePos == 4) {
                             secondIsStandard = false;
@@ -868,7 +888,7 @@ class PrimaryController extends GenericController {
                         Warehouse w1 = match.getPlayerFromPosition(match.getWhoAmI()).getWarehouseFromPosition(fromWarehousePos);
                         Warehouse w2 = match.getPlayerFromPosition(match.getWhoAmI()).getWarehouseFromPosition(toWarehousePos);
                         //A<->A
-                        if(!firstIsStandard && !secondIsStandard){
+                        if (!firstIsStandard && !secondIsStandard) {
                             //not possible for the game rule
                             runDialog(Alert.AlertType.ERROR, "Error you must respect the warehousePane's type rule!");
                             break;
@@ -883,23 +903,23 @@ class PrimaryController extends GenericController {
                                 runDialog(Alert.AlertType.ERROR, "swap not possible");
                                 return;
                             }
-                            notify(MoveResourcesPlayerMove.getInstance(fromWarehousePos,toWarehousePos,0,0));
+                            notify(MoveResourcesPlayerMove.getInstance(fromWarehousePos, toWarehousePos, 0, 0));
                             disableAllMoves();
                             return;
                         }
 
-                        if(!checkForTypeCorrectness(Utils.getResourceTypeFromUrl(warehousePaneFrom.getBackground().getImages().get(0).getImage().getUrl()),toWarehousePos)){
+                        if (!checkForTypeCorrectness(Utils.getResourceTypeFromUrl(warehousePaneFrom.getBackground().getImages().get(0).getImage().getUrl()), toWarehousePos)) {
                             runDialog(Alert.AlertType.ERROR, "Error you must respect the warehousePane's type rule!");
                             return;
                         }
-                        if(warehousePaneTo.getBackground()!=null){
+                        if (warehousePaneTo.getBackground() != null) {
                             runDialog(Alert.AlertType.ERROR, "pane is not empty");
                             return;
                         }
                         //A->S  || S->A
-                        if ((!firstIsStandard && secondIsStandard) ||(firstIsStandard && !secondIsStandard) ) {
+                        if ((!firstIsStandard && secondIsStandard) || (firstIsStandard && !secondIsStandard)) {
                             //send message
-                            notify(MoveResourcesPlayerMove.getInstance(fromWarehousePos,toWarehousePos,1,0));
+                            notify(MoveResourcesPlayerMove.getInstance(fromWarehousePos, toWarehousePos, 1, 0));
                             disableAllMoves();
                         }
                     }
@@ -1023,8 +1043,8 @@ class PrimaryController extends GenericController {
     public void flipLeaderCard(int leaderCardPosition, int executePlayerPos) {
         runningAction = MovePlayerType.NOTHING;
         runDialog(Alert.AlertType.CONFIRMATION, "You successfully activate the leader card");
-        mapLeaderCardProduction();
-        mapWarehousesAdditional();
+        mapLeaderCardProduction(activePlayerPos);
+        mapWarehousesAdditional(activePlayerPos);
         //todo:depending on the type do something (map discount and map conversion strategy)
     }
 
@@ -1118,13 +1138,6 @@ class PrimaryController extends GenericController {
             db.setDragViewOffsetY(mouseEvent.getY());
             cc.put(resourceDragFormat, "prova");
             db.setContent(cc);
-
-
-
-
-
-
-
             posWareHouseProduction = -1;
             if (pane == ware_00) {
                 posWareHouseProduction = 0;
@@ -1164,7 +1177,7 @@ class PrimaryController extends GenericController {
     public void onProductionDragOver(DragEvent dragEvent) {
         Pane sourcePane = (Pane) dragEvent.getGestureSource();
         Pane pane = (Pane) dragEvent.getSource();
-        if (!pane.isDisable() &&  (warehousesStandard.stream().anyMatch(elem->elem.contains(sourcePane))|| warehousesAdditional.stream().anyMatch(elem->elem.contains(sourcePane)) || strongbox_panes.contains(sourcePane))) {
+        if (!pane.isDisable() && (warehousesStandard.stream().anyMatch(elem -> elem.contains(sourcePane)) || warehousesAdditional.stream().anyMatch(elem -> elem.contains(sourcePane)) || strongbox_panes.contains(sourcePane))) {
             dragEvent.acceptTransferModes(TransferMode.COPY);
         }
     }
@@ -1400,14 +1413,14 @@ class PrimaryController extends GenericController {
                     }
                 }
                 pendingSelected = new Stack<>();
-                mapWarehouses();
+                mapWarehouses(activePlayerPos);
                 break;
             }
             case BUY_DEVELOPMENT_CARD: {
                 developmentCardSelected = null;
                 resNeededDevelopmentCardSelected = new ArrayList<>();
                 resDevCardSelected = new Stack<>();
-                mapWarehouses();
+                mapWarehouses(activePlayerPos);
                 break;
             }
 
@@ -1508,8 +1521,7 @@ class PrimaryController extends GenericController {
     @Override
     public void moveResourceResponse(int num_from_first, int num_from_second, int indexFirstWarehouse, int indexSecondWarehouse) {
         runDialog(Alert.AlertType.CONFIRMATION, "Move resources success");
-        mapWarehouses();
-
+        mapWarehouses(activePlayerPos);
     }
 
 
@@ -1519,14 +1531,6 @@ class PrimaryController extends GenericController {
     }
 
     public void playSound(String sound) {
-        /*URL resource = null;
-        try {
-            resource = new File("src/main/resources/audio/" + sound + ".wav").toURI().toURL();
-            MediaPlayer a =new MediaPlayer(new Media(resource.toString()));
-            a.play();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }*/
         URL resource = null;
         try {
             resource = new File("src/main/resources/audio/" + sound + ".wav").toURI().toURL();
@@ -1592,9 +1596,9 @@ class PrimaryController extends GenericController {
     }
 
     private void disableDevelopmentCardsSpace(boolean disable) {
-        card_space_0.setDisable(disable || card_space_0.getBackground()==null);
-        card_space_1.setDisable(disable || card_space_0.getBackground()==null);
-        card_space_2.setDisable(disable || card_space_0.getBackground()==null);
+        card_space_0.setDisable(disable || card_space_0.getBackground() == null);
+        card_space_1.setDisable(disable || card_space_0.getBackground() == null);
+        card_space_2.setDisable(disable || card_space_0.getBackground() == null);
     }
 
     private void disableLeaderCard(boolean disable) {

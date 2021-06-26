@@ -6,7 +6,9 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<TabPane fx:id="tabpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="993.0" prefWidth="1255.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
+<VBox alignment="CENTER" maxHeight="-Infinity" prefHeight="982.0" prefWidth="1278.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
+   <ComboBox fx:id="players_list_combobox" prefWidth="150.0" />
+    <TabPane fx:id="tabpane" tabClosingPolicy="UNAVAILABLE">
     <tabs>
         <Tab text="Untitled Tab 1">
             <content>
@@ -437,4 +439,5 @@
             </content>
         </Tab>
     </tabs>
-</TabPane>
+    </TabPane>
+</VBox>
