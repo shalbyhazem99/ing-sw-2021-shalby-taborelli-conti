@@ -65,6 +65,9 @@ public class MatchMultiTest extends TestCase {
         }
     }
 
+    /**
+     * Testing the number of Playing of the {@link Player}
+     */
     @Test
     public void testGetdistPlayerFromInkwell(){
         for (int i = 2; i < 5; i++) {
@@ -85,6 +88,9 @@ public class MatchMultiTest extends TestCase {
     }
 
 
+    /**
+     * Testing the action of discardin a {@link LeaderCard}
+     */
     @Test
     public void testAskForDiscardLeaderCard(){
         for (int i = 2; i <5 ; i++) {
@@ -216,6 +222,48 @@ public class MatchMultiTest extends TestCase {
                 }
             }
         }
+        //Testing the other case of 4 player with 2 different resources
+        MatchMulti matchMulti = new MatchMulti(4);
+        matchMulti.addPlayer(Player.getInstance("Player0"));
+        matchMulti.addPlayer(Player.getInstance("Player1"));
+        matchMulti.addPlayer(Player.getInstance("Player2"));
+        matchMulti.addPlayer(Player.getInstance("Player3"));
+        matchMulti.startMatch();
+        for (Player player:matchMulti.getPlayers()){
+            matchMulti.discardTwoLeaderCardInteraction(0, 1, player, ResourceType.COIN, ResourceType.SHIELD);
+            assertEquals(2, player.getLeaderCards().size());
+            switch (matchMulti.getdistPlayerFromInkwell(matchMulti.getPlayers().indexOf(player))){ // get the turn position
+                case 1: // Is the second to play One Resource is assigned
+                    assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                    assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                    assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                    assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                    assertEquals(0, player.getPosFaithMarker());
+                    break;
+                case 2: // Is the third to play One Resource and one Position Faith are assigned
+                    assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                    assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                    assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                    assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                    assertEquals(1, player.getPosFaithMarker());
+                    break;
+                case 3: // Is the last to play. Two Resources and one Position Faith are assigned
+                    assertEquals(1, player.getWarehousesStandard().get(0).getResources().size());
+                    assertEquals(ResourceType.COIN, player.getWarehousesStandard().get(0).getResourceType());
+                    assertEquals(1, player.getWarehousesStandard().get(1).getResources().size());
+                    assertEquals(ResourceType.SHIELD, player.getWarehousesStandard().get(1).getResourceType());
+                    assertEquals(1, player.getPosFaithMarker());
+                    break;
+                default: //The first to play. No Resources of Position Faith are assigned
+                    assertEquals(0, player.getWarehousesStandard().get(0).getResources().size());
+                    assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(0).getResourceType());
+                    assertEquals(0, player.getWarehousesStandard().get(1).getResources().size());
+                    assertEquals(ResourceType.ANY, player.getWarehousesStandard().get(1).getResourceType());
+                    assertEquals(0, player.getPosFaithMarker());
+                    break;
+            }
+        }
+
 
     }
 
@@ -280,4 +328,93 @@ public class MatchMultiTest extends TestCase {
         }
     }
 
+    /**
+     * Testing the correct checking of the turn
+     */
+    @Test
+    public void testIsMyTurn(){
+        int inkWell;
+        for (int i = 2; i < 4; i++) {
+            MatchMulti matchMulti = new MatchMulti(i);
+
+            for (int j = 0; j < i; j++) {
+                matchMulti.addPlayer(Player.getInstance("Player"+j));
+            }
+            matchMulti.startMatch();
+            for (int j = 0; j < i; j++) {
+                matchMulti.discardTwoLeaderCardInteraction(0, 1, matchMulti.getPlayers().get(j), ResourceType.COIN, ResourceType.SERVANT);
+            }
+            inkWell= matchMulti.getPosInkwell();
+            for (int j = 0; j < i; j++) {
+
+                if (j==inkWell){
+                    assertTrue(matchMulti.isMyTurn(matchMulti.getPlayers().get(j)));
+                } else {
+                    assertFalse(matchMulti.isMyTurn(matchMulti.getPlayers().get(j)));
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Testing if a {@link Player} can change a turn
+     */
+    @Test
+    public void testSetCanChangeTurn(){
+        for (int i = 2; i < 4; i++) {
+            MatchMulti matchMulti = new MatchMulti(i);
+            for (int j = 0; j < i; j++) {
+                matchMulti.addPlayer(Player.getInstance("Player"+i));
+            }
+            //Setting the match
+            matchMulti.startMatch();
+            for (int j = 0; j < i; j++) {
+                matchMulti.discardTwoLeaderCardInteraction(0,1, matchMulti.getPlayers().get(j), ResourceType.COIN, ResourceType.SERVANT);
+            }
+
+            for (int j = 0; j < i; j++) {
+                matchMulti.setCanChangeTurn(true, matchMulti.getPlayers().get(j));
+                if(j != matchMulti.getPosInkwell()){
+                    assertFalse(matchMulti.getCanChangeTurn());
+                } else {
+                    assertTrue(matchMulti.getCanChangeTurn());
+                    matchMulti.setCanChangeTurn(false, matchMulti.getPlayers().get(j));
+                }
+            }
+        }
+    }
+
+    /**
+     * Testing the end game method
+     */
+    @Test
+    public void testHasWon(){
+        for (int i = 2; i < 4; i++) {
+            MatchMulti matchMulti = new MatchMulti(i);
+            for (int j = 0; j < i; j++) {
+                matchMulti.addPlayer(Player.getInstance("Player"+i));
+            }
+            matchMulti.startMatch();
+            for (int j = 0; j < i; j++) {
+                matchMulti.discardTwoLeaderCardInteraction(0,1, matchMulti.getPlayers().get(j), ResourceType.COIN, ResourceType.SERVANT);
+            }
+
+            assertFalse(matchMulti.hasWon());
+            assertFalse(matchMulti.getIsTheFinalTurn());
+
+            matchMulti.getPlayers().get(matchMulti.getPosInkwell()).moveAheadFaith(24);
+            assertFalse(matchMulti.hasWon());
+            assertTrue(matchMulti.getIsTheFinalTurn());
+            //Testing that all the players play and it returns true only when the first who played plays again
+            for (int j = 0; j < i; j++) {
+                matchMulti.updateTurn();
+                if (j!= i-1){
+                    assertFalse(matchMulti.hasWon());
+                } else {
+                    assertTrue(matchMulti.hasWon());
+                }
+            }
+        }
+    }
 }

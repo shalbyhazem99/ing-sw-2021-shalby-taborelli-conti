@@ -138,6 +138,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return players;
     }
 
+    //todo:never used
     /**
      * Method to get a shallow copy of the {@link LeaderCard}'s {@link ArrayList}
      *
@@ -188,6 +189,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public boolean getCanChangeTurn() {
         return canChangeTurn;
     }
+
+    public ArrayList<Resource> getPendingMarketResources(){return (ArrayList<Resource>) this.pendingMarketResources.clone();}
+
+    public ArrayList<Resource> getPendingProductionResources(){return  (ArrayList<Resource>) this.pendingProductionResources.clone();}
     /*-----------------------------------------------------------------------------------------------
     END GETTER
     -------------------------------------------------------------------------------------------------*/
@@ -219,6 +224,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         this.whoAmI = whoAmI;
     }
 
+    //todo:never used
     //TODO pensare a come ridefinire l'equals, possiamo mettere un nickname che deve essere univoco, quindi dovrei fare un ulteriore controllo in addplayer
     //TODO noi scegliamo di fare la persistenza, se sì l'utente va eliminato dopo x turni che non accede?
     public boolean removeDisconnectedPlayer(Player toRemove) {
@@ -294,6 +300,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         askForMove();
     }
 
+
     public void askForMove() {
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
         if (!canChangeTurn) {
@@ -325,6 +332,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             askForMove();
         } else {
             ArrayList<Resource> resourcesGained = marketBoard.getResources(moveType, pos);
+            //todo:ho cambiato qua perchè era invertito
             if (moveType.equals(MoveType.COLUMN)) {
                 numOfWhiteMarbleToBeConverted = Utils.MARKET_ROW_NUMBER - resourcesGained.size();   //how many white marbles are there in the selected COLUMN
             } else {
@@ -339,7 +347,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 case 0:
                     numOfWhiteMarbleToBeConverted = 0;
                     break;
-                case 1:
+                    //todo: ho cambiato da 1 a default, così se le convertion strategy sono 1 o 2 aggiunge sempre le risorse bianche, questo metodo così funziona se ho un solo potere di conversione
+                default:
                     for (int i = 0; i < numOfWhiteMarbleToBeConverted; i++) {
                         resourcesGained.add(Resource.getInstance(player.getConversionStrategies().get(0)));
                     }
@@ -387,7 +396,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player, boolean noControl) {
         /*
             Check
-            1) if are there any resources to be placed
+            1) if there are any resources to be placed
             2) if the 2 arraylist sizes are equal
             3) if the warehouses can correctly store everything (simulating all the transferring process using .clone())
             If no errors ==>
@@ -411,6 +420,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         Gson gson = new Gson();
         String warehouseStandard = gson.toJson(player.getWarehousesStandard());
         String warehouseAdditional = gson.toJson(player.getWarehousesAdditional());
+
+        //todo: never used params
         ArrayList<Warehouse> standardTemp = player.getWarehousesStandard();
         ArrayList<Warehouse> additionalTemp = player.getWarehousesAdditional();
 
@@ -464,6 +475,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player   the {@link Player} which call the Move
      * @param posToAdd the int that specify in which user's {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} the new {@link DevelopmentCard} has to be placed into
      */
+    //todo: Sistemare bug che se sbagli inserimento di posizione di toglie tutte le risorse
     public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
         //if the player can afford the development card requested
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
@@ -474,7 +486,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             return;
         }
         ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getCosts(player).stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
-        //check if the resourto use are the required and if the player has this resources
+        //check if the resources to use are the required and if the player has this resources
         if (Utils.compareResources(resources, resourcesCounts) && player.canAfford(resourceToUse) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)) {
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
             if (player.addDevelopmentCard(temp_card, posToAdd)) //no errors
@@ -620,6 +632,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         productionActive = false;
     }
 
+    //todo: serve ancora questa?
     public void updateTurn() {
         /*
             Controllare:
@@ -628,10 +641,12 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
          */
     }
 
+    //Todo: questi paramentri a caso vanno tolti?
     public abstract boolean isMyTurn(Player player);
 
     public abstract void setCanChangeTurn(boolean canChangeTurn, Player player);
 
+    //todo:never used
     /**
      * Method used to serialize the {@link Match} object
      *
@@ -653,7 +668,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         return true;
     }
 
-    //todo: testing
     public void controlPopePath() {
         // 5-8 (2 points, first pope favor tiles)
         // 12-16 (3 points, second pope favor tiles)
@@ -987,11 +1001,20 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 pendingMarketResources = new ArrayList<>();
                 controlPopePath();
             }
+            if (this.pendingProductionResources.size()>0){
+                //adding all the pendingResources
+                this.getCurrentPlayer().addResourceToStrongBox(this.pendingProductionResources);
+                for (int i = 0; i < this.pendingProductionResources.size(); i++) {
+                    this.pendingProductionResources.remove(i);
+                }
+            }
             updateTurn();
         }
         if (player.getLeaderCards().size() == 4) {
             discardTwoLeaderCardInteraction(0,1,player,ResourceType.COIN,ResourceType.COIN);
-        }else if(!noControl && iAmPlaying && numPlayerWhoDiscard>= players.size()){ // i can't ask for move if i'm in the discard mode
+        }
+        //Todo: se entri in questo ramo tutti i giocatori hanno scartato, se no cosa si vorrebbe implementare?
+        else if(!noControl && iAmPlaying && numPlayerWhoDiscard>= players.size()){ // i can't ask for move if i'm in the discard mode
             askForMove();
         }
     }
