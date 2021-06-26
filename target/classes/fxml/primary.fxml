@@ -6,348 +6,438 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<TabPane fx:id="tabpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="993.0" prefWidth="1255.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.PrimaryController">
-   <tabs>
-      <Tab text="Untitled Tab 1">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="994.0" prefWidth="1260.0">
-               <children>
-                  <Pane layoutX="3.0" prefHeight="49.0" prefWidth="1244.0" styleClass="grey-bg" stylesheets="@../css/grey-background.css">
-                     <children>
-                        <TextFlow fx:id="msgBox" layoutX="8.0" layoutY="5.0" prefHeight="33.0" prefWidth="1232.0" />
-                     </children></Pane>
-                  <Pane layoutX="142.0" layoutY="55.0" prefHeight="585.0" prefWidth="997.0" styleClass="punch" stylesheets="@../css/punch.css">
-                     <children>
-                        <StackPane layoutX="393.0" layoutY="250.0">
+<VBox alignment="CENTER" maxHeight="-Infinity" prefHeight="982.0" prefWidth="1278.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
+   <ComboBox fx:id="players_list_combobox" prefWidth="150.0" />
+    <TabPane fx:id="tabpane" tabClosingPolicy="UNAVAILABLE">
+    <tabs>
+        <Tab text="Untitled Tab 1">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="979.0" prefWidth="1266.0">
+                    <children>
+                        <Pane layoutX="3.0" prefHeight="49.0" prefWidth="1244.0" styleClass="grey-bg" stylesheets="@../css/grey-background.css">
+                            <children>
+                                <TextFlow fx:id="msgBox" layoutX="8.0" layoutY="5.0" prefHeight="33.0" prefWidth="1232.0" />
+                            </children>
+                        </Pane>
+                        <Pane layoutX="142.0" layoutY="55.0" prefHeight="585.0" prefWidth="997.0" styleClass="punch" stylesheets="@../css/punch.css">
+                            <children>
+                                <StackPane layoutX="393.0" layoutY="250.0">
+                                    <children>
+                                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                            <children>
+                                                <Pane fx:id="card_space_0" layoutX="8.0" layoutY="6.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="230.0" prefWidth="143.0" />
+                                            </children>
+                                        </Pane>
+                                    </children>
+                                </StackPane>
+                                <StackPane layoutX="583.0" layoutY="250.0">
+                                    <children>
+                                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                            <children>
+                                                <Pane fx:id="card_space_1" layoutX="8.0" layoutY="6.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="230.0" prefWidth="143.0" />
+                                            </children>
+                                        </Pane>
+                                    </children>
+                                </StackPane>
+                                <StackPane layoutX="780.0" layoutY="250.0">
+                                    <children>
+                                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                            <children>
+                                                <Pane fx:id="card_space_2" layoutX="8.0" layoutY="6.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="230.0" prefWidth="143.0" />
+                                            </children>
+                                        </Pane>
+                                    </children>
+                                </StackPane>
+                                <Pane layoutX="32.0" layoutY="439.0" prefHeight="109.0" prefWidth="160.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                                    <children>
+                                        <Text fx:id="stone_strongbox_text" layoutX="13.0" layoutY="31.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                            <font>
+                                                <Font name="Algerian" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="coin_strongbox_text" layoutX="91.0" layoutY="31.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                            <font>
+                                                <Font name="Algerian" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="shield_strongbox_text" layoutX="91.0" layoutY="84.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                            <font>
+                                                <Font name="Algerian" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="servant_strongbox_text" layoutX="13.0" layoutY="85.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                            <font>
+                                                <Font name="Algerian" size="12.0" />
+                                            </font>
+                                        </Text>
+                                    </children>
+                                </Pane>
+                                <Pane fx:id="faith_0" layoutX="39.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_1" layoutX="88.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_2" layoutX="136.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_3" layoutX="136.0" layoutY="75.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_4" layoutX="136.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_5" layoutX="185.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_6" layoutX="234.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_7" layoutX="283.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_8" layoutX="332.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_9" layoutX="380.0" layoutY="36.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_10" layoutX="380.0" layoutY="74.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_11" layoutX="380.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_12" layoutX="430.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_13" layoutX="479.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_14" layoutX="528.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_15" layoutX="576.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_16" layoutX="623.0" layoutY="116.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_17" layoutX="625.0" layoutY="75.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_18" layoutX="625.0" layoutY="36.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_19" layoutX="674.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_20" layoutX="723.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_21" layoutX="772.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_22" layoutX="820.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_23" layoutX="869.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="faith_24" layoutX="918.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="button_card_space_0" layoutX="456.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" userData="0">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                                <Pane fx:id="button_card_space_1" layoutX="649.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" userData="1" />
+                                <Pane fx:id="button_card_space_2" layoutX="851.0" layoutY="185.0" onMouseClicked="#button_card_space_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" userData="2" />
+                                <Pane layoutX="496.0" layoutY="50.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Rectangle fx:id="faith_player" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="20.0" layoutX="48.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="20.0" />
+                                <Pane fx:id="ware_11" layoutX="130.0" layoutY="291.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_10" layoutX="74.0" layoutY="291.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_00" layoutX="105.0" layoutY="231.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_22" layoutX="160.0" layoutY="344.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_21" layoutX="108.0" layoutY="344.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="ware_20" layoutX="54.0" layoutY="345.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="production_base_from_1" layoutX="265.0" layoutY="416.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="production_base_from_2" layoutX="265.0" layoutY="444.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" stylesheets="@../css/purple-bg.css" />
+                        <Pane fx:id="production_base_to" layoutX="323.0" layoutY="427.0" prefHeight="33.0" prefWidth="35.0" userData="-1" />
+                        <Button fx:id="changeProductionBaseTo" layoutX="308.0" layoutY="460.0" mnemonicParsing="false" onMouseClicked="#onClickChangeProductionTo" text="change">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Button>
+                        <Pane layoutX="294.0" layoutY="514.0" onMouseClicked="#activateProduction" prefHeight="52.0" prefWidth="37.0" styleClass="red-bg" stylesheets="@../css/red-bg.css" />
+                        <Pane fx:id="production_leader_2" layoutX="239.0" layoutY="204.0" prefHeight="92.0" prefWidth="131.0" styleClass="punch" stylesheets="@../css/leader_production.css">
                            <children>
-                              <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                 <children>
-                                    <Pane fx:id="card_space_0" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                                 </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
-                        <StackPane layoutX="583.0" layoutY="250.0">
-                           <children>
-                              <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                 <children>
-                                    <Pane fx:id="card_space_1" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                                 </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
-                        <StackPane layoutX="780.0" layoutY="250.0">
-                           <children>
-                              <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                 <children>
-                                    <Pane fx:id="card_space_2" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                                 </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
-                        <Pane layoutX="32.0" layoutY="439.0" prefHeight="109.0" prefWidth="160.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <children>
-                              <Text fx:id="stone_strongbox_text" layoutX="13.0" layoutY="31.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                              <Pane fx:id="production_leader_from_2" layoutX="21.0" layoutY="33.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" />
+                              <Button fx:id="changeProductionLeader2" layoutX="65.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#onClickChangeProductionTo" text="change">
                                  <font>
                                     <Font name="Algerian" size="12.0" />
                                  </font>
-                              </Text>
-                              <Text fx:id="coin_strongbox_text" layoutX="91.0" layoutY="31.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
-                                 <font>
-                                    <Font name="Algerian" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="shield_strongbox_text" layoutX="91.0" layoutY="84.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
-                                 <font>
-                                    <Font name="Algerian" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="servant_strongbox_text" layoutX="13.0" layoutY="85.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
-                                 <font>
-                                    <Font name="Algerian" size="12.0" />
-                                 </font>
-                              </Text>
+                              </Button>
                            </children></Pane>
-                        <Pane fx:id="faith_0" layoutX="39.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_1" layoutX="88.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_2" layoutX="136.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_3" layoutX="136.0" layoutY="75.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_4" layoutX="136.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_5" layoutX="185.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_6" layoutX="234.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_7" layoutX="283.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_8" layoutX="332.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_9" layoutX="380.0" layoutY="36.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_10" layoutX="380.0" layoutY="74.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_11" layoutX="380.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_12" layoutX="430.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_13" layoutX="479.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_14" layoutX="528.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_15" layoutX="576.0" layoutY="115.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_16" layoutX="623.0" layoutY="116.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_17" layoutX="625.0" layoutY="75.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_18" layoutX="625.0" layoutY="36.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_19" layoutX="674.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_20" layoutX="723.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_21" layoutX="772.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_22" layoutX="820.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_23" layoutX="869.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="faith_24" layoutX="918.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane layoutX="299.0" layoutY="183.0" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="button_card_space_0" layoutX="456.0" layoutY="183.0" onMouseClicked="#button_card_space_0_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor></Pane>
-                        <Pane fx:id="button_card_space_1" layoutX="649.0" layoutY="183.0" onMouseClicked="#button_card_space_1_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="button_card_space_2" layoutX="851.0" layoutY="185.0" onMouseClicked="#button_card_space_2_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane layoutX="496.0" layoutY="50.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Pane layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                        <Rectangle fx:id="faith_player" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="20.0" layoutX="48.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="20.0" />
-                        <Pane fx:id="ware_11" layoutX="130.0" layoutY="291.0" onMouseClicked="#warehouse11Clicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="ware_10" layoutX="74.0" layoutY="291.0" onMouseClicked="#warehouse10Clicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="ware_00" layoutX="105.0" layoutY="231.0" onMouseClicked="#warehouse00Clicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="ware_22" layoutX="160.0" layoutY="344.0" onMouseClicked="#warehouse22Clicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="ware_21" layoutX="108.0" layoutY="344.0" onMouseClicked="#warehouse21Clicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                        <Pane fx:id="ware_20" layoutX="54.0" layoutY="345.0" onMouseClicked="#warehouse20Clicked" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
-                     </children></Pane>
-                  <Pane layoutX="731.0" layoutY="662.0" prefHeight="262.0" prefWidth="395.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                        <Pane fx:id="production_leader_1" layoutX="243.0" layoutY="299.0" prefHeight="92.0" prefWidth="131.0" styleClass="punch" stylesheets="@../css/leader_production.css">
+                           <children>
+                              <Pane fx:id="production_leader_from_1" layoutX="20.0" layoutY="33.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" />
+                              <Button fx:id="changeProductionLeader1" layoutX="60.0" layoutY="74.0" mnemonicParsing="false" onMouseClicked="#onClickChangeProductionTo" text="change">
+                                 <font>
+                                    <Font name="Algerian" size="12.0" />
+                                 </font>
+                              </Button>
+                           </children></Pane>
+                        <Pane fx:id="production_leader_to_1" layoutX="326.0" layoutY="347.0" prefHeight="33.0" prefWidth="35.0" userData="-1" />
+                        <Pane fx:id="production_leader_to_2" layoutX="318.0" layoutY="250.0" prefHeight="33.0" prefWidth="35.0" userData="-1" />
+                            </children>
+                        </Pane>
+                        <Pane layoutX="744.0" layoutY="695.0" prefHeight="262.0" prefWidth="395.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                            <children>
+                                <Pane fx:id="leadercard1" layoutX="20.0" layoutY="10.0" onDragDetected="#onLeaderCardDragDetected" onMouseClicked="#enableCardClick" prefHeight="243.0" prefWidth="161.0" userData="0" />
+                                <Pane fx:id="leadercard2" layoutX="220.0" layoutY="10.0" onDragDetected="#onLeaderCardDragDetected" onMouseClicked="#enableCardClick" prefHeight="243.0" prefWidth="161.0" userData="1" />
+                            </children>
+                        </Pane>
+                        <Pane layoutX="135.0" layoutY="697.0" prefHeight="257.0" prefWidth="208.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
+                            <children>
+                                <Pane fx:id="coin_pending" layoutX="110.0" layoutY="8.0" onDragDetected="#onPendingMarketResDragDetected" prefHeight="53.0" prefWidth="51.0" styleClass="coin" stylesheets="@../css/resources.css" />
+                                <Text fx:id="coin_pending_text" layoutX="48.0" layoutY="35.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                    <font>
+                                        <Font name="Algerian" size="12.0" />
+                                    </font>
+                                </Text>
+                                <Pane fx:id="stone_pending" layoutX="110.0" layoutY="67.0" onDragDetected="#onPendingMarketResDragDetected" prefHeight="53.0" prefWidth="51.0" styleClass="stone" stylesheets="@../css/resources.css" />
+                                <Text fx:id="stone_pending_text" layoutX="48.0" layoutY="94.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                    <font>
+                                        <Font name="Algerian" size="12.0" />
+                                    </font>
+                                </Text>
+                                <Pane fx:id="servant_pending" layoutX="110.0" layoutY="126.0" onDragDetected="#onPendingMarketResDragDetected" prefHeight="53.0" prefWidth="51.0" styleClass="servant" stylesheets="@../css/resources.css" />
+                                <Text fx:id="servant_pending_text" layoutX="48.0" layoutY="153.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                    <font>
+                                        <Font name="Algerian" size="12.0" />
+                                    </font>
+                                </Text>
+                                <Pane fx:id="shield_pending" layoutX="110.0" layoutY="185.0" onDragDetected="#onPendingMarketResDragDetected" prefHeight="53.0" prefWidth="51.0" styleClass="shield" stylesheets="@../css/resources.css" />
+                                <Text fx:id="shield_pending_text" layoutX="48.0" layoutY="212.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                                    <font>
+                                        <Font name="Algerian" size="12.0" />
+                                    </font>
+                                </Text>
+                                <Pane fx:id="stone_strongbox" layoutX="79.0" layoutY="-194.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="stone" stylesheets="@../css/resources.css" />
+                                <Pane fx:id="coin_strongbox" layoutX="160.0" layoutY="-195.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="coin" stylesheets="@../css/resources.css" />
+                                <Pane fx:id="servant_strongbox" layoutX="81.0" layoutY="-140.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="servant" stylesheets="@../css/resources.css" />
+                                <Pane fx:id="shield_strongbox" layoutX="161.0" layoutY="-138.0" onDragDetected="#onProductionResDragDetected" onMouseClicked="#onResourceClick" prefHeight="35.0" prefWidth="35.0" styleClass="shield" stylesheets="@../css/resources.css" />
+                            </children>
+                        </Pane>
+                        <Text layoutX="189.0" layoutY="676.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MARKET PENDING">
+                            <font>
+                                <Font name="Algerian" size="12.0" />
+                            </font>
+                        </Text>
+                        <Text layoutX="487.0" layoutY="675.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRODUCTION PENDING">
+                            <font>
+                                <Font name="Algerian" size="12.0" />
+                            </font>
+                        </Text>
+                        <Pane layoutX="28.0" layoutY="151.0" onMouseClicked="#abortAction" prefHeight="76.0" prefWidth="80.0" styleClass="button-cross" stylesheets="@../css/other_objects.css" />
+                        <Pane layoutX="28.0" layoutY="63.0" onMouseClicked="#endTurn" prefHeight="78.0" prefWidth="80.0" styleClass="button-tick" stylesheets="@../css/other_objects.css" />
+                        <Pane fx:id="bin" layoutX="31.0" layoutY="248.0" onDragDropped="#onBinDragDropped" onDragOver="#onBinDragOver" prefHeight="82.0" prefWidth="81.0" styleClass="bin" stylesheets="@../css/other_objects.css" />
+                  <Pane layoutX="444.0" layoutY="697.0" prefHeight="257.0" prefWidth="208.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
                      <children>
-                        <Pane layoutX="20.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="leadercard1" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" stylesheets="@../css/trydevcard.css" />
-                           </children>
-                        </Pane>
-                        <Pane layoutX="220.0" layoutY="10.0" prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="leadercard2" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" stylesheets="@../css/trydevcard.css" />
-                           </children>
-                        </Pane>
+                        <Pane layoutX="110.0" layoutY="8.0" prefHeight="53.0" prefWidth="51.0" styleClass="coin" stylesheets="@../css/resources.css" />
+                        <Text fx:id="coin_production_pending_text" layoutX="48.0" layoutY="35.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                        <Pane layoutX="110.0" layoutY="67.0" prefHeight="53.0" prefWidth="51.0" styleClass="stone" stylesheets="@../css/resources.css" />
+                        <Text fx:id="stone_production_pending_text" layoutX="48.0" layoutY="94.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                        <Pane layoutX="110.0" layoutY="126.0" prefHeight="53.0" prefWidth="51.0" styleClass="servant" stylesheets="@../css/resources.css" />
+                        <Text fx:id="servant_production_pending_text" layoutX="48.0" layoutY="153.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                        <Pane layoutX="110.0" layoutY="185.0" prefHeight="53.0" prefWidth="51.0" styleClass="shield" stylesheets="@../css/resources.css" />
+                        <Text fx:id="shield_production_pending_text" layoutX="48.0" layoutY="212.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
                      </children>
                   </Pane>
-                  <Pane layoutX="135.0" layoutY="697.0" prefHeight="257.0" prefWidth="208.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                     <children>
-                        <Pane fx:id="coin_pending" layoutX="110.0" layoutY="8.0" onMouseClicked="#coin_pending_click" prefHeight="53.0" prefWidth="51.0" styleClass="coin" stylesheets="@../css/resources.css" />
-                        <Text fx:id="coin_pending_text" layoutX="48.0" layoutY="35.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
-                           <font>
-                              <Font name="Algerian" size="12.0" />
-                           </font></Text>
-                        <Pane fx:id="stone_pending" layoutX="110.0" layoutY="67.0" onMouseClicked="#stone_pending_click" prefHeight="53.0" prefWidth="51.0" styleClass="stone" stylesheets="@../css/resources.css" />
-                        <Text fx:id="stone_pending_text" layoutX="48.0" layoutY="94.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
-                           <font>
-                              <Font name="Algerian" size="12.0" />
-                           </font></Text>
-                        <Pane fx:id="servant_pending" layoutX="110.0" layoutY="126.0" onMouseClicked="#servant_pending_click" prefHeight="53.0" prefWidth="51.0" styleClass="servant" stylesheets="@../css/resources.css" />
-                        <Text fx:id="servant_pending_text" layoutX="48.0" layoutY="153.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
-                           <font>
-                              <Font name="Algerian" size="12.0" />
-                           </font></Text>
-                        <Pane fx:id="shield_pending" layoutX="110.0" layoutY="185.0" onMouseClicked="#shield_pending_click" prefHeight="53.0" prefWidth="51.0" styleClass="shield" stylesheets="@../css/resources.css" />
-                        <Text fx:id="shield_pending_text" layoutX="48.0" layoutY="212.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0x">
-                           <font>
-                              <Font name="Algerian" size="12.0" />
-                           </font></Text>
-                        <Pane fx:id="stone_strongbox" layoutX="79.0" layoutY="-194.0" onMouseClicked="#stone_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="stone" stylesheets="@../css/resources.css" />
-                        <Pane fx:id="coin_strongbox" layoutX="160.0" layoutY="-195.0" onMouseClicked="#coin_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="coin" stylesheets="@../css/resources.css" />
-                        <Pane fx:id="servant_strongbox" layoutX="81.0" layoutY="-140.0" onMouseClicked="#servant_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="servant" stylesheets="@../css/resources.css" />
-                        <Pane fx:id="shield_strongbox" layoutX="161.0" layoutY="-138.0" onMouseClicked="#shield_pending_click" prefHeight="35.0" prefWidth="35.0" styleClass="shield" stylesheets="@../css/resources.css" />
-                     </children></Pane>
-                  <Pane layoutX="468.0" layoutY="730.0" prefHeight="131.0" prefWidth="185.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                  <Text layoutX="189.0" layoutY="676.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MARKET PENDING">
+                  <Text layoutX="33.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ADDITIONAL WAREHOUSE" wrappingWidth="81.275390625">
                      <font>
                         <Font name="Algerian" size="12.0" />
-                     </font></Text>
-                  <Text layoutX="504.0" layoutY="693.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRODUCTION PENDING">
-                     <font>
-                        <Font name="Algerian" size="12.0" />
-                     </font></Text>
-                  <Pane layoutX="28.0" layoutY="151.0" onMouseClicked="#abortAction" prefHeight="76.0" prefWidth="80.0" styleClass="button-cross" stylesheets="@../css/other_objects.css" />
-                  <Pane layoutX="28.0" layoutY="63.0" onMouseClicked="#endTurn" prefHeight="78.0" prefWidth="80.0" styleClass="button-tick" stylesheets="@../css/other_objects.css" />
-                  <Pane fx:id="bin" layoutX="31.0" layoutY="248.0" onMouseClicked="#binClicked" prefHeight="82.0" prefWidth="81.0" styleClass="bin" stylesheets="@../css/other_objects.css" />
-               </children></AnchorPane>
-         </content>
-      </Tab>
-      <Tab text="Dev Card">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <StackPane layoutX="327.0" layoutY="74.0">
+                     </font>
+                  </Text>
+                  <Pane fx:id="ware_add_1" layoutX="12.0" layoutY="391.0" prefHeight="89.0" prefWidth="124.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
                      <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_00" layoutX="8.0" layoutY="6.0" onMouseClicked="#devcard00_click" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="575.0" layoutY="74.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_01" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="817.0" layoutY="74.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_02" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="1060.0" layoutY="74.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_03" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="327.0" layoutY="340.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_10" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="575.0" layoutY="340.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_11" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="817.0" layoutY="340.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_12" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="1060.0" layoutY="340.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_13" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <Text layoutX="158.0" layoutY="190.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 1" />
-                  <Text layoutX="157.0" layoutY="457.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 2" />
-                  <Text layoutX="157.0" layoutY="722.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 3" />
-                  <Text fill="#1dbff5" layoutX="387.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GREEN" />
-                  <Text fill="#0062ff" layoutX="639.0" layoutY="38.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BLUE" />
-                  <Text fill="#f2d30f" layoutX="872.0" layoutY="37.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="YELLOW" />
-                  <Text fill="#c60101" layoutX="1115.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PURPLE" />
-                  <StackPane layoutX="327.0" layoutY="610.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_20" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="575.0" layoutY="610.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_21" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="817.0" layoutY="610.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_22" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="1060.0" layoutY="610.0">
-                     <children>
-                        <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                           <children>
-                              <Pane fx:id="devcard_23" layoutX="8.0" layoutY="6.0" prefHeight="230.0" prefWidth="143.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </StackPane>
-               </children>
-            </AnchorPane>
-         </content>
-      </Tab>
-      <Tab text="Marble Market">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <Pane layoutX="272.0" layoutY="103.0" prefHeight="729.0" prefWidth="711.0" styleClass="wallpaper" stylesheets="@../css/tab2.css">
-                     <children>
-                        <Circle fx:id="m_20" fill="DODGERBLUE" layoutX="251.0" layoutY="332.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_10" fill="DODGERBLUE" layoutX="251.0" layoutY="262.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_00" fill="DODGERBLUE" layoutX="251.0" layoutY="192.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_21" fill="DODGERBLUE" layoutX="331.0" layoutY="332.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_11" fill="DODGERBLUE" layoutX="331.0" layoutY="262.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_01" fill="DODGERBLUE" layoutX="331.0" layoutY="192.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_22" fill="DODGERBLUE" layoutX="411.0" layoutY="332.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_12" fill="DODGERBLUE" layoutX="411.0" layoutY="262.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_02" fill="#800012" layoutX="411.0" layoutY="192.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_23" fill="#1500ff" layoutX="491.0" layoutY="332.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_13" fill="#1fff4a" layoutX="491.0" layoutY="262.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_03" fill="RED" layoutX="491.0" layoutY="192.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Circle fx:id="m_add" fill="#000307" layoutX="491.0" layoutY="122.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Pane fx:id="btn_col_0" layoutX="226.0" layoutY="426.0" onMouseClicked="#clickCol0" prefHeight="103.0" prefWidth="47.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Pane>
-                        <Pane fx:id="btn_col_1" layoutX="309.0" layoutY="426.0" onMouseClicked="#clickCol1" prefHeight="103.0" prefWidth="47.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Pane>
-                        <Pane fx:id="btn_col_2" layoutX="383.0" layoutY="426.0" onMouseClicked="#clickCol2" prefHeight="103.0" prefWidth="47.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Pane>
-                        <Pane fx:id="btn_col_3" layoutX="467.0" layoutY="426.0" onMouseClicked="#clickCol3" prefHeight="103.0" prefWidth="47.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Pane>
-                        <Pane fx:id="btn_row_2" layoutX="628.0" layoutY="300.0" onMouseClicked="#clickRow2" prefHeight="50.0" prefWidth="85.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Pane>
-                        <Pane fx:id="btn_row_1" layoutX="625.0" layoutY="235.0" onMouseClicked="#clickRow1" prefHeight="43.0" prefWidth="90.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Pane>
-                        <Pane fx:id="btn_row_0" layoutX="629.0" layoutY="171.0" onMouseClicked="#clickRow0" prefHeight="40.0" prefWidth="82.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Pane>
+                        <Pane fx:id="ware_30" layoutX="7.0" layoutY="32.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="border-style" stylesheets="@../css/additional_ware.css" />
+                        <Pane fx:id="ware_31" layoutX="63.0" layoutY="33.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="border-style" stylesheets="@../css/additional_ware.css" />
+                        <Text fx:id="ware_add_type_1" layoutX="17.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MONEY" textAlignment="CENTER" wrappingWidth="81.275390625">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
                      </children>
                   </Pane>
-               </children></AnchorPane>
-         </content>
-      </Tab>
-   </tabs>
-</TabPane>
+                  <Pane fx:id="ware_add_2" layoutX="12.0" layoutY="493.0" prefHeight="89.0" prefWidth="124.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                     <children>
+                        <Pane fx:id="ware_40" layoutX="7.0" layoutY="28.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="border-style" stylesheets="@../css/additional_ware.css" />
+                        <Pane fx:id="ware_41" layoutX="63.0" layoutY="28.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" styleClass="border-style" stylesheets="@../css/additional_ware.css" />
+                        <Text fx:id="ware_add_type_2" layoutX="21.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MONEY" textAlignment="CENTER" wrappingWidth="81.275390625">
+                           <font>
+                              <Font name="Algerian" size="12.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+                    </children>
+                </AnchorPane>
+            </content>
+        </Tab>
+        <Tab text="Dev Card">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <StackPane layoutX="327.0" layoutY="74.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_00" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,0" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="575.0" layoutY="74.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_01" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,1" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="817.0" layoutY="74.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_02" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,2" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="1060.0" layoutY="74.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_03" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,3" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="327.0" layoutY="340.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_10" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,0" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="575.0" layoutY="340.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_11" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,1" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="817.0" layoutY="340.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_12" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,2" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="1060.0" layoutY="340.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_13" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,3" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <Text layoutX="158.0" layoutY="190.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 1" />
+                        <Text layoutX="157.0" layoutY="457.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 2" />
+                        <Text layoutX="157.0" layoutY="722.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 3" />
+                        <Text fill="#1dbff5" layoutX="387.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GREEN" />
+                        <Text fill="#0062ff" layoutX="639.0" layoutY="38.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BLUE" />
+                        <Text fill="#f2d30f" layoutX="872.0" layoutY="37.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="YELLOW" />
+                        <Text fill="#c60101" layoutX="1115.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PURPLE" />
+                        <StackPane layoutX="327.0" layoutY="610.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_20" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,0" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="575.0" layoutY="610.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_21" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,1" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="817.0" layoutY="610.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_22" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,2" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                        <StackPane layoutX="1060.0" layoutY="610.0">
+                            <children>
+                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
+                                    <children>
+                                        <Pane fx:id="devcard_23" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,3" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </StackPane>
+                    </children>
+                </AnchorPane>
+            </content>
+        </Tab>
+        <Tab text="Marble Market">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <Pane layoutX="272.0" layoutY="103.0" prefHeight="729.0" prefWidth="711.0" styleClass="wallpaper" stylesheets="@../css/tab2.css">
+                            <children>
+                                <Sphere fx:id="m_20" layoutX="251.0" layoutY="332.0" radius="25.0" />
+                                <Sphere fx:id="m_10" layoutX="251.0" layoutY="262.0" radius="25.0" />
+                                <Sphere fx:id="m_00" layoutX="251.0" layoutY="192.0" radius="25.0" />
+                                <Sphere fx:id="m_21" layoutX="331.0" layoutY="332.0" radius="25.0" />
+                                <Sphere fx:id="m_11" layoutX="331.0" layoutY="262.0" radius="25.0" />
+                                <Sphere fx:id="m_01" layoutX="331.0" layoutY="192.0" radius="25.0" />
+                                <Sphere fx:id="m_22" layoutX="411.0" layoutY="332.0" radius="25.0" />
+                                <Sphere fx:id="m_12" layoutX="411.0" layoutY="262.0" radius="25.0" />
+                                <Sphere fx:id="m_02" layoutX="411.0" layoutY="192.0" radius="25.0" />
+                                <Sphere fx:id="m_23" layoutX="491.0" layoutY="332.0" radius="25.0" />
+                                <Sphere fx:id="m_13" layoutX="491.0" layoutY="262.0" radius="25.0" />
+                                <Sphere fx:id="m_03" layoutX="491.0" layoutY="192.0" radius="25.0" />
+                                <Sphere fx:id="m_add" layoutX="491.0" layoutY="122.0" radius="25.0" />
+                                <Pane fx:id="btn_col_0" layoutX="221.0" layoutY="427.0" onMouseClicked="#clickMarketInteraction" prefHeight="105.0" prefWidth="55.0" styleClass="market-arrow-column" stylesheets="@../css/market-arrow.css" userData="0">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                                <Pane fx:id="btn_col_1" layoutX="303.0" layoutY="427.0" onMouseClicked="#clickMarketInteraction" prefHeight="105.0" prefWidth="55.0" styleClass="market-arrow-column" stylesheets="@../css/market-arrow.css" userData="1">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                                <Pane fx:id="btn_col_2" layoutX="384.0" layoutY="426.0" onMouseClicked="#clickMarketInteraction" prefHeight="105.0" prefWidth="55.0" styleClass="market-arrow-column" stylesheets="@../css/market-arrow.css" userData="2">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                                <Pane fx:id="btn_col_3" layoutX="465.0" layoutY="428.0" onMouseClicked="#clickMarketInteraction" prefHeight="105.0" prefWidth="55.0" styleClass="market-arrow-column" stylesheets="@../css/market-arrow.css" userData="3">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                                <Pane fx:id="btn_row_0" layoutX="620.0" layoutY="175.0" onMouseClicked="#clickMarketInteraction" prefHeight="40.0" prefWidth="92.0" styleClass="market-arrow-row" stylesheets="@../css/market-arrow.css" userData="4">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                                <Pane fx:id="btn_row_1" layoutX="620.0" layoutY="240.0" onMouseClicked="#clickMarketInteraction" prefHeight="45.0" prefWidth="92.0" styleClass="market-arrow-row" stylesheets="@../css/market-arrow.css" userData="5">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                                <Pane fx:id="btn_row_2" layoutX="620.0" layoutY="304.0" onMouseClicked="#clickMarketInteraction" prefHeight="50.0" prefWidth="92.0" styleClass="market-arrow-row" stylesheets="@../css/market-arrow.css" userData="6">
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </Pane>
+                            </children>
+                        </Pane>
+                    </children>
+                </AnchorPane>
+            </content>
+        </Tab>
+    </tabs>
+    </TabPane>
+</VBox>

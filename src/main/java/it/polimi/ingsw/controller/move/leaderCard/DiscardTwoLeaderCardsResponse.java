@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.move.leaderCard;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.gui.GenericController;
+import it.polimi.ingsw.view.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -82,8 +82,6 @@ public class DiscardTwoLeaderCardsResponse extends MoveResponse {
             System.out.println(" )");
             resSecond = stdin.nextInt();
         }
-
-
         return DiscardTwoLeaderCardsPlayerMove.getInstance(first, second,resourceTypes[resFirst],resourceTypes[resSecond]);
     }
 }

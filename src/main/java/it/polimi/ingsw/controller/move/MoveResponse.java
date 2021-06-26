@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.move;
 
-import it.polimi.ingsw.gui.GenericController;
+import it.polimi.ingsw.view.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 

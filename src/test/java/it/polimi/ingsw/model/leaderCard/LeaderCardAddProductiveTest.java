@@ -143,4 +143,13 @@ public class LeaderCardAddProductiveTest extends TestCase {
         LeaderCardAddProductive cardAddProductive4 = LeaderCardAddProductive.getInstance(0, null, resourcesNeeded, null);
         assertTrue(cardAddProductive4.isActionable(tester));
     }
+
+    @Test
+    public void testGetResourcesNeeded(){
+        ArrayList<ResourcesCount> resourcesCountArrayList = new ArrayList<>();
+        resourcesCountArrayList.add(ResourcesCount.getInstance(5, ResourceType.COIN));
+        LeaderCardAddProductive leaderCardAddProductive = new LeaderCardAddProductive(3, null,resourcesCountArrayList, null);
+        assertEquals(5, leaderCardAddProductive.getResourcesNeeded().size());
+        assertEquals(5, leaderCardAddProductive.getResourcesNeeded().stream().filter(elm-> elm.getType()==ResourceType.COIN).count());
+    }
 }

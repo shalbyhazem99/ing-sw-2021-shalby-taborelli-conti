@@ -53,6 +53,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>15</version>
+            <type>pom</type>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -72,7 +79,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.6</version>
                 <configuration>
-                    <mainClass>it.polimi.ingsw.gui.HelloFX</mainClass>
+                    <mainClass>it.polimi.ingsw.view.gui.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>

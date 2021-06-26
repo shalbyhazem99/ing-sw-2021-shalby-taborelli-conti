@@ -21,8 +21,6 @@ public class GameManger implements Observer<PlayerMove> {
     private synchronized void executeMove(PlayerMove playerMove){
         if(match.isMyTurn(playerMove.getPlayer()) || playerMove instanceof DisconnectionMove || playerMove instanceof ReconnectionMove) {
             playerMove.execute(match);
-            //match.updateTurn();
-            //TODO: control if someone won the match
         }
     }
 

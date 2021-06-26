@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.move.settings;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.gui.GenericController;
+import it.polimi.ingsw.view.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
@@ -43,16 +43,16 @@ public class SendModel extends MoveResponse {
 
     @Override
     public void elaborateGUI(GenericController controller) {
-        controller.updateModel(match,playerPosition);
+        controller.updateModel(getMatch(),playerPosition);
     }
 
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
-        //TODO: require which to discard
         return null;
     }
 
     public Match getMatch() {
+        match.setWhoAmI(playerPosition);
         return match;
     }
 }

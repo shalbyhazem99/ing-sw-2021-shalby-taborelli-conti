@@ -55,7 +55,6 @@ public class MatchMulti extends Match implements Serializable {
         return this.posInkwell;
     }
 
-    //todo:ATTENZIONE QUESTO METODO POI ANDRA' GESTITO DIVERSAMENTE DENTRO MATCHSOLO E MATCHMULTI, IO PER ORA LO METTO QUI E LO FACCIO PER MATCHMULTI
     /**
      * Method used by the {@link Player} to end his round
      *
@@ -216,24 +215,25 @@ public class MatchMulti extends Match implements Serializable {
     public int getTurn(){
         return this.turn;
     }
+    public boolean getIsTheFinalTurn(){return this.finalTurn;}
 
-    public void enableFinalTurn() {
-        this.finalTurn = true;
-    }
 
+    /**
+     * Methods to start the final turn of a Match
+     * @return True if every {@link Player} have played the same amount of turns and the Player is going to play.
+     */
     public boolean hasWon() {
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getDevelopmentCards().size() >= 7 || players.get(i).getPosFaithMarker() >= 24) {
-                this.enableFinalTurn();
-            }
-
-        }
         if (this.finalTurn) {
             if (turn == posInkwell) {
                 for (int i = 0; i < players.size(); i++) {
                     notify(EndMatchResponse.getInstance(players.get(i), i, this.hashCode()));
                 }
                 return true;
+            }
+        }
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getDevelopmentCards().size() >= 7 || players.get(i).getPosFaithMarker() >= 24) {
+                this.finalTurn=true;
             }
         }
         return false;

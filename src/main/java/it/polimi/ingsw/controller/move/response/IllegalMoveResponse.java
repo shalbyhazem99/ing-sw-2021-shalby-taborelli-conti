@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.move.response;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
-import it.polimi.ingsw.gui.GenericController;
+import it.polimi.ingsw.view.gui.GenericController;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class IllegalMoveResponse extends MoveResponse {
-    String message; //todo:or type;
+    String message;
 
     public IllegalMoveResponse(String message, ArrayList<Player> players,int executePlayerPos,int hashToVerify) {
         super(players,executePlayerPos,hashToVerify);
@@ -28,7 +28,7 @@ public class IllegalMoveResponse extends MoveResponse {
 
     @Override
     public void elaborateGUI(GenericController controller) {
-        //todo: do nothing
+
     }
 
     @Override

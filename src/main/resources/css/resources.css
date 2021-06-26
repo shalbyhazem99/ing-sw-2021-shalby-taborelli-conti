@@ -18,3 +18,27 @@
     -fx-background-image: url("../images/resources/faith_c.png");
     -fx-background-size: 100% 100%;
 }
+.shield:hover
+{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+}
+.stone:hover
+{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+}
+.coin:hover
+{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+}
+.servant:hover
+{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-scale-z: 1.2;
+}

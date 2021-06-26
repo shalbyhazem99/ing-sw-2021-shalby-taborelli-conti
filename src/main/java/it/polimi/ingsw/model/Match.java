@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import com.google.gson.Gson;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsResponse;
-import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardReponse;
+import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardResponse;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.market.MarketResponse;
 import it.polimi.ingsw.controller.move.production.EnableProductionResponse;
@@ -56,9 +56,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     protected int numPlayerWhoDiscard = 0;
     protected transient int whoAmI;
 
-    //when something wrong: resent the entire model
-    //TODO: pensare a attributi aggiuntivi, esempio salvare su disco i record, memorizzare timestamp per sapere da quanto tempo si gioca ...
-
     /**
      * Constructor that initialize the Match settings reading from a file all the information
      */
@@ -84,22 +81,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         //todo: to remove
         for (Player player : players) {
             ArrayList<ResourcesCount> aa = new ArrayList<>();
-            //players.get(0).addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN),0);
-            aa.add(ResourcesCount.getInstance(20, ResourceType.COIN));
-            aa.add(ResourcesCount.getInstance(20, ResourceType.SERVANT));
-            aa.add(ResourcesCount.getInstance(20, ResourceType.SHIELD));
-            aa.add(ResourcesCount.getInstance(20, ResourceType.STONE));
-            Warehouse w1, w2;
-            w1 = new Warehouse(2, ResourceType.COIN);
-            w2 = new Warehouse(2, ResourceType.SHIELD);
-            /*w1.addResource(Resource.getInstance(ResourceType.COIN));
-            w1.addResource(Resource.getInstance(ResourceType.COIN));
-            w2.addResource(Resource.getInstance(ResourceType.COIN));
-            */
-            player.addAdditionalWarehouse(w1);
-            player.addAdditionalWarehouse(w2);
-            player.addConversionStrategies(ResourceType.COIN);
-            player.addConversionStrategies(ResourceType.STONE);
+            aa.add(ResourcesCount.getInstance(10, ResourceType.COIN));
+            aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
+            aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));
+            aa.add(ResourcesCount.getInstance(10, ResourceType.STONE));
             player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
         }
         askForDiscardLeaderCard();
@@ -141,15 +126,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     }
 
     /**
-     * Method to get a shallow copy of the {@link LeaderCard}'s {@link ArrayList}
-     *
-     * @return {@link LeaderCard} clone
-     */
-    public ArrayList<LeaderCard> getLeaderCards() {
-        return (ArrayList<LeaderCard>) leaderCards.clone();
-    }
-
-    /**
      * Method to get a shallow copy of the {@link DevelopmentCard} section
      *
      * @return {@link DevelopmentCard} clone
@@ -175,20 +151,27 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @return The top {@link DevelopmentCard} of the {@link Stack}
      */
     public DevelopmentCard getDevelopmentCardOnTop(DevelopmentCardType type, DevelopmentCardLevel level) {
-        try{
+        try {
             return developmentCards[level.label][type.label].peek();
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
-    public int getWhoAmI()
-    {
+    public int getWhoAmI() {
         return whoAmI;
     }
 
     public boolean getCanChangeTurn() {
         return canChangeTurn;
+    }
+
+    public ArrayList<Resource> getPendingMarketResources() {
+        return (ArrayList<Resource>) this.pendingMarketResources.clone();
+    }
+
+    public ArrayList<Resource> getPendingProductionResources() {
+        return (ArrayList<Resource>) this.pendingProductionResources.clone();
     }
     /*-----------------------------------------------------------------------------------------------
     END GETTER
@@ -220,13 +203,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void setWhoAmI(int whoAmI) {
         this.whoAmI = whoAmI;
     }
-
-    //TODO pensare a come ridefinire l'equals, possiamo mettere un nickname che deve essere univoco, quindi dovrei fare un ulteriore controllo in addplayer
-    //TODO noi scegliamo di fare la persistenza, se sì l'utente va eliminato dopo x turni che non accede?
-    public boolean removeDisconnectedPlayer(Player toRemove) {
-        return false;
-    }
-
 
     /**
      * Method to pick (get and remove) the top {@link DevelopmentCard} of a {@link Stack} (combination of {@link DevelopmentCardLevel} and {@link DevelopmentCardType})
@@ -295,6 +271,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         askForMove();
     }
+
 
     public void askForMove() {
         ArrayList<MovePlayerType> possibleMove = new ArrayList<>();
@@ -389,7 +366,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
     public void positioningResourcesInteraction(ArrayList<Integer> whereToPlace, Player player, boolean noControl) {
         /*
             Check
-            1) if are there any resources to be placed
+            1) if there are any resources to be placed
             2) if the 2 arraylist sizes are equal
             3) if the warehouses can correctly store everything (simulating all the transferring process using .clone())
             If no errors ==>
@@ -413,8 +390,6 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         Gson gson = new Gson();
         String warehouseStandard = gson.toJson(player.getWarehousesStandard());
         String warehouseAdditional = gson.toJson(player.getWarehousesAdditional());
-        ArrayList<Warehouse> standardTemp = player.getWarehousesStandard();
-        ArrayList<Warehouse> additionalTemp = player.getWarehousesAdditional();
 
         int numberOfDiscardedResources = 0;
         int numberOfGainedResources = whereToPlace.size();
@@ -466,23 +441,24 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player   the {@link Player} which call the Move
      * @param posToAdd the int that specify in which user's {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} the new {@link DevelopmentCard} has to be placed into
      */
+    //todo: Sistemare bug che se sbagli inserimento di posizione di toglie tutte le risorse to test
     public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
         //if the player can afford the development card requested
         ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
-        if(getDevelopmentCardOnTop(type, level)==null){
+        if (getDevelopmentCardOnTop(type, level) == null) {
             //empty stack
             notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             askForMove();
             return;
         }
         ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getCosts(player).stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
-        //check if the resourto use are the required and if the player has this resources
-        if (Utils.compareResources(resources, resourcesCounts) && player.canAfford(resourceToUse) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)) {
+        //check if the resources to use are the required and if the player has this resources
+        if (Utils.compareResources(resources, resourcesCounts) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd) && player.canAfford(resourceToUse)) {
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
             if (player.addDevelopmentCard(temp_card, posToAdd)) //no errors
             {
                 setCanChangeTurn(true, player);
-                notify(BuyDevelopmentCardReponse.getInstance(players, players.indexOf(player), type, level, posToAdd, resourceToUse, this.hashCode()));
+                notify(BuyDevelopmentCardResponse.getInstance(players, players.indexOf(player), type, level, posToAdd, resourceToUse, this.hashCode()));
             } else {
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             }
@@ -606,7 +582,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         if (player.moveResources(indexFirstWarehouse, indexSecondWarehouse, how_may_first, how_many_second)) {
             if (!noControl) {
-                notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), how_may_first, indexFirstWarehouse, indexSecondWarehouse));
+                notify(MoveResourcesResponse.getInstance(players, players.indexOf(player), this.hashCode(), how_may_first, how_many_second, indexFirstWarehouse, indexSecondWarehouse));
                 askForMove();
             }
             return;
@@ -622,40 +598,13 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         productionActive = false;
     }
 
-    public void updateTurn() {
-        /*
-            Controllare:
-            - è stata eseguita una mossa "sbloccante" (mercato, dev card, produzioni)
-            - l'arraylist<Resource> pendingResources è vuoto
-         */
-    }
+
+    public abstract void updateTurn();
 
     public abstract boolean isMyTurn(Player player);
 
     public abstract void setCanChangeTurn(boolean canChangeTurn, Player player);
 
-    /**
-     * Method used to serialize the {@link Match} object
-     *
-     * @param location the path in which the {@link Match} has to be serialized
-     * @return true if the {@link Match} is correctly serialized to the file system, false otherwise
-     */
-    public boolean writeToFileSystem(String location) {
-        if (location == null) {
-            return false;
-        }
-        try {
-            FileOutputStream fileOut = new FileOutputStream(location);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this);
-            objectOut.close();
-        } catch (Exception ex) {
-            return false;
-        }
-        return true;
-    }
-
-    //todo: testing
     public void controlPopePath() {
         // 5-8 (2 points, first pope favor tiles)
         // 12-16 (3 points, second pope favor tiles)
@@ -800,27 +749,33 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             temp += ("---------------\n");
             temp += ("\t\t\t\t\t\t  " + DevelopmentCardType.GREEN + " \t\t\t\t\t\t  " + DevelopmentCardType.BLUE + " \t\t\t\t\t\t " + DevelopmentCardType.YELLOW + " \t\t\t\t\t\t " + DevelopmentCardType.PURPLE + "\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            int green_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.GREEN));
+            int blu_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.BLUE));
+            ;
+            int yellow_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.YELLOW));
+            ;
+            int purple_max = Utils.getMaxLengthStringDevCard(Utils.getColour(developmentCards, DevelopmentCardType.PURPLE));
             int max = 30;
             for (int i = 0; i < 3; i++) {
-                DevelopmentCard first,second,third,fourth;
-                try{
+                DevelopmentCard first, second, third, fourth;
+                try {
                     first = developmentCards[i][0].peek();
-                }catch (Exception e){
+                } catch (Exception e) {
                     first = null;
                 }
-                try{
+                try {
                     second = developmentCards[i][1].peek();
-                }catch (Exception e){
+                } catch (Exception e) {
                     second = null;
                 }
-                try{
+                try {
                     third = developmentCards[i][2].peek();
-                }catch (Exception e){
+                } catch (Exception e) {
                     third = null;
                 }
-                try{
+                try {
                     fourth = developmentCards[i][3].peek();
-                }catch (Exception e){
+                } catch (Exception e) {
                     fourth = null;
                 }
                 ArrayList<DevelopmentCard> arr = new ArrayList<>();
@@ -830,30 +785,28 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 arr.add(fourth);
 
                 temp += "        | P:| ";
-                for (DevelopmentCard d:arr) {
-                    if(d!=null){
-                        temp +=Integer.valueOf(d.getEquivalentPoint()).toString() + Utils.fillSpaces(max, Integer.valueOf(d.getEquivalentPoint()).toString().length()) + "|";
-                    }else{
-                        temp +=Integer.valueOf(0).toString() + Utils.fillSpaces(max, Integer.valueOf(0).toString().length()) + "|";
+                for (DevelopmentCard d : arr) {
+                    if (d != null) {
+                        temp += Integer.valueOf(d.getEquivalentPoint()).toString() + Utils.fillSpaces(max, Integer.valueOf(d.getEquivalentPoint()).toString().length()) + "|";
+                    } else {
+                        temp += Integer.valueOf(0).toString() + Utils.fillSpaces(max, Integer.valueOf(0).toString().length()) + "|";
                     }
                 }
                 temp += "\n";
                 temp += "LVL = " + (i + 1) + " | C:| ";
-                for (DevelopmentCard d:arr) {
-                    if(d!=null){
-                        temp +=d.getCostsFormatted() + Utils.fillSpaces(max, d.getCostsFormatted().length()) + "|";
-                    }
-                    else{
-                        temp +="empty" + Utils.fillSpaces(max, "empty".length()) + "|";
+                for (DevelopmentCard d : arr) {
+                    if (d != null) {
+                        temp += d.getCostsFormatted() + Utils.fillSpaces(max, d.getCostsFormatted().length()) + "|";
+                    } else {
+                        temp += "empty" + Utils.fillSpaces(max, "empty".length()) + "|";
                     }
                 }
                 temp += "\n";
                 temp += ("        |PP:| ");
-                for (DevelopmentCard d:arr) {
-                    if(d!=null){
+                for (DevelopmentCard d : arr) {
+                    if (d != null) {
                         temp += d.getPowersFormatted() + Utils.fillSpaces(max, d.getPowersFormatted().length()) + "|";
-                    }
-                    else{
+                    } else {
                         temp += "empty" + Utils.fillSpaces(max, "empty".length()) + "|";
                     }
                 }
@@ -966,7 +919,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         }
         player.makeOffline();
         //skip turn
-        skipTurn(player,noControl);
+        skipTurn(player, noControl);
         if (!noControl)
             notify(DisconnectionResponse.getInstance(playerName, players, players.indexOf(player), this.hashCode()));
     }
@@ -983,21 +936,24 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 pendingMarketResources = new ArrayList<>();
                 controlPopePath();
             }
+            if (this.pendingProductionResources.size() > 0) {
+                //adding all the pendingResources
+                this.getCurrentPlayer().addResourceToStrongBox(this.pendingProductionResources);
+                pendingMarketResources = new ArrayList<>();
+            }
             updateTurn();
         }
         if (player.getLeaderCards().size() == 4) {
-            discardTwoLeaderCardInteraction(0,1,player,ResourceType.COIN,ResourceType.COIN);
-        }else if(!noControl && iAmPlaying && numPlayerWhoDiscard>= players.size()){ // i can't ask for move if i'm in the discard mode
+            discardTwoLeaderCardInteraction(0, 1, player, ResourceType.COIN, ResourceType.COIN);
+        }
+        //todo:test
+        else if (!noControl && iAmPlaying && numPlayerWhoDiscard == players.size()) { // i can't ask for move if i'm in the discard mode
             askForMove();
         }
     }
 
     public Player getPlayerFromName(String playerName) {
         return players.stream().filter(elem -> elem.getName().equals(playerName)).findFirst().orElse(null);
-    }
-
-    public ArrayList<Resource> getPendingMarketResources(){
-        return pendingMarketResources;
     }
 
     public void ReconnectPlayer(String playerName, boolean noControl) {
@@ -1009,8 +965,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         player.returnOnline();
         //notifyModel();
         if (!noControl) {
-            notify(SendModel.getInstance(this, player, players.indexOf(player), this.hashCode()));
             notify(ReconnectionResponse.getInstance(playerName, players, players.indexOf(player), this.hashCode()));
+            notify(SendModel.getInstance(this, player, players.indexOf(player), this.hashCode()));
         }
     }
 }

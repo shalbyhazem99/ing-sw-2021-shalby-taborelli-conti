@@ -4,8 +4,8 @@ import it.polimi.ingsw.controller.GameManger;
 import it.polimi.ingsw.controller.move.PlayerMove;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.server.ClientConnection;
-import it.polimi.ingsw.view.RemoteView;
+import it.polimi.ingsw.connection.ClientConnection;
+import it.polimi.ingsw.connection.view.RemoteView;
 
 import java.util.Map;
 

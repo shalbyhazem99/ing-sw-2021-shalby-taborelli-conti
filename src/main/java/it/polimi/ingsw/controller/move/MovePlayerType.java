@@ -18,10 +18,6 @@ import it.polimi.ingsw.utils.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-//player è sempre in posizione 0, quyello che fa la mosssa.
-
-//todo: modificare elaborate for cli
-
 public enum MovePlayerType {
     BUY_DEVELOPMENT_CARD("Buy Development Card") {
         @Override
@@ -462,6 +458,12 @@ public enum MovePlayerType {
                 elaborateMoveForCLI(stdin, match);
             }
             return moveResourcesPlayerMove;
+        }
+    },
+    NOTHING("Nothing"){
+        @Override
+        public PlayerMove elaborateMoveForCLI(Scanner stdin, Match match) {
+            return null;
         }
     };
 
