@@ -25,7 +25,7 @@ public class Utils {
      * Connection info
      */
     public static String ip = "127.0.0.1";
-    public static int port = 64032;
+    public static int port = 63249;
 
     /**
      * the Faith path length

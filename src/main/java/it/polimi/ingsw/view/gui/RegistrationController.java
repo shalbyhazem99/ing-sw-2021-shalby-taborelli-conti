@@ -166,7 +166,7 @@ public class RegistrationController extends GenericController {
     }
 
     @Override
-    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos) {
+    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos, int num) {
 
     }
 

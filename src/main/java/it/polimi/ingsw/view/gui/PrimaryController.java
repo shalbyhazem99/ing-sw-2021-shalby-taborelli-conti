@@ -25,6 +25,7 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
+import it.polimi.ingsw.view.gui.controller.Conversion_dialogController;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -32,7 +33,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
@@ -44,9 +49,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import jdk.jshell.execution.Util;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -628,7 +637,7 @@ class PrimaryController extends GenericController {
     }
 
     /**
-     * when a resource is cliccked in the warehouse or in the strongbox
+     * when a resource is clicked in the warehouse or in the strongbox
      */
     public void onResourceClick(MouseEvent mouseEvent) {
         Pane warehousePane = (Pane) mouseEvent.getSource();
@@ -707,9 +716,10 @@ class PrimaryController extends GenericController {
      * @param executePlayerPos
      */
     @Override
-    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos) {
+    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos, int num) {
         //BEGIN ANIMATION
         final double duration = 1;
+        int whiteMarbles = 0;
         TranslateTransition temp, t2, t3;
         ParallelTransition parallelTransition = new ParallelTransition();
         ParallelTransition parallelTransitionDouble = new ParallelTransition();
@@ -781,13 +791,42 @@ class PrimaryController extends GenericController {
         enableMoves(new ArrayList<MovePlayerType>() {{
             add(MovePlayerType.MOVE_RESOURCES);
         }}, false);
+        if(num==0) //nothing to convert
+        {
+            runDialog(Alert.AlertType.INFORMATION,"Action Performed");
+        }
+        else
+        {
+            Platform.runLater(
+                    () -> {
+                       try{ Stage dialog = new Stage();
+                        dialog.initStyle(StageStyle.UTILITY);
+                        URL url = new File("src/main/resources/fxml/conversion_dialog.fxml").toURI().toURL();
+                        FXMLLoader loader = new FXMLLoader(url);
+                        Parent root = loader.load();
+                        Scene scene = new Scene(root, 600, 400);
+                        dialog.setScene(scene);
+                        dialog.show();
+                    }catch (Exception e){}}
+            );
+
+            /*Platform.runLater(
+                    () -> {
+                        new LoginDialog("sass").show();
+                    }
+            );*/
+        }
     }
 
     @Override
     public void manageResourceMarketConvert(int first, int second, int executePlayerPos) {
-        //TODO: to manage
+        System.out.println("converti merda");
     }
 
+    /**
+     * Perform slide animation
+     * @param row which row to move
+     */
     private void slideRow(int row) {
         Sphere additionalMarbleTemp = additionalMarble;
         this.additionalMarble = marketBoardObj[row][0]; //the marble in the left position of the row will be the next additionalMarble
@@ -796,7 +835,10 @@ class PrimaryController extends GenericController {
         marketBoardObj[row][2] = marketBoardObj[row][3]; //slide to left
         marketBoardObj[row][3] = additionalMarbleTemp; //the old additional marble will be the marble in the right position of the row
     }
-
+    /**
+     * Perform slide animation
+     * @param column which column to move
+     */
     private void slideColumn(int column) {
         Sphere additionalMarbleTemp = additionalMarble;
         this.additionalMarble = marketBoardObj[0][column]; //the marble in the top position of the column will be the next additionalMarble
@@ -804,6 +846,33 @@ class PrimaryController extends GenericController {
         marketBoardObj[1][column] = marketBoardObj[2][column]; //slide top
         marketBoardObj[2][column] = additionalMarbleTemp;
         ;  //the old additional marble will be the marble in the bottom position of the column
+    }
+
+    public class LoginDialog extends Dialog<String> {
+
+        public LoginDialog(String data) {
+            try {
+
+                URL url = new File("src/main/resources/fxml/conversion_dialog.fxml").toURI().toURL();
+                FXMLLoader loader = new FXMLLoader(url);
+                Parent root = loader.load();
+                Conversion_dialogController controller = loader.<Conversion_dialogController>getController();
+                getDialogPane().setContent(root);
+                Scene scene = new Scene(root, 300, 200);
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                stage.showAndWait();
+                setResultConverter(buttonType -> {
+
+                    return null ;
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     //---------------------------------------RESOURCE POSITIONING-------------------------------------------------------

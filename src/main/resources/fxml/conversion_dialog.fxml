@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.controller.Conversion_dialogController">
+   <children>
+      <Label layoutX="81.0" layoutY="22.0" text="How do you want to convert">
+         <font>
+            <Font name="Algerian" size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="162.0" layoutY="56.0" text="these n marbles?">
+         <font>
+            <Font name="Algerian" size="30.0" />
+         </font>
+      </Label>
+      <Pane layoutX="64.0" layoutY="108.0" prefHeight="230.0" prefWidth="472.0">
+         <children>
+            <Sphere fx:id="first_marble" layoutX="113.0" layoutY="49.0" radius="25.0" />
+            <Sphere fx:id="second_marble" layoutX="113.0" layoutY="153.0" radius="25.0" />
+            <Spinner fx:id="firstSpinnerConversion" min="0" max="4" initialValue="0" editable="true" layoutX="347.0" layoutY="37.0" prefHeight="25.0" prefWidth="94.0" />
+            <Spinner fx:id="secondSpinnerConversion" layoutX="348.0" layoutY="138.0" prefHeight="25.0" prefWidth="94.0" />
+            <Pane fx:id="firstPaneConversion" layoutX="246.0" layoutY="25.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: red;" />
+            <Pane fx:id="secondPaneConversion" layoutX="246.0" layoutY="128.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: red;" />
+            <Polygon fill="DODGERBLUE" layoutX="225.0" layoutY="47.0" points="-50.0, 24.0, -5.0, 4.0, -50.0, -19.0" stroke="BLACK" strokeType="INSIDE" />
+            <Polygon fill="DODGERBLUE" layoutX="228.0" layoutY="150.0" points="-50.0, 24.0, -5.0, 4.0, -50.0, -19.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+
+      </Pane>
+      <Button layoutX="258.0" layoutY="348.0" mnemonicParsing="false" onMouseClicked="#convertButtonClicked" text="CONVERT">
+         <font>
+            <Font name="Algerian" size="12.0" />
+         </font>
+      </Button>
+     
+   </children>
+</AnchorPane>
