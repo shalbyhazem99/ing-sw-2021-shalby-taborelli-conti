@@ -9,6 +9,7 @@ import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
+import it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove;
 import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
@@ -25,13 +26,14 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
-import it.polimi.ingsw.view.gui.controller.Conversion_dialogController;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -52,12 +54,14 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import jdk.jshell.execution.Util;
 
 import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -799,15 +803,18 @@ class PrimaryController extends GenericController {
         {
             Platform.runLater(
                     () -> {
-                       try{ Stage dialog = new Stage();
-                        dialog.initStyle(StageStyle.UTILITY);
-                        URL url = new File("src/main/resources/fxml/conversion_dialog.fxml").toURI().toURL();
-                        FXMLLoader loader = new FXMLLoader(url);
-                        Parent root = loader.load();
-                        Scene scene = new Scene(root, 600, 400);
-                        dialog.setScene(scene);
-                        dialog.show();
-                    }catch (Exception e){}}
+                        ArrayList<Integer> s = new ArrayList<>();
+                        for(int p = num;p>=0;p--){
+                            s.add(p);
+                        }
+                        ChoiceDialog d = new ChoiceDialog(s.get(0), s);
+                        d.setHeaderText("Convert "+ num+" white marbles, 1) Convert to > "+match.getCurrentPlayer().getConversionStrategies().get(0)+" 2) Convert to > "+match.getCurrentPlayer().getConversionStrategies().get(1));
+                        d.setContentText("How many do you want to convert with 1)");
+                        d.showAndWait();
+                        int marblesWithFirstStrategy = Integer.valueOf(d.getSelectedItem().toString());
+                        int marblesWithSecondStrategy = num - marblesWithFirstStrategy;
+                        notify(MarketMarbleConversionMove.getInstance(marblesWithFirstStrategy,marblesWithSecondStrategy));
+                    }
             );
 
             /*Platform.runLater(
@@ -820,7 +827,8 @@ class PrimaryController extends GenericController {
 
     @Override
     public void manageResourceMarketConvert(int first, int second, int executePlayerPos) {
-        System.out.println("converti merda");
+        printModel();
+        runDialog(Alert.AlertType.INFORMATION, "Conversion performed correctly");
     }
 
     /**
@@ -848,32 +856,6 @@ class PrimaryController extends GenericController {
         ;  //the old additional marble will be the marble in the bottom position of the column
     }
 
-    public class LoginDialog extends Dialog<String> {
-
-        public LoginDialog(String data) {
-            try {
-
-                URL url = new File("src/main/resources/fxml/conversion_dialog.fxml").toURI().toURL();
-                FXMLLoader loader = new FXMLLoader(url);
-                Parent root = loader.load();
-                Conversion_dialogController controller = loader.<Conversion_dialogController>getController();
-                getDialogPane().setContent(root);
-                Scene scene = new Scene(root, 300, 200);
-                Stage stage = new Stage();
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setScene(scene);
-                stage.showAndWait();
-                setResultConverter(buttonType -> {
-
-                    return null ;
-                });
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 
     //---------------------------------------RESOURCE POSITIONING-------------------------------------------------------
     private ResourceType resourceTypeDragged;
