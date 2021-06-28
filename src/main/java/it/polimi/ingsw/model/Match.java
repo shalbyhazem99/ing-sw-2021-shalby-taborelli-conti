@@ -440,20 +440,18 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
      * @param player   the {@link Player} which call the Move
      * @param posToAdd the int that specify in which user's {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace} the new {@link DevelopmentCard} has to be placed into
      */
-    //todo: Sistemare bug che se sbagli inserimento di posizione di toglie tutte le risorse to test
     public void buyDevelopmentCardInteraction(DevelopmentCardType type, DevelopmentCardLevel level, Player player, int posToAdd, ArrayList<ResourcePick> resourceToUse, boolean noControl) {
         //if the player can afford the development card requested
-        ArrayList<ResourcesCount> resourcesCounts = resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Resource> resourcesCounts = Utils.fromResourceCountToResources(resourceToUse.stream().map(elem -> ResourcesCount.getInstance(1, elem.getResourceType())).collect(Collectors.toCollection(ArrayList::new)));
         if (getDevelopmentCardOnTop(type, level) == null) {
             //empty stack
-            //todo: ho cambiato il messaggio di errore
             notify(SendMessage.getInstance("DevelopmentCards for this stack are finished, choose another one to buy ", player, players.indexOf(player), this.hashCode()));
             askForMove();
             return;
         }
         ArrayList<Resource> resources = getDevelopmentCardOnTop(type, level).getCosts(player).stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toCollection(ArrayList::new));
         //check if the resources to use are the required and if the player has this resources
-        if (Utils.compareResources(resources, resourcesCounts) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd) && player.canAfford(resourceToUse)) {
+        if (Utils.compareResourcesEquals(resources,resourcesCounts) && player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd) && player.canAfford(resourceToUse)) {
             DevelopmentCard temp_card = pickDevelopmentCardOnTop(type, level);
             if (player.addDevelopmentCard(temp_card, posToAdd)) //no errors
             {
@@ -463,10 +461,10 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 notify(SendMessage.getInstance("Something wrong, Insert valid parameters", player, players.indexOf(player), this.hashCode()));
             }
             //Qua sparisce una risorsa
-        } else if (!player.canAfford(resourceToUse)) {
-            notify(SendMessage.getInstance("Something wrong, Not enough resources", player, players.indexOf(player), this.hashCode()));
-        } else {
+        } else if (!Utils.compareResourcesEquals(resources,resourcesCounts) || !player.developmentCardCanBeAdded(DevelopmentCard.getInstance(level, type), posToAdd)){
             notify(SendMessage.getInstance("Something wrong, Cannot be added (parameter error)", player, players.indexOf(player), this.hashCode()));
+        } else if (!player.canAfford(resourceToUse) ) {
+            notify(SendMessage.getInstance("Something wrong, Not enough resources", player, players.indexOf(player), this.hashCode()));
         }
         askForMove();
     }

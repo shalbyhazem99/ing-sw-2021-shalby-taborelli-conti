@@ -873,45 +873,33 @@ public class MatchTest extends TestCase {
         match.startMatch();
         ArrayList<ResourcePick> resourcesToPick = new ArrayList<>();
 
-        //todo: dovrebbe non dare nulla al player e invece gli dò una carta, mi sa che il problema è relativo al resource Pick
-        /*
         //Testing if a Player hasn't enough resources to buy the DevelopmentCard nothing happen
         match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST, match.getCurrentPlayer(),0, resourcesToPick, true);
         assertEquals(0, match.getCurrentPlayer().getDevelopmentCards().size());
         assertEquals(4, match.getDevelopmentCards()[0][0].size());
 
-         */
-
-
-        //todo: CONTROLLARE CHE NON SPARISCANO LE RISORSE
+        //Giving the resources to Player
         int index = 0;
         for (ResourcesCount resourcesCount : match.getDevelopmentCardOnTop(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST).getCosts(match.getCurrentPlayer())) {
             for (int i = 0; i < resourcesCount.getCount(); i++) {
                 match.getCurrentPlayer().getWarehousesStandard().get(2 - index).addResource(Resource.getInstance(resourcesCount.getType()));
+                resourcesToPick.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2 - index, resourcesCount.getType()));
             }
-            resourcesToPick.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2 - index, resourcesCount.getType()));
             index++;
         }
+        int resourcesPlayer = match.getCurrentPlayer().getResources().size();
 
-        /*
         //Testing when Player chooses a wrong place to place the DevelopmentCard nothing happen
         match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST, match.getCurrentPlayer(), 4, resourcesToPick, false);
         assertEquals(0, match.getCurrentPlayer().getDevelopmentCards().size());
         assertTrue(match.getCurrentPlayer().getDevelopmentCards().isEmpty());
+        assertEquals(resourcesPlayer, match.getCurrentPlayer().getResources().size());
 
-         */
-
-
-        /*
         //Testing that if Player buy a DevelopmentCard he can't add nothing happen
-        int reoursesPlayer = match.getCurrentPlayer().getResources().size();
         match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.SECOND, match.getCurrentPlayer(), 0, resourcesToPick, false);
         assertEquals(0, match.getCurrentPlayer().getDevelopmentCards().size());
         assertEquals(4, match.getDevelopmentCards()[1][0].size());
-        //todo: riaggiungi il test dopo che hai controllato la sparizione delle risorse
-        assertEquals(reoursesPlayer, match.getCurrentPlayer().getResources().size());
-
-         */
+        assertEquals(resourcesPlayer, match.getCurrentPlayer().getResources().size());
 
         //Testing the correct workflow
         match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST, match.getCurrentPlayer(), 0, resourcesToPick, false);
@@ -922,10 +910,6 @@ public class MatchTest extends TestCase {
             assertEquals(0, match.getCurrentPlayer().getWarehousesStandard().get(i).getResources().size());
         }
 
-
-
-        //todo: gli dà comunque la carta e toglie la devCard
-        /*
         //Testing if a Player hasn't enough resources to buy the DevelopmentCard nothing happen
         match.getCurrentPlayer().addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 0);
         resourcesToPick = new ArrayList<>();
@@ -935,10 +919,6 @@ public class MatchTest extends TestCase {
         assertEquals(ResourceType.COIN, match.getCurrentPlayer().getWarehousesStandard().get(0).getResourceType());
         assertEquals(1, match.getCurrentPlayer().getDevelopmentCards().size());
         assertEquals(4, match.getDevelopmentCards()[0][1].size());
-
-         */
-
-
     }
 
     /**

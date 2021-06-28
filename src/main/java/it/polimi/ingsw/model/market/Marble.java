@@ -8,14 +8,27 @@ import java.io.Serializable;
 public class Marble implements Serializable,Cloneable {
     private final MarbleColor color;
 
+    /**
+     * Constructor
+     * @param color of the marble to create
+     */
     public Marble(MarbleColor color) {
         this.color = color;
     }
 
+    /**
+     * Create an instance of the Marble wanted
+     * @param color of the Marble to create
+     * @return an instance of the Marble wanted
+     */
     public static Marble getInstance(MarbleColor color) {
         return new Marble(color);
     }
 
+    /**
+     *
+     * @return the color of the marble
+     */
     public MarbleColor getColor() {
         return color;
     }
@@ -24,6 +37,7 @@ public class Marble implements Serializable,Cloneable {
     public String toString() {
         return color.toString();
     }
+
 
     @Override
     public boolean equals(Object obj) {

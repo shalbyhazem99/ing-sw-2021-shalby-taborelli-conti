@@ -25,7 +25,7 @@ public class Utils {
      * Connection info
      */
     public static String ip = "127.0.0.1";
-    public static int port = 64032;
+    public static int port = 53971;
 
     /**
      * the Faith path length
@@ -48,6 +48,13 @@ public class Utils {
     public static boolean compareResources(ArrayList<Resource> a, ArrayList<ResourcesCount> b) {
         return a != null && b != null && a.containsAll(b.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
     }
+
+    public static boolean compareResourcesEquals(ArrayList<Resource> a, ArrayList<Resource> b) {
+        return a != null && b != null && a.size()== b.size() && Utils.fromResourcesToResourceCount(a).containsAll(Utils.fromResourcesToResourceCount(b));
+    }
+
+
+
 
     /**
      * apply the discount to an {@link ArrayList} of ResourcesCounts

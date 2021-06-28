@@ -17,7 +17,7 @@ public class DevelopmentCard implements Serializable {
     protected String image;
 
     /**
-     *
+     * Default constructor
      * @param level {@link DevelopmentCardLevel} can be 0,1,2
      * @param type {@link DevelopmentCardType} can be green,blue,yellow,red
      * @param equivalentPoint point to be considered at the end of the game
@@ -31,6 +31,12 @@ public class DevelopmentCard implements Serializable {
         this.costs = costs;
         this.powers = powers;
     }
+
+    /**
+     * Constructor
+     * @param level {@link DevelopmentCardLevel} can be 0,1,2
+     * @param type {@link DevelopmentCardType} can be green,blue,yellow,red
+     */
     public DevelopmentCard(DevelopmentCardLevel level, DevelopmentCardType type) {
         this.level = level;
         this.type = type;
@@ -42,6 +48,7 @@ public class DevelopmentCard implements Serializable {
      * @param equivalentPoint point to be considered at the end of the game
      * @param costs {@link ArrayList} of {@link ResourcesCount} representing how much resources a player has to pay in order to buy the card
      * @param powers {@link ArrayList} of {@link ProductivePower} representing how the card can convert resources
+     * @return an instance of DevelopmentCard
      */
     public static DevelopmentCard getInstance(DevelopmentCardLevel level, DevelopmentCardType type, int equivalentPoint, ArrayList<ResourcesCount> costs, ProductivePower powers) {
         return new DevelopmentCard(level, type, equivalentPoint, costs, powers);
@@ -51,6 +58,7 @@ public class DevelopmentCard implements Serializable {
      *
      * @param level {@link DevelopmentCardLevel} can be 0,1,2
      * @param type {@link DevelopmentCardType} can be green,blue,yellow,red
+     * @return an instance of DevelopmentCard with only a Level and Type
      */
     public static DevelopmentCard getInstance(DevelopmentCardLevel level, DevelopmentCardType type)
     {
@@ -100,12 +108,20 @@ public class DevelopmentCard implements Serializable {
         return costsTemp;
     }
 
+    /**
+     *
+     * @return the conversion in String of the DevelopmentCard
+     */
     @Override
     public String toString() {
         return "/eq_point:"+equivalentPoint+"/Cost:"+costs.toString();
         //return level.toString()+"/"+type.toString()+"/eq_point:"+equivalentPoint+"/Pot_prod:"+powers.toString()+"/Cost:"+costs.toString()+"|||||";
     }
 
+    /**
+     *
+     * @return the string of the coasts formatted
+     */
     public String getCostsFormatted()
     {
         String str = "[";
@@ -116,6 +132,10 @@ public class DevelopmentCard implements Serializable {
         return str+"]";
     }
 
+    /**
+     *
+     * @return the string of powers formatted
+     */
     public String getPowersFormatted()
     {
         ArrayList<ResourcesCount> costs = powers.getFrom();
@@ -128,6 +148,10 @@ public class DevelopmentCard implements Serializable {
         return str;
     }
 
+    /**
+     *
+     * @return the number of the image linked to the DevelopmentCard
+     */
     public String getImage(){
         return image;
     }
