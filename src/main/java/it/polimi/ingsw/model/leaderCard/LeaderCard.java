@@ -118,7 +118,10 @@ public abstract class LeaderCard implements Serializable {
     }
 
 
-
+    /**
+     *
+     * @return the number of the image link to the LeaderCard
+     */
     public String getImage(){
         return image;
     }

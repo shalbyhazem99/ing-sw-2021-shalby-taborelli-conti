@@ -19,9 +19,9 @@ public class DevelopmentCardSpace implements Serializable {
     }
 
     /**
-     * create an istance of {@link DevelopmentCardSpace}
+     * create an instance of {@link DevelopmentCardSpace}
      *
-     * @return an istance of {@link DevelopmentCardSpace}
+     * @return an instance of {@link DevelopmentCardSpace}
      */
     public static DevelopmentCardSpace getInstance() {
         return new DevelopmentCardSpace();
@@ -70,6 +70,7 @@ public class DevelopmentCardSpace implements Serializable {
         }
         return null;
     }
+
 
     @Override
     public String toString() {

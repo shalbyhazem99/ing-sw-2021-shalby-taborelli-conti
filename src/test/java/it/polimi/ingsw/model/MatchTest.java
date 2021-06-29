@@ -539,8 +539,6 @@ public class MatchTest extends TestCase {
 
         //For each leaderCard it adds the resources and the developmentCard to activate the power
         for (int i = 0; i < 2; i++) {
-            //todo:testing the method in the LeaderCard
-
             //Adding Resources needed
             if (match.getCurrentPlayer().getLeaderCards().get(i).getResourcesNeeded().size() != 0) {
                 match.getCurrentPlayer().addResourceToStrongBox(match.getCurrentPlayer().getLeaderCards().get(i).getResourcesNeeded());
@@ -736,9 +734,10 @@ public class MatchTest extends TestCase {
             match.skipTurn(match.getCurrentPlayer(), true);
             numberWhiteMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.WHITE).count();
             numberBlueMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.BLUE).count();
-            numberYellowMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.BLUE).count();
-            numberGreyMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.BLUE).count();
-            numberPurpleMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.BLUE).count();
+            numberYellowMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.YELLOW).count();
+            numberGreyMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.GREY).count();
+            numberPurpleMarbles = (int) match.getMarketBoard().getRow(1).stream().filter(elem -> elem.getColor() == MarbleColor.PURPLE).count();
+            match.marketInteraction(MoveType.ROW, 1, match.getCurrentPlayer(), false);
         }
         //Finding where is the RedMarble and getting that row
         else {
@@ -761,6 +760,7 @@ public class MatchTest extends TestCase {
         assertEquals(numberGreyMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.STONE).count());
         assertEquals(numberPurpleMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.SERVANT).count());
         match.skipTurn(match.getCurrentPlayer(), true);
+        assertEquals(0, match.getPendingMarketResources().size());
 
         //Testing the case when I have a conversion strategy for the WhiteMarble
         match.getCurrentPlayer().addLeaderCard(LeaderCardColor.getInstance(2, ResourceType.SHIELD, null, null));
@@ -780,18 +780,57 @@ public class MatchTest extends TestCase {
         }
         assertEquals(1 + numberRedMarbles, match.getCurrentPlayer().getPosFaithMarker());
         assertEquals(4 - numberRedMarbles, match.getPendingMarketResources().size());
-        //todo:sistemare la conversione delle biglie bianche, così funziona per una biglia
-        assertEquals(numberBlueMarbles+numberWhiteMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.SHIELD).count());
+        assertEquals(numberBlueMarbles + numberWhiteMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.SHIELD).count());
         assertEquals(numberYellowMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.COIN).count());
         assertEquals(numberGreyMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.STONE).count());
         assertEquals(numberPurpleMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.SERVANT).count());
+        match.skipTurn(match.getCurrentPlayer(), true);
+        assertEquals(0, match.getPendingMarketResources().size());
 
+        //Testing when the Player has activated 2 power of conversion
+        match.getCurrentPlayer().addLeaderCard(LeaderCardColor.getInstance(2, ResourceType.SERVANT, null, null));
+        assertEquals(4, match.getCurrentPlayer().getLeaderCards().size());
+        match.getCurrentPlayer().getLeaderCard(3).active(match.getCurrentPlayer());
+        numberWhiteMarbles=0;
+        for (int i = 0; i < 3; i++) {
+            if (match.getMarketBoard().getRow(i).stream().filter(elem -> elem.getColor() == MarbleColor.WHITE).count() > 1) {
+                numberWhiteMarbles = (int) match.getMarketBoard().getRow(i).stream().filter(elem -> elem.getColor() == MarbleColor.WHITE).count();
+                numberBlueMarbles = (int) match.getMarketBoard().getRow(i).stream().filter(elem -> elem.getColor() == MarbleColor.BLUE).count();
+                numberYellowMarbles = (int) match.getMarketBoard().getRow(i).stream().filter(elem -> elem.getColor() == MarbleColor.YELLOW).count();
+                numberGreyMarbles = (int) match.getMarketBoard().getRow(i).stream().filter(elem -> elem.getColor() == MarbleColor.GREY).count();
+                numberPurpleMarbles = (int) match.getMarketBoard().getRow(i).stream().filter(elem -> elem.getColor() == MarbleColor.PURPLE).count();
+                match.marketInteraction(MoveType.ROW, i, match.getCurrentPlayer(), false);
+                break;
+            }
+        }
+        if (numberWhiteMarbles < 1) {
+            //Setting that a row in the Market has 2 WhiteMarble
+            do {
+                assertEquals(MarbleColor.WHITE, match.getMarketBoard().getAdditionalMarble().getColor());
+                match.marketInteraction(MoveType.ROW, 0, match.getCurrentPlayer(), false);
+                match.skipTurn(match.getCurrentPlayer(), true);
+                assertEquals(0, match.getPendingMarketResources().size());
+            } while (match.getMarketBoard().getAdditionalMarble().getColor() == MarbleColor.WHITE);
+            numberWhiteMarbles = (int) match.getMarketBoard().getRow(0).stream().filter(elem -> elem.getColor() == MarbleColor.WHITE).count();
+            numberBlueMarbles = (int) match.getMarketBoard().getRow(0).stream().filter(elem -> elem.getColor() == MarbleColor.BLUE).count();
+            numberYellowMarbles = (int) match.getMarketBoard().getRow(0).stream().filter(elem -> elem.getColor() == MarbleColor.YELLOW).count();
+            numberGreyMarbles = (int) match.getMarketBoard().getRow(0).stream().filter(elem -> elem.getColor() == MarbleColor.GREY).count();
+            numberPurpleMarbles = (int) match.getMarketBoard().getRow(0).stream().filter(elem -> elem.getColor() == MarbleColor.PURPLE).count();
+            match.marketInteraction(MoveType.ROW, 0, match.getCurrentPlayer(), true);
+        }
+
+        //Testing if Player makes a wrong input
+        match.marketMarbleConvertInteraction(numberWhiteMarbles - 1, 3, match.getCurrentPlayer(), false);
+        assertEquals(numberBlueMarbles + numberGreyMarbles + numberPurpleMarbles + numberYellowMarbles, match.getPendingMarketResources().size());
+
+        //Asking to convert one WhiteMarble with the second PowerConversion, then the remaining with the first PowerConversion
+        match.marketMarbleConvertInteraction(numberWhiteMarbles - 1, 1, match.getCurrentPlayer(), false);
+        assertEquals(numberBlueMarbles + numberWhiteMarbles - 1, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.SHIELD).count());
+        assertEquals(numberYellowMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.COIN).count());
+        assertEquals(numberGreyMarbles, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.STONE).count());
+        assertEquals(numberPurpleMarbles + 1, (int) match.getPendingMarketResources().stream().filter(elem -> elem.getType() == ResourceType.SERVANT).count());
     }
 
-    //todo:
-    public void testMarketMarbleConvertInteraction() {
-
-    }
 
     /**
      * Testing the interaction of moving {@link Resource} between {@link Warehouse}
@@ -833,27 +872,53 @@ public class MatchTest extends TestCase {
         match.addPlayer(Player.getInstance("Player"));
         match.startMatch();
         ArrayList<ResourcePick> resourcesToPick = new ArrayList<>();
-        //todo: CONTROLLARE CHE NON SPARISCANO LE RISORSE
+
+        //Testing if a Player hasn't enough resources to buy the DevelopmentCard nothing happen
+        match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST, match.getCurrentPlayer(),0, resourcesToPick, true);
+        assertEquals(0, match.getCurrentPlayer().getDevelopmentCards().size());
+        assertEquals(4, match.getDevelopmentCards()[0][0].size());
+
+        //Giving the resources to Player
         int index = 0;
         for (ResourcesCount resourcesCount : match.getDevelopmentCardOnTop(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST).getCosts(match.getCurrentPlayer())) {
             for (int i = 0; i < resourcesCount.getCount(); i++) {
                 match.getCurrentPlayer().getWarehousesStandard().get(2 - index).addResource(Resource.getInstance(resourcesCount.getType()));
+                resourcesToPick.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2 - index, resourcesCount.getType()));
             }
-            resourcesToPick.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 2 - index, resourcesCount.getType()));
             index++;
         }
+        int resourcesPlayer = match.getCurrentPlayer().getResources().size();
 
-        /*
+        //Testing when Player chooses a wrong place to place the DevelopmentCard nothing happen
         match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST, match.getCurrentPlayer(), 4, resourcesToPick, false);
         assertEquals(0, match.getCurrentPlayer().getDevelopmentCards().size());
         assertTrue(match.getCurrentPlayer().getDevelopmentCards().isEmpty());
+        assertEquals(resourcesPlayer, match.getCurrentPlayer().getResources().size());
 
-         */
+        //Testing that if Player buy a DevelopmentCard he can't add nothing happen
+        match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.SECOND, match.getCurrentPlayer(), 0, resourcesToPick, false);
+        assertEquals(0, match.getCurrentPlayer().getDevelopmentCards().size());
+        assertEquals(4, match.getDevelopmentCards()[1][0].size());
+        assertEquals(resourcesPlayer, match.getCurrentPlayer().getResources().size());
 
+        //Testing the correct workflow
         match.buyDevelopmentCardInteraction(DevelopmentCardType.GREEN, DevelopmentCardLevel.FIRST, match.getCurrentPlayer(), 0, resourcesToPick, false);
         assertEquals(1, match.getCurrentPlayer().getDevelopmentCards().size());
         assertEquals(DevelopmentCardType.GREEN, match.getCurrentPlayer().getDevelopmentCards().get(0).getType());
         assertEquals(DevelopmentCardLevel.FIRST, match.getCurrentPlayer().getDevelopmentCards().get(0).getLevel());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(0, match.getCurrentPlayer().getWarehousesStandard().get(i).getResources().size());
+        }
+
+        //Testing if a Player hasn't enough resources to buy the DevelopmentCard nothing happen
+        match.getCurrentPlayer().addResourceToWarehouseStandard(Resource.getInstance(ResourceType.COIN), 0);
+        resourcesToPick = new ArrayList<>();
+        resourcesToPick.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 0, ResourceType.COIN));
+        match.buyDevelopmentCardInteraction(DevelopmentCardType.BLUE, DevelopmentCardLevel.FIRST, match.getCurrentPlayer(),1, resourcesToPick, true);
+        assertEquals(1, match.getCurrentPlayer().getWarehousesStandard().get(0).getResources().size());
+        assertEquals(ResourceType.COIN, match.getCurrentPlayer().getWarehousesStandard().get(0).getResourceType());
+        assertEquals(1, match.getCurrentPlayer().getDevelopmentCards().size());
+        assertEquals(4, match.getDevelopmentCards()[0][1].size());
     }
 
     /**
@@ -1250,7 +1315,7 @@ public class MatchTest extends TestCase {
         wherePick.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 0, ResourceType.COIN));
         match.enableProductionDevelopmentInteraction(wherePick, 0, match.getCurrentPlayer(), true);
 
-        match.skipTurn(match.getCurrentPlayer(), true);
+        match.skipTurn(match.getCurrentPlayer(), false);
         //todo: cambiare questo assert dopo aver tolo la cosa delle risorse iniziali
         if (position == 0) {
             assertEquals(41, match.getPlayerFromPosition(1).getStrongBox().size());

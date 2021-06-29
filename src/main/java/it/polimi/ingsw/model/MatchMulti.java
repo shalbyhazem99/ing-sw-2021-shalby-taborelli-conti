@@ -12,6 +12,9 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Class that represents a multiplayer match
+ */
 public class MatchMulti extends Match implements Serializable {
     /**
      * Class concerning a Match of many players
@@ -23,7 +26,7 @@ public class MatchMulti extends Match implements Serializable {
 
     /**
      * Call method of superclass, posInkwell will be initially set to '-1' and then it will be correctly modified just before the match's starting
-     * The {@link Player} {@link java.util.ArrayList} will be initalized at a fixed length
+     * The {@link Player} {@link java.util.ArrayList} will be initialized at a fixed length
      */
     public MatchMulti(int numberOfPlayers) {
         super(numberOfPlayers);
@@ -34,7 +37,7 @@ public class MatchMulti extends Match implements Serializable {
     /**
      * Get the index of the first player in the playing order
      *
-     * @return the index of the first plauer in the playing order
+     * @return the index of the first player in the playing order
      */
     public int getPosInkwell() {
         return posInkwell;
@@ -80,8 +83,12 @@ public class MatchMulti extends Match implements Serializable {
     }
 
 
+    /**
+     * Method that starts the match, chooses randomly who will start and deals the {@link LeaderCard}
+     */
     @Override
     public void startMatch() {
+        //Todo: togliamo la parte di codice commentata?
         randomlyPickInkwellPlayer();
         turn = posInkwell;
         //start
@@ -90,6 +97,11 @@ public class MatchMulti extends Match implements Serializable {
         //askForMove();
     }
 
+    /**
+     *
+     * @param posPlayer index of the order of the {@link Player}
+     * @return the number of turns between the {@link Player} and the InkWell
+     */
     public int getdistPlayerFromInkwell(int posPlayer){
         if(posPlayer>=posInkwell)
             return posPlayer-posInkwell;
@@ -97,6 +109,10 @@ public class MatchMulti extends Match implements Serializable {
             return players.size()+posPlayer-posInkwell;
     }
 
+    /**
+     * Method to assign the number of {@link Resource} a {@link Player} can choose at the beginning of the match.
+     * Then Asks to {@link Player} the {@link LeaderCard} to discard.
+     */
     @Override
     public void askForDiscardLeaderCard() {
         for (int i = 0; i < players.size(); i++) {
@@ -116,6 +132,14 @@ public class MatchMulti extends Match implements Serializable {
         }
     }
 
+    /**
+     ** Method to discard 2 {@link LeaderCard} when a {@link Match} starts
+     * @param posFirst index of the first {@link LeaderCard} to discard
+     * @param posSecond index of the second {@link LeaderCard} to discard
+     * @param player that is discarding the 2 cards
+     * @param resourceTypeFirst {@link ResourceType} that a {@link Player} can choose, based on the order of the turn
+     * @param resourceTypeSecond {@link ResourceType} that a {@link Player} can choose, based on the order of the turn
+     */
     @Override
     public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player, ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
         if (posFirst != posSecond && posFirst >= 0 && posSecond >= 0 && posFirst < player.getLeaderCards().size() && posSecond < player.getLeaderCards().size()) {
@@ -197,20 +221,38 @@ public class MatchMulti extends Match implements Serializable {
         }
     }
 
+    /**
+     * Method to check if is the turn of a {@link Player}
+     * @param player  {@link Player} to check the turn
+     * @return true if is the turn of the {@link Player}, false otherwise
+     */
     @Override
     public boolean isMyTurn(Player player) {
         //the second condition is for the first discard of the leader card at the beginning
         return getPlayers().get(turn).equals(player) || numPlayerWhoDiscard < players.size();
     }
 
+    /**
+     *
+     * @return the {@link Player} who is playing
+     */
     @Override
     public Player getCurrentPlayer() {
         return getPlayers().get(turn);
     }
 
+    /**
+     *
+     * @return the number og the turn
+     */
     public int getTurn(){
         return this.turn;
     }
+
+    /**
+     *
+     * @return true if is the final round before the counting of the points, false otherwise
+     */
     public boolean getIsTheFinalTurn(){return this.finalTurn;}
 
 

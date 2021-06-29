@@ -120,10 +120,17 @@ public class MarketBoard implements Serializable, Cloneable {
         return null;
     }
 
+    /**
+     *
+     * @return the {@link Marble} the is not in the marketBoard and it must be inserted
+     */
     public Marble getAdditionalMarble() {
         return additionalMarble;
     }
 
+    /**
+     * Insert the {@link Marble} in the MarketBoard and then randomize them
+     */
     private void generateMarblesMatrix() {
         ArrayList<Marble> list = new ArrayList<>();
         //Marbles : 4 white, 2 blue, 2 grey, 2 yellow, 2 purple, 1 red
@@ -151,6 +158,10 @@ public class MarketBoard implements Serializable, Cloneable {
         additionalMarble = list.get(count);
     }
 
+    /**
+     * Insert the additional Marble in the selected row and then shift all the {@link Marble} in the row
+     * @param row where to insert the additional Marble
+     */
     private void slideRow(int row) {
         Marble additionalMarble = this.additionalMarble;
         this.additionalMarble = marketMatrix[row][0]; //the marble in the left position of the row will be the next additionalMarble
@@ -160,6 +171,10 @@ public class MarketBoard implements Serializable, Cloneable {
         marketMatrix[row][3] = additionalMarble; //the old additional marble will be the marble in the right position of the row
     }
 
+    /**
+     * Insert the additional Marble in the selected column and then shift all the {@link Marble} in the column
+     * @param column where to insert the additional Marble
+     */
     private void slideColumn(int column) {
         Marble additionalMarble = this.additionalMarble;
         this.additionalMarble = marketMatrix[0][column]; //the marble in the top position of the column will be the next additionalMarble

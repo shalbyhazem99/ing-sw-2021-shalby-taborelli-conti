@@ -8,23 +8,26 @@ import it.polimi.ingsw.exceptions.EndRoundException;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
+import it.polimi.ingsw.model.leaderCard.LeaderCard;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.Serializable;
 import java.util.*;
 
-
+/**
+ * Class that represent a Solo Match
+ */
 public class MatchSolo extends Match implements Serializable {
     /**
      * Class concerning a Match of one player vs CPU "Lorenzo il Magnifico"
      */
 
     /*
-    Ad ogni turno l'utente fa un pickActionToken(), poi sulla base del tipo dell'action token controller chiama
+    Every turn the Player makes a pickActionToken(), based on the type of the Action token picked the controller invokes:
     - moveAheadBlackCross(2)
     - moveAheadBlackCross(1) e shuffle()
-    - discardDevelopmentCards(numero,tipo)
+    - discardDevelopmentCards(number,type)
      */
     private transient LinkedList<ActionToken> actionTokens;
     private int posBlackCross;
@@ -98,9 +101,16 @@ public class MatchSolo extends Match implements Serializable {
      * The method shuffles the action tokens list
      */
     public void shuffleActionTokens() {
-        try{Collections.shuffle(actionTokens);}catch (Exception e){}
+        try {
+            Collections.shuffle(actionTokens);
+        } catch (Exception e) {
+        }
     }
 
+    /**
+     * @param player {@link Player} to check if is his turn
+     * @return always true, because the turn of Lorenzo il Magnifico is processed immediately
+     */
     @Override
     public boolean isMyTurn(Player player) {
         return true;
@@ -115,7 +125,6 @@ public class MatchSolo extends Match implements Serializable {
      * Method used by the {@link Player} to end a {@link MatchSolo} round
      *
      * @param player {@link Player} who wants to end the round
-     * @throws EndRoundException {@link EndRoundException} thrown when an error occurs
      */
     public void endRoundInteraction(Player player, boolean noControl) {
         if (!noControl && (!isMyTurn(player) || pendingMarketResources.size() != 0 || !getCanChangeTurn())) {
@@ -146,6 +155,14 @@ public class MatchSolo extends Match implements Serializable {
 
     }
 
+    /**
+     * Method that execute the move of Lorenzo il Magnifico
+     *
+     * @param action    {@link ActionToken} to execute
+     * @param player    {@link Player} is playing
+     * @param noControl boolean parameter if the method needs to check everything
+     * @return the description of what Lorenzo il Magnifico has done
+     */
     public String executeAction(ActionToken action, Player player, boolean noControl) {
         setCanChangeTurn(false, player);
         pendingMarketResources = new ArrayList<>();
@@ -160,7 +177,7 @@ public class MatchSolo extends Match implements Serializable {
                 {
                     moveAheadBlackCross(2);
                 }
-                //control tailes
+                //control tales
                 if (posBlackCross == 24) {
                     if (getCurrentPlayer().getPosFaithMarker() >= 19) {
                         if (getCurrentPlayer().getPopeFavorTiles().get(2) != null) {
@@ -207,17 +224,31 @@ public class MatchSolo extends Match implements Serializable {
         return u;
     }
 
+    /**
+     * @return always the {@link Player} is playing
+     */
     @Override
     public Player getCurrentPlayer() {
         return players.get(0);
     }
 
+    /**
+     * Method to start the match and deals the {@link it.polimi.ingsw.model.leaderCard.LeaderCard}
+     */
     @Override
     public void startMatch() {
         super.startMatch();
         //askForMove();
     }
 
+    /**
+     * Method to discard 2 {@link LeaderCard} when a {@link Match} starts
+     * @param posFirst index of the first {@link LeaderCard} to discard
+     * @param posSecond index of the second {@link LeaderCard} to discard
+     * @param player that is discarding the 2 cards
+     * @param resourceTypeFirst {@link ResourceType} that a {@link Player} can choose, based on the order of the turn
+     * @param resourceTypeSecond {@link ResourceType} that a {@link Player} can choose, based on the order of the turn
+     */
     @Override
     public void discardTwoLeaderCardInteraction(int posFirst, int posSecond, Player player, ResourceType resourceTypeFirst, ResourceType resourceTypeSecond) {
         super.discardTwoLeaderCardInteraction(posFirst, posSecond, player, resourceTypeFirst, resourceTypeSecond);
@@ -228,6 +259,10 @@ public class MatchSolo extends Match implements Serializable {
         }
     }
 
+    /**
+     *
+     * @return the ArrayList of {@link ActionToken} in the order of stack
+     */
     public LinkedList<ActionToken> getActionTokens() {
         return actionTokens;
     }
@@ -239,6 +274,10 @@ public class MatchSolo extends Match implements Serializable {
         }
     }
 
+    /**
+     *
+     * @return true if the {@link Player} has lost, true otherwise
+     */
     public boolean hasLose() {
         //control the development card (if the development card of a certain typology has end)
         if (Arrays.stream(DevelopmentCardType.values()).anyMatch(developmentCardType ->
@@ -249,6 +288,10 @@ public class MatchSolo extends Match implements Serializable {
         return false;
     }
 
+    /**
+     *
+     * @return if the {@link Player} has bought 7 {@link DevelopmentCard} or has reached the FaithMarker number 24
+     */
     public boolean hasWon() {
         return (players.get(0).getDevelopmentCards().size() >= 7 || players.get(0).getPosFaithMarker() >= 24);
     }
