@@ -93,7 +93,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
 
     public abstract void discardLeaderCard(int leaderCardPosition, int executePlayerPos);
 
-    public abstract void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos);
+    public abstract void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos, int numOfWhiteMarble);
 
     public abstract void manageResourceMarketConvert(int first, int second, int executePlayerPos);
 

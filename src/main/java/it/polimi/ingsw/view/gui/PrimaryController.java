@@ -6,6 +6,7 @@ import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
+import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
@@ -26,8 +27,18 @@ import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -38,10 +49,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -204,6 +221,10 @@ class PrimaryController extends GenericController {
     private Text ware_add_type_1;
     @FXML
     private Text ware_add_type_2;
+
+    //posfaith lorenzo
+    @FXML
+    private Text lorenzo_pos_faith;
 
 
     //production variable
@@ -600,7 +621,7 @@ class PrimaryController extends GenericController {
         if (runningAction != MovePlayerType.NOTHING) {
             runDialog(Alert.AlertType.ERROR, "Another action is already running, abort it before performing another one!");
         } else {
-            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses the resources needed");
+            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses :"+match.getDevelopmentCards()[row][column].peek().getCosts(match.getCurrentPlayer()).toString());
             disableAllMoves();
             enableMoves(new ArrayList<MovePlayerType>() {{
                 add(MovePlayerType.MOVE_RESOURCES);
@@ -644,7 +665,7 @@ class PrimaryController extends GenericController {
     }
 
     /**
-     * when a resource is cliccked in the warehouse or in the strongbox
+     * when a resource is clicked in the warehouse or in the strongbox
      */
     public void onResourceClick(MouseEvent mouseEvent) {
         Pane warehousePane = (Pane) mouseEvent.getSource();
@@ -722,9 +743,10 @@ class PrimaryController extends GenericController {
      * @param executePlayerPos
      */
     @Override
-    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos) {
+    public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos, int num) {
         //BEGIN ANIMATION
         final double duration = 1;
+        int whiteMarbles = 0;
         TranslateTransition temp, t2, t3;
         ParallelTransition parallelTransition = new ParallelTransition();
         ParallelTransition parallelTransitionDouble = new ParallelTransition();
@@ -798,13 +820,53 @@ class PrimaryController extends GenericController {
                 add(MovePlayerType.MOVE_RESOURCES);
             }}, false);
         }
+        mapMarketResource();
+        updateFaith(executePlayerPos);
+        disableAllMoves();
+        enableMoves(new ArrayList<MovePlayerType>() {{
+            add(MovePlayerType.MOVE_RESOURCES);
+        }}, false);
+        if(num==0) //nothing to convert
+        {
+            runDialog(Alert.AlertType.INFORMATION,"Action Performed");
+        }
+        else
+        {
+            Platform.runLater(
+                    () -> {
+                        ArrayList<Integer> s = new ArrayList<>();
+                        for(int p = num;p>=0;p--){
+                            s.add(p);
+                        }
+                        ChoiceDialog d = new ChoiceDialog(s.get(0), s);
+                        d.setHeaderText("Convert "+ num+" white marbles, 1) Convert to > "+match.getCurrentPlayer().getConversionStrategies().get(0)+" 2) Convert to > "+match.getCurrentPlayer().getConversionStrategies().get(1));
+                        d.setContentText("How many do you want to convert with 1)");
+                        d.showAndWait();
+                        int marblesWithFirstStrategy = Integer.valueOf(d.getSelectedItem().toString());
+                        int marblesWithSecondStrategy = num - marblesWithFirstStrategy;
+                        notify(MarketMarbleConversionMove.getInstance(marblesWithFirstStrategy,marblesWithSecondStrategy));
+                        System.out.println(marblesWithFirstStrategy+"-"+marblesWithSecondStrategy);
+                    }
+            );
+
+            /*Platform.runLater(
+                    () -> {
+                        new LoginDialog("sass").show();
+                    }
+            );*/
+        }
     }
 
     @Override
     public void manageResourceMarketConvert(int first, int second, int executePlayerPos) {
-        //TODO: to manage
+        printModel();
+        runDialog(Alert.AlertType.INFORMATION, "Conversion performed correctly");
     }
 
+    /**
+     * Perform slide animation
+     * @param row which row to move
+     */
     private void slideRow(int row) {
         Sphere additionalMarbleTemp = additionalMarble;
         this.additionalMarble = marketBoardObj[row][0]; //the marble in the left position of the row will be the next additionalMarble
@@ -813,7 +875,10 @@ class PrimaryController extends GenericController {
         marketBoardObj[row][2] = marketBoardObj[row][3]; //slide to left
         marketBoardObj[row][3] = additionalMarbleTemp; //the old additional marble will be the marble in the right position of the row
     }
-
+    /**
+     * Perform slide animation
+     * @param column which column to move
+     */
     private void slideColumn(int column) {
         Sphere additionalMarbleTemp = additionalMarble;
         this.additionalMarble = marketBoardObj[0][column]; //the marble in the top position of the column will be the next additionalMarble
@@ -1042,6 +1107,12 @@ class PrimaryController extends GenericController {
 
     @Override
     public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
+        System.out.println("manage end turn");
+        try{
+            MatchSolo temp = (MatchSolo) match;
+            lorenzo_pos_faith.setText("LORENZO POS FAITH: "+temp.getPosBlackCross());
+        }catch (Exception e){}
+        runDialog(Alert.AlertType.INFORMATION,message);
         printModel();
         if (message.isEmpty()) {
             if (executePlayerPos != match.getWhoAmI()) {
@@ -1148,7 +1219,6 @@ class PrimaryController extends GenericController {
                 production_base_to.setBackground(null);
                 production_base_to.setUserData(-1);
                 runningAction = MovePlayerType.NOTHING;
-                hasPerformedUnBlockingAction=true;
             }
         } else if (activeProduction.equals(ProductionType.LEADER_CARD)) {
             if ((production_leader_to_1.getBackground() != null && activeProductionIndex == 0)
@@ -1434,6 +1504,7 @@ class PrimaryController extends GenericController {
     }
 
     //------------------------------------OTHERS----------------------------------------------------------------------
+
     public void abortAction() {
         revertAction();
         runningAction = MovePlayerType.NOTHING;
@@ -1485,6 +1556,7 @@ class PrimaryController extends GenericController {
 
         }
     }
+
 
     //-------------------------------ON CLICK METHODS-----------------------
 
@@ -1575,6 +1647,7 @@ class PrimaryController extends GenericController {
         //runDialog(Alert.AlertType.CONFIRMATION, "Move resources success");
         mapWarehouses(activePlayerPos);
     }
+
 
     @Override
     public void manageDisconnection(String playerName) {

@@ -83,6 +83,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         //todo: to remove
         for (Player player : players) {
             ArrayList<ResourcesCount> aa = new ArrayList<>();
+            player.addConversionStrategies(ResourceType.COIN);
+            player.addConversionStrategies(ResourceType.STONE);
             aa.add(ResourcesCount.getInstance(10, ResourceType.COIN));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));

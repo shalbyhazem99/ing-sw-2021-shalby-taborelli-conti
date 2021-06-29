@@ -96,8 +96,15 @@ public class MarketResponse extends MoveResponse {
 
     @Override
     public void elaborateGUI(GenericController controller) {
+        System.out.println("ECCALLA");
+        System.out.println(resources);
+        System.out.println(numOfMarbleToBeCoverted);
+        System.out.println(moveType);
+        System.out.println(pos);
+        System.out.println(first);
+        System.out.println(second);
         if(pos>=0) {// resource obtained
-            controller.manageResourceMarket(moveType,pos,getExecutePlayerPos());
+            controller.manageResourceMarket(moveType,pos,getExecutePlayerPos(),numOfMarbleToBeCoverted);
         } else if(first>=0){ // how to convert
             controller.manageResourceMarketConvert(first,second,getExecutePlayerPos());
         }
