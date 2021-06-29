@@ -23,11 +23,11 @@ public class ActionToken implements Serializable {
     }
 
     /**
-     * Return an istance of {@link ActionToken}
+     * Return an instance of {@link ActionToken}
      * @param action {@link MarkerType} action
      * @param count it represents how many cards tha player must discard or how many cells the BlackCross must run across
      * @param cardToReject it represents the {@link DevelopmentCardType} the player must discard
-     * @return the istance of {@link ActionToken}
+     * @return the instance of {@link ActionToken}
      */
     public static ActionToken getInstance(MarkerType action, int count, DevelopmentCardType cardToReject) {
         return new ActionToken(action,count,cardToReject);

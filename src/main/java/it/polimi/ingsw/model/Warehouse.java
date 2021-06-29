@@ -8,6 +8,9 @@ import it.polimi.ingsw.utils.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Class used to represent the Warehouse of a {@link Player}
+ */
 public class Warehouse implements Serializable, Cloneable {
     private int spaceAvailable;
     private ResourceType resourceType;
@@ -26,14 +29,26 @@ public class Warehouse implements Serializable, Cloneable {
         this.resources = new ArrayList<>();
     }
 
+    /**
+     *
+     * @return {@link ResourceType} that can be stored inside
+     */
     public ResourceType getResourceType() {
         return resourceType;
     }
 
+    /**
+     *
+     * @return the amount of resources that a player can store
+     */
     public int getSpaceAvailable() {
         return spaceAvailable;
     }
 
+    /**
+     *
+     * @return an ArrayList of all the {@link Resource} stored inside
+     */
     public ArrayList<Resource> getResources() {
         return resources;
     }
@@ -41,7 +56,7 @@ public class Warehouse implements Serializable, Cloneable {
     /**
      * This method is used to create a new space for the warehouse
      *
-     * @param spaceAvailable it's the amount of resources that a player can stor
+     * @param spaceAvailable it's the amount of resources that a player can store
      * @param resourceType   it's the type of the resource that can be stored inside
      * @return the new warehouse obj created
      */
@@ -81,15 +96,27 @@ public class Warehouse implements Serializable, Cloneable {
         return true;
     }
 
+    /**
+     * Method to increase the availability of the Warehouse of 1 unit
+     * @return true if the availability is increased by 1
+     */
     public boolean incrementAvailability() {
         spaceAvailable++;
         return true;
     }
 
+    /**
+     * Method to insert new {@link Resource} inside the Warehouse
+     * @param temp ArrayList of the{@link Resource} to insert
+     */
     public void changeResources(ArrayList<Resource> temp) {
         this.resources = temp;
     }
 
+    /**
+     * Method to change the Type of the Warehouse
+     * @param resourceType {@link ResourceType} to change in the Warehouse
+     */
     public void changeResourceType(ResourceType resourceType) {
         this.resourceType = resourceType;
     }

@@ -14,7 +14,11 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 
-
+/**
+ * Class used to convert the input given into a JSON representation of a {@link LeaderCard}
+ * In order to easily correct the input error, there will be create 16 JSON file one for each {@link LeaderCard}
+ * To have an unique JSON it must be used {@link LeaderCardJoinJSON}
+ */
 public class LeaderCard2JSON {
 
 
@@ -24,7 +28,8 @@ public class LeaderCard2JSON {
         BufferedReader myInput = new BufferedReader(reader);
         String name = "LeaderCard_Discount_";
         String str = "";
-        String path = "C:\\Users\\tabot\\Desktop\\Json\\LederCard\\";
+        //Insert the Path where to save the JSON
+        String path = "";
         //ArrayList<LeaderCard> list = new ArrayList<LeaderCard>();
         int victoryPoints=0;
         ResourceType resourceTypeRelated = null;

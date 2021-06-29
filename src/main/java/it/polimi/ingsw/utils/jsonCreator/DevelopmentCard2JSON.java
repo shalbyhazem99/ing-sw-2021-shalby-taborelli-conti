@@ -15,7 +15,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-
+/**
+ * Class used to convert the input given into a JSON representation of a {@link it.polimi.ingsw.model.developmentCard.DevelopmentCard}
+ * In order to easily correct the input error, there will be create 48 JSON file one for each {@link it.polimi.ingsw.model.developmentCard.DevelopmentCard}
+ * To have an unique JSON it must be used {@link DevelopmentCard2JSON}
+ */
 public class DevelopmentCard2JSON {
 
 
@@ -25,7 +29,8 @@ public class DevelopmentCard2JSON {
         BufferedReader myInput = new BufferedReader (reader);
         String name = "DevelopmentCard_";
         String str ="";
-        String path ="C:\\Users\\tabot\\Desktop\\Json\\DevelopmentCard\\";
+        //Insert the path where to save the JSONs
+        String path =" ";
         DevelopmentCardLevel level = null;
         DevelopmentCardType color =null;
         int victoryPoints;

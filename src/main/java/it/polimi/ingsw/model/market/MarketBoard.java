@@ -172,7 +172,7 @@ public class MarketBoard implements Serializable, Cloneable {
     }
 
     /**
-     * nsert the additional Marble in the selected column and then shift all the {@link Marble} in the column
+     * Insert the additional Marble in the selected column and then shift all the {@link Marble} in the column
      * @param column where to insert the additional Marble
      */
     private void slideColumn(int column) {

@@ -25,7 +25,7 @@ public class Utils {
      * Connection info
      */
     public static String ip = "127.0.0.1";
-    public static int port = 53971;
+    public static int port = 63019;
 
     /**
      * the Faith path length
@@ -49,6 +49,13 @@ public class Utils {
         return a != null && b != null && a.containsAll(b.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
     }
 
+    /**
+     * compare two {@link ArrayList} to see if the first is equals to the second one
+     *
+     * @param a the first {@link ArrayList}
+     * @param b the second {@link ArrayList}
+     * @return true if a equals to b, false otherwise
+     */
     public static boolean compareResourcesEquals(ArrayList<Resource> a, ArrayList<Resource> b) {
         return a != null && b != null && a.size()== b.size() && Utils.fromResourcesToResourceCount(a).containsAll(Utils.fromResourcesToResourceCount(b));
     }
@@ -120,6 +127,11 @@ public class Utils {
         return temp;
     }
 
+    /**
+     * Method to convert an ArrayList of {@link ResourcesCount} to an ArrayList of {@link Resource}
+     * @param resourcesCounts ArrayList of {@link ResourcesCount} to convert
+     * @return an ArrayList of {@link Resource} containing all the {@link Resource} int the ArrayList of {@link ResourcesCount}
+     */
     public static ArrayList<Resource> fromResourceCountToResources(ArrayList<ResourcesCount> resourcesCounts) {
         ArrayList<Resource> temp = new ArrayList<>();
         for (ResourcesCount r : resourcesCounts) {
@@ -130,6 +142,11 @@ public class Utils {
         return temp;
     }
 
+    /**
+     * Method to convert an ArrayList of {@link ResourcePick} to an ArrayList of {@link Resource}
+     * @param res ArrayList of {@link ResourcePick} to convert
+     * @return an ArrayList of {@link Resource} containing all the {@link Resource} int the ArrayList of {@link ResourcePick}
+     */
     public static ArrayList<Resource> fromResourcePickToResources(ArrayList<ResourcePick> res) {
         ArrayList<Resource> temp = new ArrayList<>();
         for (ResourcePick r : res) {
@@ -137,6 +154,7 @@ public class Utils {
         }
         return temp;
     }
+
 
     public static ResourceType[] getUsableResourcesType() {
         return Arrays.stream(ResourceType.values())
@@ -151,10 +169,10 @@ public class Utils {
     /**
      * Method to ask client from where he wants to get the resources for some operation
      *
-     * @param resourcesCounts
-     * @param stdin
-     * @param match
-     * @return
+     * @param resourcesCounts {@link ResourcesCount} to convert
+     * @param stdin passing a scanner of the input
+     * @param match {@link Match} where is using the method
+     * @return ArrayList of {@link ResourcePick} the equivalent {@link ResourcesCount} passed
      */
     public static ArrayList<ResourcePick> getRequiredResourceFrom(ArrayList<ResourcesCount> resourcesCounts, Scanner stdin, Match match) {
         ArrayList<ResourcePick> resourcePicks = new ArrayList<>();
@@ -207,6 +225,11 @@ public class Utils {
         return resourcePicks;
     }
 
+    /**
+     * Method to know which is the maximum length of the toString of an ArrayList of {@link DevelopmentCard}
+     * @param devcard ArrayList of the {@link DevelopmentCard} to count the length
+     * @return the maximum length of the string that can be generated from toString of {@link DevelopmentCard}
+     */
     public static int getMaxLengthStringDevCard(ArrayList<DevelopmentCard> devcard) {
         int max = devcard.get(0).getCostsFormatted().length();
         for (int i = 0; i < devcard.size(); i++) {
@@ -222,6 +245,12 @@ public class Utils {
         return max;
     }
 
+    /**
+     * Method to obtain an ArrayList of {@link DevelopmentCard}, all with the {@link DevelopmentCardType} given, from the DevelopmentCard Market
+     * @param dev DevelopmentCard market
+     * @param type {@link DevelopmentCardType} of the {@link DevelopmentCard} to get
+     * @return an ArrayList of {@link DevelopmentCard}, all with the {@link DevelopmentCardType} given, from the DevelopmentCard Market
+     */
     public static ArrayList<DevelopmentCard> getColour(Stack<DevelopmentCard>[][] dev, DevelopmentCardType type) {
         ArrayList<DevelopmentCard> temp = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -230,6 +259,12 @@ public class Utils {
         return temp;
     }
 
+    /**
+     * Method used to fill the empty space during a call of toString
+     * @param l1 Index of the first space to fill
+     * @param l2 Index of the last space to fill
+     * @return a string of the given length containing empty spaces
+     */
     public static String fillSpaces(int l1, int l2) {
         String s = "";
         for (int i = 0; i < (l1 - l2); i++) {
@@ -238,10 +273,20 @@ public class Utils {
         return s;
     }
 
+    /**
+     * Method to convert into string the symbol of a {@link Resource}
+     * @param r {@link ResourceType} to convert
+     * @return the equivalent string of the {@link ResourceType} given
+     */
     public static String resourceTypeToString(ResourceType r) {
         return r.symbol;
     }
 
+    /**
+     * Method to format the cost of an ArrayList of {@link ResourcesCount}
+     * @param costs ArrayList of {@link ResourcesCount} to convert
+     * @return String with the equivalent conversion of the ArrayList of {@link ResourcesCount} given
+     */
     public static String formatResourcesCount(ArrayList<ResourcesCount> costs) {
         String str = "[";
         for (int i = 0; i < costs.size(); i++) {
@@ -252,6 +297,11 @@ public class Utils {
         return str;
     }
 
+    /**
+     * Method use to convert the word of a {@link ResourceType} contained in a string into the equivalent {@link ResourceType}
+     * @param s string to control
+     * @return equivalent {@link ResourceType} contained in the string given
+     */
     public static ResourceType getResourceTypeFromUrl(String s) {
         if (s.contains("coin")) {
             return ResourceType.COIN;
@@ -266,6 +316,11 @@ public class Utils {
 
     }
 
+    /**
+     * Method used to convert the {@link MarbleColor} into the equivalent Color used to represent in in the GUI
+     * @param marbleColor {@link MarbleColor} to convert
+     * @return the equivalent color used in the GUI
+     */
     public static Color fromMarbleColorToJavaFXColor(MarbleColor marbleColor) {
         Color color = null;
         if (marbleColor == MarbleColor.BLUE) {

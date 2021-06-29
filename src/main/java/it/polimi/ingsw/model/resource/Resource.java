@@ -19,7 +19,7 @@ public class Resource implements Serializable, Cloneable {
 
     /**
      * Create an instance of a Resource
-     * @param resourceType @link ResourceType} of the Resourc
+     * @param resourceType @link ResourceType} of the Resource
      * @return an instance of a Resource
      */
     public static Resource getInstance(ResourceType resourceType){

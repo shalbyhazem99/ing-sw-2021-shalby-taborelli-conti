@@ -73,6 +73,7 @@ public class FileReader {
     }
 
 
+    //todo: is it useful?
     public static void main(String[] args) {
         FileReader.readLeaderCard();
     }

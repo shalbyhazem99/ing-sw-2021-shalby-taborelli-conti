@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class to represent the Player
+ */
 public class Player implements Serializable {
     private final String name;
     private int posFaithMarker;
@@ -32,6 +35,10 @@ public class Player implements Serializable {
     private final ArrayList<ProductivePower> addedPower;
     private boolean offline;
 
+    /**
+     * Constructor
+     * @param name of the Player
+     */
     public Player(String name) {
         this.name = name;
         this.offline = false;
@@ -50,15 +57,28 @@ public class Player implements Serializable {
         generateWarehouse();
     }
 
+    /**
+     * Creating an instance of the Player
+     * @param name of the Player
+     * @return an instance of the Player
+     */
     public static Player getInstance(String name) {
         return new Player(name);
     }
 
+    /**
+     * Creating an instance of a Player without a name
+     * @return an instance of a Player without a name
+     */
     public static Player getInstance() {
         return new Player("unknown");
     }
 
     //------------------------------------GENERATE PLAYER SUPPORT METHOD---------------------------------------
+
+    /**
+     * Generate the {@link DevelopmentCardSpace}
+     */
     private void generateDevelopmentCardSpaces() {
         developmentCardSpaces = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -67,12 +87,18 @@ public class Player implements Serializable {
     }
 
 
+    /**
+     * Generate the {@link PopeFavorTiles}
+     */
     private void generatePopeFavorTiles() {
         popeFavorTiles.add(PopeFavorTiles.getInstance(2));
         popeFavorTiles.add(PopeFavorTiles.getInstance(3));
         popeFavorTiles.add(PopeFavorTiles.getInstance(4));
     }
 
+    /**
+     * Generate the {@link Warehouse}
+     */
     public void generateWarehouse() {
         warehousesStandard.add(Warehouse.getInstance(1, ResourceType.ANY));
         warehousesStandard.add(Warehouse.getInstance(2, ResourceType.ANY));
@@ -80,21 +106,27 @@ public class Player implements Serializable {
     }
 
     //------------------------------------------SIMPLE GETTER------------------------------------------------------
+
+
     public String getName() {
         return name;
     }
+
 
     public boolean isOffline(){
         return offline;
     }
 
+
     public ArrayList<ProductivePower> getAddedPower() {
         return addedPower;
     }
 
+
     public ArrayList<ResourceType> getConversionStrategies() {
         return conversionStrategies;
     }
+
 
     public ArrayList<LeaderCard> getLeaderCards() {
         return leaderCards;
@@ -233,12 +265,25 @@ public class Player implements Serializable {
     }
 
     //---------------------------------------COMPLEX ADDER------------------------------------------------------
+
+    /**
+     * Add a {@link Resource} to the AdditionalWarehouse
+     * @param resource {@link Resource} to add
+     * @param index number of the Additional Warehouse
+     * @return false if the method couldn't complete the action, true otherwise
+     */
     public boolean addResourceToWarehouseAdditional(Resource resource, int index) {
         if (index >= warehousesAdditional.size() || !resource.getType().equals(warehousesAdditional.get(index).getResourceType()) || warehousesAdditional.get(index).getSpaceAvailable() < 1)
             return false;
         return warehousesAdditional.get(index).addResource(resource);
     }
 
+    /**
+     * Add an ArrayList of  {@link Resource} to the AdditionalWarehouse
+     * @param resources ArrayList of {@link Resource} to add
+     * @param index number of the Additional Warehouse
+     * @return false if the method couldn't complete the action, true otherwise
+     */
     public boolean addResourceToWarehouseAdditional(ArrayList<Resource> resources, int index) {
         String warehousesAdditional = new Gson().toJson(getWarehousesAdditional());
         for (Resource resource : resources) {
@@ -254,6 +299,12 @@ public class Player implements Serializable {
         return true;
     }
 
+    /**
+     * Add a {@link Resource} to the {@link Warehouse}
+     * @param resource @link Resource} to add
+     * @param index number of the{@link Warehouse}
+     * @return false if the method couldn't complete the action, true otherwise
+     */
     public boolean addResourceToWarehouseStandard(Resource resource, int index) {
         if (index >= warehousesStandard.size())
             return false;
@@ -270,6 +321,12 @@ public class Player implements Serializable {
         return warehousesStandard.get(index).addResource(resource);
     }
 
+    /**
+     * Add an ArrayList of  {@link Resource} to the @link Warehouse}
+     * @param resources ArrayList of {@link Resource} to add
+     * @param index number of the{@link Warehouse}
+     * @return false if the method couldn't complete the action, true otherwise
+     */
     public boolean addResourceToWarehouseStandard(ArrayList<Resource> resources, int index) {
         String warehouseStandard = new Gson().toJson(getWarehousesStandard());
         for (Resource resource : resources) {
@@ -297,6 +354,7 @@ public class Player implements Serializable {
         posFaithMarker = Math.min(Utils.FAITH_LENGTH, posFaithMarker);
     }
 
+
     public boolean isActionable(ArrayList<ResourcesCount> resourcesNeeded) {
         return resourcesNeeded != null && Utils.compareResources(getResources(), resourcesNeeded);
     }
@@ -304,8 +362,8 @@ public class Player implements Serializable {
     /**
      * Verify if the {@link Player} could activate the power and remove the resources
      *
-     * @param resourceToUse
-     * @return
+     * @param resourceToUse ArrayList of {@link ResourcePick} to indicate where to pick the {@link Resource}
+     * @return true if {@link Player} can afford the cost, false otherwise
      */
     public boolean canAfford(ArrayList<ResourcePick> resourceToUse) {
         if (resourceToUse == null)
@@ -366,6 +424,12 @@ public class Player implements Serializable {
         return true;
     }
 
+    /**
+     * Method to verify if a {@link DevelopmentCard} can be added
+     * @param developmentCard  {@link DevelopmentCard} to add
+     * @param spacePos number of the position of the {@link DevelopmentCardSpace} where to add the {@link DevelopmentCard}
+     * @return  false if the method couldn't complete the action, true otherwise
+     */
     public boolean developmentCardCanBeAdded(DevelopmentCard developmentCard, int spacePos) {
         if (developmentCardSpaces.size() <= spacePos) {
             return false;
@@ -376,7 +440,7 @@ public class Player implements Serializable {
     /**
      * add a {@link DevelopmentCard} to the {@link DevelopmentCardSpace}
      *
-     * @param developmentCard
+     * @param developmentCard {@link DevelopmentCard} to add
      * @param spacePos        the {@link DevelopmentCardSpace} where the {@link DevelopmentCard} must be placed, and it start fro zero
      * @return true if successful, false otherwise
      */
@@ -411,8 +475,6 @@ public class Player implements Serializable {
      *
      * @param indexFirstWarehouse  index of the source Warehouse
      * @param indexSecondWarehouse index of the destination Warehouse
-     * @param indexFirstWarehouse  index of the source Warehouse
-     * @param indexSecondWarehouse index of the destination Warehouse
      * @param how_many_first       number of  {@link Resource} to get from the first {@link Warehouse}
      * @param how_many_second      number of {@link Resource} to get from the second {@link Warehouse}
      * @return result of the operation
@@ -440,7 +502,7 @@ public class Player implements Serializable {
         if (firstIsStandard && secondIsStandard) { //if both standard I mustn't consider how many parameters, I must swap warehouses
             //if both warehouses are not empty and they've different types stored ==> error
             //they obviously are of different type (a part of if they're ANY)
-            //check that the first warehouse can store the amount of resources taken from the second warehouse and viceversa
+            //check that the first warehouse can store the amount of resources taken from the second warehouse and vice versa
             if (w1.getSpaceAvailable() + w1.getResources().size() < w2.getResources().size()) {
                 return false;
             }
@@ -545,7 +607,7 @@ public class Player implements Serializable {
                     return false;
                 }
                 for (int i = 0; i < how_many_first; i++) {
-                    w2.addResource(w1.getResources().remove(0)); //add resource will automatically manage spaceavailability
+                    w2.addResource(w1.getResources().remove(0)); //add resource will automatically manage the space availability
                 }
                 w1.changeAvailability(w1.getSpaceAvailable() + how_many_first);
                 if(w1.getResources().size()==0){
