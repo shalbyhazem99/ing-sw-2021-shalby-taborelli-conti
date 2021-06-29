@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.ActionToken;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.view.gui.GenericController;
 
 import java.util.ArrayList;
 import java.util.Scanner;

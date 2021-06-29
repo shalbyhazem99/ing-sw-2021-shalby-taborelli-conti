@@ -36,7 +36,7 @@ public class App extends Application {
         connection.asyncReadFromSocket();
        ((WelcomeController)myController).start();
 
-        scene = new Scene(root, 1255, 993);
+        scene = new Scene(root, 1141, 982);
         scene.setCamera(new PerspectiveCamera());
         stage.setScene(scene);
         stage.setResizable(false);

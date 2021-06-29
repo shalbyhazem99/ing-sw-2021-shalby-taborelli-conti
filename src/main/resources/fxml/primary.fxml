@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Sphere?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" prefHeight="982.0" prefWidth="1278.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="982.0" prefWidth="1141.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
    <ComboBox fx:id="players_list_combobox" prefWidth="150.0" />
     <TabPane fx:id="tabpane" tabClosingPolicy="UNAVAILABLE">
     <tabs>
-        <Tab text="Untitled Tab 1">
+        <Tab text="Punch Board">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="979.0" prefWidth="1266.0">
                     <children>
@@ -259,121 +272,101 @@
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <StackPane layoutX="327.0" layoutY="74.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_00" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,0" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="575.0" layoutY="74.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_01" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,1" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="817.0" layoutY="74.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_02" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,2" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="1060.0" layoutY="74.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_03" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="0,3" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="327.0" layoutY="340.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_10" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,0" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="575.0" layoutY="340.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_11" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,1" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="817.0" layoutY="340.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_12" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,2" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="1060.0" layoutY="340.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_13" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="1,3" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <Text layoutX="158.0" layoutY="190.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 1" />
-                        <Text layoutX="157.0" layoutY="457.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 2" />
-                        <Text layoutX="157.0" layoutY="722.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 3" />
-                        <Text fill="#1dbff5" layoutX="387.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GREEN" />
-                        <Text fill="#0062ff" layoutX="639.0" layoutY="38.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BLUE" />
-                        <Text fill="#f2d30f" layoutX="872.0" layoutY="37.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="YELLOW" />
-                        <Text fill="#c60101" layoutX="1115.0" layoutY="40.0" scaleX="3.0" scaleY="3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PURPLE" />
-                        <StackPane layoutX="327.0" layoutY="610.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_20" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,0" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="575.0" layoutY="610.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_21" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,1" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="817.0" layoutY="610.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_22" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,2" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
-                        <StackPane layoutX="1060.0" layoutY="610.0">
-                            <children>
-                                <Pane prefHeight="243.0" prefWidth="161.0" styleClass="red-bg" stylesheets="@../css/red-bg.css">
-                                    <children>
-                                        <Pane fx:id="devcard_23" layoutX="8.0" layoutY="6.0" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" userData="2,3" />
-                                    </children>
-                                </Pane>
-                            </children>
-                        </StackPane>
+                     <GridPane hgap="40.0" prefHeight="928.0" prefWidth="1115.0" vgap="30.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                       <columnConstraints>
+                         <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
+                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                       </columnConstraints>
+                       <rowConstraints>
+                         <RowConstraints minHeight="5.0" prefHeight="30.0" vgrow="NEVER" />
+                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                       </rowConstraints>
+                        <children>
+                                  <Pane fx:id="devcard_00" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="0,0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                  <Pane fx:id="devcard_01" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="0,1" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                  <Pane fx:id="devcard_02" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="0,2" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                  <Pane fx:id="devcard_03" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="0,3" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                  <Pane fx:id="devcard_10" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="1,0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                  <Pane fx:id="devcard_11" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="1,1" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                  <Pane fx:id="devcard_12" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="1,2" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                  <Pane fx:id="devcard_13" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="1,3" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                  <Pane fx:id="devcard_20" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="2,0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                  <Pane fx:id="devcard_21" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="2,1" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                  <Pane fx:id="devcard_22" onMouseClicked="#dev_card_click" prefHeight="230.0" prefWidth="143.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="2,2" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                  <Pane fx:id="devcard_23" onMouseClicked="#dev_card_click" prefHeight="235.0" prefWidth="205.0" styleClass="border-style" stylesheets="@../css/dev_card.css" userData="2,3" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                           <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                              <children>
+                                  <Text layoutX="19.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 1" textAlignment="CENTER">
+                                    <font>
+                                       <Font name="Algerian" size="24.0" />
+                                    </font>
+                                 </Text>
+                              </children>
+                           </Pane>
+                           <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                              <children>
+                                 <Text layoutX="19.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 2" textAlignment="CENTER">
+                                    <font>
+                                       <Font name="Algerian" size="24.0" />
+                                    </font>
+                                 </Text>
+                              </children>
+                           </Pane>
+                           <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+                              <children>
+                                 <Text layoutX="19.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LVL 3" textAlignment="CENTER">
+                                    <font>
+                                       <Font name="Algerian" size="24.0" />
+                                    </font>
+                                 </Text>
+                              </children>
+                           </Pane>
+                           <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                              <children>
+                                 <Text fill="GREEN" layoutX="79.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="green" textAlignment="CENTER">
+                                    <font>
+                                       <Font name="Algerian" size="24.0" />
+                                    </font>
+                                 </Text>
+                              </children>
+                           </Pane>
+                           <Pane layoutX="130.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+                              <children>
+                                 <Text fill="BLUE" layoutX="74.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="bluE" textAlignment="CENTER">
+                                    <font>
+                                       <Font name="Algerian" size="24.0" />
+                                    </font>
+                                 </Text>
+                              </children>
+                           </Pane>
+                           <Pane layoutX="351.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                              <children>
+                                 <Text fill="#b5b53a" layoutX="72.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yellow" textAlignment="CENTER">
+                                    <font>
+                                       <Font name="Algerian" size="24.0" />
+                                    </font>
+                                 </Text>
+                              </children>
+                           </Pane>
+                           <Pane layoutX="572.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
+                              <children>
+                                 <Text fill="PURPLE" layoutX="73.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PURPLE" textAlignment="CENTER">
+                                    <font>
+                                       <Font name="Algerian" size="24.0" />
+                                    </font>
+                                 </Text>
+                              </children>
+                           </Pane>
+                        </children>
+                        <padding>
+                           <Insets bottom="1.0" />
+                        </padding>
+                     </GridPane>
                     </children>
                 </AnchorPane>
             </content>

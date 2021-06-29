@@ -28,12 +28,13 @@ import java.util.ArrayList;
 public abstract class GenericController extends Observable<PlayerMove> implements Observer<MoveResponse> {
 
     protected Match match;
+
     public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
-        URL url = new File("src/main/resources/fxml/"+fxml+".fxml").toURI().toURL();
+        URL url = new File("src/main/resources/fxml/" + fxml + ".fxml").toURI().toURL();
         System.out.println(fxml);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(url);
-        Parent root =loader.load();
+        Parent root = loader.load();
         App.setRoot(root);
         GenericController myController = loader.getController();
         myController.match = this.match;
@@ -54,10 +55,12 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         }
         Image image = new Image(url.toString());
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
-        BackgroundImage myBI = new BackgroundImage(new Image(url.toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+        BackgroundImage myBI = new BackgroundImage(new Image(url.toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         Background r = new Background(myBI);
         p.setBackground(r);
     }
+
+
     public void runDialog(Alert.AlertType type, String message) {
         Platform.runLater(() -> {
             Alert dialog = new Alert(type, message, ButtonType.OK);
@@ -65,14 +68,20 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         });
 
     }
+
     //abstact method to modify view
     public abstract void blockView();
 
-    public void printModel(){};
+    public void printModel() {
+    }
 
-    public void disableAllMoves(){}
+    ;
 
-    public void initialization(){}
+    public void disableAllMoves() {
+    }
+
+    public void initialization() {
+    }
 
     public abstract void printMessage(String message);
 
@@ -104,7 +113,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
 
     public abstract void askForData(String message, int executePlayerPos);
 
-    public abstract void moveResourceResponse(int num_from_first,int num_from_second,int indexFirstWarehouse, int indexSecondWarehouse);
+    public abstract void moveResourceResponse(int num_from_first, int num_from_second, int indexFirstWarehouse, int indexSecondWarehouse);
 
     public abstract void manageDisconnection(String playerName);
 }

@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
-import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
@@ -27,14 +26,11 @@ import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
@@ -45,7 +41,6 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
-import jdk.jshell.execution.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -331,11 +326,7 @@ class PrimaryController extends GenericController {
         market_pending_panes.add(stone_pending);
         market_pending_panes.add(shield_pending);
         market_pending_panes.add(servant_pending);
-
-        //
-        players_list_combobox.setItems(FXCollections
-                .observableArrayList(match.getPlayers()));
-        players_list_combobox.getSelectionModel().select(activePlayerPos);
+        mapComboPox();
 
     }
 
@@ -355,16 +346,37 @@ class PrimaryController extends GenericController {
 
     @Override
     public void printModel() {
-        mapMyLeaderCards(activePlayerPos);
+        if (activePlayerPos == match.getWhoAmI())
+            mapMyLeaderCards(activePlayerPos);
+        else
+            mapOthersLeaderCards(activePlayerPos);
         mapLeaderCardProduction(activePlayerPos);
         mapMarbles();
         mapWarehouses(activePlayerPos);
         mapDevelopmentCards();
         mapDevelopmentCardsSpaces(activePlayerPos);
         mapStrongBox(activePlayerPos);
-        mapMarketResource();
+        mapMarketResource(activePlayerPos);
         mapProductionResource();
         updateFaith(activePlayerPos);
+    }
+
+    public void mapComboPox() {
+        /*Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                players_list_combobox.getItems().setAll(match.getPlayers());
+                players_list_combobox.getSelectionModel().select(activePlayerPos);
+                players_list_combobox.valueProperty().addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                        activePlayerPos = match.getPlayers().indexOf(newValue);
+                        printModel();
+                        tabpane.getTabs().parallelStream().forEach(elem -> elem.getContent().setDisable(activePlayerPos != match.getWhoAmI()));
+                    }
+                });
+            }
+        });*/
     }
 
     public void mapStrongBox(int posPlayer) {
@@ -390,36 +402,38 @@ class PrimaryController extends GenericController {
         }
     }
 
-    private void mapMarketResource() {
-        ArrayList<ResourcesCount> res = Utils.fromResourcesToResourceCount(match.getPendingMarketResources());
-        coin_pending.setDisable(true);
-        stone_pending.setDisable(true);
-        servant_pending.setDisable(true);
-        shield_pending.setDisable(true);
-        for (ResourcesCount r : res) {
-            switch (r.getType()) {
-                case COIN: {
-                    coin_pending_text.setText(r.getCount() + "x");
-                    coin_pending.setDisable(r.getCount() == 0);
-                    break;
+    private void mapMarketResource(int posPlayer) {
+        if (match.getCurrentPlayer().equals(match.getPlayerFromPosition(posPlayer))) {
+            ArrayList<ResourcesCount> res = Utils.fromResourcesToResourceCount(match.getPendingMarketResources());
+            coin_pending.setDisable(true);
+            stone_pending.setDisable(true);
+            servant_pending.setDisable(true);
+            shield_pending.setDisable(true);
+            for (ResourcesCount r : res) {
+                switch (r.getType()) {
+                    case COIN: {
+                        coin_pending_text.setText(r.getCount() + "x");
+                        coin_pending.setDisable(r.getCount() == 0);
+                        break;
+                    }
+                    case STONE: {
+                        stone_pending_text.setText(r.getCount() + "x");
+                        stone_pending.setDisable(r.getCount() == 0);
+                        break;
+                    }
+                    case SERVANT: {
+                        servant_pending_text.setText(r.getCount() + "x");
+                        servant_pending.setDisable(r.getCount() == 0);
+                        break;
+                    }
+                    case SHIELD: {
+                        shield_pending_text.setText(r.getCount() + "x");
+                        shield_pending.setDisable(r.getCount() == 0);
+                        break;
+                    }
+                    default:
+                        break;
                 }
-                case STONE: {
-                    stone_pending_text.setText(r.getCount() + "x");
-                    stone_pending.setDisable(r.getCount() == 0);
-                    break;
-                }
-                case SERVANT: {
-                    servant_pending_text.setText(r.getCount() + "x");
-                    servant_pending.setDisable(r.getCount() == 0);
-                    break;
-                }
-                case SHIELD: {
-                    shield_pending_text.setText(r.getCount() + "x");
-                    shield_pending.setDisable(r.getCount() == 0);
-                    break;
-                }
-                default:
-                    break;
             }
         }
     }
@@ -562,16 +576,20 @@ class PrimaryController extends GenericController {
     //-----------------------------------BUY DEVELOPMENT CARD---------------------------------------------------------
     @Override
     public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
-        System.out.println("Correctly received buy development card response");
-        changeImage(card_spaces.get(posToAdd), developmentCardSelected.getImage(), "devcard_leadercard/");
-        card_spaces.get(posToAdd).setDisable(false);
-        hasPerformedUnBlockingAction = true;
-        developmentCardSelected = null;
-        resNeededDevelopmentCardSelected = new ArrayList<>();
-        resDevCardSelected = new Stack<>();
-        hasPerformedUnBlockingAction = true;
-        runningAction = MovePlayerType.NOTHING;
-        disableAllMoves();
+        if (executePlayerPos == match.getWhoAmI()) {
+            System.out.println("Correctly received buy development card response");
+            changeImage(card_spaces.get(posToAdd), developmentCardSelected.getImage(), "devcard_leadercard/");
+            card_spaces.get(posToAdd).setDisable(false);
+            hasPerformedUnBlockingAction = true;
+            developmentCardSelected = null;
+            resNeededDevelopmentCardSelected = new ArrayList<>();
+            resDevCardSelected = new Stack<>();
+            hasPerformedUnBlockingAction = true;
+            runningAction = MovePlayerType.NOTHING;
+            disableAllMoves();
+        } else {
+            runDialog(Alert.AlertType.INFORMATION, match.getPlayerFromPosition(executePlayerPos).getName() + " buy a new development card [" + type.toString() + ", " + level.toString() + "]");
+        }
         mapDevelopmentCards();
     }
 
@@ -682,7 +700,6 @@ class PrimaryController extends GenericController {
      *
      * @param event
      */
-    @FXML
     public void clickMarketInteraction(MouseEvent event) {
         //get the pos and if > column dim means that the user click row
         Node node = (Node) event.getSource();
@@ -775,12 +792,14 @@ class PrimaryController extends GenericController {
             playSound("market-row");
             slideRow(pos);
         }
-        mapMarketResource();
-        updateFaith(executePlayerPos);
-        disableAllMoves();
-        enableMoves(new ArrayList<MovePlayerType>() {{
-            add(MovePlayerType.MOVE_RESOURCES);
-        }}, false);
+        mapMarketResource(activePlayerPos);
+        updateFaith(activePlayerPos);
+        if (executePlayerPos == match.getWhoAmI()) {
+            disableAllMoves();
+            enableMoves(new ArrayList<MovePlayerType>() {{
+                add(MovePlayerType.MOVE_RESOURCES);
+            }}, false);
+        }
     }
 
     @Override
@@ -998,6 +1017,12 @@ class PrimaryController extends GenericController {
     @Override
     public void manageResourceMarketPositioning(ArrayList<Integer> whereToPlace, int executePlayerPos) {
         //updateFaith(match.getWhoAmI());
+        if (activePlayerPos == executePlayerPos) {
+            mapWarehouses(activePlayerPos);
+            if (executePlayerPos != match.getWhoAmI())
+                runDialog(Alert.AlertType.INFORMATION, match.getPlayerFromPosition(executePlayerPos).getName() + " placed all the resources");
+
+        }
     }
 
     //----------------------------------------END TURN----------------------------------------------------------------
@@ -1005,6 +1030,8 @@ class PrimaryController extends GenericController {
         System.out.println(match.getPendingMarketResources());
         if (!match.getPendingMarketResources().isEmpty()) {
             runDialog(Alert.AlertType.ERROR, "You must place all the resources before ending your round");
+        } else if (!hasPerformedUnBlockingAction) {
+            runDialog(Alert.AlertType.ERROR, "You have to execute a blocking action ");
         } else {
             System.out.println(hasPerformedUnBlockingAction);
             hasPerformedUnBlockingAction = false;
@@ -1018,6 +1045,13 @@ class PrimaryController extends GenericController {
     @Override
     public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
         printModel();
+        if (message.isEmpty()) {
+            if (executePlayerPos != match.getWhoAmI()) {
+                runDialog(Alert.AlertType.INFORMATION, match.getPlayerFromPosition(executePlayerPos).getName() + " finish his turn");
+            }
+        } else {
+            runDialog(Alert.AlertType.INFORMATION, message);
+        }
     }
 
     //------------------------------------ENABLE LEADER CARD---------------------------------------------------------
@@ -1041,10 +1075,16 @@ class PrimaryController extends GenericController {
 
     @Override
     public void flipLeaderCard(int leaderCardPosition, int executePlayerPos) {
-        runningAction = MovePlayerType.NOTHING;
-        runDialog(Alert.AlertType.CONFIRMATION, "You successfully activate the leader card");
+        if (executePlayerPos == match.getWhoAmI()) {
+            runningAction = MovePlayerType.NOTHING;
+            runDialog(Alert.AlertType.CONFIRMATION, "You successfully activate the leader card");
+        } else {
+            runDialog(Alert.AlertType.INFORMATION, match.getPlayerFromPosition(executePlayerPos).getName() + " successfully activate a leader card");
+        }
+
         mapLeaderCardProduction(activePlayerPos);
         mapWarehousesAdditional(activePlayerPos);
+
         //todo:depending on the type do something (map discount and map conversion strategy)
     }
 
@@ -1063,6 +1103,15 @@ class PrimaryController extends GenericController {
                 cc.put(leaderCardDragFormat, "prova");
                 db.setContent(cc);
             }
+        }
+    }
+
+    @Override
+    public void discardLeaderCard(int leaderCardPosition, int executePlayerPos) {
+        if (executePlayerPos == match.getWhoAmI()) {
+            runDialog(Alert.AlertType.INFORMATION, "Leader card discarded correctly");
+        } else {
+            runDialog(Alert.AlertType.INFORMATION, match.getPlayerFromPosition(executePlayerPos).getName() + " DISCARDED A LEADER CARD");
         }
     }
 
@@ -1101,6 +1150,7 @@ class PrimaryController extends GenericController {
                 production_base_to.setBackground(null);
                 production_base_to.setUserData(-1);
                 runningAction = MovePlayerType.NOTHING;
+                hasPerformedUnBlockingAction=true;
             }
         } else if (activeProduction.equals(ProductionType.LEADER_CARD)) {
             if ((production_leader_to_1.getBackground() != null && activeProductionIndex == 0)
@@ -1122,7 +1172,7 @@ class PrimaryController extends GenericController {
                 production_leader_to_2.setBackground(null);
                 production_leader_to_2.setUserData(-1);
                 runningAction = MovePlayerType.NOTHING;
-               //disableAllMoves();
+                hasPerformedUnBlockingAction = true;
             }
         }
 
@@ -1226,7 +1276,7 @@ class PrimaryController extends GenericController {
     }
 
     private void manageProductionDevelopmentCardAddResource(int pos) {
-        if (activeProductivePowerCost == null || activeProductivePowerCost.size()==0 ) {
+        if (activeProductivePowerCost == null || activeProductivePowerCost.size() == 0) {
             activeProductivePowerCost = Utils.fromResourceCountToResources(match.getPlayerFromPosition(match.getWhoAmI()).getDevelopmentCardSpaces().get(pos).pickTopCard().getPowers().getFrom());
         }
         if (activeProductivePowerCost.remove(Resource.getInstance(resourceTypeProduction))) {
@@ -1248,6 +1298,7 @@ class PrimaryController extends GenericController {
                 activeProduction = ProductionType.NOTHING;
                 activeProductivePowerCost = null;
                 runningAction = MovePlayerType.NOTHING;
+                hasPerformedUnBlockingAction=true;
                 //disableAllMoves();
             } else {
                 runDialog(Alert.AlertType.INFORMATION, "You've correctly picked a required resource, pick the others");
@@ -1277,7 +1328,7 @@ class PrimaryController extends GenericController {
 
     @Override
     public void enableProduction(ProductivePower power, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
-        updateFaith(match.getWhoAmI());
+        updateFaith(activePlayerPos);
     }
 
     //--------------------------------------SUPPORT METHODS---------------------------------------------------------
@@ -1373,8 +1424,18 @@ class PrimaryController extends GenericController {
         }
     }
 
-    //------------------------------------OTHERS----------------------------------------------------------------------
+    public void playSound(String sound) {
+        URL resource = null;
+        try {
+            resource = new File("src/main/resources/audio/" + sound + ".wav").toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        MediaPlayer a = new MediaPlayer(new Media(resource.toString()));
+        a.play();
+    }
 
+    //------------------------------------OTHERS----------------------------------------------------------------------
     public void abortAction() {
         revertAction();
         runningAction = MovePlayerType.NOTHING;
@@ -1426,7 +1487,6 @@ class PrimaryController extends GenericController {
 
         }
     }
-
 
     //-------------------------------ON CLICK METHODS-----------------------
 
@@ -1490,16 +1550,10 @@ class PrimaryController extends GenericController {
 
 
     @Override
-    public void discardLeaderCard(int leaderCardPosition, int executePlayerPos) {
-
-    }
-
-
-    @Override
     public void manageAllowedMoves(ArrayList<MovePlayerType> possibleMove) {
         disableAllMoves();
         enableMoves(possibleMove, false);
-        updateFaith(match.getWhoAmI());
+        updateFaith(activePlayerPos);
     }
 
     @Override
@@ -1520,26 +1574,15 @@ class PrimaryController extends GenericController {
 
     @Override
     public void moveResourceResponse(int num_from_first, int num_from_second, int indexFirstWarehouse, int indexSecondWarehouse) {
-        runDialog(Alert.AlertType.CONFIRMATION, "Move resources success");
+        //runDialog(Alert.AlertType.CONFIRMATION, "Move resources success");
         mapWarehouses(activePlayerPos);
     }
-
 
     @Override
     public void manageDisconnection(String playerName) {
 
     }
 
-    public void playSound(String sound) {
-        URL resource = null;
-        try {
-            resource = new File("src/main/resources/audio/" + sound + ".wav").toURI().toURL();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        MediaPlayer a = new MediaPlayer(new Media(resource.toString()));
-        a.play();
-    }
 
     //--------------------------------------DISABLE/ENABLE METHODS-------------------------------------------------
     public void disableAllMoves() {
