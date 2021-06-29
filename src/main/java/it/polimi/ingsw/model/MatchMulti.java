@@ -173,13 +173,9 @@ public class MatchMulti extends Match implements Serializable {
             else
                 turn = 0;
             if (check == turn && this.players.get(check).isOffline()){
-                //todo: mettere qualcosa se tutti vanno offline
+                return;
             }
         } while (this.players.get(turn).isOffline());
-        //check if anyone is online
-        //players.stream().anyMatch(player -> player.isOffline());
-        //if(players.get(turn).isOffline())
-            //updateTurn(); //todo: se si disconnettono tutti non so se è una feature o no che la partita rimanga in sospeso
     }
 
     /**

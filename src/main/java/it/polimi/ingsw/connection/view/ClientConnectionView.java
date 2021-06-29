@@ -1,4 +1,4 @@
-package it.polimi.ingsw.connection;
+package it.polimi.ingsw.connection.view;
 
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
@@ -49,7 +49,6 @@ public class ClientConnectionView extends Observable<MoveResponse> implements Ob
             try {
                 socketOut.writeObject(playerMove);
                 socketOut.flush();
-                System.out.println("Object written to the socket" + playerMove.toString());
             } catch (Exception e) {
                 setActive(false);
             }
@@ -62,10 +61,8 @@ public class ClientConnectionView extends Observable<MoveResponse> implements Ob
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
-                    System.out.println(inputObject.getClass());
                     if (inputObject instanceof SendModel) {
                         ClientConnectionView.this.notify((SendModel) inputObject);
-                        System.out.println("Model received");
                     }
                     else if(inputObject instanceof EndMatchResponse) {
                         setActive(false);
@@ -74,7 +71,6 @@ public class ClientConnectionView extends Observable<MoveResponse> implements Ob
                     }
                     else if (inputObject instanceof MoveResponse) {
                         ClientConnectionView.this.notify((MoveResponse) inputObject);
-                        System.out.println("new Object Received: \n" + inputObject.toString());
                     }
                     else {
                         throw new IllegalArgumentException();

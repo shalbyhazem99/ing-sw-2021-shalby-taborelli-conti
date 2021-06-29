@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.connection.ClientConnectionView;
+import it.polimi.ingsw.connection.view.ClientConnectionView;
 import it.polimi.ingsw.utils.Utils;
 import it.polimi.ingsw.view.gui.controller.WelcomeController;
 import javafx.application.Application;
@@ -10,7 +10,6 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

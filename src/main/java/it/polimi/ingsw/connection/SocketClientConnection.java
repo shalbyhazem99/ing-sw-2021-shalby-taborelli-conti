@@ -1,6 +1,7 @@
 package it.polimi.ingsw.connection;
 
 import it.polimi.ingsw.controller.move.PlayerMove;
+import it.polimi.ingsw.controller.move.endMatch.EndMatchResponse;
 import it.polimi.ingsw.controller.move.response.IllegalMoveResponse;
 import it.polimi.ingsw.controller.move.settings.AskForData;
 import it.polimi.ingsw.controller.move.settings.MessageMove;
@@ -18,11 +19,10 @@ import java.util.ArrayList;
  */
 public class SocketClientConnection extends Observable<PlayerMove> implements ClientConnection, Runnable {
 
-    private Socket socket;
+    private final Socket socket;
     private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private Server server;
-
+    private final Server server;
+    private static final Object syncObj = new Object();
     private boolean active = true;
 
     public SocketClientConnection(Socket socket, Server server) {
@@ -30,8 +30,13 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
         this.server = server;
     }
 
-    private synchronized boolean isActive(){
+    private synchronized boolean isActive() {
         return active;
+    }
+
+    @Override
+    public void asyncSend(final Object message) {
+        new Thread(() -> send(message)).start();
     }
 
     private synchronized void send(Object message) {
@@ -39,8 +44,12 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
             out.reset();
             out.writeObject(message);
             out.flush();
-        } catch(IOException e){
+        } catch (IOException e) {
             System.err.println(e.getMessage());
+        }
+
+        if(message instanceof EndMatchResponse){
+            close(true);
         }
 
     }
@@ -56,54 +65,51 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
         active = false;
     }
 
-    private void close() {
+    private synchronized void close(boolean endGame) {
         closeConnection();
-        System.out.println("Deregistering client...");
-        server.deregisterConnection(this);
+        System.out.println("Unregistering client...");
+        server.deregisterConnection(this,endGame);
         System.out.println("Done!");
-    }
-
-    @Override
-    public void asyncSend(final Object message){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                send(message);
-            }
-        }).start();
     }
 
     @Override
     public void run() {
         int numOfPlayer;
-        try{
+        try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            send(AskForData.getInstance("Welcome!\nWhat is your name?",null,0,0));
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            //ask the player name
+            send(AskForData.getInstance("Welcome!\nWhat is your name?", null, 0, 0));
             String name = ((MessageMove) in.readObject()).getMessage();
-            //todo: generates error if two client run together
-            if(server.getNumPlayer()==-1){
-                send(AskForData.getInstance("You are the first. how many player do you want?",null,0,0));
-                numOfPlayer = Integer.parseInt(((MessageMove) in.readObject()).getMessage());
-                send(SendMessage.getInstance("match created!\n",new ArrayList<>(),0,0));
-                server.lobby(this, name,numOfPlayer);
-            }else {
-                server.lobby(this, name);
+            //check if the player was already playing
+            if (server.wasAlreadyPlaying(name)) {
+                server.manageReconnection(this, name);
+            } else { // start a new match or add him to an already created match
+                synchronized (syncObj) {
+                    if (server.getNumPlayer() == -1) {
+                        send(AskForData.getInstance("You are the first. how many player do you want?", null, 0, 0));
+                        numOfPlayer = Math.min(4, Math.max(1, Integer.parseInt(((MessageMove) in.readObject()).getMessage()))); //the player number must be between 1 and 4
+                        send(SendMessage.getInstance("match created!\n", new ArrayList<>(), 0, 0));
+                        server.lobby(this, name, numOfPlayer);
+                    } else {
+                        server.lobby(this, name);
+                    }
+                }
             }
-            Object readed;
-            while(isActive()){
-                readed = in.readObject();
-                if(readed instanceof PlayerMove){
-                    notify((PlayerMove)readed);
-                }else {
-                    asyncSend(IllegalMoveResponse.getInstance("WRONG ANSWERS",null,0,0));
+
+            Object readied;
+            while (isActive()) {
+                readied = in.readObject();
+                if (readied instanceof PlayerMove) {
+                    notify((PlayerMove) readied);
+                } else {
+                    asyncSend(IllegalMoveResponse.getInstance("WRONG ANSWERS", null, 0, 0));
                 }
             }
         } catch (Exception e) {
             System.err.println("Error!" + e.getMessage());
-            //TODO:MAYBE INFORM THE CLIENT THAT SOMETHING WRONG HAPPEND
-        }finally{
-            close();
+        } finally {
+            close(false);
         }
     }
 }

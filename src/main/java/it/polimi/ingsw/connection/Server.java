@@ -14,37 +14,32 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+/**
+ * Manage the Server connection part
+ */
 public class Server {
-
-    private static final int PORT = 64999;
-    private ServerSocket serverSocket;
-    private ExecutorService executor = Executors.newFixedThreadPool(128);
-
-    private Map<String, ClientConnection> waitingConnection = new HashMap<>();
-
+    private final ServerSocket serverSocket;
+    private final Map<String, ClientConnection> waitingConnection = new HashMap<>();
     //for connection resilience
-    private Map<String, GameManger> playerReference = new HashMap<>();
-
-
-    private Map<String, RemoteView> playingConnection = new HashMap<>();
-
-
+    private final Map<String, GameManger> playerReference = new HashMap<>();
+    private final Map<String, RemoteView> playerConnection = new HashMap<>();
     private int numPlayer = -1;
-
     //Deregister connection
-    public synchronized void deregisterConnection(ClientConnection clientConnection) {
-        Iterator<String> iterator = playingConnection.keySet().iterator();
+    public synchronized void deregisterConnection(ClientConnection clientConnection, boolean endGame) {
+
+        Iterator<String> iterator = playerConnection.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            if (playingConnection.get(key).getClientConnection() == clientConnection) {
-                RemoteView playerView = playingConnection.get(key);
+            if (playerConnection.get(key).getClientConnection() == clientConnection) {
+                RemoteView playerView = playerConnection.get(key);
                 playerView.removeObserver(playerReference.get(key));
                 //match.removeObserver(playerView);
                 playerReference.get(key).update(DisconnectionMove.getInstance(key, playerView));
                 iterator.remove();
+                if(endGame){
+                    playerReference.remove(key);
+                }
                 break;
             }
         }
@@ -61,57 +56,75 @@ public class Server {
         }
     }
 
-    public int getNumPlayer() {
+    public synchronized int  getNumPlayer() {
         return numPlayer;
     }
 
-    private void manageReconnection(ClientConnection clientConnection, String name) {
-        playerReference.get(name).update(ReconnectionMove.getInstance(name, playerReference.get(name), clientConnection, playingConnection));
+    public synchronized void setNumPlayer(int numPlayer) {
+        this.numPlayer = numPlayer;
     }
 
-    public synchronized void lobby(SocketClientConnection socketClientConnection, String name, int numOfPlayer) {
+    /**
+     * Add a player to the lobby
+     * @param clientConnection player {@link ClientConnection}
+     * @param name the player name
+     * @param numOfPlayer the dimension of the game the player want to start
+     */
+    public synchronized void lobby(ClientConnection clientConnection, String name, int numOfPlayer) {
         this.numPlayer = numOfPlayer;
-        lobby(socketClientConnection, name);
+        lobby(clientConnection, name);
     }
 
-    //Wait for another player
+    /**
+     * Add a player to the lobby
+     * @param c player {@link ClientConnection}
+     * @param name the player name
+     */
     public synchronized void lobby(ClientConnection c, String name) {
         waitingConnection.put(name, c);
-        //if the player is playing in another match
-        if (playerReference.get(name) != null) {
-            manageReconnection(c, name);
-            waitingConnection.remove(name);
-            return;
-        }
-        System.out.println("user:" + name + " registered!\n");
-        if (waitingConnection.size() == numPlayer) {
+        System.out.println("user: " + name + " registered!\n");
+        if (waitingConnection.size() == getNumPlayer()) {
             List<String> keys = new ArrayList<>(waitingConnection.keySet());
             Match match;
-            //multi or solo match
-            if (numPlayer >= 2)
-                match = new MatchMulti(numPlayer);
+            if (keys.size() >= 2)
+                match = new MatchMulti(numPlayer); //match multi
             else
-                match = new MatchSolo();
+                match = new MatchSolo(); //match solo
             GameManger gameManger = GameManger.getInstance(match);
             for (String key : keys) {
-                ClientConnection clientConnection = waitingConnection.get(key);
+                //add the player to the match
                 Player player = Player.getInstance(key);
                 match.addPlayer(player);
+                //create MVC structure
+                ClientConnection clientConnection = waitingConnection.get(key);
                 RemoteView playerView = new RemoteView(player, clientConnection);
-                match.addObserver(playerView);
-                playerView.addObserver(gameManger);
+                match.addObserver(playerView);  //the view observe the player view
+                playerView.addObserver(gameManger);  // the controller observe the view
                 //Save data for Resilience
                 playerReference.put(key, gameManger);
-                playingConnection.put(key, playerView);
+                playerConnection.put(key, playerView);
                 //if match turn send something async
                 clientConnection.asyncSend(SendMessage.getInstance("Game starts!\n", new ArrayList<>(), 0, match.hashCode()));
             }
             match.startMatch();
             waitingConnection.clear();
-            numPlayer = -1;
+            setNumPlayer(-1);
         } else {
             c.asyncSend(SendMessage.getInstance("Waiting for other to join!\n", new ArrayList<>(), 0, 0));
         }
+    }
+
+    /**
+     * check if a player was already playing in a game
+     * @param name the player name to control
+     * @return true if the player is registered in a game false otherwise
+     */
+    public synchronized  boolean wasAlreadyPlaying(String name){
+        return playerReference.get(name)!= null;
+    }
+
+    public synchronized void manageReconnection(ClientConnection clientConnection, String name) {
+        playerReference.get(name).update(ReconnectionMove.getInstance(name, playerReference.get(name), clientConnection, playerConnection));
     }
 
     public Server() throws IOException {
@@ -123,13 +136,11 @@ public class Server {
         while (true) {
             try {
                 Socket newSocket = serverSocket.accept();
-                SocketClientConnection socketConnection;
-                socketConnection = new SocketClientConnection(newSocket, this);
-                executor.submit(socketConnection);
+                SocketClientConnection socketConnection = new SocketClientConnection(newSocket, this);
+                new Thread(socketConnection).start();
             } catch (IOException e) {
-                System.out.println("Connection Error!");
+                e.printStackTrace();
             }
         }
     }
-
 }

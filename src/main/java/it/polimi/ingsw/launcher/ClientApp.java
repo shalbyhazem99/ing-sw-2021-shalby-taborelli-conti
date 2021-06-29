@@ -1,7 +1,7 @@
 package it.polimi.ingsw.launcher;
 
 import it.polimi.ingsw.view.ClientCLI;
-import it.polimi.ingsw.connection.ClientConnectionView;
+import it.polimi.ingsw.connection.view.ClientConnectionView;
 import it.polimi.ingsw.utils.Utils;
 
 import java.io.IOException;

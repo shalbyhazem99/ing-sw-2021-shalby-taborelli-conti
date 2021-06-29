@@ -947,7 +947,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             discardTwoLeaderCardInteraction(0, 1, player, ResourceType.COIN, ResourceType.COIN);
         }
         //todo:test
-        else if (!noControl && iAmPlaying && numPlayerWhoDiscard == players.size()) { // i can't ask for move if i'm in the discard mode
+        else if (!noControl && iAmPlaying && numPlayerWhoDiscard == players.size() && players.stream().anyMatch(elem ->!elem.isOffline())) { // i can't ask for move if i'm in the discard mode
             askForMove();
         }
     }
@@ -962,11 +962,17 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
             System.out.println("Not existing player");
             return;
         }
-        player.returnOnline();
-        //notifyModel();
-        if (!noControl) {
-            notify(ReconnectionResponse.getInstance(playerName, players, players.indexOf(player), this.hashCode()));
-            notify(SendModel.getInstance(this, player, players.indexOf(player), this.hashCode()));
+        if(players.stream().allMatch(elem ->elem.isOffline())){
+            updateTurn();
         }
+        player.returnOnline();
+        if (!noControl) {
+            notify(SendModel.getInstance(this, player, players.indexOf(player), this.hashCode()));
+            notify(ReconnectionResponse.getInstance(playerName, players, players.indexOf(player), this.hashCode()));
+            if(isMyTurn(player)){
+                askForMove();
+            }
+        }
+
     }
 }
