@@ -19,6 +19,9 @@ The development of the code had been done following the MVC (Model-View-Controll
 ### JavaDoc
 
 ### Coverage Report
+|Element|Class coverage|Methods coverage|Line coverage|
+|-------|--------------|----------------|-------------|
+|Model|100% (30/30)|90% (237/262)|80% (1104/1374)
 
 ### Libraries and Plugins
 |Libraries/Plugins|Description|
