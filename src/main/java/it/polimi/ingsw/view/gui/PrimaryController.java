@@ -13,10 +13,7 @@ import it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove;
 import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
-import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.ProductivePower;
-import it.polimi.ingsw.model.Warehouse;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -224,6 +221,10 @@ class PrimaryController extends GenericController {
     private Text ware_add_type_1;
     @FXML
     private Text ware_add_type_2;
+
+    //posfaith lorenzo
+    @FXML
+    private Text lorenzo_pos_faith;
 
 
     //production variable
@@ -597,7 +598,7 @@ class PrimaryController extends GenericController {
         if (runningAction != MovePlayerType.NOTHING) {
             runDialog(Alert.AlertType.ERROR, "Another action is already running, abort it before performing another one!");
         } else {
-            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses the resources needed");
+            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses :"+match.getDevelopmentCards()[row][column].peek().getCosts(match.getCurrentPlayer()).toString());
             disableAllMoves();
             enableMoves(new ArrayList<MovePlayerType>() {{
                 add(MovePlayerType.MOVE_RESOURCES);
@@ -814,6 +815,7 @@ class PrimaryController extends GenericController {
                         int marblesWithFirstStrategy = Integer.valueOf(d.getSelectedItem().toString());
                         int marblesWithSecondStrategy = num - marblesWithFirstStrategy;
                         notify(MarketMarbleConversionMove.getInstance(marblesWithFirstStrategy,marblesWithSecondStrategy));
+                        System.out.println(marblesWithFirstStrategy+"-"+marblesWithSecondStrategy);
                     }
             );
 
@@ -1068,6 +1070,12 @@ class PrimaryController extends GenericController {
 
     @Override
     public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
+        System.out.println("manage end turn");
+        try{
+            MatchSolo temp = (MatchSolo) match;
+            lorenzo_pos_faith.setText("LORENZO POS FAITH: "+temp.getPosBlackCross());
+        }catch (Exception e){}
+        runDialog(Alert.AlertType.INFORMATION,message);
         printModel();
     }
 

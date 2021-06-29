@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" prefHeight="982.0" prefWidth="1278.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="982.0" prefWidth="1278.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
    <ComboBox fx:id="players_list_combobox" prefWidth="150.0" />
     <TabPane fx:id="tabpane" tabClosingPolicy="UNAVAILABLE">
     <tabs>
@@ -251,6 +251,11 @@
                         </Text>
                      </children>
                   </Pane>
+                     <Text fx:id="lorenzo_pos_faith" layoutX="11.0" layoutY="797.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LORENZO POS FAITH: 0" wrappingWidth="120.275390625">
+                        <font>
+                           <Font name="Algerian" size="18.0" />
+                        </font>
+                     </Text>
                     </children>
                 </AnchorPane>
             </content>
