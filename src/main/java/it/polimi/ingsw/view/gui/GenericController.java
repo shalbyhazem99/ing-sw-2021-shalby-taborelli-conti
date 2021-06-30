@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.connection.view.ClientConnectionView;
+import it.polimi.ingsw.connection.view.ClientConnectionViewMulti;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.PlayerMove;
@@ -35,14 +36,20 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(url);
         Parent root = loader.load();
-        App.setRoot(root);
+        try {
+            App.setRoot(root);
+        }catch (Exception e){
+            AppLocal.setRoot(root);
+        }
         //remove observer
         GenericController myController = loader.getController();
         myController.match = this.match;
         //add the clientConnection
-        myController.addObserver(clientConnectionView);
+        myController.addObserver(this.getObservers());
         //add controller to notify the connection
         clientConnectionView.setObserver(myController);
+
+        match.addObserver(myController);
         myController.initialization();
         if(match!=null && !match.getCurrentPlayer().equals(match.getPlayerFromPosition(match.getWhoAmI())))
             myController.disableAllMoves();

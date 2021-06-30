@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.connection.view.ClientConnectionView;
+import it.polimi.ingsw.connection.view.ClientConnectionViewMulti;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
@@ -56,6 +57,7 @@ public class RegistrationController extends GenericController {
 
     @Override
     public void askToDiscardTwoLeader(int numOfResource, int executePlayerPos) {
+        askDataPane.setVisible(false);
         changeImage(leader_card_1,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(0).getImage(),"devcard_leadercard/");
         changeImage(leader_card_2,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(1).getImage(),"devcard_leadercard/");
         changeImage(leader_card_3,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(2).getImage(),"devcard_leadercard/");
@@ -65,6 +67,7 @@ public class RegistrationController extends GenericController {
 
     @Override
     public void askForData(String message, int executePlayerPos) {
+        askDataPane.setVisible(true);
         messageToAskData.setText(message);
         discardTwoLeaderCardPane.setVisible(false);
 
@@ -115,7 +118,11 @@ public class RegistrationController extends GenericController {
             first = leaderCards.indexOf(selectedLeaderCards[0]);
             second = leaderCards.indexOf(selectedLeaderCards[1]);
             System.out.println("leader cards discarded: first:"+first+", second:"+second);
-            changeView("primary",App.getConnection());
+            if(App.getConnection()!=null) {
+                changeView("primary", App.getConnection());
+            }else {
+                changeView("primary", AppLocal.getConnection());
+            }
             notify(DiscardTwoLeaderCardsPlayerMove.getInstance(first, second, ResourceType.COIN, ResourceType.FAITH));
         }
         else {

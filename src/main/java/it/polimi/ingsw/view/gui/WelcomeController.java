@@ -1,16 +1,19 @@
-package it.polimi.ingsw.view.gui.controller;
+package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.connection.view.ClientConnectionView;
+import it.polimi.ingsw.connection.view.ClientConnectionViewMulti;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.production.move.ResourcePick;
 import it.polimi.ingsw.controller.move.settings.MessageMove;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.ProductivePower;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.view.gui.App;
+import it.polimi.ingsw.view.gui.AppLocal;
 import it.polimi.ingsw.view.gui.GenericController;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -79,8 +82,15 @@ public class WelcomeController extends GenericController {
 
     public void play() throws IOException {
         if(!playerName.getText().isBlank()){
-            changeView("register", App.getConnection());
-            notify(MessageMove.getInstance(playerName.getText()));
+            if(AppLocal.getConnection() !=null) {
+                Player player = Player.getInstance(playerName.getText());
+                match.addPlayer(player);
+                changeView("register", AppLocal.getConnection());
+                match.startMatch();
+            }else {
+                changeView("register", App.getConnection());
+                notify(MessageMove.getInstance(playerName.getText()));
+            }
         }
     }
 

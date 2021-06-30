@@ -1,12 +1,12 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.connection.view.ClientConnectionView;
+import it.polimi.ingsw.connection.view.ClientConnectionViewMulti;
 import it.polimi.ingsw.controller.move.MovePlayerType;
 import it.polimi.ingsw.controller.move.MoveResponse;
 import it.polimi.ingsw.controller.move.development.BuyDevelopmentCardPlayerMove;
 import it.polimi.ingsw.controller.move.endRound.EndRoundPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
-import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove;
@@ -25,20 +25,10 @@ import it.polimi.ingsw.model.resource.ResourcesCount;
 import it.polimi.ingsw.utils.Utils;
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -48,23 +38,15 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-public
-class PrimaryController extends GenericController {
+public class PrimaryController extends GenericController {
 
     private Stack<ResourcePick> pendingSelected;
     private MovePlayerType runningAction;
@@ -93,8 +75,6 @@ class PrimaryController extends GenericController {
     private Pane devcard_00, devcard_01, devcard_02, devcard_03, devcard_10, devcard_11, devcard_12, devcard_13, devcard_20, devcard_21, devcard_22, devcard_23;
     @FXML
     private Pane[][] devcardmatrix;
-    @FXML
-    private TextFlow msgBox;
     @FXML
     private Pane btn_col_0;
     @FXML
@@ -254,7 +234,7 @@ class PrimaryController extends GenericController {
     private ResourceType resourceTypeProduction;
     private Pane wareHousePaneFromProduction;
     private ArrayList<Resource> activeProductivePowerCost = null;
-    private int activePlayerPos;
+    private int activePlayerPos = 0;
 
     private enum ProductionType {BASE, LEADER_CARD, DEVELOPMENT_CARD, NOTHING;}
 
@@ -276,7 +256,8 @@ class PrimaryController extends GenericController {
     public void update(MoveResponse message) {
         //elaborate message
         if (match != null) {
-            message.updateLocalMatch(match);
+            if (AppLocal.getConnection() == null)
+                message.updateLocalMatch(match);
         }
         message.elaborateGUI(this);
     }
@@ -745,7 +726,6 @@ class PrimaryController extends GenericController {
     public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos, int num) {
         //BEGIN ANIMATION
         final double duration = 1;
-        int whiteMarbles = 0;
         TranslateTransition temp, t2, t3;
         ParallelTransition parallelTransition = new ParallelTransition();
         ParallelTransition parallelTransitionDouble = new ParallelTransition();
@@ -811,8 +791,10 @@ class PrimaryController extends GenericController {
             playSound("market-row");
             slideRow(pos);
         }
+
+
         mapMarketResource(activePlayerPos);
-        updateFaith(activePlayerPos);
+        /*updateFaith(activePlayerPos);
         if (executePlayerPos == match.getWhoAmI()) {
             disableAllMoves();
             enableMoves(new ArrayList<MovePlayerType>() {{
@@ -825,33 +807,30 @@ class PrimaryController extends GenericController {
         enableMoves(new ArrayList<MovePlayerType>() {{
             add(MovePlayerType.MOVE_RESOURCES);
         }}, false);
-        if (num == 0) //nothing to convert
-        {
-            runDialog(Alert.AlertType.INFORMATION, "Action Performed");
-        } else {
-            Platform.runLater(
-                    () -> {
-                        ArrayList<Integer> s = new ArrayList<>();
-                        for (int p = num; p >= 0; p--) {
-                            s.add(p);
+        if(executePlayerPos == match.getWhoAmI()) {
+            if (num == 0) //nothing to convert
+            {
+                runDialog(Alert.AlertType.INFORMATION, "Action Performed");
+            } else {
+                Platform.runLater(
+                        () -> {
+                            ArrayList<Integer> s = new ArrayList<>();
+                            for (int p = num; p >= 0; p--) {
+                                s.add(p);
+                            }
+                            ChoiceDialog d = new ChoiceDialog(s.get(0), s);
+                            d.setHeaderText("Convert " + num + " white marbles, 1) Convert to > " + match.getCurrentPlayer().getConversionStrategies().get(0) + " 2) Convert to > " + match.getCurrentPlayer().getConversionStrategies().get(1));
+                            d.setContentText("How many do you want to convert with 1)");
+                            d.showAndWait();
+                            int marblesWithFirstStrategy = Integer.valueOf(d.getSelectedItem().toString());
+                            int marblesWithSecondStrategy = num - marblesWithFirstStrategy;
+                            notify(MarketMarbleConversionMove.getInstance(marblesWithFirstStrategy, marblesWithSecondStrategy));
+                            System.out.println(marblesWithFirstStrategy + "-" + marblesWithSecondStrategy);
                         }
-                        ChoiceDialog d = new ChoiceDialog(s.get(0), s);
-                        d.setHeaderText("Convert " + num + " white marbles, 1) Convert to > " + match.getCurrentPlayer().getConversionStrategies().get(0) + " 2) Convert to > " + match.getCurrentPlayer().getConversionStrategies().get(1));
-                        d.setContentText("How many do you want to convert with 1)");
-                        d.showAndWait();
-                        int marblesWithFirstStrategy = Integer.valueOf(d.getSelectedItem().toString());
-                        int marblesWithSecondStrategy = num - marblesWithFirstStrategy;
-                        notify(MarketMarbleConversionMove.getInstance(marblesWithFirstStrategy, marblesWithSecondStrategy));
-                        System.out.println(marblesWithFirstStrategy + "-" + marblesWithSecondStrategy);
-                    }
-            );
+                );
 
-            /*Platform.runLater(
-                    () -> {
-                        new LoginDialog("sass").show();
-                    }
-            );*/
-        }
+            }
+        }*/
     }
 
     @Override
@@ -1100,8 +1079,6 @@ class PrimaryController extends GenericController {
             hasPerformedUnBlockingAction = false;
             notify(EndRoundPlayerMove.getInstance());
             disableAllMoves();
-            msgBox.getChildren().clear();
-            msgBox.getChildren().add(new Text("Waiting for other players"));
         }
     }
 

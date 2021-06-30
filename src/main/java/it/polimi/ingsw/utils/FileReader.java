@@ -71,12 +71,4 @@ public class FileReader {
         stacks.addAll(leaderCards);
         return stacks;
     }
-
-
-    //todo: is it useful?
-    public static void main(String[] args) {
-        FileReader.readLeaderCard();
-    }
-
-
 }

@@ -46,7 +46,7 @@ public class ClientCLI extends Observable<PlayerMove> implements Observer<MoveRe
                 System.out.flush();
                 if (match.hashCode() != message.getHashToVerify()) {
                     //todo to complete (response and move)
-                    System.err.println("Different model received");
+                    //System.err.println("Different model received");
                 }
             }
             if (message.getExecutePlayerPos() == playerPos) {

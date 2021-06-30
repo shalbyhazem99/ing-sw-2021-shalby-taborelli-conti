@@ -19,6 +19,8 @@ public class GameManger implements Observer<PlayerMove> {
     }
 
     private synchronized void executeMove(PlayerMove playerMove){
+        if(playerMove.getPlayer()==null)
+            playerMove.concatPlayer(match.getPlayerFromPosition(0));
         if(match.isMyTurn(playerMove.getPlayer()) || playerMove instanceof DisconnectionMove || playerMove instanceof ReconnectionMove) {
             playerMove.execute(match);
         }

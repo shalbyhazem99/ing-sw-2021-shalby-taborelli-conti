@@ -96,7 +96,6 @@ public class MarketResponse extends MoveResponse {
 
     @Override
     public void elaborateGUI(GenericController controller) {
-        System.out.println("ECCALLA");
         System.out.println(resources);
         System.out.println(numOfMarbleToBeCoverted);
         System.out.println(moveType);

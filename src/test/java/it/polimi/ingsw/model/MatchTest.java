@@ -1053,10 +1053,10 @@ public class MatchTest extends TestCase {
         whereToPick.add(ResourcePick.getInstance(ResourceWarehouseType.WAREHOUSE, 0, ResourceType.SHIELD));
         match.enableProductionLeaderInteraction(whereToPick, 0, ResourceType.STONE, match.getCurrentPlayer(), true);
 
-        //Todo:sistemare il valore dell'equals dopo aver tolto le risorse extra
+
         match.endRoundInteraction(match.getCurrentPlayer(), true);
         assertEquals(0, match.getPendingProductionResources().size());
-        assertEquals(11, match.getCurrentPlayer().getStrongBox().stream().filter(elem -> elem.getType() == ResourceType.STONE).count());
+        assertEquals(1, match.getCurrentPlayer().getStrongBox().stream().filter(elem -> elem.getType() == ResourceType.STONE).count());
 
     }
 
@@ -1316,11 +1316,10 @@ public class MatchTest extends TestCase {
         match.enableProductionDevelopmentInteraction(wherePick, 0, match.getCurrentPlayer(), true);
 
         match.skipTurn(match.getCurrentPlayer(), false);
-        //todo: cambiare questo assert dopo aver tolo la cosa delle risorse iniziali
         if (position == 0) {
-            assertEquals(41, match.getPlayerFromPosition(1).getStrongBox().size());
+            assertEquals(1, match.getPlayerFromPosition(1).getStrongBox().size());
         } else {
-            assertEquals(41, match.getPlayerFromPosition(0).getStrongBox().size());
+            assertEquals(1, match.getPlayerFromPosition(0).getStrongBox().size());
         }
     }
 }

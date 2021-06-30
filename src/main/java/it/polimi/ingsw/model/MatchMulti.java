@@ -88,13 +88,10 @@ public class MatchMulti extends Match implements Serializable {
      */
     @Override
     public void startMatch() {
-        //Todo: togliamo la parte di codice commentata?
         randomlyPickInkwellPlayer();
         turn = posInkwell;
         //start
         super.startMatch();
-        //askForDiscardLeaderCard();
-        //askForMove();
     }
 
     /**
@@ -185,7 +182,7 @@ public class MatchMulti extends Match implements Serializable {
 
     /**
      * When the turn is changing this method set the turn to the next {@link Player} online
-     * If all the {@link Player} go offline //todo: inserire come gestiamo la cosa
+     * If all the {@link Player} go offline
      */
     @Override
     public void updateTurn() {

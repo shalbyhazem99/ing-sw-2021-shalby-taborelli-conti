@@ -179,7 +179,6 @@ public class MatchSoloTest extends TestCase {
         assertEquals(4, matchSolo1.getCurrentPlayer().getPopeFavorTiles().get(2).getPoints());
     }
 
-    //todo: togliere le linee commentate quando si saranno tolte le risorse in più per testare il gioco
     /**
      * Testing the phase of early game in which the {@link Player} discards 2 {@link LeaderCard}
      */
@@ -191,10 +190,10 @@ public class MatchSoloTest extends TestCase {
         int leaderCard2 = matchSolo.getCurrentPlayer().getLeaderCards().get(2).hashCode();
         int leaderCard3 = matchSolo.getCurrentPlayer().getLeaderCards().get(3).hashCode();
         assertEquals(4, matchSolo.getCurrentPlayer().getLeaderCards().size());
-        //assertEquals(0, matchSolo.getCurrentPlayer().getResources().size());
+        assertEquals(0, matchSolo.getCurrentPlayer().getResources().size());
         matchSolo.discardTwoLeaderCardInteraction(2,3, matchSolo.getCurrentPlayer(), ResourceType.COIN, ResourceType.SERVANT);
         assertEquals(2, matchSolo.getCurrentPlayer().getLeaderCards().size());
-        //assertEquals(0, matchSolo.getCurrentPlayer().getResources().size());
+        assertEquals(0, matchSolo.getCurrentPlayer().getResources().size());
         for (int i = 0; i < 2; i++) {
             assertTrue(matchSolo.getCurrentPlayer().getLeaderCards().get(i).hashCode() != leaderCard2);
             assertTrue(matchSolo.getCurrentPlayer().getLeaderCards().get(i).hashCode() != leaderCard3);

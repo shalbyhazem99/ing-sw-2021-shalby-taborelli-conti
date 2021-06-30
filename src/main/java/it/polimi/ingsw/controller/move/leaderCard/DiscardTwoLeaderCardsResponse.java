@@ -63,7 +63,6 @@ public class DiscardTwoLeaderCardsResponse extends MoveResponse {
                 param_correct = true;
             }
         } while (!param_correct);
-        ///todo: do some controls on user inputs and maybe write it better
         ResourceType[] resourceTypes = Utils.getUsableResourcesType();
         int resFirst=0, resSecond=0;
         if (numOfResource > 0) {
