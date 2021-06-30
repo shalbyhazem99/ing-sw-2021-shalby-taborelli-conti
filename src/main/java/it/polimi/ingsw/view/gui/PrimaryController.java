@@ -326,8 +326,6 @@ public class PrimaryController extends GenericController {
         market_pending_panes.add(stone_pending);
         market_pending_panes.add(shield_pending);
         market_pending_panes.add(servant_pending);
-        mapComboPox();
-
     }
 
     @Override
@@ -359,26 +357,18 @@ public class PrimaryController extends GenericController {
         mapMarketResource(activePlayerPos);
         mapProductionResource();
         updateFaith(activePlayerPos);
+        mapComboPox();
     }
 
     public void mapComboPox() {
-        Platform.runLater(() -> {
-            players_list_combobox.getItems().setAll(match.getPlayers());
-            players_list_combobox.getSelectionModel().select(activePlayerPos);
-        });
-        players_list_combobox.valueProperty().addListener(new ChangeListener() {
+        Platform.runLater(new Runnable() {
             @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                // Player player = (Player) newValue;
-                activePlayerPos = match.getPlayers().indexOf(newValue);
-                //activePlayerPos = players_list_combobox.getSelectionModel().getSelectedIndex();
-                // System.out.println("Selected user index: "+activePlayerPos+"    "+index);
-                if (activePlayerPos >= 0 && activePlayerPos < match.getPlayers().size()) {
-                    printModel();
-                    tabpane.getTabs().parallelStream().forEach(elem -> elem.getContent().setDisable(activePlayerPos != match.getWhoAmI()));
-                }
+            public void run() {
+                players_list_combobox.getItems().setAll(match.getPlayers());
+                players_list_combobox.getSelectionModel().select(activePlayerPos);
             }
         });
+
     }
 
     public void mapStrongBox(int posPlayer) {
@@ -1089,8 +1079,8 @@ public class PrimaryController extends GenericController {
             MatchSolo temp = (MatchSolo) match;
             lorenzo_pos_faith.setText("LORENZO POS FAITH: " + temp.getPosBlackCross());
         } catch (Exception e) {
+            lorenzo_pos_faith.setVisible(false);
         }
-        runDialog(Alert.AlertType.INFORMATION, message);
         printModel();
         if (message.isEmpty()) {
             if (executePlayerPos != match.getWhoAmI()) {
@@ -1197,6 +1187,7 @@ public class PrimaryController extends GenericController {
                 production_base_to.setBackground(null);
                 production_base_to.setUserData(-1);
                 runningAction = MovePlayerType.NOTHING;
+                hasPerformedUnBlockingAction = true;
             }
         } else if (activeProduction.equals(ProductionType.LEADER_CARD)) {
             if ((production_leader_to_1.getBackground() != null && activeProductionIndex == 0)
@@ -1481,6 +1472,11 @@ public class PrimaryController extends GenericController {
     }
 
     //------------------------------------OTHERS----------------------------------------------------------------------
+
+    public void onComboBoxAction(){
+        activePlayerPos =  Math.max(0,players_list_combobox.getSelectionModel().getSelectedIndex());
+    }
+
 
     public void abortAction() {
         revertAction();

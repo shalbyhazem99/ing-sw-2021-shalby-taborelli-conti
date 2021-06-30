@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="it.polimi.ingsw.utils.UtilsTest" time="0.012" errors="0" skipped="0">
+<testsuite tests="9" failures="0" name="it.polimi.ingsw.model.MatchSoloTest" time="0.063" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2020.3.2"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -59,7 +59,13 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="it.polimi.ingsw.utils.UtilsTest" name="testApplyDiscount" time="0"/>
-  <testcase classname="it.polimi.ingsw.utils.UtilsTest" name="testFromResourcesToResourceCount" time="0.012"/>
-  <testcase classname="it.polimi.ingsw.utils.UtilsTest" name="testCompareResources" time="0"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testExecuteAction" time="0.016"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testGenerateActionTokens" time="0.006"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testDiscardTwoLeaderCard" time="0.011"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testHasLose" time="0.006"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testIsMyTurn" time="0.004"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testPickActionToken" time="0.009"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testMatchSolo" time="0.004"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testHasWon" time="0.004"/>
+  <testcase classname="it.polimi.ingsw.model.MatchSoloTest" name="testMoveAheadBlackCross" time="0.003"/>
 </testsuite>

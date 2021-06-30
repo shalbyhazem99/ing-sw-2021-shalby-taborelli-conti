@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="it.polimi.ingsw.utils.UtilsTest" time="0.012" errors="0" skipped="0">
+<testsuite tests="28" failures="0" name="it.polimi.ingsw.model.MatchTest" time="0.353" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2020.3.2"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -59,7 +59,32 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="it.polimi.ingsw.utils.UtilsTest" name="testApplyDiscount" time="0"/>
-  <testcase classname="it.polimi.ingsw.utils.UtilsTest" name="testFromResourcesToResourceCount" time="0.012"/>
-  <testcase classname="it.polimi.ingsw.utils.UtilsTest" name="testCompareResources" time="0"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testControlPopePath" time="0.011"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testWhoIsWinner" time="0.019"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testGetMarketBoard" time="0.008"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testPickDevelopmentCardOnTop" time="0.007"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testSkipTurn" time="0.022"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testEnableProductionDevelopmentInteraction" time="0.011"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testEnableProductionBaseInteraction" time="0.006"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testDiscardLeaderCardInteraction" time="0.011"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testReconnectPlayer" time="0.015"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testEnableLeaderCardInteraction" time="0.017"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testMoveResourcesInteraction" time="0.025"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testDisconnectPlayer" time="0.017"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testBuyDevelopmentCardInteraction" time="0.025"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testGetPlayerFromPosition" time="0.005"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testEnableProductionLeaderInteraction" time="0.014"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testWhoIsTheWinner1" time="0.004"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testWhoIsTheWinner2" time="0.005"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testMarketInteraction" time="0.032"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testAddPlayer" time="0.003"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testGetDevelopmentCard" time="0.005"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testActivateProductivePower" time="0.011"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testPositioningResourcesInteraction" time="0.022"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testGetPlayerFromName" time="0.009"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testSetWhoAmI" time="0.005"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testGetDevelopmentCardOnTop" time="0.008"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testGetWhoAmI" time="0.008"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testDiscardTwoLeaderCardInteraction" time="0.019"/>
+  <testcase classname="it.polimi.ingsw.model.MatchTest" name="testEndRoundInteraction" time="0.009"/>
 </testsuite>

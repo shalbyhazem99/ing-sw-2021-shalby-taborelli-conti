@@ -80,14 +80,14 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                 player.addLeaderCard(leaderCards.pop());
         }
         //todo: to remove
-        for (Player player : players) {
+        /*for (Player player : players) {
             ArrayList<ResourcesCount> aa = new ArrayList<>();
             aa.add(ResourcesCount.getInstance(10, ResourceType.COIN));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SERVANT));
             aa.add(ResourcesCount.getInstance(10, ResourceType.SHIELD));
             aa.add(ResourcesCount.getInstance(10, ResourceType.STONE));
             player.addResourceToStrongBox((ArrayList<Resource>) aa.stream().flatMap(elem -> elem.toArrayListResources().stream()).collect(Collectors.toList()));
-        }
+        }*/
         notifyModel();
         askForDiscardLeaderCard();
     }

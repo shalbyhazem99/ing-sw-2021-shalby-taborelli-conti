@@ -77,7 +77,6 @@ public class MatchMulti extends Match implements Serializable {
             if (!hasWon()) {
                 askForMove();
             } else {
-                // todo: close connection
             }
         }
     }

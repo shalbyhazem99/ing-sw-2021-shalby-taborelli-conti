@@ -132,6 +132,11 @@ public class Server {
         System.out.println("listening on port: " + serverSocket.getLocalPort());
     }
 
+    public Server(int port) throws IOException {
+        this.serverSocket = new ServerSocket(port);
+        System.out.println("listening on port: " + serverSocket.getLocalPort());
+    }
+
     public void run() {
         while (true) {
             try {

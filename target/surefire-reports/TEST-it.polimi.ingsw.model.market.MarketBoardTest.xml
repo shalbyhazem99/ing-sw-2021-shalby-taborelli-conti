@@ -59,8 +59,8 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="it.polimi.ingsw.model.market.MarketBoardTest" name="testMarketBoard" time="0.001"/>
-  <testcase classname="it.polimi.ingsw.model.market.MarketBoardTest" name="testGenerateResourcesFail" time="0.001"/>
+  <testcase classname="it.polimi.ingsw.model.market.MarketBoardTest" name="testMarketBoard" time="0.002"/>
+  <testcase classname="it.polimi.ingsw.model.market.MarketBoardTest" name="testGenerateResourcesFail" time="0"/>
   <testcase classname="it.polimi.ingsw.model.market.MarketBoardTest" name="testGenerateResourcesColumn" time="0.001"/>
   <testcase classname="it.polimi.ingsw.model.market.MarketBoardTest" name="testGenerateResourcesRow" time="0"/>
 </testsuite>
