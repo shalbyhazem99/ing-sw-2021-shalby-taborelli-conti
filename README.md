@@ -42,6 +42,43 @@ The development of the code had been done following the MVC (Model-View-Controll
 - __Local match__ :  The user is able to play a Solo Match without the connection to the server.
 - __Resilience to disconnections__ : The Player is able to resume the game after disconnections issues.
 
+## HOW TO EXCUTE JAR
+
+The execution of the code is made using the following command
+
+```
+java -jar masters-of-renaissance.jar [--type <type>] [--address <address>] [--port <port>]  [--gui] [--cli] [--local]
+```
+__Parameters__
+- `--type <type>` allow to select the type of service you are asking `s` (server) or `c` (client). Default is `s`.
+- `--address <address>` allow to insert the address the client want to connect to (useful only for client). Default is `127.0.0.1`.
+- `--port <port>` allow to insert the port for the server or for the client. If a port is not provided the server will run on the first free.
+- `--gui` request a client running with gui.
+- `--cli` request a client running with cli.
+- `--local` request a client which run a the game in solo modo.
+
+__DEFAULT COMMAND__
+
+Execute the server:
+```
+java -jar masters-of-renaissance.jar --type s --port 12345
+```
+Execute the client in distributed way with GUI:
+```
+java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  --gui
+```
+Execute the client in local way with GUI:
+```
+java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  --gui --local
+```
+Execute the client in distributed way with CLI:
+```
+java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  --cli
+```
+Execute the client in local way with CLI:
+```
+java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  --cli --local
+```
 ## Developers
 - [__Conti Alessando__](https://github.com/alessandroconti99)
 - [__Shalby Hazem__](https://github.com/shalbyhazem99)
