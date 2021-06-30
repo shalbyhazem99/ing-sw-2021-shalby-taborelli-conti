@@ -61,6 +61,7 @@ public class ClientConnectionView extends Observable<MoveResponse> implements Ob
             try {
                 while (isActive()) {
                     Object inputObject = socketIn.readObject();
+                    System.err.println(inputObject.getClass().toString());
                     if (inputObject instanceof SendModel) {
                         ClientConnectionView.this.notify((SendModel) inputObject);
                     }

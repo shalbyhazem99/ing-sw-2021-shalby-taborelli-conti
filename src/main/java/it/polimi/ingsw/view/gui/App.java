@@ -20,7 +20,11 @@ import java.net.URL;
 public class App extends Application {
 
     private static Scene scene;
-    public static ClientConnectionView connection;
+    private static ClientConnectionView connection;
+
+    public static synchronized ClientConnectionView getConnection(){
+        return connection;
+    }
 
     @Override
     public void start(Stage stage) throws IOException {

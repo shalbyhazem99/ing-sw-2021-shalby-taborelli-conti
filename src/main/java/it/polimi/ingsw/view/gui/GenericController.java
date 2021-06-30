@@ -36,18 +36,19 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         loader.setLocation(url);
         Parent root = loader.load();
         App.setRoot(root);
+        //remove observer
         GenericController myController = loader.getController();
         myController.match = this.match;
         //add the clientConnection
         myController.addObserver(clientConnectionView);
         //add controller to notify the connection
-        clientConnectionView.addObserver(myController);
+        clientConnectionView.setObserver(myController);
         myController.initialization();
-        myController.disableAllMoves();
+        if(match!=null && !match.getCurrentPlayer().equals(match.getPlayerFromPosition(match.getWhoAmI())))
+            myController.disableAllMoves();
     }
 
     public void changeImage(Pane p, String s, String type) {
-        System.out.println("Stiamo cambiando icona e settando : " + type + s);
         URL url = null;
         try {
             url = new File("src/main/resources/images/" + type + s + ".png").toURI().toURL();

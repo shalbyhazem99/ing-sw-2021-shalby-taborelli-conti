@@ -79,7 +79,7 @@ public class WelcomeController extends GenericController {
 
     public void play() throws IOException {
         if(!playerName.getText().isBlank()){
-            changeView("register", App.connection);
+            changeView("register", App.getConnection());
             notify(MessageMove.getInstance(playerName.getText()));
         }
     }

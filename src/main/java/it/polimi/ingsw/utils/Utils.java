@@ -11,8 +11,6 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import javafx.scene.paint.Color;
 
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,7 +23,7 @@ public class Utils {
      * Connection info
      */
     public static String ip = "127.0.0.1";
-    public static int port = 63019;
+    public static int port = 62941;
 
     /**
      * the Faith path length

@@ -9,13 +9,11 @@ import it.polimi.ingsw.controller.move.leaderCard.DiscardLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.DiscardTwoLeaderCardsPlayerMove;
 import it.polimi.ingsw.controller.move.leaderCard.EnableLeaderCardPlayerMove;
 import it.polimi.ingsw.controller.move.market.MarketInteractionPlayerMove;
+import it.polimi.ingsw.controller.move.market.MarketMarbleConversionMove;
 import it.polimi.ingsw.controller.move.moveResources.MoveResourcesPlayerMove;
 import it.polimi.ingsw.controller.move.production.move.*;
 import it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesPlayerMove;
-import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.ProductivePower;
-import it.polimi.ingsw.model.Warehouse;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
@@ -28,6 +26,8 @@ import it.polimi.ingsw.utils.Utils;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -381,21 +381,23 @@ class PrimaryController extends GenericController {
     }
 
     public void mapComboPox() {
-        /*Platform.runLater(new Runnable() {
+        Platform.runLater(() -> {
+            players_list_combobox.getItems().setAll(match.getPlayers());
+            players_list_combobox.getSelectionModel().select(activePlayerPos);
+        });
+        players_list_combobox.valueProperty().addListener(new ChangeListener() {
             @Override
-            public void run() {
-                players_list_combobox.getItems().setAll(match.getPlayers());
-                players_list_combobox.getSelectionModel().select(activePlayerPos);
-                players_list_combobox.valueProperty().addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                        activePlayerPos = match.getPlayers().indexOf(newValue);
-                        printModel();
-                        tabpane.getTabs().parallelStream().forEach(elem -> elem.getContent().setDisable(activePlayerPos != match.getWhoAmI()));
-                    }
-                });
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                // Player player = (Player) newValue;
+                activePlayerPos = match.getPlayers().indexOf(newValue);
+                //activePlayerPos = players_list_combobox.getSelectionModel().getSelectedIndex();
+                // System.out.println("Selected user index: "+activePlayerPos+"    "+index);
+                if (activePlayerPos >= 0 && activePlayerPos < match.getPlayers().size()) {
+                    printModel();
+                    tabpane.getTabs().parallelStream().forEach(elem -> elem.getContent().setDisable(activePlayerPos != match.getWhoAmI()));
+                }
             }
-        });*/
+        });
     }
 
     public void mapStrongBox(int posPlayer) {
@@ -515,10 +517,8 @@ class PrimaryController extends GenericController {
     }
 
     public void mapDevelopmentCards() {
-        System.out.println("stiamo mappando le dev card");
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
-                System.out.println(i + "," + j);
                 try {
                     changeImage(devcardmatrix[i][j], match.getDevelopmentCards()[i][j].peek().getImage(), "devcard_leadercard/");
                 } catch (Exception e) {
@@ -528,7 +528,6 @@ class PrimaryController extends GenericController {
     }
 
     public void mapDevelopmentCardsSpaces(int posPlayer) {
-        System.out.println("stiamo mappando le dev card");
         for (int i = 0; i < card_spaces.size(); i++) {
             Pane space = card_spaces.get(i);
             space.setBackground(null);
@@ -621,7 +620,7 @@ class PrimaryController extends GenericController {
         if (runningAction != MovePlayerType.NOTHING) {
             runDialog(Alert.AlertType.ERROR, "Another action is already running, abort it before performing another one!");
         } else {
-            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses :"+match.getDevelopmentCards()[row][column].peek().getCosts(match.getCurrentPlayer()).toString());
+            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses :" + match.getDevelopmentCards()[row][column].peek().getCosts(match.getCurrentPlayer()).toString());
             disableAllMoves();
             enableMoves(new ArrayList<MovePlayerType>() {{
                 add(MovePlayerType.MOVE_RESOURCES);
@@ -820,32 +819,30 @@ class PrimaryController extends GenericController {
                 add(MovePlayerType.MOVE_RESOURCES);
             }}, false);
         }
-        mapMarketResource();
+        mapMarketResource(activePlayerPos);
         updateFaith(executePlayerPos);
         disableAllMoves();
         enableMoves(new ArrayList<MovePlayerType>() {{
             add(MovePlayerType.MOVE_RESOURCES);
         }}, false);
-        if(num==0) //nothing to convert
+        if (num == 0) //nothing to convert
         {
-            runDialog(Alert.AlertType.INFORMATION,"Action Performed");
-        }
-        else
-        {
+            runDialog(Alert.AlertType.INFORMATION, "Action Performed");
+        } else {
             Platform.runLater(
                     () -> {
                         ArrayList<Integer> s = new ArrayList<>();
-                        for(int p = num;p>=0;p--){
+                        for (int p = num; p >= 0; p--) {
                             s.add(p);
                         }
                         ChoiceDialog d = new ChoiceDialog(s.get(0), s);
-                        d.setHeaderText("Convert "+ num+" white marbles, 1) Convert to > "+match.getCurrentPlayer().getConversionStrategies().get(0)+" 2) Convert to > "+match.getCurrentPlayer().getConversionStrategies().get(1));
+                        d.setHeaderText("Convert " + num + " white marbles, 1) Convert to > " + match.getCurrentPlayer().getConversionStrategies().get(0) + " 2) Convert to > " + match.getCurrentPlayer().getConversionStrategies().get(1));
                         d.setContentText("How many do you want to convert with 1)");
                         d.showAndWait();
                         int marblesWithFirstStrategy = Integer.valueOf(d.getSelectedItem().toString());
                         int marblesWithSecondStrategy = num - marblesWithFirstStrategy;
-                        notify(MarketMarbleConversionMove.getInstance(marblesWithFirstStrategy,marblesWithSecondStrategy));
-                        System.out.println(marblesWithFirstStrategy+"-"+marblesWithSecondStrategy);
+                        notify(MarketMarbleConversionMove.getInstance(marblesWithFirstStrategy, marblesWithSecondStrategy));
+                        System.out.println(marblesWithFirstStrategy + "-" + marblesWithSecondStrategy);
                     }
             );
 
@@ -865,6 +862,7 @@ class PrimaryController extends GenericController {
 
     /**
      * Perform slide animation
+     *
      * @param row which row to move
      */
     private void slideRow(int row) {
@@ -875,8 +873,10 @@ class PrimaryController extends GenericController {
         marketBoardObj[row][2] = marketBoardObj[row][3]; //slide to left
         marketBoardObj[row][3] = additionalMarbleTemp; //the old additional marble will be the marble in the right position of the row
     }
+
     /**
      * Perform slide animation
+     *
      * @param column which column to move
      */
     private void slideColumn(int column) {
@@ -1108,11 +1108,12 @@ class PrimaryController extends GenericController {
     @Override
     public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
         System.out.println("manage end turn");
-        try{
+        try {
             MatchSolo temp = (MatchSolo) match;
-            lorenzo_pos_faith.setText("LORENZO POS FAITH: "+temp.getPosBlackCross());
-        }catch (Exception e){}
-        runDialog(Alert.AlertType.INFORMATION,message);
+            lorenzo_pos_faith.setText("LORENZO POS FAITH: " + temp.getPosBlackCross());
+        } catch (Exception e) {
+        }
+        runDialog(Alert.AlertType.INFORMATION, message);
         printModel();
         if (message.isEmpty()) {
             if (executePlayerPos != match.getWhoAmI()) {
@@ -1366,7 +1367,7 @@ class PrimaryController extends GenericController {
                 activeProduction = ProductionType.NOTHING;
                 activeProductivePowerCost = null;
                 runningAction = MovePlayerType.NOTHING;
-                hasPerformedUnBlockingAction=true;
+                hasPerformedUnBlockingAction = true;
                 //disableAllMoves();
             } else {
                 runDialog(Alert.AlertType.INFORMATION, "You've correctly picked a required resource, pick the others");
@@ -1446,7 +1447,6 @@ class PrimaryController extends GenericController {
     }
 
     private void updateFaith(int index) {
-        System.out.println("Vai a > " + faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX() + ", " + faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY());
         faith_player.setLayoutX(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX() + 10);
         faith_player.setLayoutY(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY() + 10);
     }

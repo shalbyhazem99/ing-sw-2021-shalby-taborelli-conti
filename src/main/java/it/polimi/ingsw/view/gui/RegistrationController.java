@@ -115,7 +115,7 @@ public class RegistrationController extends GenericController {
             first = leaderCards.indexOf(selectedLeaderCards[0]);
             second = leaderCards.indexOf(selectedLeaderCards[1]);
             System.out.println("leader cards discarded: first:"+first+", second:"+second);
-            changeView("primary",App.connection);
+            changeView("primary",App.getConnection());
             notify(DiscardTwoLeaderCardsPlayerMove.getInstance(first, second, ResourceType.COIN, ResourceType.FAITH));
         }
         else {
@@ -190,17 +190,18 @@ public class RegistrationController extends GenericController {
 
     @Override
     public void updateModel(Match match, int playerPosition) {
-
+        this.match = match;
     }
 
     @Override
-    public void manageReconnection(String playerName){
+    public void manageReconnection(String playerName) {
         try {
-            changeView("primary", App.connection);
+            changeView("primary", App.getConnection());
         }catch (Exception e){
-            //todo:manage
+
         }
     }
+
 
     @Override
     public void manageResourceMarketPositioning(ArrayList<Integer> whereToPlace, int executePlayerPos) {

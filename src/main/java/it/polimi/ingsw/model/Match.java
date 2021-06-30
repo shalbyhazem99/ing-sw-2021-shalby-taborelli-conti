@@ -1034,9 +1034,9 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         if (!noControl) {
             notify(SendModel.getInstance(this, player, players.indexOf(player), this.hashCode()));
             notify(ReconnectionResponse.getInstance(playerName, players, players.indexOf(player), this.hashCode()));
-            if(isMyTurn(player)){
+            /*if(isMyTurn(player)){
                 askForMove();
-            }
+            }*/
         }
 
     }

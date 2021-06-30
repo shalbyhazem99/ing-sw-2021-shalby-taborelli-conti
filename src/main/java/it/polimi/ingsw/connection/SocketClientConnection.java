@@ -51,7 +51,6 @@ public class SocketClientConnection extends Observable<PlayerMove> implements Cl
         if(message instanceof EndMatchResponse){
             close(true);
         }
-
     }
 
     @Override

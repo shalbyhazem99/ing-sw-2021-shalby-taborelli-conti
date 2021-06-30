@@ -5,10 +5,17 @@ import java.util.List;
 
 public class Observable<T> {
 
-    private final transient List<Observer<T>> observers = new ArrayList<>();
+    private transient List<Observer<T>> observers = new ArrayList<>();
 
     public void addObserver(Observer<T> observer) {
         synchronized (observers) {
+            observers.add(observer);
+        }
+    }
+
+    public void setObserver(Observer<T> observer) {
+        synchronized (observers) {
+            observers = new ArrayList<>();
             observers.add(observer);
         }
     }
