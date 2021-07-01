@@ -3,11 +3,14 @@ package it.polimi.ingsw.utils;
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCard;
 import it.polimi.ingsw.model.leaderCard.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
+
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class to read data from file
@@ -16,9 +19,10 @@ public class FileReader {
 
     /**
      * Read all the development cards
+     *
      * @return a matrix of {@link Stack<DevelopmentCard>} with all 64 cards
      */
-    public static Stack<DevelopmentCard>[][] readDevelopmentCards() {
+    public Stack<DevelopmentCard>[][] readDevelopmentCards() {
         Stack<DevelopmentCard>[][] stacks = new Stack[Utils.DEV_CARD_ROW_NUMBER][Utils.DEV_CARD_COL_NUMBER];
         //stacks initialization
         for (int row = 0; row < Utils.DEV_CARD_ROW_NUMBER; row++) {
@@ -27,18 +31,20 @@ public class FileReader {
             }
         }
         Gson gson = new Gson();
-        String filePath = new File("JSON/DevelopmentCard/DevelopmentCard.json").getAbsolutePath();
-        try (Reader reader = new java.io.FileReader(filePath)) {
-
+        String filePath ="/json/DevelopmentCard.json";
+        try {
+            InputStream inputStream = getClass().getResourceAsStream(filePath);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String contents = reader.lines().collect(Collectors.joining(System.lineSeparator()));
             // Convert JSON File to Java Object
-            DevelopmentCard[] array = gson.fromJson(reader, (DevelopmentCard[].class));
+            DevelopmentCard[] array = gson.fromJson(contents, (DevelopmentCard[].class));
             ArrayList<DevelopmentCard> developmentCards = new ArrayList<>();
             Collections.addAll(developmentCards, array);
             Collections.shuffle(developmentCards);
             for (DevelopmentCard developmentCard : developmentCards) {
                 stacks[developmentCard.getLevel().label][developmentCard.getType().label].push(developmentCard);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return stacks;
@@ -46,25 +52,30 @@ public class FileReader {
 
     /**
      * Read all the leader cards
+     *
      * @return a {@link Stack<LeaderCard>} with all 16 cards
      */
-    public static Stack<LeaderCard> readLeaderCard() {
+    public Stack<LeaderCard> readLeaderCard() {
         Stack<LeaderCard> stacks = new Stack<>();
         ArrayList<LeaderCard> leaderCards = new ArrayList<>();
         Gson gson = new Gson();
         Map<String, Type> fileSet = new HashMap<>();
-        fileSet.put(new File("JSON/LeaderCard/LeaderCard_AddProductive.json").getAbsolutePath(), LeaderCardAddProductive[].class);
-        fileSet.put(new File("JSON/LeaderCard/LeaderCard_AddWarehouse.json").getAbsolutePath(), LeaderCardAddWarehouse[].class);
-        fileSet.put(new File("JSON/LeaderCard/LeaderCard_Color.json").getAbsolutePath(), LeaderCardColor[].class);
-        fileSet.put(new File("JSON/LeaderCard/LeaderCard_Discount.json").getAbsolutePath(), LeaderCardDiscount[].class);
-        for (Map.Entry<String, Type> entry : fileSet.entrySet()) {
-            try (Reader reader = new java.io.FileReader(entry.getKey())) {
-                //read data from file;
-                LeaderCard[] array= gson.fromJson(reader, entry.getValue());
-                Collections.addAll(leaderCards, array);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+        fileSet.put("/json/LeaderCard/LeaderCard_AddProductive.json",LeaderCardAddProductive[].class);
+        fileSet.put("/json/LeaderCard/LeaderCard_AddWarehouse.json",LeaderCardAddWarehouse[].class);
+        fileSet.put("/json/LeaderCard/LeaderCard_Color.json",LeaderCardColor[].class);
+        fileSet.put("/json/LeaderCard/LeaderCard_Discount.json",LeaderCardDiscount[].class);
+
+
+        for (Map.Entry<String, Type> entry : fileSet.entrySet()) {
+            try {
+                InputStream inputStream = getClass().getResourceAsStream(entry.getKey());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String contents = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+                LeaderCard[] array = gson.fromJson(contents, entry.getValue());
+                Collections.addAll(leaderCards, array);
+            } catch (Exception e) {
+
             }
         }
         Collections.shuffle(leaderCards);

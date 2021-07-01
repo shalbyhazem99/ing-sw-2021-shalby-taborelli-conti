@@ -1,3 +1,5 @@
+package it.polimi.ingsw;
+
 import it.polimi.ingsw.connection.Server;
 import it.polimi.ingsw.connection.view.ClientConnectionViewMulti;
 import it.polimi.ingsw.controller.GameManger;
@@ -10,6 +12,7 @@ import it.polimi.ingsw.view.ClientCLI;
 import it.polimi.ingsw.view.ClientSoloCLI;
 import it.polimi.ingsw.view.gui.App;
 import it.polimi.ingsw.view.gui.AppLocal;
+import javafx.application.Application;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -66,10 +69,12 @@ public class Launcher {
                 }
             } else {//client
                 if(viewType== 1){//gui
-                    if(viewMode==1){//distributed
-                        App.main(args);
+                    if(viewMode==0){//distributed
+                        Application.launch(App.class);
+                        //App.main(args);
                     }else { //local
-                        AppLocal.main(args);
+                        Application.launch(AppLocal.class);
+                        //AppLocal.main(args);
                     }
                 }
                 else { //cli

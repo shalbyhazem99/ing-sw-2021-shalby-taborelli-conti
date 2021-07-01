@@ -42,6 +42,7 @@ it\polimi\ingsw\connection\view\ClientConnectionViewSolo.class
 it\polimi\ingsw\controller\move\MovePlayerType$4.class
 it\polimi\ingsw\controller\move\settings\MessageMove.class
 it\polimi\ingsw\model\developmentCard\DevelopmentCardType.class
+it\polimi\ingsw\Launcher.class
 it\polimi\ingsw\utils\jsonCreator\DevelopmentCard2JSON.class
 it\polimi\ingsw\controller\move\settings\SendModel.class
 it\polimi\ingsw\model\leaderCard\LeaderCard.class
