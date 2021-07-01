@@ -326,6 +326,8 @@ public class PrimaryController extends GenericController {
         market_pending_panes.add(stone_pending);
         market_pending_panes.add(shield_pending);
         market_pending_panes.add(servant_pending);
+
+        mapMarbles();
     }
 
     @Override
@@ -349,7 +351,7 @@ public class PrimaryController extends GenericController {
         else
             mapOthersLeaderCards(activePlayerPos);
         mapLeaderCardProduction(activePlayerPos);
-        mapMarbles();
+        //mapMarbles();
         mapWarehouses(activePlayerPos);
         mapDevelopmentCards();
         mapDevelopmentCardsSpaces(activePlayerPos);
@@ -697,9 +699,11 @@ public class PrimaryController extends GenericController {
 
         disableAllMoves();
         if (value > Utils.MARKET_COL_NUMBER - 1) {
+            System.out.println("ROW"+(value - Utils.MARKET_COL_NUMBER));
             notify(MarketInteractionPlayerMove.getInstance(MoveType.ROW, value - Utils.MARKET_COL_NUMBER));
         } else {
             notify(MarketInteractionPlayerMove.getInstance(MoveType.COLUMN, value));
+            System.out.println("COLUMN"+(value - Utils.MARKET_COL_NUMBER));
         }
         runningAction = MovePlayerType.MARKET_INTERACTION;
         hasPerformedUnBlockingAction = true;
@@ -715,6 +719,10 @@ public class PrimaryController extends GenericController {
     @Override
     public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos, int num) {
         //BEGIN ANIMATION
+        System.out.println(match.getMarketBoard().getAdditionalMarble().toString());
+        for(int row = 0;row<3;row++){
+            System.out.println(match.getMarketBoard().getRow(row));
+        }
         final double duration = 1;
         TranslateTransition temp, t2, t3;
         ParallelTransition parallelTransition = new ParallelTransition();
@@ -782,8 +790,10 @@ public class PrimaryController extends GenericController {
             slideRow(pos);
         }
 
-
+        System.out.println("Res market : "+(match.getPendingMarketResources()));
+        System.out.println("Faith : "+match.getCurrentPlayer().getPosFaithMarker());
         mapMarketResource(activePlayerPos);
+        updateFaith(activePlayerPos);
         /*updateFaith(activePlayerPos);
         if (executePlayerPos == match.getWhoAmI()) {
             disableAllMoves();
@@ -856,6 +866,8 @@ public class PrimaryController extends GenericController {
         marketBoardObj[2][column] = additionalMarbleTemp;
         ;  //the old additional marble will be the marble in the bottom position of the column
     }
+
+
 
     //---------------------------------------RESOURCE POSITIONING-------------------------------------------------------
     private ResourceType resourceTypeDragged;
