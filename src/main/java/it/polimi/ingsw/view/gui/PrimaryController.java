@@ -495,6 +495,7 @@ public class PrimaryController extends GenericController {
                 try {
                     changeImage(devcardmatrix[i][j], match.getDevelopmentCards()[i][j].peek().getImage(), "devcard_leadercard/");
                 } catch (Exception e) {
+                    devcardmatrix[i][j].setVisible(false);
                 }
             }
         }
@@ -593,22 +594,43 @@ public class PrimaryController extends GenericController {
         if (runningAction != MovePlayerType.NOTHING) {
             runDialog(Alert.AlertType.ERROR, "Another action is already running, abort it before performing another one!");
         } else {
-            runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses :" + match.getDevelopmentCards()[row][column].peek().getCosts(match.getCurrentPlayer()).toString());
-            disableAllMoves();
-            enableMoves(new ArrayList<MovePlayerType>() {{
-                add(MovePlayerType.MOVE_RESOURCES);
-                add(MovePlayerType.BUY_DEVELOPMENT_CARD);
-            }}, false);
-            runningAction = MovePlayerType.BUY_DEVELOPMENT_CARD;
-            developmentCardSelected = match.getDevelopmentCards()[row][column].peek();
-            resNeededDevelopmentCardSelected = Utils.fromResourceCountToResources(developmentCardSelected.getCosts(match.getPlayers().get(match.getWhoAmI())));
-            ScaleTransition st = new ScaleTransition(Duration.millis(500), node.getParent());
-            st.setByX(0.3f);
-            st.setByY(0.3f);
-            st.setCycleCount(2);
-            st.setAutoReverse(true);
-            st.play();
+            if(canBuy(activePlayerPos,match.getDevelopmentCards()[row][column].peek())){
+                runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses :" + match.getDevelopmentCards()[row][column].peek().getCosts(match.getCurrentPlayer()).toString());
+                disableAllMoves();
+                enableMoves(new ArrayList<MovePlayerType>() {{
+                    add(MovePlayerType.MOVE_RESOURCES);
+                    add(MovePlayerType.BUY_DEVELOPMENT_CARD);
+                }}, false);
+                runningAction = MovePlayerType.BUY_DEVELOPMENT_CARD;
+                developmentCardSelected = match.getDevelopmentCards()[row][column].peek();
+                resNeededDevelopmentCardSelected = Utils.fromResourceCountToResources(developmentCardSelected.getCosts(match.getPlayers().get(match.getWhoAmI())));
+                ScaleTransition st = new ScaleTransition(Duration.millis(500), node.getParent());
+                st.setByX(0.3f);
+                st.setByY(0.3f);
+                st.setCycleCount(2);
+                st.setAutoReverse(true);
+                st.play();
+            }
+            else{
+                runDialog(Alert.AlertType.ERROR,"Error: you can't afford this dev card!");
+            }
         }
+    }
+
+    private boolean canBuy(int indexOfPlayer,DevelopmentCard developmentCard){
+        Player p = match.getPlayers().get(indexOfPlayer);
+        ArrayList<Resource> resNeeded = Utils.fromResourceCountToResources(developmentCard.getCosts(p));
+        ArrayList<Resource> resGot = new ArrayList<>();
+        for(int i = 0;i<p.getWarehousesStandard().size();i++){
+            resGot.addAll(p.getWarehousesStandard().get(i).getResources());
+        }
+        for(int i = 0;i<p.getWarehousesAdditional().size();i++){
+            resGot.addAll(p.getWarehousesAdditional().get(i).getResources());
+        }
+        resGot.addAll(p.getStrongBox());
+        System.out.println(resGot);
+        System.out.println(resNeeded);
+        return resGot.containsAll(resNeeded);
     }
 
     public void button_card_space_clicked(MouseEvent event) {
@@ -1613,7 +1635,7 @@ public class PrimaryController extends GenericController {
 
     @Override
     public void manageEndMatch() {
-
+        System.out.println("Match finished!");
     }
 
     @Override

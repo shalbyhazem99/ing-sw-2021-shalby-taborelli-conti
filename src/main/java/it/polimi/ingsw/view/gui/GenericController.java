@@ -49,7 +49,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         //add controller to notify the connection
         clientConnectionView.setObserver(myController);
 
-        match.addObserver(myController);
+        try{match.addObserver(myController);}catch(Exception e){}
         myController.initialization();
         if(match!=null && !match.getCurrentPlayer().equals(match.getPlayerFromPosition(match.getWhoAmI())))
             myController.disableAllMoves();
