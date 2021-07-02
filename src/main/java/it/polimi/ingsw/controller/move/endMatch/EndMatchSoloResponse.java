@@ -29,6 +29,7 @@ public class EndMatchSoloResponse extends EndMatchResponse {
 
     }
 
+
     @Override
     public PlayerMove elaborateCliInput(Scanner stdin, Match match) {
         if (hasLose) {

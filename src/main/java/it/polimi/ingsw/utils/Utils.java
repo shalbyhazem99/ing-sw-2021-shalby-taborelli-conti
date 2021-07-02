@@ -23,7 +23,7 @@ public class Utils {
      * Connection info
      */
     public static String ip = "127.0.0.1";
-    public static int port = 49444;
+    public static int port = 64292;
 
     /**
      * the Faith path length
@@ -335,6 +335,23 @@ public class Utils {
             color = Color.WHITE;
         }
         return color;
+    }
+
+    /**
+     * Method to know if the first {@link ArrayList} contains the second {@link ArrayList}
+     * @param a1 first {@link ArrayList}
+     * @param a2 second {@link ArrayList}
+     * @return true <==> a1 contains a2
+     */
+    public static boolean containsAll(ArrayList<Resource> a1, ArrayList<Resource> a2){
+        ArrayList<ResourcesCount> b1 = fromResourcesToResourceCount(a1);
+        ArrayList<ResourcesCount> b2 = fromResourcesToResourceCount(a2);
+        for (ResourcesCount r: b2) {
+            if(b1.get(b1.indexOf(r)).getCount()<r.getCount()){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

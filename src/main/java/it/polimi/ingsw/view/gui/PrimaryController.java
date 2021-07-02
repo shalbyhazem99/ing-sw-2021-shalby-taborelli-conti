@@ -594,7 +594,10 @@ public class PrimaryController extends GenericController {
         if (runningAction != MovePlayerType.NOTHING) {
             runDialog(Alert.AlertType.ERROR, "Another action is already running, abort it before performing another one!");
         } else {
-            if(canBuy(activePlayerPos,match.getDevelopmentCards()[row][column].peek())){
+            if(!canBePlacedSomewhere(match.getDevelopmentCards()[row][column].peek())){
+                runDialog(Alert.AlertType.ERROR,"Error the card you've selected can't be placed anywhere!");
+            }
+            else if(canBuy(activePlayerPos,match.getDevelopmentCards()[row][column].peek())){
                 runDialog(Alert.AlertType.INFORMATION, "Card correctly selected, now you must select from your warehouses :" + match.getDevelopmentCards()[row][column].peek().getCosts(match.getCurrentPlayer()).toString());
                 disableAllMoves();
                 enableMoves(new ArrayList<MovePlayerType>() {{
@@ -617,6 +620,12 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method to know if the {@link Player} has enough {@link Resource} to buy the {@link DevelopmentCard}
+     * @param indexOfPlayer to identify the {@link Player}
+     * @param developmentCard the {@link DevelopmentCard} to check
+     * @return true <==> the {@link DevelopmentCard} can be bought by the {@link Player}
+     */
     private boolean canBuy(int indexOfPlayer,DevelopmentCard developmentCard){
         Player p = match.getPlayers().get(indexOfPlayer);
         ArrayList<Resource> resNeeded = Utils.fromResourceCountToResources(developmentCard.getCosts(p));
@@ -630,7 +639,22 @@ public class PrimaryController extends GenericController {
         resGot.addAll(p.getStrongBox());
         System.out.println(resGot);
         System.out.println(resNeeded);
-        return resGot.containsAll(resNeeded);
+        return Utils.containsAll(resGot,resNeeded);
+    }
+
+    /**
+     * Method used to know if a {@link DevelopmentCard} can be placed in some {@link it.polimi.ingsw.model.developmentCard.DevelopmentCardSpace}
+     * @param developmentCard the {@link DevelopmentCard} to be placed
+     * @return true <==> the {@link DevelopmentCard} can be correctly placed
+     */
+    private boolean canBePlacedSomewhere(DevelopmentCard developmentCard){
+        Player p = match.getPlayers().get(activePlayerPos);
+        for(int i = 0;i<p.getDevelopmentCardSpaces().size();i++){
+            if(p.developmentCardCanBeAdded(developmentCard, i)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void button_card_space_clicked(MouseEvent event) {
@@ -1636,6 +1660,27 @@ public class PrimaryController extends GenericController {
     @Override
     public void manageEndMatch() {
         System.out.println("Match finished!");
+        Platform.runLater(() -> {
+            String msg = "";
+            if(match instanceof MatchSolo){
+                if(((MatchSolo) match).hasLose()){
+                    msg = "Lorenzo won: your points ";
+                    msg = msg + match.whoIsWinner().get(0).getPoints();
+                }
+                else{
+                    msg = "You won: your points ";
+                    msg = msg + match.whoIsWinner().get(0).getPoints();
+                }
+            }
+            else{
+                msg = "Winner are: " + match.whoIsWinner().toString();
+            }
+            Alert dialog = new Alert(Alert.AlertType.INFORMATION, "Match ended \n"+msg, ButtonType.OK);
+            Optional<ButtonType> result = dialog.showAndWait();
+            result.ifPresent(res->{
+                Platform.exit();
+            });
+        });
     }
 
     @Override

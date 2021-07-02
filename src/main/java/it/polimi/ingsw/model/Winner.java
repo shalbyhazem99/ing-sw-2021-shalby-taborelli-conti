@@ -57,6 +57,6 @@ public class Winner {
 
     @Override
     public String toString() {
-        return name +"("+points+" points)";
+        return name +"("+points+" points)\n";
     }
 }

@@ -238,6 +238,7 @@ public class MatchSolo extends Match implements Serializable {
     @Override
     public void startMatch() {
         super.startMatch();
+        moveAheadBlackCross(23);
         //askForMove();
     }
 
