@@ -78,6 +78,18 @@ public abstract class GenericController extends Observable<PlayerMove> implement
         p.setBackground(r);
     }
 
+    public void changeImage(Pane p, String urlS) {
+        URL url = null;
+        try {
+            url = getClass().getResource(urlS);
+        } catch (Exception e) {
+        }
+        BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
+        BackgroundImage myBI = new BackgroundImage(new Image(url.toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+        Background r = new Background(myBI);
+        p.setBackground(r);
+    }
+
 
     /**
      * Method to run dialog

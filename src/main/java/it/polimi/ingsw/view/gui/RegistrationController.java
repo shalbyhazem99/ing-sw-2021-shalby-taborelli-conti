@@ -17,8 +17,10 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -40,11 +42,17 @@ public class RegistrationController extends GenericController {
     @FXML
     private VBox discardTwoLeaderCardPane;
 
-
     @FXML
     Pane leader_card_1,leader_card_2,leader_card_3,leader_card_4;
     @FXML
     Pane resource_coin, resource_shield, resource_servant, resource_stone;
+    @FXML
+    Pane resource_coin1, resource_shield1, resource_servant1, resource_stone1;
+    @FXML
+    HBox resourceToSelect1, resourceToSelect2;
+    @FXML
+    Text resourceToSelectMsg;
+    @FXML Text waitingMsg;
 
     private int numResourceToGet;
 
@@ -66,7 +74,11 @@ public class RegistrationController extends GenericController {
         changeImage(leader_card_3,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(2).getImage(),"devcard_leadercard/");
         changeImage(leader_card_4,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(3).getImage(),"devcard_leadercard/");
         numResourceToGet=numOfResource;
+        resourceToSelectMsg.setVisible(numOfResource>=1);
+        resourceToSelect1.setVisible(numOfResource>=1);
+        resourceToSelect2.setVisible(numOfResource>=2);
         discardTwoLeaderCardPane.setVisible(true);
+        waitingMsg.setVisible(false);
     }
 
     @Override
@@ -74,6 +86,7 @@ public class RegistrationController extends GenericController {
         askDataPane.setVisible(true);
         messageToAskData.setText(message);
         discardTwoLeaderCardPane.setVisible(false);
+        waitingMsg.setVisible(false);
 
     }
 
@@ -85,6 +98,7 @@ public class RegistrationController extends GenericController {
     public void onClickPlay(MouseEvent mouseEvent) throws IOException {
         notify(MessageMove.getInstance(dataTextField.getText()));
         askDataPane.setVisible(false);
+        waitingMsg.setVisible(true);
     }
 
     public void onLeaderCardMouseClick(MouseEvent mouseEvent){
@@ -113,7 +127,29 @@ public class RegistrationController extends GenericController {
         Pane selectedPane = (Pane) mouseEvent.getSource();
         Pane resources[]= {resource_coin,resource_shield,resource_servant,resource_stone};
         if(Integer.parseInt(selectedPane.getUserData().toString())==0) {
-            if (Arrays.stream(resources).filter(elem -> !elem.equals(selectedPane) && Integer.parseInt(elem.getUserData().toString()) != 0).count() < numResourceToGet) {
+            if (Arrays.stream(resources).filter(elem -> !elem.equals(selectedPane) && Integer.parseInt(elem.getUserData().toString()) != 0).count() < 1) {
+                selectedPane.setUserData("1");
+                selectedPane.scaleXProperty().setValue(1.2);
+                selectedPane.scaleYProperty().setValue(1.2);
+                selectedPane.scaleZProperty().setValue(1.2);
+            }
+            else {
+                runDialog(Alert.AlertType.WARNING,"You have already selected the max num of resource you can get");
+            }
+        }
+        else {
+            selectedPane.setUserData("0");
+            selectedPane.scaleXProperty().setValue(1);
+            selectedPane.scaleYProperty().setValue(1);
+            selectedPane.scaleZProperty().setValue(1);
+        }
+    }
+
+    public void onResourceMouseClick2(MouseEvent mouseEvent){
+        Pane selectedPane = (Pane) mouseEvent.getSource();
+        Pane resources[]= {resource_coin1,resource_shield1,resource_servant1,resource_stone1};
+        if(Integer.parseInt(selectedPane.getUserData().toString())==0) {
+            if (Arrays.stream(resources).filter(elem -> !elem.equals(selectedPane) && Integer.parseInt(elem.getUserData().toString()) != 0).count() < 1) {
                 selectedPane.setUserData("1");
                 selectedPane.scaleXProperty().setValue(1.2);
                 selectedPane.scaleYProperty().setValue(1.2);
@@ -142,6 +178,10 @@ public class RegistrationController extends GenericController {
         resourcePanes.add(resource_servant);
         resourcePanes.add(resource_stone);
         resourcePanes.add(resource_coin);
+        resourcePanes.add(resource_shield1);
+        resourcePanes.add(resource_servant1);
+        resourcePanes.add(resource_stone1);
+        resourcePanes.add(resource_coin1);
         if (leaderCards.stream().filter(elem-> Integer.parseInt(elem.getUserData().toString()) != 0).count() ==2) {
             if (resourcePanes.stream().filter(elem-> Integer.parseInt(elem.getUserData().toString()) != 0).count() ==numResourceToGet) {
                 int first = -1;
@@ -151,11 +191,11 @@ public class RegistrationController extends GenericController {
                 Pane[] selectedLeaderCards = leaderCards.stream().filter(elem -> Integer.parseInt(elem.getUserData().toString()) == 0).toArray(Pane[]::new);
                 first = leaderCards.indexOf(selectedLeaderCards[0]);
                 second = leaderCards.indexOf(selectedLeaderCards[1]);
-                selectedLeaderCards = resourcePanes.stream().filter(elem -> Integer.parseInt(elem.getUserData().toString()) == 0).toArray(Pane[]::new);
-                if(selectedLeaderCards.length==1){
+                selectedLeaderCards = resourcePanes.stream().filter(elem -> Integer.parseInt(elem.getUserData().toString()) == 1).toArray(Pane[]::new);
+                if(selectedLeaderCards.length>=1){
                     resourceType1 = Utils.getResourceTypeFromUrl(selectedLeaderCards[0].getBackground().getImages().get(0).getImage().getUrl());
                 }
-                if(selectedLeaderCards.length==2){
+                if(selectedLeaderCards.length>=2){
                     resourceType2 = Utils.getResourceTypeFromUrl(selectedLeaderCards[1].getBackground().getImages().get(0).getImage().getUrl());
                 }
                 System.out.println("leader cards discarded: first:" + first + ", second:" + second);

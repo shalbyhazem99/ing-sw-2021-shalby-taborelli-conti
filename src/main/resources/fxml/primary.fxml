@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Sphere?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="982.0" prefWidth="1141.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.PrimaryController">
    <ComboBox fx:id="players_list_combobox" onAction="#onComboBoxAction" prefWidth="150.0">
@@ -144,9 +155,9 @@
                         <Pane fx:id="production_leader_to_2" layoutX="318.0" layoutY="250.0" prefHeight="33.0" prefWidth="35.0" userData="-1" />
                             </children>
                         </Pane>
-                        <Pane layoutX="746.0" layoutY="640.0" prefHeight="262.0" prefWidth="395.0" styleClass="purple-bg-2" stylesheets="@../css/purple-bg.css">
+                        <Pane layoutX="714.0" layoutY="639.0" prefHeight="262.0" prefWidth="395.0" styleClass="purple-bg-2" stylesheets="@../css/purple-bg.css">
                             <children>
-                                <Pane fx:id="leadercard1" layoutX="3.0" layoutY="10.0" onDragDetected="#onLeaderCardDragDetected" onMouseClicked="#enableCardClick" prefHeight="243.0" prefWidth="161.0" userData="0" />
+                                <Pane fx:id="leadercard1" layoutX="15.0" layoutY="10.0" onDragDetected="#onLeaderCardDragDetected" onMouseClicked="#enableCardClick" prefHeight="243.0" prefWidth="161.0" userData="0" />
                                 <Pane fx:id="leadercard2" layoutX="220.0" layoutY="10.0" onDragDetected="#onLeaderCardDragDetected" onMouseClicked="#enableCardClick" prefHeight="243.0" prefWidth="161.0" userData="1" />
                             </children>
                         </Pane>
@@ -253,6 +264,11 @@
                      <Text fx:id="lorenzo_pos_faith" layoutX="13.0" layoutY="742.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LORENZO POS FAITH: 0" visible="false" wrappingWidth="120.275390625">
                         <font>
                            <Font name="Algerian" size="18.0" />
+                        </font>
+                     </Text>
+                     <Text layoutX="837.0" layoutY="624.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LEADER CARDs" wrappingWidth="176.376953125">
+                        <font>
+                           <Font name="Algerian" size="24.0" />
                         </font>
                      </Text>
                     </children>
@@ -424,5 +440,4 @@
         </Tab>
     </tabs>
     </TabPane>
-   <HBox prefHeight="100.0" prefWidth="200.0" />
 </VBox>

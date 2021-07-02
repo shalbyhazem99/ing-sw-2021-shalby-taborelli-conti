@@ -6,9 +6,6 @@ import it.polimi.ingsw.model.leaderCard.*;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +28,7 @@ public class FileReader {
             }
         }
         Gson gson = new Gson();
-        String filePath ="/json/DevelopmentCard.json";
+        String filePath = "/json/DevelopmentCard/DevelopmentCard.json";
         try {
             InputStream inputStream = getClass().getResourceAsStream(filePath);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
