@@ -64,8 +64,8 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         {
             players.add(null);
         }
-        leaderCards = FileReader.readLeaderCard();
-        developmentCards = FileReader.readDevelopmentCards();
+        leaderCards = (new FileReader()).readLeaderCard();
+        developmentCards = (new FileReader()).readDevelopmentCards();
         marketBoard = MarketBoard.getInstance();
         pendingMarketResources = new ArrayList<>();
         pendingProductionResources = new ArrayList<>();

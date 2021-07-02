@@ -27,9 +27,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        URL url = new File("src/main/resources/fxml/welcome.fxml").toURI().toURL();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(url);
+        loader.setLocation(getClass().getResource("/fxml/welcome.fxml"));
         Parent root =loader.load();
         GenericController myController = loader.getController();
         connection = new ClientConnectionViewMulti(Utils.ip,  Utils.port);

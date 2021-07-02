@@ -69,7 +69,7 @@ java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  
 ```
 Execute the client in local way with GUI:
 ```
-java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  --gui --local
+java -jar masters-of-renaissance.jar --type c --gui --local
 ```
 Execute the client in distributed way with CLI:
 ```
@@ -77,7 +77,7 @@ java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  
 ```
 Execute the client in local way with CLI:
 ```
-java -jar masters-of-renaissance.jar --type c --address 127.0.0.1 --port 12345  --cli --local
+java -jar masters-of-renaissance.jar --type c --cli --local
 ```
 ## Developers
 - [__Conti Alessando__](https://github.com/alessandroconti99)

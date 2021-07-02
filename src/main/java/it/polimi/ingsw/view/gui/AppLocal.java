@@ -10,11 +10,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 /**
  * JavaFX App
@@ -36,9 +41,8 @@ public class AppLocal extends Application {
         //controller (C)
         GameManger gameManger = GameManger.getInstance(match);
         //view (V)
-        URL url = new File("src/main/resources/fxml/welcome.fxml").toURI().toURL();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(url);
+        loader.setLocation(getClass().getResource("/fxml/welcome.fxml"));
         Parent root =loader.load();
         GenericController myController = loader.getController();
         connection = new ClientConnectionViewSolo(gameManger);
