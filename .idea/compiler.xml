@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GC11" />
+        <module name="ing-sw-2021-shalby-taborelli-conti-5 - Copia" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -17,6 +18,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="-encoding UTF-8" />
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="GC11" options="" />
+      <module name="ing-sw-2021-shalby-taborelli-conti-5 - Copia" options="" />
     </option>
   </component>
 </project>

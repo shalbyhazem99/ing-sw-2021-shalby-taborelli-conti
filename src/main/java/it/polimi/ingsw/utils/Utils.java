@@ -23,7 +23,7 @@ public class Utils {
      * Connection info
      */
     public static String ip = "127.0.0.1";
-    public static int port = 64292;
+    public static int port = 50191;
 
     /**
      * the Faith path length
@@ -347,11 +347,11 @@ public class Utils {
         ArrayList<ResourcesCount> b1 = fromResourcesToResourceCount(a1);
         ArrayList<ResourcesCount> b2 = fromResourcesToResourceCount(a2);
         for (ResourcesCount r: b2) {
-            if(b1.get(b1.indexOf(r)).getCount()<r.getCount()){
+            try{
+                if(b1.get(b1.indexOf(r)).getCount()<r.getCount()){
                 return false;
-            }
+            }}catch (Exception e){}
         }
         return true;
     }
-
 }
