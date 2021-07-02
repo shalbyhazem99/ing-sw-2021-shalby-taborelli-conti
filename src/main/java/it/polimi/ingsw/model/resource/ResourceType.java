@@ -7,7 +7,7 @@ public enum ResourceType implements Serializable {
     STONE("💎"),
     SERVANT("⚔"),
     SHIELD("⛨"),
-    FAITH("✝"),
+    FAITH("+"),
     ANY("A");
 
     public final String symbol;
