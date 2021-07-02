@@ -40,6 +40,7 @@ public class Launcher {
                 }
             } else if (args[i].equals("--port")) {
                 port = Integer.parseInt(args[i + 1]);
+                i++;
             } else if (args[i].equals("--gui")) {
                 viewType = 1;
             } else if (args[i].equals("--cli")) {
