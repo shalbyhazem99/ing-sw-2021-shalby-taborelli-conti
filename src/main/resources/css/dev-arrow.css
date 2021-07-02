@@ -1,0 +1,12 @@
+.market-arrow-row
+{
+    -fx-background-image: url("../images/punchboard/arrow_dev.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 35 40;
+}
+.market-arrow-row:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-scale-z: 1.1;
+}
+

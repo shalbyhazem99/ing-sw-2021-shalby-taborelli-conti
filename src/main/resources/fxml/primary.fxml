@@ -96,13 +96,13 @@
                                 <Pane fx:id="faith_22" layoutX="820.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane fx:id="faith_23" layoutX="869.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane fx:id="faith_24" layoutX="918.0" layoutY="35.0" prefHeight="35.0" prefWidth="43.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                                <Pane fx:id="button_card_space_0" layoutX="456.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" userData="0">
+                                <Pane fx:id="button_card_space_0" layoutX="451.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="40.0" prefWidth="35.0" styleClass="market-arrow-row" stylesheets="@../css/dev-arrow.css" userData="0">
                                     <cursor>
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </Pane>
-                                <Pane fx:id="button_card_space_1" layoutX="649.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" userData="1" />
-                                <Pane fx:id="button_card_space_2" layoutX="851.0" layoutY="185.0" onMouseClicked="#button_card_space_clicked" prefHeight="35.0" prefWidth="27.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" userData="2" />
+                                <Pane fx:id="button_card_space_1" layoutX="644.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="40.0" prefWidth="35.0" styleClass="market-arrow-row" stylesheets="@../css/dev-arrow.css" userData="1" />
+                                <Pane fx:id="button_card_space_2" layoutX="846.0" layoutY="185.0" onMouseClicked="#button_card_space_clicked" prefHeight="40.0" prefWidth="35.0" styleClass="market-arrow-row" stylesheets="@../css/dev-arrow.css" userData="2" />
                                 <Pane layoutX="496.0" layoutY="50.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Pane layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
@@ -121,7 +121,7 @@
                               <Font name="Algerian" size="12.0" />
                            </font>
                         </Button>
-                        <Pane layoutX="294.0" layoutY="514.0" onMouseClicked="#activateProduction" prefHeight="52.0" prefWidth="37.0" styleClass="red-bg" stylesheets="@../css/red-bg.css" />
+                        <Pane layoutX="294.0" layoutY="525.0" onMouseClicked="#activateProduction" prefHeight="38.0" prefWidth="34.0" styleClass="market-arrow-row" stylesheets="@../css/dev-arrow.css" />
                         <Pane fx:id="production_leader_2" layoutX="239.0" layoutY="204.0" prefHeight="92.0" prefWidth="131.0" styleClass="punch" stylesheets="@../css/leader_production.css">
                            <children>
                               <Pane fx:id="production_leader_from_2" layoutX="21.0" layoutY="33.0" onDragDropped="#onProductionDragDropped" onDragOver="#onProductionDragOver" prefHeight="27.0" prefWidth="29.0" />

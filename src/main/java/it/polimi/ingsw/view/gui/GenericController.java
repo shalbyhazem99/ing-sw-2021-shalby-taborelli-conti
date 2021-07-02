@@ -30,6 +30,12 @@ public abstract class GenericController extends Observable<PlayerMove> implement
 
     protected Match match;
 
+    /**
+     * Method to change view
+     * @param fxml file to load
+     * @param clientConnectionView {@link ClientConnectionView}
+     * @throws IOException throws an {@link IOException}
+     */
     public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/"+fxml+".fxml"));
@@ -53,6 +59,12 @@ public abstract class GenericController extends Observable<PlayerMove> implement
             myController.disableAllMoves();
     }
 
+    /**
+     * Change the image
+     * @param p pane to be changed
+     * @param s string of the path
+     * @param type type of string
+     */
     public void changeImage(Pane p, String s, String type) {
         URL url = null;
         try {
@@ -67,6 +79,11 @@ public abstract class GenericController extends Observable<PlayerMove> implement
     }
 
 
+    /**
+     * Method to run dialog
+     * @param type {@link javafx.scene.control.Alert.AlertType} type of dialog
+     * @param message that must be printed
+     */
     public void runDialog(Alert.AlertType type, String message) {
         Platform.runLater(() -> {
             Alert dialog = new Alert(type, message, ButtonType.OK);
