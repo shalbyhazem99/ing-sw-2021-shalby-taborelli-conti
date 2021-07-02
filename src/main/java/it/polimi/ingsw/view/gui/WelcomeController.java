@@ -47,10 +47,10 @@ public class WelcomeController extends GenericController {
         IntegerProperty showImg = new SimpleIntegerProperty(0);
         URL url1,url2,url3,url4;
         try {
-            url1 = new File("src/main/resources/images/welcome_card/game-back.png").toURI().toURL();
-            url2 = new File("src/main/resources/images/welcome_card/conti-front.png").toURI().toURL();
-            url3 = new File("src/main/resources/images/welcome_card/hazem-front.png").toURI().toURL();
-            url4 = new File("src/main/resources/images/welcome_card/tabo-front.png").toURI().toURL();
+            url1 = getClass().getResource("/images/welcome_card/game-back.png");
+            url2 = getClass().getResource("/images/welcome_card/conti-front.png");
+            url3 = getClass().getResource("/images/welcome_card/hazem-front.png");
+            url4 = getClass().getResource("/images/welcome_card/tabo-front.png");
             Node card = createCard(showImg,
                     new Image(url1.toString()),
                     new Image(url2.toString()),
@@ -73,7 +73,7 @@ public class WelcomeController extends GenericController {
             SequentialTransition rotator = new SequentialTransition(card, rotator1, rotator2, rotator3);
             rotator.setCycleCount(Timeline.INDEFINITE);
             rotator.play();
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

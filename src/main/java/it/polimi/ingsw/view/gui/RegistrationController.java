@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.developmentCard.DevelopmentCardLevel;
 import it.polimi.ingsw.model.developmentCard.DevelopmentCardType;
 import it.polimi.ingsw.model.market.MoveType;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -42,8 +43,10 @@ public class RegistrationController extends GenericController {
 
     @FXML
     Pane leader_card_1,leader_card_2,leader_card_3,leader_card_4;
+    @FXML
+    Pane resource_coin, resource_shield, resource_servant, resource_stone;
 
-
+    private int numResourceToGet;
 
     @Override
     public void update(MoveResponse message) {
@@ -62,6 +65,7 @@ public class RegistrationController extends GenericController {
         changeImage(leader_card_2,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(1).getImage(),"devcard_leadercard/");
         changeImage(leader_card_3,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(2).getImage(),"devcard_leadercard/");
         changeImage(leader_card_4,match.getPlayerFromPosition(executePlayerPos).getLeaderCard(3).getImage(),"devcard_leadercard/");
+        numResourceToGet=numOfResource;
         discardTwoLeaderCardPane.setVisible(true);
     }
 
@@ -105,25 +109,65 @@ public class RegistrationController extends GenericController {
         }
     }
 
+    public void onResourceMouseClick(MouseEvent mouseEvent){
+        Pane selectedPane = (Pane) mouseEvent.getSource();
+        Pane resources[]= {resource_coin,resource_shield,resource_servant,resource_stone};
+        if(Integer.parseInt(selectedPane.getUserData().toString())==0) {
+            if (Arrays.stream(resources).filter(elem -> !elem.equals(selectedPane) && Integer.parseInt(elem.getUserData().toString()) != 0).count() < numResourceToGet) {
+                selectedPane.setUserData("1");
+                selectedPane.scaleXProperty().setValue(1.2);
+                selectedPane.scaleYProperty().setValue(1.2);
+                selectedPane.scaleZProperty().setValue(1.2);
+            }
+            else {
+                runDialog(Alert.AlertType.WARNING,"You have already selected the max num of resource you can get");
+            }
+        }
+        else {
+            selectedPane.setUserData("0");
+            selectedPane.scaleXProperty().setValue(1);
+            selectedPane.scaleYProperty().setValue(1);
+            selectedPane.scaleZProperty().setValue(1);
+        }
+    }
+
     public void onClickDiscard() throws IOException {
         ArrayList<Pane> leaderCards=new ArrayList<>();
         leaderCards.add(leader_card_1);
         leaderCards.add(leader_card_2);
         leaderCards.add(leader_card_3);
         leaderCards.add(leader_card_4);
+        ArrayList<Pane> resourcePanes=new ArrayList<>();
+        resourcePanes.add(resource_shield);
+        resourcePanes.add(resource_servant);
+        resourcePanes.add(resource_stone);
+        resourcePanes.add(resource_coin);
         if (leaderCards.stream().filter(elem-> Integer.parseInt(elem.getUserData().toString()) != 0).count() ==2) {
-            int first=-1;
-            int second=-1;
-            Pane[] selectedLeaderCards = leaderCards.stream().filter(elem-> Integer.parseInt(elem.getUserData().toString()) == 0).toArray(Pane[]::new);
-            first = leaderCards.indexOf(selectedLeaderCards[0]);
-            second = leaderCards.indexOf(selectedLeaderCards[1]);
-            System.out.println("leader cards discarded: first:"+first+", second:"+second);
-            if(App.getConnection()!=null) {
-                changeView("primary", App.getConnection());
+            if (resourcePanes.stream().filter(elem-> Integer.parseInt(elem.getUserData().toString()) != 0).count() ==numResourceToGet) {
+                int first = -1;
+                int second = -1;
+                ResourceType resourceType1 = ResourceType.COIN;
+                ResourceType resourceType2 = ResourceType.COIN;
+                Pane[] selectedLeaderCards = leaderCards.stream().filter(elem -> Integer.parseInt(elem.getUserData().toString()) == 0).toArray(Pane[]::new);
+                first = leaderCards.indexOf(selectedLeaderCards[0]);
+                second = leaderCards.indexOf(selectedLeaderCards[1]);
+                selectedLeaderCards = resourcePanes.stream().filter(elem -> Integer.parseInt(elem.getUserData().toString()) == 0).toArray(Pane[]::new);
+                if(selectedLeaderCards.length==1){
+                    resourceType1 = Utils.getResourceTypeFromUrl(selectedLeaderCards[0].getBackground().getImages().get(0).getImage().getUrl());
+                }
+                if(selectedLeaderCards.length==2){
+                    resourceType2 = Utils.getResourceTypeFromUrl(selectedLeaderCards[1].getBackground().getImages().get(0).getImage().getUrl());
+                }
+                System.out.println("leader cards discarded: first:" + first + ", second:" + second);
+                if (App.getConnection() != null) {
+                    changeView("primary", App.getConnection());
+                } else {
+                    changeView("primary", AppLocal.getConnection());
+                }
+                notify(DiscardTwoLeaderCardsPlayerMove.getInstance(first, second, resourceType1, resourceType2));
             }else {
-                changeView("primary", AppLocal.getConnection());
+                runDialog(Alert.AlertType.WARNING,"You have to select "+ numResourceToGet+" resources to keep");
             }
-            notify(DiscardTwoLeaderCardsPlayerMove.getInstance(first, second, ResourceType.COIN, ResourceType.FAITH));
         }
         else {
             runDialog(Alert.AlertType.WARNING,"You have to select two leader cards");

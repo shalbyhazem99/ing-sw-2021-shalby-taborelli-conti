@@ -31,10 +31,8 @@ public abstract class GenericController extends Observable<PlayerMove> implement
     protected Match match;
 
     public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
-        URL url = new File("src/main/resources/fxml/" + fxml + ".fxml").toURI().toURL();
-        System.out.println(fxml);
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(url);
+        loader.setLocation(getClass().getResource("/fxml/"+fxml+".fxml"));
         Parent root = loader.load();
         try {
             App.setRoot(root);
@@ -58,7 +56,7 @@ public abstract class GenericController extends Observable<PlayerMove> implement
     public void changeImage(Pane p, String s, String type) {
         URL url = null;
         try {
-            url = new File("src/main/resources/images/" + type + s + ".png").toURI().toURL();
+            url = getClass().getResource("/images/" + type + s + ".png");
         } catch (Exception e) {
         }
         Image image = new Image(url.toString());

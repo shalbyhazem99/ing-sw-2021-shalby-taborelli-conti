@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="16" failures="0" name="it.polimi.ingsw.model.PlayerTest" time="0.02" errors="0" skipped="0">
+<testsuite tests="16" failures="0" name="it.polimi.ingsw.model.PlayerTest" time="0.019" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2020.3.2"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -59,20 +59,20 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testMoveAheadFaith" time="0.001"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testMoveAheadFaith" time="0"/>
   <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testHasDiscount" time="0"/>
   <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testGetLeaderCard" time="0"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddResourceToWarehouseStandard" time="0.003"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddedPowers" time="0"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddResourceToWarehouseStandard" time="0.001"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddedPowers" time="0.001"/>
   <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testDiscardLeaderCard" time="0"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testNumOfWhiteMarbleConversionStrategy" time="0"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddDevelopmentCard" time="0.005"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testNumOfWhiteMarbleConversionStrategy" time="0.001"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddDevelopmentCard" time="0"/>
   <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testDevelopmentCardCanBeAdded" time="0.001"/>
   <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testGetConversionStrategies" time="0"/>
   <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testIsActionable" time="0"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testGetDevelopmentCardSpace" time="0"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testMoveResources" time="0.004"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testGetDevelopmentCardSpace" time="0.001"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testMoveResources" time="0.003"/>
   <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testReturnOnLine" time="0.001"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddResourceToWarehouseAdditional" time="0.001"/>
-  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testTestCanAfford" time="0.004"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testAddResourceToWarehouseAdditional" time="0.002"/>
+  <testcase classname="it.polimi.ingsw.model.PlayerTest" name="testTestCanAfford" time="0.008"/>
 </testsuite>
