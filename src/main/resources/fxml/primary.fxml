@@ -103,9 +103,9 @@
                                 </Pane>
                                 <Pane fx:id="button_card_space_1" layoutX="644.0" layoutY="183.0" onMouseClicked="#button_card_space_clicked" prefHeight="40.0" prefWidth="35.0" styleClass="market-arrow-row" stylesheets="@../css/dev-arrow.css" userData="1" />
                                 <Pane fx:id="button_card_space_2" layoutX="846.0" layoutY="185.0" onMouseClicked="#button_card_space_clicked" prefHeight="40.0" prefWidth="35.0" styleClass="market-arrow-row" stylesheets="@../css/dev-arrow.css" userData="2" />
-                                <Pane layoutX="496.0" layoutY="50.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                                <Pane layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
-                                <Pane layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="pope_tiles_2" layoutX="496.0" layoutY="50.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="pope_tiles_1" layoutX="252.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
+                                <Pane fx:id="pope_tiles_3" layoutX="790.0" layoutY="94.0" prefHeight="40.0" prefWidth="54.0" styleClass="purple-bg" stylesheets="@../css/purple-bg.css" />
                                 <Rectangle fx:id="faith_player" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="20.0" layoutX="48.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="20.0" />
                                 <Pane fx:id="ware_11" layoutX="130.0" layoutY="291.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
                                 <Pane fx:id="ware_10" layoutX="74.0" layoutY="291.0" onDragDetected="#onProductionResDragDetected" onDragDropped="#onWarehousesDragDropped" onDragOver="#onWarehousesDragOver" onMouseClicked="#onResourceClick" prefHeight="53.0" prefWidth="51.0" stylesheets="@../css/purple-bg.css" />
@@ -250,7 +250,7 @@
                         </Text>
                      </children>
                   </Pane>
-                     <Text fx:id="lorenzo_pos_faith" layoutX="13.0" layoutY="742.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LORENZO POS FAITH: 0" wrappingWidth="120.275390625">
+                     <Text fx:id="lorenzo_pos_faith" layoutX="13.0" layoutY="742.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LORENZO POS FAITH: 0" visible="false" wrappingWidth="120.275390625">
                         <font>
                            <Font name="Algerian" size="18.0" />
                         </font>
@@ -424,4 +424,5 @@
         </Tab>
     </tabs>
     </TabPane>
+   <HBox prefHeight="100.0" prefWidth="200.0" />
 </VBox>

@@ -122,6 +122,16 @@ public class PrimaryController extends GenericController {
     @FXML
     private Rectangle faith_player;
 
+    //PopeFavorTiles
+    @FXML
+    private Pane pope_tiles_1;
+    @FXML
+    private Pane pope_tiles_2;
+    @FXML
+    private Pane pope_tiles_3;
+    @FXML
+    private ArrayList<Pane> pope_tiles_list;
+
     @FXML
     private Pane ware_00;
     @FXML
@@ -330,7 +340,18 @@ public class PrimaryController extends GenericController {
         market_pending_panes.add(shield_pending);
         market_pending_panes.add(servant_pending);
 
+
+        pope_tiles_list = new ArrayList<>();
+        pope_tiles_list.add(pope_tiles_1);
+        pope_tiles_list.add(pope_tiles_2);
+        pope_tiles_list.add(pope_tiles_3);
         mapMarbles();
+
+        /*try{
+            MatchSolo s = (MatchSolo) match;
+            lorenzo_pos_faith.setVisible(true);
+        }
+        catch (Exception e){}*/
     }
 
     @Override
@@ -385,6 +406,24 @@ public class PrimaryController extends GenericController {
             }
         });
 
+    }
+    /**
+     * Method used to map the {@link PopeFavorTiles}
+     * @param indexOfPlayer pos of the plauer to be shown
+     */
+    public void mapPopeTiles(int indexOfPlayer){
+        for(int i=0;i<match.getPlayers().get(indexOfPlayer).getPopeFavorTiles().size();i++){
+            try{
+                if(match.getPlayers().get(indexOfPlayer).getPopeFavorTiles().get(i) == null){
+                    pope_tiles_list.get(i).setVisible(false);
+                }
+                else{
+                    pope_tiles_list.get(i).setVisible(true);
+                }
+            }catch (Exception e){
+                pope_tiles_list.get(i).setVisible(false);
+            }
+        }
     }
 
     /**
@@ -1253,6 +1292,7 @@ public class PrimaryController extends GenericController {
         System.out.println("manage end turn");
         try {
             MatchSolo temp = (MatchSolo) match;
+            lorenzo_pos_faith.setVisible(true);
             lorenzo_pos_faith.setText("LORENZO POS FAITH: " + temp.getPosBlackCross());
         } catch (Exception e) {
             lorenzo_pos_faith.setVisible(false);
