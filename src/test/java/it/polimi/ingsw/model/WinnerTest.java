@@ -27,6 +27,6 @@ public class WinnerTest extends TestCase {
     @Test
     public void testToString(){
         Winner winner = new Winner("Tester", 48, 17);
-        assertEquals("Tester(48 points)", winner.toString());
+        assertEquals("Tester(48 points)\n", winner.toString());
     }
 }

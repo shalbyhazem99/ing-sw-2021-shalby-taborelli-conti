@@ -264,6 +264,9 @@ public class PrimaryController extends GenericController {
 
     //--------------------------------------Initialization-----------------------------------------------------------
 
+    /**
+     * Method to intialize all the gui objects
+     */
     public void initialization() {
         pendingSelected = new Stack<>();
         runningAction = MovePlayerType.NOTHING;
@@ -336,6 +339,11 @@ public class PrimaryController extends GenericController {
     }
 
     //--------------------------------------PRINT MODEL---------------------------------------------------------------
+    /**
+     * Method to update the model
+     * @param match The {@link Match} to be watched
+     * @param playerPosition the position of the {@link Player}
+     */
     @Override
     public void updateModel(Match match, int playerPosition) {
         this.match = match;
@@ -344,6 +352,9 @@ public class PrimaryController extends GenericController {
         printModel();
     }
 
+    /**
+     * Method used to print the model to the gui
+     */
     @Override
     public void printModel() {
         if (activePlayerPos == match.getWhoAmI())
@@ -362,6 +373,9 @@ public class PrimaryController extends GenericController {
         mapComboPox();
     }
 
+    /**
+     * Method used to map the combo box
+     */
     public void mapComboPox() {
         Platform.runLater(new Runnable() {
             @Override
@@ -373,6 +387,10 @@ public class PrimaryController extends GenericController {
 
     }
 
+    /**
+     * Method used to map the strongbox
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapStrongBox(int posPlayer) {
         for (ResourcesCount r : Utils.fromResourcesToResourceCount(match.getPlayers().get(posPlayer).getStrongBox())) {
             switch (r.getType()) {
@@ -396,6 +414,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the market's pending res
+     * @param posPlayer pos of the plauer to be shown
+     */
     private void mapMarketResource(int posPlayer) {
         if (match.getCurrentPlayer().equals(match.getPlayerFromPosition(posPlayer))) {
             ArrayList<ResourcesCount> res = Utils.fromResourcesToResourceCount(match.getPendingMarketResources());
@@ -432,6 +454,9 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the pending production resources
+     */
     private void mapProductionResource() {
         ArrayList<ResourcesCount> res = Utils.fromResourcesToResourceCount(match.getPendingProductionResources());
         for (ResourcesCount r : res) {
@@ -458,11 +483,19 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the warehouses
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapWarehouses(int posPlayer) {
         mapWarehousesStandard(posPlayer);
         mapWarehousesAdditional(posPlayer);
     }
 
+    /**
+     * Method used to map the warehouses standard
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapWarehousesStandard(int posPlayer) {
         unsetAllBackgroundWarehouseStandard();
         for (int i = 0; i < 3; i++) {
@@ -472,6 +505,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the warehouses additional
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapWarehousesAdditional(int posPlayer) {
         unsetAllBackgroundWarehouseAdditional();
         for (int i = 0; i < match.getPlayers().get(posPlayer).getWarehousesAdditional().size(); i++) {
@@ -489,6 +526,9 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the dev cards
+     */
     public void mapDevelopmentCards() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
@@ -501,6 +541,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the dev cards spaces
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapDevelopmentCardsSpaces(int posPlayer) {
         for (int i = 0; i < card_spaces.size(); i++) {
             Pane space = card_spaces.get(i);
@@ -513,6 +557,9 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the marbles
+     */
     public void mapMarbles() {
         m_add.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getAdditionalMarble().getColor())));
         m_00.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(0, 0).getColor())));
@@ -529,6 +576,10 @@ public class PrimaryController extends GenericController {
         m_23.setMaterial(new PhongMaterial(Utils.fromMarbleColorToJavaFXColor(match.getMarketBoard().getMarbleAt(2, 3).getColor())));
     }
 
+    /**
+     * Method used to map the leadercards of the player
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapMyLeaderCards(int posPlayer) {
         try {
             changeImage(leadercards[0], match.getPlayers().get(posPlayer).getLeaderCards().get(0).getImage(), "devcard_leadercard/");
@@ -538,6 +589,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the leadercards of other player
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapOthersLeaderCards(int posPlayer) {
         leadercards[0].setBackground(null);
         leadercards[1].setBackground(null);
@@ -551,6 +606,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map the {@link LeaderCard}'s production
+     * @param posPlayer pos of the plauer to be shown
+     */
     public void mapLeaderCardProduction(int posPlayer) {
         ArrayList<ProductivePower> activePower = match.getPlayerFromPosition(posPlayer).getAddedPower();
         production_leader_1.setVisible(false);
@@ -566,6 +625,14 @@ public class PrimaryController extends GenericController {
     }
 
     //-----------------------------------BUY DEVELOPMENT CARD---------------------------------------------------------
+    /**
+     * Method used to buy a {@link DevelopmentCard}
+     * @param type {@link DevelopmentCardType} of the card
+     * @param level {@link DevelopmentCardLevel} of the card
+     * @param posToAdd where to add the card
+     * @param resourceToUse which {@link Resource} you have to use
+     * @param executePlayerPos pos of the plauer to be shown
+     */
     @Override
     public void buyDevelopmentCard(DevelopmentCardType type, DevelopmentCardLevel level, int posToAdd, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
         if (executePlayerPos == match.getWhoAmI()) {
@@ -585,6 +652,10 @@ public class PrimaryController extends GenericController {
         mapDevelopmentCards();
     }
 
+    /**
+     * Click method of dev_card
+     * @param event {@link javafx.event.Event} to be handled
+     */
     public void dev_card_click(MouseEvent event) {
         Node node = (Node) event.getSource();
         String[] data = ((String) node.getUserData()).split(",");
@@ -657,6 +728,10 @@ public class PrimaryController extends GenericController {
         return false;
     }
 
+    /**
+     * Click method of button card space
+     * @param event {@link javafx.event.Event} to be handled
+     */
     public void button_card_space_clicked(MouseEvent event) {
         Node node = (Node) event.getSource();
         String data = (String) node.getUserData();
@@ -683,7 +758,8 @@ public class PrimaryController extends GenericController {
     }
 
     /**
-     * when a resource is clicked in the warehouse or in the strongbox
+     * Click method of the resources
+     * @param mouseEvent {@link MouseEvent} to be handled
      */
     public void onResourceClick(MouseEvent mouseEvent) {
         Pane warehousePane = (Pane) mouseEvent.getSource();
@@ -735,7 +811,7 @@ public class PrimaryController extends GenericController {
     /**
      * Manaage the click event on one of the marketBoard arrow
      *
-     * @param event
+     * @param event {@link MouseEvent} to be handled
      */
     public void clickMarketInteraction(MouseEvent event) {
         //get the pos and if > column dim means that the user click row
@@ -758,9 +834,9 @@ public class PrimaryController extends GenericController {
     /**
      * Manage the response to a market move
      *
-     * @param moveType
-     * @param pos
-     * @param executePlayerPos
+     * @param moveType {@link MoveType} can be row or column
+     * @param pos index of the row or column
+     * @param executePlayerPos pos of the {@link Player} who executes the move
      */
     @Override
     public void manageResourceMarket(MoveType moveType, int pos, int executePlayerPos, int num) {
@@ -918,6 +994,10 @@ public class PrimaryController extends GenericController {
     //---------------------------------------RESOURCE POSITIONING-------------------------------------------------------
     private ResourceType resourceTypeDragged;
 
+    /**
+     * Method called when pending market resource is dragged
+     * @param mouseEvent event to be handled
+     */
     public void onPendingMarketResDragDetected(MouseEvent mouseEvent) {
         if (runningAction.equals(MovePlayerType.MARKET_INTERACTION)) {
             Pane pane = (Pane) mouseEvent.getSource();
@@ -948,6 +1028,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used when the drag event is finished
+     * @param dragEvent event to be handled
+     */
     public void onWarehousesDragOver(DragEvent dragEvent) {
         Pane sourcePane = (Pane) dragEvent.getGestureSource();
         Pane pane = (Pane) dragEvent.getSource();
@@ -957,6 +1041,11 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to map index of {@link Warehouse} from gui to model
+     * @param warehousePane {@link Pane} object to be mapped
+     * @return the index of the {@link Warehouse}
+     */
     private int getWarehousePositionFromPane(Pane warehousePane) {
         if (warehousePane == ware_00) {
             return 0;
@@ -972,6 +1061,10 @@ public class PrimaryController extends GenericController {
         return -1;
     }
 
+    /**
+     * Method called when the drag is dropped
+     * @param dragEvent event to be handled
+     */
     public void onWarehousesDragDropped(DragEvent dragEvent) {
         if (dragEvent.isAccepted()) {
             Pane warehousePaneFrom = (Pane) dragEvent.getGestureSource();
@@ -1062,6 +1155,10 @@ public class PrimaryController extends GenericController {
         dragEvent.setDropCompleted(true);
     }
 
+    /**
+     * Method used to manage a correct pending resource positioning
+     * @param resourceType {@link ResourceType} associated to the label to be modified
+     */
     private void decrementPendingLabelCount(ResourceType resourceType) {
         Text pending_text = null;
         switch (resourceType) {
@@ -1082,10 +1179,17 @@ public class PrimaryController extends GenericController {
         pending_text.setText(--val + "x");
     }
 
+    /**
+     * Method to know if we are positioning the last pending {@link Resource} of the market
+     * @return true <==> we have placed all the {@link Resource}
+     */
     private boolean isLastPositioning() {
         return new ArrayList<>(pendingSelected).stream().filter(el -> el.getWarehousePosition() != -1).count() == match.getPendingMarketResources().size();
     }
 
+    /**
+     * Method used to notify a {@link PositioningResourcesPlayerMove}
+     */
     private void sendPlaceResourceMove() {
         runningAction = MovePlayerType.NOTHING;
         disableAllMoves();
@@ -1104,6 +1208,11 @@ public class PrimaryController extends GenericController {
         pendingSelected = new Stack<>();
     }
 
+    /**
+     * Method called when a {@link it.polimi.ingsw.controller.move.resourcePositioning.PositioningResourcesResponse} is received
+     * @param whereToPlace {@link ArrayList} representing for each resource where to place it
+     * @param executePlayerPos who is performing the action
+     */
     @Override
     public void manageResourceMarketPositioning(ArrayList<Integer> whereToPlace, int executePlayerPos) {
         //updateFaith(match.getWhoAmI());
@@ -1116,6 +1225,9 @@ public class PrimaryController extends GenericController {
     }
 
     //----------------------------------------END TURN----------------------------------------------------------------
+    /**
+     * Method called to end a turn
+     */
     public void endTurn() {
         System.out.println(match.getPendingMarketResources());
         if (!match.getPendingMarketResources().isEmpty()) {
@@ -1130,6 +1242,12 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method called when a {@link EndRoundPlayerMove} is received
+     * @param correctlyEnded true <==> everything went well
+     * @param executePlayerPos who is perfroming the action
+     * @param message {@link String} representing a message
+     */
     @Override
     public void manageEndTurn(boolean correctlyEnded, int executePlayerPos, String message) {
         System.out.println("manage end turn");
@@ -1151,6 +1269,10 @@ public class PrimaryController extends GenericController {
 
     //------------------------------------ENABLE LEADER CARD---------------------------------------------------------
 
+    /**
+     * Method used to notify a {@link EnableLeaderCardPlayerMove}
+     * @param mouseEvent event to be handled
+     */
     public void enableCardClick(MouseEvent mouseEvent) {
         Node node = (Node) mouseEvent.getSource();
         String data = (String) node.getUserData();
@@ -1168,6 +1290,11 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to show a ledaer card
+     * @param leaderCardPosition pos of the {@link LeaderCard} to be flipped
+     * @param executePlayerPos who is performing the action
+     */
     @Override
     public void flipLeaderCard(int leaderCardPosition, int executePlayerPos) {
         if (executePlayerPos == match.getWhoAmI()) {
@@ -1184,6 +1311,10 @@ public class PrimaryController extends GenericController {
     }
 
     //------------------------------------DISCARD LEADER CARD---------------------------------------------------------
+    /**
+     * Method called when {@link LeaderCard} drag event occurs
+     * @param mouseEvent event to be handled
+     */
     public void onLeaderCardDragDetected(MouseEvent mouseEvent) {
         if (runningAction.equals(MovePlayerType.NOTHING)) {
             Pane pane = (Pane) mouseEvent.getSource();
@@ -1201,6 +1332,11 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method called when a LeaderCard is discarded
+     * @param leaderCardPosition pos of the {@link LeaderCard}
+     * @param executePlayerPos who is performing the action
+     */
     @Override
     public void discardLeaderCard(int leaderCardPosition, int executePlayerPos) {
         if (executePlayerPos == match.getWhoAmI()) {
@@ -1212,6 +1348,10 @@ public class PrimaryController extends GenericController {
 
     //---------------------------------------PRODUCTION-------------------------------------------------------------
 
+    /**
+     * Click on change button on production
+     * @param mouseEvent event to be handled
+     */
     public void onClickChangeProductionTo(MouseEvent mouseEvent) {
         Button button = (Button) mouseEvent.getSource();
         Pane pane = null;
@@ -1230,6 +1370,9 @@ public class PrimaryController extends GenericController {
         changeImage(pane, Utils.mapResTypeToImage(ResourceType.values()[posResourceVisibleProduction]), "resources/");
     }
 
+    /**
+     * Method used to activate a {@link ProductivePower}
+     */
     public void activateProduction() {
         if (activeProduction.equals(ProductionType.BASE)) {
             if (production_base_from_1.getBackground() != null && production_base_from_2.getBackground() != null && production_base_to.getBackground() != null) {
@@ -1273,6 +1416,10 @@ public class PrimaryController extends GenericController {
 
     }
 
+    /**
+     * Method called when a Production pending {@link Resource} is dragged
+     * @param mouseEvent event to be handled
+     */
     public void onProductionResDragDetected(MouseEvent mouseEvent) {
         Pane pane = (Pane) mouseEvent.getSource();
         if (runningAction.equals(MovePlayerType.NOTHING) || runningAction.equals(MovePlayerType.ENABLE_PRODUCTION)) {
@@ -1319,6 +1466,10 @@ public class PrimaryController extends GenericController {
 
     }
 
+    /**
+     * Method called when the drag is over
+     * @param dragEvent event to be handled
+     */
     public void onProductionDragOver(DragEvent dragEvent) {
         Pane sourcePane = (Pane) dragEvent.getGestureSource();
         Pane pane = (Pane) dragEvent.getSource();
@@ -1327,6 +1478,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method called when the drag is dropped
+     * @param dragEvent event to be handled
+     */
     public void onProductionDragDropped(DragEvent dragEvent) {
         if (dragEvent.isAccepted()) {
             Pane pane = (Pane) dragEvent.getSource();
@@ -1350,14 +1505,29 @@ public class PrimaryController extends GenericController {
         dragEvent.setDropCompleted(true);
     }
 
+    /**
+     * Method to check if the production is possible
+     * @param type {@link ProductionType} of the production to be checked
+     * @return true <--> the production is possible
+     */
     private boolean isProductionPossible(ProductionType type) {
         return activeProduction.equals(ProductionType.NOTHING) || activeProduction.equals(type);
     }
 
+    /**
+     * Method to check if the production is possible
+     * @param type {@link ProductionType} of the production to be checked
+     * @param index the index of the production
+     * @return true <--> the production is possible
+     */
     private boolean isProductionPossible(ProductionType type, int index) {
         return activeProduction.equals(ProductionType.NOTHING) || (activeProduction.equals(type) && activeProductionIndex == index);
     }
 
+    /**
+     * Method to manage production
+     * @param pane {@link Pane} to mangage
+     */
     private void manageProductionBaseAddResource(Pane pane) {
         if (pane.getBackground() == null) {
             activeProduction = ProductionType.BASE;
@@ -1370,6 +1540,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used when a {@link Resource} is added to a {@link DevelopmentCard}'s production
+     * @param pos pos of the production
+     */
     private void manageProductionDevelopmentCardAddResource(int pos) {
         if (activeProductivePowerCost == null || activeProductivePowerCost.size() == 0) {
             activeProductivePowerCost = Utils.fromResourceCountToResources(match.getPlayerFromPosition(match.getWhoAmI()).getDevelopmentCardSpaces().get(pos).pickTopCard().getPowers().getFrom());
@@ -1403,6 +1577,11 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used when a {@link Resource} is added to a {@link DevelopmentCard}'s production
+     * @param pos pos of the production
+     * @param pane {@link Pane} used to identify which {@link ResourceType} is selected
+     */
     private void manageProductionLeaderAddResource(int pos, Pane pane) {
         if (!activeProduction.equals(ProductionType.LEADER_CARD)) {
             activeProduction = ProductionType.LEADER_CARD;
@@ -1421,12 +1600,22 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to enable a production
+     * @param power the {@link ProductivePower} to be activated
+     * @param resourceToUse which {@link Resource} we must use
+     * @param executePlayerPos who is performing the action
+     */
     @Override
     public void enableProduction(ProductivePower power, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
         updateFaith(activePlayerPos);
     }
 
     //--------------------------------------SUPPORT METHODS---------------------------------------------------------
+    /**
+     * Method called when a production is activated to modify procution's labels
+     * @param resourceType {@link ResourceType} used to identify the label
+     */
     private void incrementProductionPendingLabelCount(ResourceType resourceType) {
         Text pending_text = null;
         switch (resourceType) {
@@ -1447,6 +1636,10 @@ public class PrimaryController extends GenericController {
         pending_text.setText(++val + "x");
     }
 
+    /**
+     * Method called when something is took from the STRONGBOX
+     * @param resourceType {@link ResourceType} which has been withdrawn
+     */
     private void decrementStrongBoxLabelCount(ResourceType resourceType) {
         Text pending_text = null;
         switch (resourceType) {
@@ -1467,16 +1660,27 @@ public class PrimaryController extends GenericController {
         pending_text.setText(--val + "x");
     }
 
+    /**
+     * Method used to completely block the view
+     */
     @Override
     public void blockView() {
         tabpane.setDisable(true);
     }
 
+    /**
+     * Method used to move the {@link Player} ahed in the faith's path
+     * @param index how many passes we must do
+     */
     private void updateFaith(int index) {
         faith_player.setLayoutX(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutX() + 10);
         faith_player.setLayoutY(faithArray[match.getPlayers().get(index).getPosFaithMarker()].getLayoutY() + 10);
     }
 
+    /**
+     * Method called when something has been dragged to the bin
+     * @param dragEvent event to be handled
+     */
     public void onBinDragOver(DragEvent dragEvent) {
         Pane sourcePane = (Pane) dragEvent.getGestureSource();
         Pane pane = (Pane) dragEvent.getSource();
@@ -1485,6 +1689,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method called when something has been dropped into the bin
+     * @param dragEvent event to be handled
+     */
     public void onBinDragDropped(DragEvent dragEvent) {
         if (dragEvent.isAccepted()) {
             Pane sourcePane = (Pane) dragEvent.getGestureSource();
@@ -1518,24 +1726,34 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to play a sound
+     * @param sound {@link String} of the path of the sound
+     */
     public void playSound(String sound) {
-        URL resource = null;
+        /*URL resource = null;
         try {
             resource = new File("src/main/resources/audio/" + sound + ".wav").toURI().toURL();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         MediaPlayer a = new MediaPlayer(new Media(resource.toString()));
-        a.play();
+        a.play();*/
     }
 
     //------------------------------------OTHERS----------------------------------------------------------------------
 
+    /**
+     * Manage combo box action
+     */
     public void onComboBoxAction(){
         activePlayerPos =  Math.max(0,players_list_combobox.getSelectionModel().getSelectedIndex());
     }
 
 
+    /**
+     * Method used when a action has to be aborted
+     */
     public void abortAction() {
         revertAction();
         runningAction = MovePlayerType.NOTHING;
@@ -1545,6 +1763,9 @@ public class PrimaryController extends GenericController {
         });
     }
 
+    /**
+     * Revert the result of the action
+     */
     private void revertAction() {
         switch (runningAction) {
             case MARKET_INTERACTION: {
@@ -1591,6 +1812,12 @@ public class PrimaryController extends GenericController {
 
     //-------------------------------ON CLICK METHODS-----------------------
 
+    /**
+     * Method used to check if the drag-swap respects the Warehouse's rules
+     * @param resourceType {@link ResourceType} to be dragged-swapped
+     * @param where pos of the {@link Warehouse}
+     * @return true <==> the warehouses' rule is respected
+     */
     private boolean checkForTypeCorrectness(ResourceType resourceType, int where) {
         //check 3 warehouses rule
         if (where >= 3) {// warehouseAdditional
@@ -1623,6 +1850,9 @@ public class PrimaryController extends GenericController {
         return true;
     }
 
+    /**
+     * Set all the GUI warehouses standard to null
+     */
     private void unsetAllBackgroundWarehouseStandard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < warehousesStandard.get(i).size(); j++) {
@@ -1631,6 +1861,9 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Set all the GUI warehouses additional to null
+     */
     private void unsetAllBackgroundWarehouseAdditional() {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < warehousesAdditional.get(i).size(); j++) {
@@ -1639,6 +1872,12 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to change the view
+     * @param fxml where is placed the fxml
+     * @param clientConnectionView {@link ClientConnectionView}
+     * @throws IOException thrown if any error related to the fxml occurs
+     */
     @Override
     public void changeView(String fxml, ClientConnectionView clientConnectionView) throws IOException {
         super.changeView(fxml, clientConnectionView);
@@ -1650,6 +1889,10 @@ public class PrimaryController extends GenericController {
     }
 
 
+    /**
+     * Method to manage all the possible moves
+     * @param possibleMove {@link ArrayList} of the {@link MovePlayerType}
+     */
     @Override
     public void manageAllowedMoves(ArrayList<MovePlayerType> possibleMove) {
         disableAllMoves();
@@ -1657,6 +1900,9 @@ public class PrimaryController extends GenericController {
         updateFaith(activePlayerPos);
     }
 
+    /**
+     * Manage end match
+     */
     @Override
     public void manageEndMatch() {
         System.out.println("Match finished!");
@@ -1694,6 +1940,13 @@ public class PrimaryController extends GenericController {
 
     }
 
+    /**
+     * Method called when a {@link it.polimi.ingsw.controller.move.moveResources.MoveResourcesResponse} is received
+     * @param num_from_first how many {@link Resource} from the first
+     * @param num_from_second how many {@link Resource} from the second
+     * @param indexFirstWarehouse index of the first {@link Warehouse}
+     * @param indexSecondWarehouse index of the second {@link Warehouse}
+     */
     @Override
     public void moveResourceResponse(int num_from_first, int num_from_second, int indexFirstWarehouse, int indexSecondWarehouse) {
         //runDialog(Alert.AlertType.CONFIRMATION, "Move resources success");
@@ -1708,14 +1961,25 @@ public class PrimaryController extends GenericController {
 
 
     //--------------------------------------DISABLE/ENABLE METHODS-------------------------------------------------
+    /**
+     * Method used to disable all the moves
+     */
     public void disableAllMoves() {
         enableMoves(new ArrayList<>(Arrays.asList(MovePlayerType.values())), true);
     }
 
+    /**
+     * Method used to enable all the moves
+     */
     public void enableAllMoves() {
         enableMoves(new ArrayList<>(Arrays.asList(MovePlayerType.values())), false);
     }
 
+    /**
+     * Method used to enable-disable all the moves contained in the parameter
+     * @param moves {@link ArrayList} of {@link MovePlayerType} to be enabled-disabled
+     * @param disable true <==> enable, false <==> disable
+     */
     public void enableMoves(ArrayList<MovePlayerType> moves, boolean disable) {
         if (disable) {
             System.out.println("disable" + moves.toString());
@@ -1741,6 +2005,10 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to disable-enable all the market's butons
+     * @param disable true <==> enable, false <==> disable
+     */
     private void disableMarketMatrix(boolean disable) {
         for (Pane p : market_button) {
             p.setDisable(disable);
@@ -1754,6 +2022,10 @@ public class PrimaryController extends GenericController {
         shield_pending.setDisable(disable);*/
     }
 
+    /**
+     * Method used to enable-disable all the development cards
+     * @param disable disable true <==> enable, false <==> disable
+     */
     private void disableDevelopmentCardsMatrix(boolean disable) {
         Arrays.stream(devcardmatrix).forEach(elem -> Arrays.stream(elem).forEach(x -> x.setDisable(disable)));
         for (Pane pane : buttons_card_space) {
@@ -1761,18 +2033,30 @@ public class PrimaryController extends GenericController {
         }
     }
 
+    /**
+     * Method used to enable-disable all the development cards' space
+     * @param disable true <==> enable, false <==> disable
+     */
     private void disableDevelopmentCardsSpace(boolean disable) {
         card_space_0.setDisable(disable || card_space_0.getBackground() == null);
         card_space_1.setDisable(disable || card_space_1.getBackground() == null);
         card_space_2.setDisable(disable || card_space_2.getBackground() == null);
     }
 
+    /**
+     * Method used to disable-enable all the {@link LeaderCard}
+     * @param disable true <==> enable, false <==> disable
+     */
     private void disableLeaderCard(boolean disable) {
         for (Pane pane : leadercards) {
             pane.setDisable(disable);
         }
     }
 
+    /**
+     * Method used to disable all the base prodction
+     * @param disable true <==> enable, false <==> disable
+     */
     private void disableBaseProduction(boolean disable) {
         production_base_from_1.setDisable(disable);
         production_base_from_2.setDisable(disable);
