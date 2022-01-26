@@ -79,7 +79,7 @@ public class Launcher {
                     }
                 }
                 else { //cli
-                    if(viewMode==1){//distributed
+                    if(viewMode==0){//distributed
                         ClientConnectionViewMulti clientConnectionViewMulti = new ClientConnectionViewMulti(Utils.ip,  Utils.port);
                         ClientCLI client = new ClientCLI(new Scanner(System.in));
                         clientConnectionViewMulti.addObserver(client);

@@ -418,7 +418,7 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
         int numberOfDiscardedResources = 0;
         int numberOfGainedResources = whereToPlace.size();
         for (int i = 0; i < whereToPlace.size(); i++) {
-            if (whereToPlace.get(i) == null) {
+            if ( whereToPlace.get(i) == null || whereToPlace.get(i) == 6)  {
                 numberOfDiscardedResources++;
                 numberOfGainedResources--;
             } else if (
@@ -794,14 +794,14 @@ public abstract class Match extends Observable<MoveResponse> implements Serializ
                     }
                 }
             }
-            temp += (" ▲ ▲ ▲ ▲\n");
+            temp += (" ▲▲▲▲\n");
             temp += (" 0 1 2 3\n");
             temp += "\n";
             temp += ("-------------------------------------------------------------------------------------------------------\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             temp += ("|DEVELOPMENT CARDS|            (P=Point, C=Costs, PP = Productive Powers)\n");
             temp += ("---------------\n");
-            temp += ("\t\t\t\t\t\t  " + DevelopmentCardType.GREEN + " \t\t\t\t\t\t  " + DevelopmentCardType.BLUE + " \t\t\t\t\t\t " + DevelopmentCardType.YELLOW + " \t\t\t\t\t\t " + DevelopmentCardType.PURPLE + "\n");
+            temp += ("\t\t\t  " + DevelopmentCardType.GREEN + " \t\t\t\t\t\t  " + DevelopmentCardType.BLUE + " \t\t\t\t\t\t " + DevelopmentCardType.YELLOW + " \t\t\t\t\t\t " + DevelopmentCardType.PURPLE + "\n");
             temp += ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             int max = 30;
             for (int i = 0; i < 3; i++) {

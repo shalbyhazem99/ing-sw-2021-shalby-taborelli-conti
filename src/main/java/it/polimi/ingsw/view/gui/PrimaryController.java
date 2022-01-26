@@ -277,6 +277,7 @@ public class PrimaryController extends GenericController {
     /**
      * Method to intialize all the gui objects
      */
+    @Override
     public void initialization() {
         pendingSelected = new Stack<>();
         runningAction = MovePlayerType.NOTHING;
@@ -346,6 +347,8 @@ public class PrimaryController extends GenericController {
         pope_tiles_list.add(pope_tiles_2);
         pope_tiles_list.add(pope_tiles_3);
         mapMarbles();
+        printModel();
+        mapComboPox();
 
         /*try{
             MatchSolo s = (MatchSolo) match;
@@ -372,8 +375,8 @@ public class PrimaryController extends GenericController {
         this.match = match;
         activePlayerPos = playerPosition;
         initialization();
-        printModel();
-        mapComboPox();
+        //printModel();
+        //mapComboPox();
     }
 
     /**
@@ -1298,12 +1301,11 @@ public class PrimaryController extends GenericController {
      */
     @Override
     public void manageResourceMarketPositioning(ArrayList<Integer> whereToPlace, int executePlayerPos) {
-        //updateFaith(match.getWhoAmI());
+        updateFaith(activePlayerPos);
         if (activePlayerPos == executePlayerPos) {
             mapWarehouses(activePlayerPos);
             if (executePlayerPos != match.getWhoAmI())
                 runDialog(Alert.AlertType.INFORMATION, match.getPlayerFromPosition(executePlayerPos).getName() + " placed all the resources");
-
         }
     }
 
@@ -1598,6 +1600,8 @@ public class PrimaryController extends GenericController {
                 runningAction = MovePlayerType.NOTHING;
             }
         }
+        if(pendingSelected.isEmpty())
+            runningAction=MovePlayerType.NOTHING;
         dragEvent.setDropCompleted(true);
     }
 
@@ -1645,7 +1649,7 @@ public class PrimaryController extends GenericController {
      * @param pos pos of the production
      */
     private void manageProductionDevelopmentCardAddResource(int pos) {
-        if (activeProductivePowerCost == null || activeProductivePowerCost.size() == 0) {
+        if (activeProductivePowerCost == null || activeProductivePowerCost.size() == 0 ||pendingSelected.isEmpty()) {
             activeProductivePowerCost = Utils.fromResourceCountToResources(match.getPlayerFromPosition(match.getWhoAmI()).getDevelopmentCardSpaces().get(pos).pickTopCard().getPowers().getFrom());
         }
         if (activeProductivePowerCost.remove(Resource.getInstance(resourceTypeProduction))) {
@@ -1661,7 +1665,7 @@ public class PrimaryController extends GenericController {
                 pendingSelected.stream().forEach(elem -> res.add(elem));
                 notify(EnableProductionPlayerMoveDevelopmentCard.getInstance(res, pos));
                 ArrayList<Resource> to = match.getPlayerFromPosition(match.getWhoAmI()).getDevelopmentCardSpaces().get(pos).pickTopCard().getPowers().getTo();
-                to.stream().forEach(elem -> incrementProductionPendingLabelCount(elem.getType()));
+                to.stream().filter(elem->!elem.getType().equals(ResourceType.FAITH)).forEach(elem -> incrementProductionPendingLabelCount(elem.getType()));
                 runDialog(Alert.AlertType.INFORMATION, "You've correctly picked all the resources, Production activated");
                 pendingSelected = new Stack<>();
                 activeProduction = ProductionType.NOTHING;
@@ -1674,6 +1678,8 @@ public class PrimaryController extends GenericController {
             }
         } else {
             runDialog(Alert.AlertType.ERROR, resourceTypeProduction + " is not required!");
+            if(pendingSelected.isEmpty())
+                runningAction=MovePlayerType.NOTHING;
         }
     }
 
@@ -1711,6 +1717,8 @@ public class PrimaryController extends GenericController {
     @Override
     public void enableProduction(ProductivePower power, ArrayList<ResourcePick> resourceToUse, int executePlayerPos) {
         updateFaith(activePlayerPos);
+        activeProduction= ProductionType.NOTHING;
+        hasPerformedUnBlockingAction = true;
     }
 
     //--------------------------------------SUPPORT METHODS---------------------------------------------------------
